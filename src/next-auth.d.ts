@@ -1,16 +1,11 @@
 import { Types } from "mongoose";
-import NextAuth, { type DefaultSession } from "next-auth";
-
-export const UserRole = {
-  ADMIN: "ADMIN",
-  USER: "USER",
-  THERAPIST: "THERAPIST",
-} as const;
-
-export type UserRole = (typeof UserRole)[keyof typeof UserRole];
+import NextAuth, { type DefaultSession, type } from "next-auth";
 
 export type ExtendedUser = DefaultSession["user"] & {
   role: UserRole;
+  id: string;
+  email: string;
+  isOAuth: boolean;
   isTwoFactorEnabled: boolean;
 };
 

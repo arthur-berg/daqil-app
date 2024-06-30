@@ -2,6 +2,8 @@ import mailchimp from "@mailchimp/mailchimp_transactional";
 
 const mailchimpTx = mailchimp(process.env.MAILCHIMP_TRANSACTIONAL_KEY || "");
 
+const domain = process.env.NEXT_PUBLIC_APP_URL;
+
 export const sendTwoFactorTokenEmail = async (email: string, token: string) => {
   const message = {
     from_email: "info@zakina-app.com",
@@ -26,7 +28,7 @@ export const sendTwoFactorTokenEmail = async (email: string, token: string) => {
 };
 
 export const sendVerificationEmail = async (email: string, token: string) => {
-  const confirmLink = `http://localhost:3000/auth/new-verification?token=${token}`;
+  const confirmLink = `${domain}/auth/new-verification?token=${token}`;
 
   const message = {
     from_email: "info@zakina-app.com",
@@ -51,7 +53,7 @@ export const sendVerificationEmail = async (email: string, token: string) => {
 };
 
 export const sendPasswordResetEmail = async (email: string, token: string) => {
-  const resetLink = `http://localhost:3000/auth/new-password?token=${token}`;
+  const resetLink = `${domain}/auth/new-password?token=${token}`;
 
   const message = {
     from_email: "info@zakina-app.com",

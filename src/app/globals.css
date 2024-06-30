@@ -4,7 +4,9 @@
 
 @layer base {
   :root {
-    --background: 0 78.87% 72.16%; 
+    --page-background: 0 78.87% 72.16%;
+
+    --background: 0 0% 100%; 
     --foreground: 0 0% 10%; 
 
     --card: 0 0% 100%; 
@@ -22,7 +24,7 @@
     --muted: 0 0% 82.7%;
     --muted-foreground: 0 0% 0%; 
  
-    --accent: 0 0% 20%; 
+    --accent: 0 78.87% 72.16%; 
     --accent-foreground: 0 0% 95%; 
 
     --destructive: 9.1 100% 64.7%;
@@ -42,6 +44,9 @@
   }
 
   .dark {
+
+    --page-background: 0 78.87% 72.16%;
+
     --background: 0 0% 11.8%; 
     --foreground: 0 0% 100%;
 
@@ -86,6 +91,6 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-page-background text-foreground;
   }
 }
