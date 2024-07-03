@@ -16,7 +16,6 @@ export const NewVerificationForm = () => {
   const router = useRouter();
 
   const token = searchParams.get("token");
-  const secret = searchParams.get("secret");
 
   const onSubmit = useCallback(() => {
     if (success || error) return;
@@ -29,15 +28,13 @@ export const NewVerificationForm = () => {
       .then(async (data) => {
         if (data.success) {
           setSuccess(data.success);
-          if (secret) {
-            router.push(
-              `/auth/setup?email=${encodeURIComponent(
-                data.email
-              )}&secret=${encodeURIComponent(secret)}`
-            );
-          } else {
-            router.push(`/auth/setup?email=${encodeURIComponent(data.email)}`);
-          }
+
+          router.push(
+            `/auth/setup?email=${encodeURIComponent(
+              data.email
+            )}&token=${encodeURIComponent(token)}`
+          );
+
           return;
         }
         if (data.error) {

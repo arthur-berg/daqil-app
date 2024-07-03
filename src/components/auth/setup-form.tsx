@@ -24,21 +24,23 @@ import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 import { useSearchParams } from "next/navigation";
 import { setupAccount } from "@/actions/setup-account";
+import { login } from "@/actions/login";
 
 export const SetupForm = () => {
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
+  const [currentPasswordRequired, setCurrentPasswordRequired] = useState(false);
   const [isPending, startTransition] = useTransition();
   const searchParams = useSearchParams();
 
   const email = searchParams.get("email");
-  const secret = searchParams.get("secret");
+  const token = searchParams.get("token");
 
   const form = useForm<z.infer<typeof SetupAccountSchema>>({
     resolver: zodResolver(SetupAccountSchema),
     defaultValues: {
       email: email ? email : "",
-      currentPassword: secret ? secret : "",
+      currentPassword: token ? undefined : "",
       password: "",
       name: "",
     },
@@ -48,12 +50,16 @@ export const SetupForm = () => {
     setError("");
     setSuccess("");
     startTransition(async () => {
-      const data = await setupAccount(values);
-      if (data.success) {
-        setSuccess(data.success);
+      const data = await setupAccount(values, token);
+      if ("success" in data && data.success) {
+        setSuccess(data?.success);
+        await login({ email: values.email, password: values.password });
       }
-      if (data.error) {
+      if ("error" in data && data.error) {
         setError(data.error);
+        if ("currentPasswordRequired" in data && data.currentPasswordRequired) {
+          setCurrentPasswordRequired(true);
+        }
       }
     });
   };
@@ -67,6 +73,7 @@ export const SetupForm = () => {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <div className="space-y-4">
+            {!token && <FormError message={""} />}
             <FormField
               control={form.control}
               name="email"
@@ -98,24 +105,21 @@ export const SetupForm = () => {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="currentPassword"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Current password</FormLabel>
-                  <FormControl>
-                    <Input
-                      readOnly={!!secret}
-                      disabled={isPending}
-                      {...field}
-                      type="password"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {(!token || currentPasswordRequired) && (
+              <FormField
+                control={form.control}
+                name="currentPassword"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Current password</FormLabel>
+                    <FormControl>
+                      <Input disabled={isPending} {...field} type="password" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
             <FormField
               control={form.control}
               name="password"

@@ -35,19 +35,15 @@ export const sendVerificationEmail = async (
   const encodedToken = encodeURIComponent(token);
   let confirmLink = `${domain}/auth/new-verification?token=${encodedToken}`;
 
-  const initialRegister = password;
-
-  if (initialRegister) {
-    const encodedPassword = encodeURIComponent(password);
-    confirmLink = `${domain}/auth/new-verification?token=${encodedToken}&secret=${encodedPassword}`;
-  }
+  const temporaryPasswordMessage = password
+    ? `Here is your temporary password: <strong>${password}</strong><br>`
+    : "";
 
   const message = {
     from_email: "info@zakina-app.com",
     subject: "Confirm your email",
     html: `<p>Welcome to Zakina. ${
-      initialRegister &&
-      `Here is your temporary password <strong> ${password} </strong>`
+      temporaryPasswordMessage && `<p>${temporaryPasswordMessage}</p>`
     } Click <a href="${confirmLink}">here</a> to confirm email, change password and finish your account setup.</p>`,
     to: [
       {

@@ -62,7 +62,7 @@ export const SetupAccountSchema = z.object({
   password: z.string().min(6, {
     message: "Minimum 6 characters required",
   }),
-  currentPassword: z.z.string().min(6),
+  currentPassword: z.optional(z.string().min(6)),
   name: z.string().min(1, {
     message: "Name is required",
   }),
