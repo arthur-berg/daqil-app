@@ -3,7 +3,8 @@ import * as z from "zod";
 
 export const SettingsSchema = z
   .object({
-    name: z.optional(z.string()),
+    firstName: z.optional(z.string()),
+    lastName: z.optional(z.string()),
     isTwoFactorEnabled: z.optional(z.boolean()),
     role: z.enum([UserRole.ADMIN, UserRole.USER, UserRole.THERAPIST]),
     email: z.optional(z.string().email()),
@@ -63,8 +64,11 @@ export const SetupAccountSchema = z.object({
     message: "Minimum 6 characters required",
   }),
   currentPassword: z.optional(z.string().min(6)),
-  name: z.string().min(1, {
-    message: "Name is required",
+  firstName: z.string().min(1, {
+    message: "First name is required",
+  }),
+  lastName: z.string().min(1, {
+    message: "Last name is required",
   }),
 });
 

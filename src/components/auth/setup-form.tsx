@@ -42,7 +42,8 @@ export const SetupForm = () => {
       email: email ? email : "",
       currentPassword: token ? undefined : "",
       password: "",
-      name: "",
+      firstName: "",
+      lastName: "",
     },
   });
 
@@ -94,10 +95,23 @@ export const SetupForm = () => {
             />
             <FormField
               control={form.control}
-              name="name"
+              name="firstName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Full name</FormLabel>
+                  <FormLabel>First name</FormLabel>
+                  <FormControl>
+                    <Input disabled={isPending} {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="lastName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Last name</FormLabel>
                   <FormControl>
                     <Input disabled={isPending} {...field} />
                   </FormControl>

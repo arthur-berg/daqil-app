@@ -9,19 +9,22 @@ import { getUserByEmail } from "@/data/user";
 import { login } from "@/actions/login";
 import { getVerificationTokenByToken } from "@/data/verification-token";
 import VerificationToken from "@/models/VerificationToken";
+import { addUserNameToSubscriberProfile } from "@/lib/mail";
 
 const verifyPasswordAndLogin = async ({
   existingUser,
   currentPassword,
   hashedPassword,
-  name,
+  firstName,
+  lastName,
   email,
   password,
 }: {
   existingUser: any;
   currentPassword?: string;
   hashedPassword: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
 }) => {
@@ -42,7 +45,8 @@ const verifyPasswordAndLogin = async ({
   await User.findByIdAndUpdate(existingUser._id, {
     password: hashedPassword,
     isAccountSetupDone: true,
-    name,
+    firstName,
+    lastName,
   });
 
   await login({ email, password });
@@ -59,7 +63,8 @@ export const setupAccount = async (
   if (!validatedFields.success) {
     return { error: "Invalid fields!" };
   }
-  const { email, password, name, currentPassword } = validatedFields.data;
+  const { email, password, firstName, lastName, currentPassword } =
+    validatedFields.data;
 
   const existingUser = await getUserByEmail(email);
 
@@ -74,7 +79,8 @@ export const setupAccount = async (
       existingUser,
       currentPassword,
       hashedPassword,
-      name,
+      firstName,
+      lastName,
       email,
       password,
     });
@@ -87,7 +93,8 @@ export const setupAccount = async (
       existingUser,
       currentPassword,
       hashedPassword,
-      name,
+      firstName,
+      lastName,
       email,
       password,
     });
@@ -96,10 +103,13 @@ export const setupAccount = async (
   await User.findByIdAndUpdate(existingUser._id, {
     password: hashedPassword,
     isAccountSetupDone: true,
-    name,
+    firstName,
+    lastName,
   });
 
   await VerificationToken.findByIdAndDelete(existingToken._id);
+
+  await addUserNameToSubscriberProfile(email, firstName, lastName);
 
   await login({ email, password });
 

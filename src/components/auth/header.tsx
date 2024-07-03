@@ -8,7 +8,7 @@ export const Header = ({ label }: HeaderProps) => {
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src="/zakina-logo.png" alt="zakina" />
       {/* <h1 className="text-3xl font-semibold">Zakina</h1> */}
-      <p className="text-muted-foreground text-lg">{label}</p>
+      <p className="text-muted-foreground text-xl">{label}</p>
     </div>
   );
 };

@@ -7,7 +7,7 @@ import User from "@/models/User";
 import { RegisterSchema } from "@/schemas";
 import { getUserByEmail } from "@/data/user";
 import { generateVerificationToken } from "@/lib/tokens";
-import { sendVerificationEmail } from "@/lib/mail";
+import { addUserToSubscriberList, sendVerificationEmail } from "@/lib/mail";
 
 const generatePassword = (length = 12) => {
   const charset =
@@ -50,6 +50,8 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
     verificationToken.token,
     password
   );
+
+  await addUserToSubscriberList(verificationToken.email);
 
   return { success: "Confirmation email sent!" };
 };
