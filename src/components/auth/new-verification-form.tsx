@@ -7,13 +7,16 @@ import { CardWrapper } from "@/components/auth/card-wrapper";
 import { newVerification } from "@/actions/new-verification";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
+import { useRouter } from "next/navigation";
 
 export const NewVerificationForm = () => {
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
   const searchParams = useSearchParams();
+  const router = useRouter();
 
   const token = searchParams.get("token");
+  const secret = searchParams.get("secret");
 
   const onSubmit = useCallback(() => {
     if (success || error) return;
@@ -23,9 +26,23 @@ export const NewVerificationForm = () => {
       return;
     }
     newVerification(token)
-      .then((data) => {
-        setSuccess(data.success);
-        setError(data.error);
+      .then(async (data) => {
+        if (data.success) {
+          setSuccess(data.success);
+          if (secret) {
+            router.push(
+              `/auth/setup?email=${encodeURIComponent(
+                data.email
+              )}&secret=${encodeURIComponent(secret)}`
+            );
+          } else {
+            router.push(`/auth/setup?email=${encodeURIComponent(data.email)}`);
+          }
+          return;
+        }
+        if (data.error) {
+          setError(data.error);
+        }
       })
       .catch(() => {
         setError("Something went wrong!");

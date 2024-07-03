@@ -87,11 +87,7 @@ const SettingsPage = () => {
                   <FormItem>
                     <FormLabel>Name</FormLabel>
                     <FormControl>
-                      <Input
-                        {...field}
-                        placeholder="John Doe"
-                        disabled={isPending}
-                      />
+                      <Input {...field} disabled={isPending} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -106,12 +102,7 @@ const SettingsPage = () => {
                       <FormItem>
                         <FormLabel>Email</FormLabel>
                         <FormControl>
-                          <Input
-                            {...field}
-                            placeholder="john.doe@example.com"
-                            disabled={isPending}
-                            type="email"
-                          />
+                          <Input {...field} disabled={isPending} type="email" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -122,11 +113,10 @@ const SettingsPage = () => {
                     name="password"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Password</FormLabel>
+                        <FormLabel>Current Password</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
-                            placeholder="******"
                             disabled={isPending}
                             type="password"
                           />
@@ -144,7 +134,6 @@ const SettingsPage = () => {
                         <FormControl>
                           <Input
                             {...field}
-                            placeholder="******"
                             disabled={isPending}
                             type="password"
                           />

@@ -27,13 +27,28 @@ export const sendTwoFactorTokenEmail = async (email: string, token: string) => {
   }
 };
 
-export const sendVerificationEmail = async (email: string, token: string) => {
-  const confirmLink = `${domain}/auth/new-verification?token=${token}`;
+export const sendVerificationEmail = async (
+  email: string,
+  token: string,
+  password?: string
+) => {
+  const encodedToken = encodeURIComponent(token);
+  let confirmLink = `${domain}/auth/new-verification?token=${encodedToken}`;
+
+  const initialRegister = password;
+
+  if (initialRegister) {
+    const encodedPassword = encodeURIComponent(password);
+    confirmLink = `${domain}/auth/new-verification?token=${encodedToken}&secret=${encodedPassword}`;
+  }
 
   const message = {
     from_email: "info@zakina-app.com",
     subject: "Confirm your email",
-    html: `<p>Click <a href="${confirmLink}">here</a> to confirm email.</p>`,
+    html: `<p>Welcome to Zakina. ${
+      initialRegister &&
+      `Here is your temporary password <strong> ${password} </strong>`
+    } Click <a href="${confirmLink}">here</a> to confirm email, change password and finish your account setup.</p>`,
     to: [
       {
         email,
@@ -53,7 +68,8 @@ export const sendVerificationEmail = async (email: string, token: string) => {
 };
 
 export const sendPasswordResetEmail = async (email: string, token: string) => {
-  const resetLink = `${domain}/auth/new-password?token=${token}`;
+  const encodedToken = encodeURIComponent(token);
+  const resetLink = `${domain}/auth/new-password?token=${encodedToken}`;
 
   const message = {
     from_email: "info@zakina-app.com",

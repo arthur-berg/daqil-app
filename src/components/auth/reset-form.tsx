@@ -61,12 +61,7 @@ export const ResetForm = () => {
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input
-                      disabled={isPending}
-                      {...field}
-                      placeholder="john.die@example.com"
-                      type="email"
-                    />
+                    <Input disabled={isPending} {...field} type="email" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

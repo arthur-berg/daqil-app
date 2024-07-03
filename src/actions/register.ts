@@ -9,6 +9,16 @@ import { getUserByEmail } from "@/data/user";
 import { generateVerificationToken } from "@/lib/tokens";
 import { sendVerificationEmail } from "@/lib/mail";
 
+const generatePassword = (length = 12) => {
+  const charset =
+    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+<>?";
+  let password = "";
+  for (let i = 0, n = charset.length; i < length; ++i) {
+    password += charset.charAt(Math.floor(Math.random() * n));
+  }
+  return password;
+};
+
 export const register = async (values: z.infer<typeof RegisterSchema>) => {
   const validatedFields = RegisterSchema.safeParse(values);
 
@@ -16,8 +26,7 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
     return { error: "Invalid fields!" };
   }
 
-  const { email, password, name } = validatedFields.data;
-  const hashedPassword = await bcrypt.hash(password, 10);
+  const { email } = validatedFields.data;
 
   const existingUser = await getUserByEmail(email);
 
@@ -25,14 +34,22 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
     return { error: "Email already in use!" };
   }
 
+  const password = generatePassword();
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
   await User.create({
-    email,
     password: hashedPassword,
-    name,
+    email,
   });
 
   const verificationToken = await generateVerificationToken(email);
-  await sendVerificationEmail(verificationToken.email, verificationToken.token);
+
+  await sendVerificationEmail(
+    verificationToken.email,
+    verificationToken.token,
+    password
+  );
 
   return { success: "Confirmation email sent!" };
 };

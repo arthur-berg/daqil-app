@@ -65,12 +65,7 @@ export const NewPasswordForm = () => {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input
-                      disabled={isPending}
-                      {...field}
-                      placeholder="******"
-                      type="password"
-                    />
+                    <Input disabled={isPending} {...field} type="password" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

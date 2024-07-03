@@ -19,7 +19,6 @@ export const LoginButton = ({
 
   const onClick = () => {
     router.push("/auth/login");
-    console.log("login btn clicked");
   };
 
   if (mode === "modal") {

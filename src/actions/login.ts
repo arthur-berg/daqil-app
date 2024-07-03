@@ -19,7 +19,8 @@ import TwoFactorConfirmation from "@/models/TwoFactorConfirmation";
 
 export const login = async (
   values: z.infer<typeof LoginSchema>,
-  callbackUrl?: string | null
+  callbackUrl?: string | null,
+  verifyAccountSetup?: boolean
 ) => {
   const validatedFields = LoginSchema.safeParse(values);
 
@@ -27,11 +28,22 @@ export const login = async (
     return { error: "Invalid fields!" };
   }
 
-  const { email, password, code } = validatedFields.data;
+  if (verifyAccountSetup) {
+    const { email } = validatedFields.data;
+    const existingUser = await getUserByEmail(email);
+    if (!existingUser) {
+      return { error: "Email does not exist" };
+    }
+    if (!existingUser.isAccountSetupDone) {
+      return { success: true, isAccountSetupDone: false };
+    }
 
+    return { success: true, isAccountSetupDone: true };
+  }
+  const { email, password, code } = validatedFields.data;
   const existingUser = await getUserByEmail(email);
 
-  if (!existingUser || !existingUser.email || !existingUser.password) {
+  if (!existingUser || !existingUser.email) {
     return { error: "Email does not exist!" };
   }
 

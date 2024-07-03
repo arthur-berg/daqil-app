@@ -10,8 +10,8 @@ export default async function ProtectedLayout({
   const session = await auth();
   return (
     <SessionProvider session={session}>
+      <Navbar />
       <div className="h-full w-full flex flex-col gap-y-10 items-center justify-center ">
-        <Navbar />
         {children}
       </div>
     </SessionProvider>

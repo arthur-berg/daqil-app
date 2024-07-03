@@ -26,6 +26,14 @@ const userSchema = new Schema(
       type: String,
       required: false,
     },
+    isAccountSetupDone: {
+      type: Boolean,
+      default: false,
+    },
+    isOnboardingDone: {
+      type: Boolean,
+      default: false,
+    },
     role: {
       type: String,
       enum: ["ADMIN", "USER", "THERAPIST"],

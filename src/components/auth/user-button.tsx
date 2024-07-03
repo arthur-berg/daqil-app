@@ -1,7 +1,7 @@
 "use client";
 
 import { FaUser } from "react-icons/fa";
-import { ExitIcon } from "@radix-ui/react-icons";
+import { ExitIcon, GearIcon } from "@radix-ui/react-icons";
 
 import {
   DropdownMenu,
@@ -29,6 +29,10 @@ export const UserButton = () => {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-40" align="end">
         <LogoutButton>
+          <DropdownMenuItem>
+            <GearIcon className="h-4 w-4 mr-2" />
+            Settings
+          </DropdownMenuItem>
           <DropdownMenuItem>
             <ExitIcon className="h-4 w-4 mr-2" />
             Logout
