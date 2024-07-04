@@ -20,6 +20,11 @@ const userSchema = new Schema(
       type: String,
       required: false,
     },
+    credits: {
+      type: Number,
+      default: 0,
+      required: false,
+    },
     stripeCustomerId: {
       type: String,
       required: false,

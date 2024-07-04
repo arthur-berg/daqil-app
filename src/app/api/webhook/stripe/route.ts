@@ -19,6 +19,10 @@ type StripeEventData = {
   [key: string]: any;
 };
 
+interface ExpandedSubscription extends Stripe.Subscription {
+  plan: Stripe.Plan;
+}
+
 export async function POST(req: Request): Promise<NextResponse> {
   await connectToMongoDB();
   const body = await req.text();
@@ -89,22 +93,45 @@ export async function POST(req: Request): Promise<NextResponse> {
       }
 
       const priceId = session.line_items?.data[0]?.price?.id;
-      const user = await User.findOne({ email: customer?.email });
+      let user = await User.findOne({ email: customer?.email });
 
       if (!user) {
-        await User.create({
+        user = await User.create({
           email: customer?.email,
           name: customer?.name,
           stripeCustomerId: customerId,
+          credits: 0,
         });
+      }
+
+      // Update credits based on subscription plan or one-time payment
+      let creditsToAdd = 0;
+      if (session.mode === "subscription") {
+        const subscription = (await stripe.subscriptions.retrieve(
+          session.subscription as string,
+          {
+            expand: ["plan"],
+          }
+        )) as unknown as ExpandedSubscription;
+        const interval = subscription.plan.interval;
+        if (interval === "week") {
+          creditsToAdd = 1;
+        } else if (interval === "month") {
+          creditsToAdd = 4;
+        }
+      } else if (session.mode === "payment") {
+        creditsToAdd = 1;
       }
 
       await User.updateOne(
         { email: customer?.email },
         {
-          priceId,
-          hasAccess: true,
-          stripeCustomerId: customerId,
+          $set: {
+            priceId,
+            hasAccess: true,
+            stripeCustomerId: customerId,
+          },
+          $inc: { credits: creditsToAdd },
         }
       );
 
@@ -132,7 +159,7 @@ export async function POST(req: Request): Promise<NextResponse> {
     // customer.subscription.updated
     //
     // invoice.payment_failed
-    // If you want to terminate subscription immeditaly after payment failed, otherwise by default it waits until end of billing cycle
+    // If you want to terminate subscription immediately after payment failed, otherwise by default it waits until end of billing cycle
     //
     // invoice.paid
     // if you are using the invoice.payment_failed event to revoke access, you can use this event to grant access back
