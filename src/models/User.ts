@@ -12,6 +12,18 @@ const userSchema = new Schema(
       type: String,
       required: false,
     },
+    hasAccess: {
+      type: Boolean,
+      default: false,
+    },
+    priceId: {
+      type: String,
+      required: false,
+    },
+    stripeCustomerId: {
+      type: String,
+      required: false,
+    },
     email: {
       type: String,
       unique: true,

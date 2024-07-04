@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 // Stripe Plans >> fill in your own priceId & link
 export const plans = [
   {
+    id: "weekly",
     link:
       process.env.NODE_ENV === "development"
         ? "https://buy.stripe.com/test_5kA3fhgIK5cw46s28a"
@@ -16,10 +17,12 @@ export const plans = [
       process.env.NODE_ENV === "development"
         ? "price_1PYoTtRtOqDuJSqudHYIZshR"
         : "",
-    price: 59,
+    price: 69,
+
     duration: "/week",
   },
   {
+    id: "monthly",
     link:
       process.env.NODE_ENV === "development"
         ? "https://buy.stripe.com/test_8wM1792RU7kE0Ug6op"
@@ -28,9 +31,22 @@ export const plans = [
       process.env.NODE_ENV === "development"
         ? "price_1PYoWhRtOqDuJSqu0pbz4nN6"
         : "",
-
     price: 236,
+
     duration: "/month",
+  },
+  {
+    id: "one-time",
+    link:
+      process.env.NODE_ENV === "development"
+        ? "https://buy.stripe.com/test_dR67vx0JM34ocCY6or"
+        : "",
+    priceId:
+      process.env.NODE_ENV === "development"
+        ? "price_1PYtKPRtOqDuJSquZtgseaJR"
+        : "",
+    price: 79,
+    duration: "/session",
   },
 ];
 
@@ -51,31 +67,43 @@ const PricingForm = () => {
         <CardContent>
           <div className="relative flex justify-center flex-col lg:flex-row items-center lg:items-stretch gap-8">
             <div className=" w-full max-w-lg">
-              <div className="relative flex flex-col h-full gap-5 lg:gap-8 z-10 bg-base-100 p-8 rounded-xl">
-                <div className="flex justify-between items-center">
+              <div className="relative flex flex-col h-full gap-5 lg:gap-8 z-10 bg-base-100 p-8 rounded-xl  ">
+                <div className="flex justify-between items-center flex-wrap">
                   <div
-                    className="flex items-center gap-2"
+                    className="flex items-center gap-2 "
                     onClick={() => setPlan(plans[0])}
                   >
                     <input
                       type="radio"
                       name="weekly"
                       className="radio"
-                      checked={plan.price === 59}
+                      checked={plan.id === "weekly"}
                     />
                     <span>Pay weekly</span>
                   </div>
                   <div
-                    className="flex items-center gap-2"
+                    className="flex items-center gap-2 "
                     onClick={() => setPlan(plans[1])}
                   >
                     <input
                       type="radio"
                       name="monthly"
                       className="radio"
-                      checked={plan.price === 236}
+                      checked={plan.id === "monthly"}
                     />
                     <span>Pay monthly (Save $40 per month 💰)</span>
+                  </div>
+                  <div
+                    className="flex items-center gap-2 "
+                    onClick={() => setPlan(plans[2])}
+                  >
+                    <input
+                      type="radio"
+                      name="one-time"
+                      className="radio"
+                      checked={plan.id === "one-time"}
+                    />
+                    <span>Buy a single session</span>
                   </div>
                 </div>
 
@@ -127,7 +155,9 @@ const PricingForm = () => {
                         plan.link + "?prefilled_email=" + session?.user?.email
                       }
                     >
-                      Subscribe
+                      {plan.id === "one-time"
+                        ? "Buy single session"
+                        : "Subscribe"}
                     </a>
                   </Button>
                 </div>
