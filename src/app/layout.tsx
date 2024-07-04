@@ -12,14 +12,17 @@ export const metadata: Metadata = {
   description: "Zakina app",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  connectToMongoDB()
-    .then(() => console.log("Connected to MongoDB"))
-    .catch((error) => console.error(error));
+  try {
+    await connectToMongoDB();
+    console.log("Mongo connected");
+  } catch {
+    console.log("Mongo connection failed");
+  }
 
   return (
     <html lang="en">
