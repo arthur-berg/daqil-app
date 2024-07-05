@@ -7,7 +7,7 @@ import { CardWrapper } from "@/components/auth/card-wrapper";
 import { newVerification } from "@/actions/new-verification";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/navigation";
 
 export const NewVerificationForm = () => {
   const [error, setError] = useState<string | undefined>();

@@ -10,6 +10,7 @@ import { login } from "@/actions/login";
 import { getVerificationTokenByToken } from "@/data/verification-token";
 import VerificationToken from "@/models/VerificationToken";
 import { addUserNameToSubscriberProfile } from "@/lib/mail";
+import { getLocale } from "next-intl/server";
 
 const verifyPasswordAndLogin = async ({
   existingUser,
@@ -19,6 +20,7 @@ const verifyPasswordAndLogin = async ({
   lastName,
   email,
   password,
+  locale,
 }: {
   existingUser: any;
   currentPassword?: string;
@@ -27,6 +29,7 @@ const verifyPasswordAndLogin = async ({
   lastName: string;
   email: string;
   password: string;
+  locale: string;
 }) => {
   if (!currentPassword) {
     return {
@@ -49,13 +52,14 @@ const verifyPasswordAndLogin = async ({
     lastName,
   });
 
-  await login({ email, password });
+  await login({ email, password }, locale);
 
   return { success: "Account successfully setup" };
 };
 
 export const setupAccount = async (
   values: z.infer<typeof SetupAccountSchema>,
+  locale: string,
   token?: string | null
 ) => {
   const validatedFields = SetupAccountSchema.safeParse(values);
@@ -83,6 +87,7 @@ export const setupAccount = async (
       lastName,
       email,
       password,
+      locale,
     });
   }
 
@@ -97,6 +102,7 @@ export const setupAccount = async (
       lastName,
       email,
       password,
+      locale,
     });
   }
 
@@ -111,7 +117,7 @@ export const setupAccount = async (
 
   await addUserNameToSubscriberProfile(email, firstName, lastName);
 
-  await login({ email, password });
+  await login({ email, password }, locale);
 
   return { success: "Account succesfully setup" };
 };

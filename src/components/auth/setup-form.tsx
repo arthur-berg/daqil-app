@@ -25,6 +25,7 @@ import { FormSuccess } from "@/components/form-success";
 import { useSearchParams } from "next/navigation";
 import { setupAccount } from "@/actions/setup-account";
 import { login } from "@/actions/login";
+import { useLocale } from "next-intl";
 
 export const SetupForm = () => {
   const [error, setError] = useState<string | undefined>("");
@@ -32,6 +33,7 @@ export const SetupForm = () => {
   const [currentPasswordRequired, setCurrentPasswordRequired] = useState(false);
   const [isPending, startTransition] = useTransition();
   const searchParams = useSearchParams();
+  const locale = useLocale();
 
   const email = searchParams.get("email");
   const token = searchParams.get("token");
@@ -51,10 +53,10 @@ export const SetupForm = () => {
     setError("");
     setSuccess("");
     startTransition(async () => {
-      const data = await setupAccount(values, token);
+      const data = await setupAccount(values, locale, token);
       if ("success" in data && data.success) {
         setSuccess(data?.success);
-        await login({ email: values.email, password: values.password });
+        await login({ email: values.email, password: values.password }, locale);
       }
       if ("error" in data && data.error) {
         setError(data.error);

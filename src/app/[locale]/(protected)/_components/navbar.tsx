@@ -1,8 +1,8 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname } from "@/navigation";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import { Link } from "@/navigation";
 import { UserButton } from "@/components/auth/user-button";
 
 export const Navbar = () => {

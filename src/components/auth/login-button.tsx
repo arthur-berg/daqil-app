@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/navigation";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { LoginForm } from "@/components/auth/login-form";
 
@@ -8,6 +8,7 @@ type LoginButtonProps = {
   children: React.ReactNode;
   mode?: "modal" | "redirect";
   asChild?: boolean;
+  locale?: string;
 };
 
 export const LoginButton = ({

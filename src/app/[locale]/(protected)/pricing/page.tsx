@@ -1,5 +1,5 @@
-import PricingForm from "@/app/(protected)/pricing/pricing-form";
 import CustomerPortalButton from "./customer-portal-button";
+import PricingForm from "./pricing-form";
 
 const PricingPage = () => {
   return (

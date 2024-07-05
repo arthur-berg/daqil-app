@@ -19,6 +19,7 @@ import TwoFactorConfirmation from "@/models/TwoFactorConfirmation";
 
 export const login = async (
   values: z.infer<typeof LoginSchema>,
+  locale: string,
   callbackUrl?: string | null,
   verifyAccountSetup?: boolean
 ) => {
@@ -98,11 +99,16 @@ export const login = async (
     }
   }
 
+  console.log(
+    " `${locale}${DEFAULT_LOGIN_REDIRECT}`",
+    `${locale}${DEFAULT_LOGIN_REDIRECT}`
+  );
+
   try {
     await signIn("credentials", {
       email,
       password,
-      redirectTo: callbackUrl || DEFAULT_LOGIN_REDIRECT,
+      redirectTo: callbackUrl || `/${locale}${DEFAULT_LOGIN_REDIRECT}`,
     });
   } catch (error) {
     if (error instanceof AuthError) {

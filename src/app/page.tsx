@@ -1,30 +1,6 @@
-import { LoginButton } from "@/components/auth/login-button";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import { redirect } from "next/navigation";
 
-export default function Home() {
-  return (
-    <main className="flex h-full flex-col items-center justify-center ">
-      <div className="space-y-6 text-center">
-        <h1 className="text-6xl font-semibold text-white drop-shadow-md">
-          Zakina
-        </h1>
-        <h2 className="font-semibold text-white drop-shadow-md text-2xl">
-          Get started
-        </h2>
-        <div className="flex space-x-4">
-          <LoginButton>
-            <Button variant="secondary" size="lg">
-              Log in
-            </Button>
-          </LoginButton>
-          <Link href="/auth/register">
-            <Button variant="secondary" size="lg">
-              Sign up
-            </Button>
-          </Link>
-        </div>
-      </div>
-    </main>
-  );
+// This page only renders when the app is built statically (output: 'export')
+export default function RootPage() {
+  redirect("/en");
 }

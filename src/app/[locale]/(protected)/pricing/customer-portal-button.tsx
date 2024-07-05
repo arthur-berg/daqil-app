@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { signIn } from "next-auth/react";
-import Link from "next/link";
+import { Link } from "@/navigation";
 
 // Customer portal link
 const customerPortalLink =

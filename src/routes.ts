@@ -4,7 +4,11 @@
  * @type {string[]}
  */
 
-export const publicRoutes = ["/auth/new-verification", "/api/webhook/stripe"];
+export const publicRoutes = [
+  "/auth/new-verification",
+  "/api/webhook/stripe",
+  "/",
+];
 
 /**
  * An array of routes that are used for authentication.
@@ -13,7 +17,6 @@ export const publicRoutes = ["/auth/new-verification", "/api/webhook/stripe"];
  */
 
 export const authRoutes = [
-  "/",
   "/auth/login",
   "/auth/register",
   "/auth/error",

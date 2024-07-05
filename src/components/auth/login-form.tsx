@@ -23,9 +23,9 @@ import { Button } from "@/components/ui/button";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 import { login } from "@/actions/login";
-import { useRouter } from "next/navigation";
 
-import Link from "next/link";
+import { Link, useRouter } from "@/navigation";
+import { useLocale } from "next-intl";
 
 export const LoginForm = () => {
   const searchParams = useSearchParams();
@@ -41,6 +41,7 @@ export const LoginForm = () => {
   const [emailVerified, setEmailIsVerified] = useState(false);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
+  const locale = useLocale();
 
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
@@ -55,7 +56,7 @@ export const LoginForm = () => {
     startTransition(async () => {
       try {
         if (!emailVerified) {
-          const data = await login(values, callbackUrl, true);
+          const data = await login(values, locale, callbackUrl, true);
           if (data?.success) {
             if (data.isAccountSetupDone) {
               setEmailIsVerified(true);
@@ -68,7 +69,7 @@ export const LoginForm = () => {
           }
           return;
         }
-        const data = await login(values, callbackUrl);
+        const data = await login(values, locale, callbackUrl);
         if (data?.error) {
           setError(data.error);
         }
