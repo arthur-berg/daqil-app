@@ -4,6 +4,7 @@ import { usePathname } from "@/navigation";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/navigation";
 import { UserButton } from "@/components/auth/user-button";
+import LanguageSwitcher from "./language-switcher";
 
 export const Navbar = () => {
   const pathname = usePathname();
@@ -31,6 +32,7 @@ export const Navbar = () => {
         >
           <Link href="/settings">Settings</Link>
         </Button> */}
+        <LanguageSwitcher />
       </div>
       <UserButton />
     </nav>

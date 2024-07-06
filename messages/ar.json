@@ -1,0 +1,21 @@
+{
+  "ProfileAvatarDropdown": {
+    "payment": "الاشتراك والرصيد",
+    "settings": "الإعدادات",
+    "logout": "تسجيل الخروج"
+  },
+  "SettingsPage": {
+    "firstNameLabel": "الاسم الأول",
+    "lastNameLabel": "اسم العائلة",
+    "emailLabel": "البريد الإلكتروني",
+    "currentPasswordLabel": "كلمة المرور الحالية",
+    "newPasswordLabel": "كلمة المرور الجديدة",
+    "roleLabel": "الدور",
+    "twoFactorAuthLabel": "المصادقة الثنائية",
+    "twoFactorText": "تمكين المصادقة الثنائية لحسابك",
+    "saveBtn": "حفظ"
+  },
+  "PricingPage": {
+    "heading": "اختر بين الاشتراكات أو شراء جلسة واحدة"
+  }
+}

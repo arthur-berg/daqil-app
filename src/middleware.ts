@@ -26,6 +26,7 @@ const authMiddleware = auth((req) => {
   const locale = (
     locales.includes(pathnameParts[1] as any) ? pathnameParts[1] : "en"
   ) as (typeof locales)[number];
+  console.log("locale", locale);
   const pathWithoutLocale = locales.includes(pathnameParts[1] as any)
     ? `/${pathnameParts.slice(2).join("/")}`
     : nextUrl.pathname;

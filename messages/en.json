@@ -1,5 +1,21 @@
 {
-    "Index": {
-      "title": "Hello world!"
-    }
+  "ProfileAvatarDropdown": {
+    "payment": "Subscription & Credits",
+    "settings": "Settings",
+    "logout": "Logout"
+  },
+  "SettingsPage": {
+    "firstNameLabel": "First Name",
+    "lastNameLabel": "Last Name",
+    "emailLabel": "Email",
+    "currentPasswordLabel": "Current Password",
+    "newPasswordLabel": "New Password",
+    "roleLabel": "Role",
+    "twoFactorAuthLabel": "Two Factor Authentication",
+    "twoFactorText": "Enable two factor authentication for your account",
+    "saveBtn": "Save"
+  },
+  "PricingPage": {
+    "heading": "Choose between subscriptions or buy a single session"
   }
+}

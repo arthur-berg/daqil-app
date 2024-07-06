@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { DM_Sans } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
+import { getLangDir } from "rtl-detect";
 import "@/app/globals.css";
 
 import connectToMongoDB from "@/lib/mongoose";
@@ -12,7 +13,7 @@ export const metadata: Metadata = {
   description: "Zakina app",
 };
 
-export default async function RootLayout({
+export default async function LocaleLayout({
   children,
   params: { locale },
 }: Readonly<{
@@ -26,8 +27,10 @@ export default async function RootLayout({
     console.log("Mongo connection failed");
   }
 
+  const direction = getLangDir(locale);
+
   return (
-    <html lang={locale}>
+    <html lang={locale} dir={direction}>
       <body className={dmSans.className}>
         <Toaster />
         {children}
