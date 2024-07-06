@@ -40,10 +40,10 @@ const authMiddleware = auth((req) => {
   if (isAuthRoute) {
     if (isLoggedIn) {
       return Response.redirect(
-        new URL(`/${locale}${DEFAULT_LOGIN_REDIRECT}`, nextUrl)
+        new URL(`/${locale}/${DEFAULT_LOGIN_REDIRECT}`, nextUrl)
       );
     }
-    return;
+    return intlMiddleware(req);
   }
 
   if (!isLoggedIn && !isPublicRoute) {
@@ -76,7 +76,7 @@ const authMiddleware = auth((req) => {
     return intlMiddleware(req); // Apply internationalization for logged-in users
   }
 
-  return;
+  return intlMiddleware(req);
 });
 
 export default function middleware(req: NextRequest) {

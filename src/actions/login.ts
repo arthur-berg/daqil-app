@@ -35,6 +35,20 @@ export const login = async (
     if (!existingUser) {
       return { error: "Email does not exist" };
     }
+    if (!existingUser.emailVerified) {
+      const verificationToken = await generateVerificationToken(
+        existingUser.email
+      );
+      await sendVerificationEmail(
+        verificationToken.email,
+        verificationToken.token
+      );
+
+      return {
+        success: verificationToken.email,
+        verificationEmailSent: true,
+      };
+    }
     if (!existingUser.isAccountSetupDone) {
       return { success: true, isAccountSetupDone: false };
     }
@@ -57,7 +71,10 @@ export const login = async (
       verificationToken.token
     );
 
-    return { success: "Confirmation email sent!" };
+    return {
+      success: verificationToken.email,
+      verificationEmailSent: true,
+    };
   }
 
   if (existingUser.isTwoFactorEnabled && existingUser.email) {
@@ -99,16 +116,11 @@ export const login = async (
     }
   }
 
-  console.log(
-    " `${locale}${DEFAULT_LOGIN_REDIRECT}`",
-    `${locale}${DEFAULT_LOGIN_REDIRECT}`
-  );
-
   try {
     await signIn("credentials", {
       email,
       password,
-      redirectTo: callbackUrl || `/${locale}${DEFAULT_LOGIN_REDIRECT}`,
+      redirectTo: callbackUrl || `/${locale}/${DEFAULT_LOGIN_REDIRECT}`,
     });
   } catch (error) {
     if (error instanceof AuthError) {

@@ -37,8 +37,11 @@ export const LoginForm = () => {
 
   const [showTwoFactor, setShowTwoFactor] = useState(false);
   const [error, setError] = useState<string | undefined>("");
-  const [success, setSuccess] = useState<string | undefined>("");
-  const [emailVerified, setEmailIsVerified] = useState(false);
+  const [success, setSuccess] = useState<string | undefined>();
+  const [verificationEmailSent, setVerificationEmailSent] = useState<
+    null | boolean
+  >(null);
+  const [emailCheckDone, setEmailCheckDone] = useState(false);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
   const locale = useLocale();
@@ -55,21 +58,31 @@ export const LoginForm = () => {
     setSuccess("");
     startTransition(async () => {
       try {
-        if (!emailVerified) {
+        if (!emailCheckDone) {
           const data = await login(values, locale, callbackUrl, true);
           if (data?.success) {
             if (data.isAccountSetupDone) {
-              setEmailIsVerified(true);
+              setEmailCheckDone(true);
               return;
             }
-            router.push(`/auth/setup?email=${values.email}`);
+
+            if (data?.verificationEmailSent) {
+              setSuccess(data.success);
+              setVerificationEmailSent(true);
+              return;
+            }
+            if (!data?.verificationEmailSent) {
+              router.push(`/auth/setup?email=${values.email}`);
+            }
           }
           if (data?.error) {
-            setEmailIsVerified(false);
+            setEmailCheckDone(false);
           }
           return;
         }
+
         const data = await login(values, locale, callbackUrl);
+
         if (data?.error) {
           setError(data.error);
         }
@@ -94,107 +107,117 @@ export const LoginForm = () => {
       backButtonHref="/auth/register"
       showSocial
     >
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <div className="space-y-4">
-            {showTwoFactor && (
-              <FormField
-                control={form.control}
-                name="code"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Two Factor Code</FormLabel>
-                    <FormControl>
-                      <Input disabled={isPending} {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            )}
-            {!showTwoFactor && !emailVerified && (
-              <>
+      {verificationEmailSent && success ? (
+        <div className="bg-success/15 p-3 rounded-md text-lg text-success text-center">
+          <p>
+            Confirmation email sent to{" "}
+            <div className="font-bold text-2xl">{success}</div> Please verify
+            your email!
+          </p>
+        </div>
+      ) : (
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <div className="space-y-4">
+              {showTwoFactor && (
                 <FormField
                   control={form.control}
-                  name="email"
+                  name="code"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Email</FormLabel>
+                      <FormLabel>Two Factor Code</FormLabel>
                       <FormControl>
-                        <Input
-                          inputSize="lg"
-                          disabled={isPending}
-                          {...field}
-                          type="email"
-                        />
+                        <Input disabled={isPending} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-              </>
-            )}
-            {!showTwoFactor && emailVerified && (
-              <>
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
-                      <FormControl>
-                        <Input
-                          inputSize="lg"
-                          disabled={isPending}
-                          {...field}
-                          type="email"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Password</FormLabel>
-                      <FormControl>
-                        <Input
-                          inputSize="lg"
-                          disabled={isPending}
-                          {...field}
-                          type="password"
-                        />
-                      </FormControl>
+              )}
+              {!showTwoFactor && !emailCheckDone && (
+                <>
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Email</FormLabel>
+                        <FormControl>
+                          <Input
+                            inputSize="lg"
+                            disabled={isPending}
+                            {...field}
+                            type="email"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </>
+              )}
+              {!showTwoFactor && emailCheckDone && (
+                <>
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Email</FormLabel>
+                        <FormControl>
+                          <Input
+                            inputSize="lg"
+                            disabled={isPending}
+                            {...field}
+                            type="email"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="password"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Password</FormLabel>
+                        <FormControl>
+                          <Input
+                            inputSize="lg"
+                            disabled={isPending}
+                            {...field}
+                            type="password"
+                          />
+                        </FormControl>
 
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </>
-            )}
-            <Button
-              size="sm"
-              variant="link"
-              asChild
-              className="px-0 font-normal text-xs"
-            >
-              <Link href="/auth/reset">Forgot password?</Link>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </>
+              )}
+              <Button
+                size="sm"
+                variant="link"
+                asChild
+                className="px-0 font-normal text-xs"
+              >
+                <Link href="/auth/reset">Forgot password?</Link>
+              </Button>
+            </div>
+            <FormError message={error || urlError} />
+            <FormSuccess message={success} />
+            <Button type="submit" className="w-full" disabled={isPending}>
+              {showTwoFactor
+                ? "Confirm"
+                : !showTwoFactor && !emailCheckDone
+                ? "Continue"
+                : "Login"}
             </Button>
-          </div>
-          <FormError message={error || urlError} />
-          <FormSuccess message={success} />
-          <Button type="submit" className="w-full" disabled={isPending}>
-            {showTwoFactor
-              ? "Confirm"
-              : !showTwoFactor && !emailVerified
-              ? "Continue"
-              : "Login"}
-          </Button>
-        </form>
-      </Form>
+          </form>
+        </Form>
+      )}
     </CardWrapper>
   );
 };

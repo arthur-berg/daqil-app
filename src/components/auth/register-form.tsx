@@ -48,40 +48,52 @@ export const RegisterForm = () => {
 
   return (
     <CardWrapper
-      headerLabel="Create an account"
+      headerLabel={!success ? "Create an account" : ""}
       backButtonLabel="Already have an account?"
       backButtonHref="/auth/login"
       showSocial
     >
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <div className="space-y-4">
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input
-                      inputSize="lg"
-                      disabled={isPending}
-                      {...field}
-                      type="email"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-          <FormError message={error} />
-          <FormSuccess message={success} />
-          <Button type="submit" className="w-full" disabled={isPending}>
-            Create an account
-          </Button>
-        </form>
-      </Form>
+      {!success && (
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <div className="space-y-4">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input
+                        inputSize="lg"
+                        disabled={isPending}
+                        {...field}
+                        type="email"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <FormError message={error} />
+
+            <Button type="submit" className="w-full" disabled={isPending}>
+              Create an account
+            </Button>
+          </form>
+        </Form>
+      )}
+
+      {success && (
+        <div className="bg-success/15 p-3 rounded-md text-lg text-success text-center">
+          <p>
+            Confirmation email sent to{" "}
+            <div className="font-bold text-2xl">{success}</div> Please verify
+            your email!
+          </p>
+        </div>
+      )}
     </CardWrapper>
   );
 };

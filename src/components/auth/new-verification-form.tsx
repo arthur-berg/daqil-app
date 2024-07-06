@@ -28,7 +28,6 @@ export const NewVerificationForm = () => {
       .then(async (data) => {
         if (data.success) {
           setSuccess(data.success);
-
           router.push(
             `/auth/setup?email=${encodeURIComponent(
               data.email
