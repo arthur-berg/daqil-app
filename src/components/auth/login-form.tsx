@@ -41,7 +41,7 @@ export const LoginForm = () => {
   const [verificationEmailSent, setVerificationEmailSent] = useState<
     null | boolean
   >(null);
-  const [emailCheckDone, setEmailCheckDone] = useState(false);
+  /*   const [emailCheckDone, setEmailCheckDone] = useState(false); */
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
   const locale = useLocale();
@@ -58,29 +58,6 @@ export const LoginForm = () => {
     setSuccess("");
     startTransition(async () => {
       try {
-        if (!emailCheckDone) {
-          const data = await login(values, locale, callbackUrl, true);
-          if (data?.success) {
-            if (data.isAccountSetupDone) {
-              setEmailCheckDone(true);
-              return;
-            }
-
-            if (data?.verificationEmailSent) {
-              setSuccess(data.success);
-              setVerificationEmailSent(true);
-              return;
-            }
-            if (!data?.verificationEmailSent) {
-              router.push(`/auth/setup?email=${values.email}`);
-            }
-          }
-          if (data?.error) {
-            setEmailCheckDone(false);
-          }
-          return;
-        }
-
         const data = await login(values, locale, callbackUrl);
 
         if (data?.error) {
@@ -88,9 +65,13 @@ export const LoginForm = () => {
         }
 
         if (data?.success) {
-          form.reset();
           setSuccess(data.success as string);
+          if (data?.verificationEmailSent) {
+            setVerificationEmailSent(true);
+          }
+          form.reset();
         }
+
         if (data?.twoFactor) {
           setShowTwoFactor(true);
         }
@@ -109,11 +90,7 @@ export const LoginForm = () => {
     >
       {verificationEmailSent && success ? (
         <div className="bg-success/15 p-3 rounded-md text-lg text-success text-center">
-          <p>
-            Confirmation email sent to{" "}
-            <div className="font-bold text-2xl">{success}</div> Please verify
-            your email!
-          </p>
+          <p>{success}</p>
         </div>
       ) : (
         <Form {...form}>
@@ -134,29 +111,7 @@ export const LoginForm = () => {
                   )}
                 />
               )}
-              {!showTwoFactor && !emailCheckDone && (
-                <>
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Email</FormLabel>
-                        <FormControl>
-                          <Input
-                            inputSize="lg"
-                            disabled={isPending}
-                            {...field}
-                            type="email"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </>
-              )}
-              {!showTwoFactor && emailCheckDone && (
+              {!showTwoFactor && (
                 <>
                   <FormField
                     control={form.control}
@@ -209,11 +164,7 @@ export const LoginForm = () => {
             <FormError message={error || urlError} />
             <FormSuccess message={success} />
             <Button type="submit" className="w-full" disabled={isPending}>
-              {showTwoFactor
-                ? "Confirm"
-                : !showTwoFactor && !emailCheckDone
-                ? "Continue"
-                : "Login"}
+              {showTwoFactor ? "Confirm" : "Login"}
             </Button>
           </form>
         </Form>

@@ -15,7 +15,7 @@ import { NextRequest } from "next/server";
 
 const intlMiddleware = createMiddleware({
   locales,
-  defaultLocale: "en",
+  defaultLocale: "ar",
 });
 
 const authMiddleware = auth((req) => {
@@ -24,9 +24,9 @@ const authMiddleware = auth((req) => {
 
   const pathnameParts = nextUrl.pathname.split("/");
   const locale = (
-    locales.includes(pathnameParts[1] as any) ? pathnameParts[1] : "en"
+    locales.includes(pathnameParts[1] as any) ? pathnameParts[1] : "ar"
   ) as (typeof locales)[number];
-  console.log("locale", locale);
+
   const pathWithoutLocale = locales.includes(pathnameParts[1] as any)
     ? `/${pathnameParts.slice(2).join("/")}`
     : nextUrl.pathname;

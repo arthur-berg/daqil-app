@@ -31,7 +31,10 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
   const existingUser = await getUserByEmail(email);
 
   if (existingUser) {
-    return { error: "Email already in use!" };
+    return {
+      error:
+        "Please check your input. If you believe you already have an account, please try logging in or use the password recovery option.",
+    };
   }
 
   const password = generatePassword();
@@ -54,6 +57,7 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
   await addUserToSubscriberList(verificationToken.email);
 
   return {
-    success: verificationToken.email,
+    success:
+      "A link to activate your account has been emailed to the address provided",
   };
 };

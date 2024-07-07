@@ -87,11 +87,7 @@ export const RegisterForm = () => {
 
       {success && (
         <div className="bg-success/15 p-3 rounded-md text-lg text-success text-center">
-          <p>
-            Confirmation email sent to{" "}
-            <div className="font-bold text-2xl">{success}</div> Please verify
-            your email!
-          </p>
+          <p>{success}</p>
         </div>
       )}
     </CardWrapper>

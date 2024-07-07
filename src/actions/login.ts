@@ -29,7 +29,7 @@ export const login = async (
     return { error: "Invalid fields!" };
   }
 
-  if (verifyAccountSetup) {
+  /* if (verifyAccountSetup) {
     const { email } = validatedFields.data;
     const existingUser = await getUserByEmail(email);
     if (!existingUser) {
@@ -54,7 +54,8 @@ export const login = async (
     }
 
     return { success: true, isAccountSetupDone: true };
-  }
+  } */
+
   const { email, password, code } = validatedFields.data;
   const existingUser = await getUserByEmail(email);
 
@@ -72,7 +73,8 @@ export const login = async (
     );
 
     return {
-      success: verificationToken.email,
+      success:
+        "A link to activate your account has been emailed to the address provided",
       verificationEmailSent: true,
     };
   }
