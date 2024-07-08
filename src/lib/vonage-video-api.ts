@@ -1,5 +1,4 @@
-/* import OpenTok from "opentok"; */
-const apiKey = process.env.VONAGE_API_KEY;
+/* const apiKey = process.env.VONAGE_API_KEY;
 const apiSecret = process.env.VONAGE_API_SECRET;
 const appId = process.env.VONAGE_APP_ID;
 const privateKeyPath = process.env.VONAGE_PRIVATE_KEY_PATH;
@@ -30,12 +29,7 @@ const createSessionandToken = async () => {
     const session = await videoClient.createSession({
       mediaMode: "relayed" as any,
     });
-    /*   const options = {
-      role: "moderator",
-      expireTime: new Date().getTime() / 1000 + 7 * 24 * 60 * 60,
-      data: "name=Johnny",
-      initialLayoutClassList: ["focus"],
-    }; */
+    
     const token = videoClient.generateClientToken(session.sessionId);
 
     return {
@@ -57,7 +51,7 @@ export const getCredentials = async () => {
   sessionId = data?.sessionId;
   const token = data?.token;
   return { sessionId: sessionId, token: token, appId: appId };
-};
+}; */
 
 /* export const listArchives = async (sessionId) => {
   return new Promise((resolve, reject) => {

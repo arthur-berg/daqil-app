@@ -33,7 +33,9 @@ export const authRoutes = [
 
 export const apiAuthPrefix = "/api/auth";
 
-export const apiVideoPrefix = "/api/video";
+export const apiVideoPrefix = "/api/video/:room";
+
+export const apiMeetingPrefix = "/api/meeting";
 
 /**
  * The default redirect path after logging in.
