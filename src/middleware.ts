@@ -10,6 +10,7 @@ import {
   publicRoutes,
   apiAuthPrefix,
   authRoutes,
+  apiVideoPrefix,
 } from "@/routes";
 import { NextRequest } from "next/server";
 
@@ -32,10 +33,11 @@ const authMiddleware = auth((req) => {
     : nextUrl.pathname;
 
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
+  const isApiVideoRoute = nextUrl.pathname.startsWith(apiVideoPrefix);
   const isPublicRoute = publicRoutes.includes(pathWithoutLocale);
   const isAuthRoute = authRoutes.includes(pathWithoutLocale);
 
-  if (isApiAuthRoute) {
+  if (isApiAuthRoute || isApiVideoRoute) {
     return;
   }
   if (isAuthRoute) {
