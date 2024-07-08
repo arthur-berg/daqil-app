@@ -27,16 +27,10 @@ const LanguageSwitcher = () => {
       <span>
         {selectedLocale === "en" ? (
           <div className="text-md flex items-center flex-row-reverse">
-            <span role="img" aria-label="English Flag" className="text-lg ml-1">
-              🇸🇦
-            </span>
             التبديل إلى العربية
           </div>
         ) : (
           <div className="text-md flex items-center flex-row-reverse">
-            <span role="img" aria-label="English Flag" className="text-lg mr-1">
-              🇬🇧
-            </span>
             <div>Switch to english</div>
           </div>
         )}

@@ -1,31 +1,90 @@
-import OpenTok from "opentok";
+/* import OpenTok from "opentok"; */
 const apiKey = process.env.VONAGE_API_KEY;
 const apiSecret = process.env.VONAGE_API_SECRET;
-if (!apiKey || !apiSecret) {
+const appId = process.env.VONAGE_APP_ID;
+const privateKeyPath = process.env.VONAGE_PRIVATE_KEY_PATH;
+
+if (!apiKey || !apiSecret || !appId || !privateKeyPath) {
   throw new Error(
-    "Missing config values for env params OT_API_KEY and OT_API_SECRET"
+    "Missing config values for env params VONAGE_API_KEY and VONAGE_API_SECRET"
   );
 }
 let sessionId;
 
-const opentok = new OpenTok(apiKey, apiSecret);
+import { Auth } from "@vonage/auth";
+import { Video } from "@vonage/video";
 
-const createSessionandToken = () => {
+const credentials = new Auth({
+  apiKey: apiKey,
+  apiSecret: apiSecret,
+  applicationId: appId,
+  privateKey: privateKeyPath,
+});
+
+const options = {};
+
+const videoClient = new Video(credentials, options);
+
+const createSessionandToken = async () => {
+  try {
+    const session = await videoClient.createSession({
+      mediaMode: "relayed" as any,
+    });
+    /*   const options = {
+      role: "moderator",
+      expireTime: new Date().getTime() / 1000 + 7 * 24 * 60 * 60,
+      data: "name=Johnny",
+      initialLayoutClassList: ["focus"],
+    }; */
+    const token = videoClient.generateClientToken(session.sessionId);
+
+    return {
+      sessionId: session.sessionId,
+      token: token,
+    };
+  } catch (error) {
+    console.error("Error creating session: ", error);
+  }
+};
+
+export const generateToken = (sessionId: string) => {
+  const token = videoClient.generateClientToken(sessionId);
+  return { token: token, appId: appId };
+};
+
+export const getCredentials = async () => {
+  const data = await createSessionandToken();
+  sessionId = data?.sessionId;
+  const token = data?.token;
+  return { sessionId: sessionId, token: token, appId: appId };
+};
+
+/* export const listArchives = async (sessionId) => {
   return new Promise((resolve, reject) => {
-    opentok.createSession({ mediaMode: "routed" }, function (error, session) {
+    const options = { sessionId };
+    opentok.listArchives(options, (error, archives) => {
       if (error) {
         reject(error);
       } else {
-        sessionId = session.sessionId;
-        const token = opentok.generateToken(sessionId);
-        resolve({ sessionId: sessionId, token: token });
-        //console.log("Session ID: " + sessionId);
+        resolve(archives);
       }
     });
   });
+}; */
+
+/* export const initiateArchiving = async (sessionId) => {
+  const archive = await createArchive(sessionId);
+  return archive;
 };
 
-export const createArchive = (session) => {
+export const stopArchiving = async (archiveId) => {
+  console.log(archiveId);
+  const response = await stopArchive(archiveId);
+  return response;
+};
+ */
+
+/* export const createArchive = (session) => {
   return new Promise((resolve, reject) => {
     opentok.startArchive(
       session,
@@ -51,39 +110,4 @@ export const stopArchive = (archive) => {
       }
     });
   });
-};
-
-export const generateToken = (sessionId) => {
-  const token = opentok.generateToken(sessionId);
-  return { token: token, apiKey: apiKey };
-};
-
-export const initiateArchiving = async (sessionId) => {
-  const archive = await createArchive(sessionId);
-  return archive;
-};
-
-export const stopArchiving = async (archiveId) => {
-  console.log(archiveId);
-  const response = await stopArchive(archiveId);
-  return response;
-};
-
-export const getCredentials = async (session = null) => {
-  const data = await createSessionandToken(session);
-  sessionId = data.sessionId;
-  const token = data.token;
-  return { sessionId: sessionId, token: token, apiKey: apiKey };
-};
-export const listArchives = async (sessionId) => {
-  return new Promise((resolve, reject) => {
-    const options = { sessionId };
-    opentok.listArchives(options, (error, archives) => {
-      if (error) {
-        reject(error);
-      } else {
-        resolve(archives);
-      }
-    });
-  });
-};
+}; */
