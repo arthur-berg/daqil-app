@@ -59,6 +59,7 @@ export const createMeeting = async () => {
     }
 
     const data = await response.json();
+
     revalidatePath("/meetings");
 
     return data;
