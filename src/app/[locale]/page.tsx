@@ -1,30 +1,36 @@
 import { LoginButton } from "@/components/auth/login-button";
+import LanguageSwitcher from "@/components/language-switcher";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/navigation";
-import { NextIntlClientProvider } from "next-intl";
+import { getTranslations } from "next-intl/server";
 
-export default function Home() {
+export default async function Home() {
+  const t = await getTranslations("HomePage");
+
   return (
-    <main className="flex h-full flex-col items-center justify-center ">
+    <main className="flex h-full flex-col items-center justify-center">
       <div className="space-y-6 text-center">
         <h1 className="text-6xl font-semibold text-white drop-shadow-md">
-          Zakina
+          {t("companyName")}
         </h1>
         <h2 className="font-semibold text-white drop-shadow-md text-2xl">
-          Get started
+          {t("getStarted")}
         </h2>
-        <div className="flex space-x-4">
+        <div className="flex rtl:space-x-reverse space-x-4">
           <LoginButton>
             <Button variant="secondary" size="lg">
-              Log in
+              {t("login")}
             </Button>
           </LoginButton>
           <Link href="/auth/register">
             <Button variant="secondary" size="lg">
-              Sign up
+              {t("signUp")}
             </Button>
           </Link>
         </div>
+      </div>
+      <div className="flex justify-center mt-12">
+        <LanguageSwitcher secondary />
       </div>
     </main>
   );

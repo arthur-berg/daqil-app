@@ -33,6 +33,7 @@ export default async function LocaleLayout({
     <html lang={locale} dir={direction}>
       <body className={dmSans.className}>
         <Toaster />
+
         {children}
       </body>
     </html>

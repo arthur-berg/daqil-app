@@ -16,7 +16,7 @@ const MeetingsPage = async () => {
           </div>
         }
       >
-        <MeetingsBody />{" "}
+        <MeetingsBody />
       </Suspense>
     </div>
   );

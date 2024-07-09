@@ -14,13 +14,14 @@ import {
   apiMeetingPrefix,
 } from "@/routes";
 import { NextRequest } from "next/server";
+import User from "@/models/User";
 
 const intlMiddleware = createMiddleware({
   locales,
   defaultLocale: "ar",
 });
 
-const authMiddleware = auth((req) => {
+const authMiddleware = auth(async (req) => {
   const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
 
@@ -42,6 +43,7 @@ const authMiddleware = auth((req) => {
   if (isApiAuthRoute || isApiVideoRoute || isApiMeetingRoute) {
     return;
   }
+
   if (isAuthRoute) {
     if (isLoggedIn) {
       return Response.redirect(

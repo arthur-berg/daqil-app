@@ -52,6 +52,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       }
 
       if (session.user) {
+        session.user.isOnboardingDone = token.isOnboardingDone as boolean;
         session.user.isTwoFactorEnabled = token.isTwoFactorEnabled as boolean;
         session.user.firstName = token.firstName as string;
         session.user.lastName = token.lastName as string;
@@ -70,6 +71,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 
       const existingAccount = await getAccountByUserId(existingUser.id);
 
+      token.isOnboardingDone = existingUser.isOnboardingDone;
       token.isOAuth = !!existingAccount;
       token.firstName = existingUser.firstName;
       token.lastName = existingUser.lastName;

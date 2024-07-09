@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
+import { getTranslations } from "next-intl/server";
 
 import { LoginSchema } from "@/schemas";
 
@@ -16,7 +17,7 @@ export default {
     Credentials({
       async authorize(credentials) {
         const validatedFields = LoginSchema.safeParse(credentials);
-
+        const t = await getTranslations("ErrorMessages");
         if (validatedFields.success) {
           const { email, password } = validatedFields.data;
 
@@ -27,7 +28,7 @@ export default {
           if (passwordsMatch) return user;
         }
 
-        throw new Error("Invalid credentials!");
+        throw new Error(t("invalidCredentials"));
       },
     }),
   ],

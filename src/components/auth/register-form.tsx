@@ -23,11 +23,13 @@ import { Button } from "@/components/ui/button";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 import { register } from "@/actions/register";
+import { useTranslations } from "next-intl";
 
 export const RegisterForm = () => {
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
+  const t = useTranslations("RegisterPage");
 
   const form = useForm<z.infer<typeof RegisterSchema>>({
     resolver: zodResolver(RegisterSchema),
@@ -48,8 +50,8 @@ export const RegisterForm = () => {
 
   return (
     <CardWrapper
-      headerLabel={!success ? "Create an account" : ""}
-      backButtonLabel="Already have an account?"
+      headerLabel={!success ? t("createAccount") : ""}
+      backButtonLabel={t("alreadyHaveAccount")}
       backButtonHref="/auth/login"
       showSocial
     >
@@ -62,7 +64,7 @@ export const RegisterForm = () => {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>{t("emailLabel")}</FormLabel>
                     <FormControl>
                       <Input
                         inputSize="lg"
@@ -79,7 +81,7 @@ export const RegisterForm = () => {
             <FormError message={error} />
 
             <Button type="submit" className="w-full" disabled={isPending}>
-              Create an account
+              {t("createAccount")}
             </Button>
           </form>
         </Form>

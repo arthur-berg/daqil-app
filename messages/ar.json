@@ -1,4 +1,25 @@
 {
+  "HomePage": {
+    "companyName": "زاكينا",
+    "getStarted": "ابدأ",
+    "login": "تسجيل الدخول",
+    "signUp": "الاشتراك"
+  },
+  "LoginPage": {
+    "welcomeBack": "مرحبا بعودتك",
+    "emailLabel": "البريد الإلكتروني",
+    "passwordLabel": "كلمة المرور",
+    "forgotPassword": "هل نسيت كلمة المرور؟",
+    "login": "تسجيل الدخول",
+    "continueWithGoogle": "متابعة باستخدام جوجل",
+    "noAccount": "ليس لديك حساب؟",
+    "twoFactorCode": "رمز التحقق الثنائي"
+  },
+  "RegisterPage": {
+    "emailLabel": "البريد الإلكتروني",
+    "createAccount": "إنشاء حساب",
+    "alreadyHaveAccount": "هل لديك حساب بالفعل؟"
+  },
   "ProfileAvatarDropdown": {
     "payment": "الاشتراك والرصيد",
     "settings": "الإعدادات",
@@ -17,5 +38,15 @@
   },
   "PricingPage": {
     "heading": "اختر بين الاشتراكات أو شراء جلسة واحدة"
+  },
+  "ErrorMessages": {
+    "invalidFields": "حقول غير صالحة!",
+    "invalidCredentials": "بيانات الاعتماد غير صالحة!",
+    "invalidCode": "رمز غير صالح!",
+    "codeHasExpired": "انتهت صلاحية الرمز!",
+    "somethingWentWrong": "حدث خطأ ما!"
+  },
+  "SuccessMessages": {
+    "activateLinkSent": "تم إرسال رابط لتفعيل حسابك إلى البريد الإلكتروني المقدم"
   }
 }

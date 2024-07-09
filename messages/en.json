@@ -1,4 +1,26 @@
 {
+  "HomePage": {
+    "companyName": "Zakina",
+    "getStarted": "Get started",
+    "login": "Log in",
+    "signUp": "Sign up"
+  },
+  "LoginPage": {
+    "welcomeBack": "Welcome back",
+    "emailLabel": "Email",
+    "passwordLabel": "Password",
+    "forgotPassword": "Forgot password?",
+    "login": "Login",
+    "continueWithGoogle": "Continue with google",
+    "noAccount": "Don't have an account?",
+    "twoFactorCode": "Two factor code",
+    "confirm": "Confirm"
+  },
+  "RegisterPage": {
+    "emailLabel": "Email",
+    "createAccount": "Create an account",
+    "alreadyHaveAccount": "Already have an account?"
+  },
   "ProfileAvatarDropdown": {
     "payment": "Subscription & Credits",
     "settings": "Settings",
@@ -17,5 +39,15 @@
   },
   "PricingPage": {
     "heading": "Choose between subscriptions or buy a single session"
+  },
+  "ErrorMessages": {
+    "invalidFields": "Invalid fields!",
+    "invalidCredentials": "Invalid credentials!",
+    "invalidCode": "Invalid code!",
+    "codeHasExpired": "Code has expired!",
+    "somethingWentWrong": "Something went wrong!"
+  },
+  "SuccessMessages": {
+    "activateLinkSent": "A link to activate your account has been emailed to the address provided"
   }
 }

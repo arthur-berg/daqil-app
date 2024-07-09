@@ -24,11 +24,13 @@ import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 import { login } from "@/actions/login";
 
-import { Link, useRouter } from "@/navigation";
-import { useLocale } from "next-intl";
+import { Link } from "@/navigation";
+import { NextIntlClientProvider, useLocale, useTranslations } from "next-intl";
 
 export const LoginForm = () => {
   const searchParams = useSearchParams();
+  const t = useTranslations("LoginPage");
+  const tError = useTranslations("ErrorMessages");
   const callbackUrl = searchParams.get("callbackUrl");
   const urlError =
     searchParams.get("error") === "OAuthAccountNotLinked"
@@ -41,9 +43,7 @@ export const LoginForm = () => {
   const [verificationEmailSent, setVerificationEmailSent] = useState<
     null | boolean
   >(null);
-  /*   const [emailCheckDone, setEmailCheckDone] = useState(false); */
   const [isPending, startTransition] = useTransition();
-  const router = useRouter();
   const locale = useLocale();
 
   const form = useForm<z.infer<typeof LoginSchema>>({
@@ -76,15 +76,15 @@ export const LoginForm = () => {
           setShowTwoFactor(true);
         }
       } catch {
-        setError("Something went wrong!");
+        setError(tError("somethingWentWrong"));
       }
     });
   };
 
   return (
     <CardWrapper
-      headerLabel="Welcome back"
-      backButtonLabel="Don't have an account?"
+      headerLabel={t("welcomeBack")}
+      backButtonLabel={t("noAccount")}
       backButtonHref="/auth/register"
       showSocial
     >
@@ -102,7 +102,7 @@ export const LoginForm = () => {
                   name="code"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Two Factor Code</FormLabel>
+                      <FormLabel>{t("twoFactorCode")}</FormLabel>
                       <FormControl>
                         <Input disabled={isPending} {...field} />
                       </FormControl>
@@ -118,7 +118,7 @@ export const LoginForm = () => {
                     name="email"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Email</FormLabel>
+                        <FormLabel>{t("emailLabel")}</FormLabel>
                         <FormControl>
                           <Input
                             inputSize="lg"
@@ -136,7 +136,7 @@ export const LoginForm = () => {
                     name="password"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Password</FormLabel>
+                        <FormLabel>{t("passwordLabel")}</FormLabel>
                         <FormControl>
                           <Input
                             inputSize="lg"
@@ -158,13 +158,13 @@ export const LoginForm = () => {
                 asChild
                 className="px-0 font-normal text-xs"
               >
-                <Link href="/auth/reset">Forgot password?</Link>
+                <Link href="/auth/reset">{t("forgotPassword")}</Link>
               </Button>
             </div>
             <FormError message={error || urlError} />
             <FormSuccess message={success} />
             <Button type="submit" className="w-full" disabled={isPending}>
-              {showTwoFactor ? "Confirm" : "Login"}
+              {showTwoFactor ? t("confirm") : t("login")}
             </Button>
           </form>
         </Form>

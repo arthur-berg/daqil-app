@@ -16,6 +16,7 @@ import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation
 
 import TwoFactorToken from "@/models/TwoFactorToken";
 import TwoFactorConfirmation from "@/models/TwoFactorConfirmation";
+import { getTranslations } from "next-intl/server";
 
 export const login = async (
   values: z.infer<typeof LoginSchema>,
@@ -24,9 +25,13 @@ export const login = async (
   verifyAccountSetup?: boolean
 ) => {
   const validatedFields = LoginSchema.safeParse(values);
+  const [tSuccess, tError] = await Promise.all([
+    getTranslations("SuccessMessages"),
+    getTranslations("ErrorMessages"),
+  ]);
 
   if (!validatedFields.success) {
-    return { error: "Invalid fields!" };
+    return { error: tError("invalidFields") };
   }
 
   /* if (verifyAccountSetup) {
@@ -60,7 +65,7 @@ export const login = async (
   const existingUser = await getUserByEmail(email);
 
   if (!existingUser || !existingUser.email) {
-    return { error: "Email does not exist!" };
+    return { error: tError("invalidCredentials") };
   }
 
   if (!existingUser.emailVerified) {
@@ -73,8 +78,7 @@ export const login = async (
     );
 
     return {
-      success:
-        "A link to activate your account has been emailed to the address provided",
+      success: tSuccess("activateLinkSent"),
       verificationEmailSent: true,
     };
   }
@@ -84,17 +88,17 @@ export const login = async (
       const twoFactorToken = await getTwoFactorTokenByEmail(existingUser.email);
 
       if (!twoFactorToken) {
-        return { error: "Invalid code!" };
+        return { error: tError("invalidCode") };
       }
 
       if (twoFactorToken.token !== code) {
-        return { error: "Invalid code!" };
+        return { error: tError("invalidCode") };
       }
 
       const hasExpired = new Date(twoFactorToken.expires) < new Date();
 
       if (hasExpired) {
-        return { error: "Code has expired!" };
+        return { error: tError("codeHasExpired") };
       }
 
       await TwoFactorToken.findByIdAndDelete(twoFactorToken._id);
@@ -130,7 +134,7 @@ export const login = async (
       if (error.cause?.err instanceof Error) {
         return { error: error.cause.err.message };
       }
-      return { error: "Something went wrong" };
+      return { error: tError("somethingWentWrong") };
       /*  switch (error.type) {
         case "CredentialsSignin":
           return { error: "Invalid credentials" };

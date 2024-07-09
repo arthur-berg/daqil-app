@@ -1,6 +1,6 @@
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
-import { Navbar } from "./_components/navbar";
+import { Navbar } from "@/components/navbar";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 

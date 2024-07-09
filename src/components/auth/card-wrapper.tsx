@@ -10,6 +10,7 @@ import {
 import { Header } from "@/components/auth/header";
 import { Social } from "@/components/auth/social";
 import { BackButton } from "@/components/auth/back-button";
+import LanguageSwitcher from "@/components/language-switcher";
 
 type CardWrapperProps = {
   children: React.ReactNode;
@@ -38,7 +39,12 @@ export const CardWrapper = ({
         </CardFooter>
       )}
       <CardFooter>
-        <BackButton label={backButtonLabel} href={backButtonHref} />
+        <div className="flex flex-col items-center w-full">
+          <BackButton label={backButtonLabel} href={backButtonHref} />
+          <div className="mt-2">
+            <LanguageSwitcher />
+          </div>
+        </div>
       </CardFooter>
     </Card>
   );

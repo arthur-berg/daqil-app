@@ -6,15 +6,19 @@ import { FaMicrosoft } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import { useSearchParams } from "next/navigation";
+import { useLocale, useTranslations } from "next-intl";
 
 export const Social = () => {
+  const t = useTranslations("LoginPage");
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl");
+
+  const locale = useLocale();
 
   const onClick = (provider: "google" | "github") => {
     // TODO ADD LOCALE BEFORE DEFAULT_LOGIN_REDIRECT
     signIn(provider, {
-      callbackUrl: callbackUrl || DEFAULT_LOGIN_REDIRECT,
+      callbackUrl: callbackUrl || `/${locale}/${DEFAULT_LOGIN_REDIRECT}`,
     });
   };
 
@@ -26,7 +30,8 @@ export const Social = () => {
         variant="secondary"
         onClick={() => onClick("google")}
       >
-        <FcGoogle className="h-5 w-5 mr-4" /> <span>Continue with Google</span>
+        <FcGoogle className="h-5 w-5 mr-4" />{" "}
+        <span>{t("continueWithGoogle")}</span>
       </Button>
       {/*  <Button
         size="lg"
