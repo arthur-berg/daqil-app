@@ -1,14 +1,13 @@
-/* const apiKey = process.env.VONAGE_API_KEY;
+const apiKey = process.env.VONAGE_API_KEY;
 const apiSecret = process.env.VONAGE_API_SECRET;
-const appId = process.env.VONAGE_APP_ID;
-const privateKeyPath = process.env.VONAGE_PRIVATE_KEY_PATH;
+const appId = process.env.VONAGE_VIDEO_APP_ID;
+const privateKey = process.env.VONAGE_VIDEO_PRIVATE_KEY_PATH;
 
-if (!apiKey || !apiSecret || !appId || !privateKeyPath) {
+if (!apiKey || !apiSecret || !appId || !privateKey) {
   throw new Error(
     "Missing config values for env params VONAGE_API_KEY and VONAGE_API_SECRET"
   );
 }
-let sessionId;
 
 import { Auth } from "@vonage/auth";
 import { Video } from "@vonage/video";
@@ -17,24 +16,25 @@ const credentials = new Auth({
   apiKey: apiKey,
   apiSecret: apiSecret,
   applicationId: appId,
-  privateKey: privateKeyPath,
+  privateKey: privateKey,
 });
 
 const options = {};
 
 const videoClient = new Video(credentials, options);
 
-const createSessionandToken = async () => {
+export const createSessionAndToken = async () => {
   try {
     const session = await videoClient.createSession({
       mediaMode: "relayed" as any,
     });
-    
+
     const token = videoClient.generateClientToken(session.sessionId);
 
     return {
       sessionId: session.sessionId,
       token: token,
+      apiKey: appId,
     };
   } catch (error) {
     console.error("Error creating session: ", error);
@@ -43,9 +43,10 @@ const createSessionandToken = async () => {
 
 export const generateToken = (sessionId: string) => {
   const token = videoClient.generateClientToken(sessionId);
-  return { token: token, appId: appId };
+  return { token: token, apiKey: appId };
 };
 
+/*
 export const getCredentials = async () => {
   const data = await createSessionandToken();
   sessionId = data?.sessionId;
