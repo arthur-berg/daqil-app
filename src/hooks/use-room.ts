@@ -1,43 +1,68 @@
-import React, { useState, useRef, useCallback, useEffect } from "react";
+"use client";
+import { useState, useRef, useCallback, useEffect } from "react";
 import _ from "lodash";
 import * as VideoExpress from "@vonage/video-express";
 
+interface Credentials {
+  appId: string;
+  sessionId: string;
+  token: string;
+}
+
+interface VideoFilter {
+  filterName: string;
+  filterPayload: any;
+}
+
+interface PublisherOptions {
+  style?: {
+    buttonDisplayMode: string;
+    nameDisplayMode: string;
+    audioLevelDisplayMode: string;
+  };
+  name?: string;
+  showControls?: boolean;
+  videoFilter?: any;
+}
+
 export default function useRoom() {
-  let roomRef = useRef(null);
-  let publisherOptionsRef = useRef(null);
+  let roomRef = useRef<any>(null);
+  const publisherOptionsRef = useRef<PublisherOptions>({});
   const [camera, setCamera] = useState(null);
   const [screen, setScreen] = useState(null);
-  const [localParticipant, setLocalParticipant] = useState(null);
+  const [localParticipant, setLocalParticipant] = useState<any>(null);
   const [connected, setConnected] = useState(false);
-  const [participants, setParticipants] = useState([]);
-  const [networkStatus, setNetworkStatus] = useState(null);
+  const [participants, setParticipants] = useState<any>([]);
+  const [networkStatus, setNetworkStatus] = useState("");
   const [publisherIsSpeaking, setPublisherIsSpeaking] = useState(false);
   const [cameraPublishing, setCameraPublishing] = useState(false);
 
-  const addParticipants = ({ participant }) => {
-    setParticipants((prev) => [...prev, participant]);
+  const addParticipants = ({ participant }: any) => {
+    setParticipants((prev: any) => [...prev, participant]);
   };
 
-  const removeParticipants = ({ participant }) => {
-    setParticipants((prev) =>
-      prev.filter((prevparticipant) => prevparticipant.id !== participant.id)
+  const removeParticipants = ({ participant }: any) => {
+    setParticipants((prev: any) =>
+      prev.filter(
+        (prevparticipant: any) => prevparticipant.id !== participant.id
+      )
     );
   };
 
-  const addLocalParticipant = ({ room }) => {
+  const addLocalParticipant = ({ room }: any) => {
     if (room) {
       setLocalParticipant({
-        id: room.participantId,
+        id: room.participantId as any,
         name: room.participantName,
       });
     }
   };
 
-  const removeLocalParticipant = ({ participant }) => {
+  const removeLocalParticipant = ({ participant }: any) => {
     setParticipants(null);
   };
 
-  const onAudioLevel = React.useCallback((audioLevel) => {
+  const onAudioLevel = useCallback((audioLevel: any) => {
     let movingAvg = null;
     if (movingAvg === null || movingAvg <= audioLevel) {
       movingAvg = audioLevel;
@@ -54,7 +79,7 @@ export default function useRoom() {
   }, []);
 
   const addPublisherCameraEvents = () => {
-    if (roomRef.current.camera) {
+    if (roomRef?.current?.camera) {
       roomRef.current.camera.on(
         "audioLevelUpdated",
         _.throttle((event) => onAudioLevel(event), 250)
@@ -62,7 +87,7 @@ export default function useRoom() {
     }
   };
 
-  const parseVideoFilter = (videoFilter) => {
+  const parseVideoFilter = (videoFilter: any) => {
     switch (videoFilter.filterName) {
       case "blur":
         return {
@@ -94,7 +119,7 @@ export default function useRoom() {
         setCameraPublishing(true);
         console.log("camera publishing now");
       });
-      roomRef.current.on("activeSpeakerChanged", (participant) => {
+      roomRef.current.on("activeSpeakerChanged", (participant: any) => {
         console.log("Active speaker changed", participant);
       });
 
@@ -106,12 +131,11 @@ export default function useRoom() {
         setNetworkStatus("reconnecting");
         console.log("Room: reconnecting");
       });
-      roomRef.current.on("participantJoined", (participant) => {
-        console.log(participant);
+      roomRef.current.on("participantJoined", (participant: any) => {
         addParticipants({ participant: participant });
         console.log("Room: participant joined: ", participant);
       });
-      roomRef.current.on("participantLeft", (participant, reason) => {
+      roomRef.current.on("participantLeft", (participant: any, reason: any) => {
         removeParticipants({ participant: participant });
         console.log("Room: participant left", participant, reason);
       });
@@ -119,13 +143,19 @@ export default function useRoom() {
   }, []);
 
   const createCall = useCallback(
-    async ({ apiKey, sessionId, token }, roomContainer, userName) => {
-      if (!apiKey || !sessionId || !token) {
+    async (
+      { appId, sessionId, token }: Credentials,
+      roomContainer: any,
+      userName: string,
+      videoFilter?: VideoFilter,
+      publisherOptions?: PublisherOptions
+    ) => {
+      if (!appId || !sessionId || !token) {
         throw new Error("Check your credentials");
       }
 
       roomRef.current = new VideoExpress.Room({
-        apiKey: apiKey,
+        apiKey: appId,
         sessionId: sessionId,
         token: token,
         roomContainer: "roomContainer",
@@ -133,36 +163,48 @@ export default function useRoom() {
         participantName: userName,
         managedLayoutOptions: {
           layoutMode: "grid",
-          screenPublisherContainer: "screenSharingContainer",
           speakerHighlightEnabled: true,
         },
-      });
-      startRoomListeners();
-      publisherOptionsRef.current = {
-        style: {
-          buttonDisplayMode: "off",
-          nameDisplayMode: "auto",
-          audioLevelDisplayMode: "off",
-        },
-        name: userName,
-        showControls: true,
-      };
+      }) as VideoExpress.Room;
 
-      console.log(
-        "[useRoom] - finalPublisherOptions",
-        publisherOptionsRef.current
-      );
+      startRoomListeners();
+
+      if (videoFilter && videoFilter.filterName && videoFilter.filterPayload) {
+        publisherOptionsRef.current = {
+          ...publisherOptions,
+          style: {
+            buttonDisplayMode: "off",
+            nameDisplayMode: "auto",
+            audioLevelDisplayMode: "off",
+          },
+          name: userName,
+          showControls: true,
+          videoFilter: parseVideoFilter(videoFilter),
+        };
+      } else {
+        publisherOptionsRef.current = {
+          ...publisherOptions,
+          style: {
+            buttonDisplayMode: "off",
+            nameDisplayMode: "auto",
+            audioLevelDisplayMode: "off",
+          },
+          name: userName,
+          showControls: true,
+        };
+      }
+
       roomRef.current
         .join({ publisherProperties: publisherOptionsRef.current })
         .then(() => {
           setConnected(true);
-          setCamera(roomRef.current.camera);
-          setScreen(roomRef.current.screen);
-          addLocalParticipant({ room: roomRef.current });
+          setCamera(roomRef.current!.camera);
+          setScreen(roomRef.current!.screen);
+          addLocalParticipant({ room: roomRef.current! });
         })
-        .catch((e) => console.log(e));
+        .catch((error: any) => console.log(error));
     },
-    []
+    [startRoomListeners]
   );
 
   return {

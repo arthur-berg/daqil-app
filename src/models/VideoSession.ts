@@ -1,0 +1,49 @@
+import mongoose from "mongoose";
+
+const Schema = mongoose.Schema;
+
+const videoSessionSchema = new Schema(
+  {
+    sessionId: {
+      type: String,
+      unique: true,
+      required: true,
+    },
+    roomName: {
+      type: String,
+      required: true,
+    },
+    hostId: {
+      type: String,
+      ref: "User",
+      required: false,
+    },
+    hostToken: {
+      type: String,
+      required: false,
+    },
+    hostTokenExpiresAt: {
+      type: Date,
+      required: false,
+    },
+    appointmentId: {
+      type: String,
+      ref: "Appointment",
+      required: true,
+    },
+    participants: [
+      {
+        userId: {
+          type: String,
+          ref: "User",
+        },
+        token: String,
+        tokenExpiresAt: Date,
+      },
+    ],
+  },
+  { collection: "video_sessions" }
+);
+
+export default mongoose.models?.VideoSession ||
+  mongoose.model("VideoSession", videoSessionSchema);

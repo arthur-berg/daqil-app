@@ -1,18 +1,6 @@
 import { useState, useEffect } from "react";
-/* import { useHistory } from "react-router-dom"; */
-/* import useMediaQuery from "@material-ui/core/useMediaQuery";
-import * as VideoExpress from "@vonage/video-express";
-import MuteAudioButton from "components/MuteAudioButton";
-import MuteVideoButton from "components/MuteVideoButton"; */
-// import SpeakerButton from 'components/SpeakerButton';
-/* import SpeakerSelector from "components/SpeakerSelector";
-import RecordingButton from "components/RecordingButton";
-import LayoutButton from "components/LayoutButton";
-import MuteAll from "components/MuteAllButton";
-import ReactionsButton from "components/ReactionsButton";
-import ScreenSharingButton from "components/ScreenSharingButton"; */
-/* import MuteAudioButton from "./mute-audio-button";
-import MuteVideoButton from "./mute-video-button"; */
+import MuteAudioButton from "./mute-audio-button";
+import MuteVideoButton from "./mute-video-button";
 import EndCallButton from "./end-call-button";
 import { useRouter } from "@/navigation";
 
@@ -68,8 +56,15 @@ const ToolBar = ({
 
   const endCall = () => {
     if (room) {
-      router.push(`/video/end`);
       room.leave();
+      router.push(`/video/ended`);
+    }
+  };
+
+  const getAudioSource = async () => {
+    if (room && room.camera) {
+      const audioDevice = await room.camera.getAudioDevice();
+      return audioDevice.deviceId;
     }
   };
 
@@ -83,26 +78,22 @@ const ToolBar = ({
       setHasVideo(isVideoEnabled);
     }
   }, [connected, room]);
-  /*{" "}
-      <MuteVideoButton
-        toggleVideo={toggleVideo}
-        hasVideo={hasVideo}
-        classes={classes}
-        changeVideoSource={changeVideoSource}
-      />{" "}
-      */
-  /*{" "}
+
+  return (
+    <div className="bg-[#41464D] flex justify-center items-center absolute bottom-0 left-0 right-0 h-[90px] m-2 rounded-md space-x-8">
       <MuteAudioButton
         toggleAudio={toggleAudio}
         hasAudio={hasAudio}
-        classes={classes}
         changeAudioSource={changeAudioSource}
-      />{" "}
-      */
-
-  return (
-    <div className="bg-[#41464D] flex justify-center items-center absolute bottom-0 left-0 right-0 h-[90px] m-2 rounded-md">
+        cameraPublishing={cameraPublishing}
+        getAudioSource={getAudioSource}
+      />
       <EndCallButton handleEndCall={endCall} />
+      <MuteVideoButton
+        toggleVideo={toggleVideo}
+        hasVideo={hasVideo}
+        changeVideoSource={changeVideoSource}
+      />
     </div>
   );
 };

@@ -4,13 +4,13 @@ import * as z from "zod";
 
 import { SettingsSchema } from "@/schemas";
 import { getUserByEmail, getUserById } from "@/data/user";
-import { currentUser } from "@/lib/auth";
+import { getCurrentUser } from "@/lib/auth";
 import User from "@/models/User";
 import { generateVerificationToken } from "@/lib/tokens";
 import { sendVerificationEmail } from "@/lib/mail";
 
 export const settings = async (values: z.input<typeof SettingsSchema>) => {
-  const user = await currentUser();
+  const user = await getCurrentUser();
   if (!user) {
     return { error: "Unauthorized" };
   }

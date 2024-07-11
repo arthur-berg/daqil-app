@@ -38,6 +38,31 @@ export const SettingsSchema = z
     }
   );
 
+export const AppointmentSchema = z.object({
+  startDate: z.date({
+    required_error: "Start date is required",
+    invalid_type_error: "Start date must be a date",
+  }),
+  endDate: z.date({
+    required_error: "End date is required",
+    invalid_type_error: "End date must be a date",
+  }),
+  title: z.string({
+    required_error: "Title is required",
+    invalid_type_error: "Title must be a string",
+  }),
+  patientId: z.string({
+    required_error: "You must select a patient",
+  }),
+
+  description: z.string().optional(),
+  paid: z.boolean().optional().default(false),
+  status: z
+    .enum(["confirmed", "canceled", "completed"])
+    .optional()
+    .default("confirmed"),
+});
+
 export const NewPasswordSchema = z.object({
   password: z.string().min(6, {
     message: "Minimum 6 characters required",
