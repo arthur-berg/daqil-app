@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from "react";
-import * as VideoExpress from "@vonage/video-express";
 
 const useDevices = () => {
   const [deviceInfo, setDeviceInfo] = useState<any>({
@@ -14,6 +13,7 @@ const useDevices = () => {
       return;
     }
     try {
+      const VideoExpress = await import("@vonage/video-express");
       const devices = await VideoExpress.getDevices();
       let audioOutputDevices = await VideoExpress.getAudioOutputDevices();
       audioOutputDevices = audioOutputDevices.map((audiooutput) =>

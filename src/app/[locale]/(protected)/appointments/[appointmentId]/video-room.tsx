@@ -10,9 +10,9 @@ const VideoRoom = ({
   sessionData,
 }: {
   sessionData: {
-    sessionId: string;
-    token: string;
-    appId: string;
+    sessionId?: string;
+    token?: string;
+    appId?: string;
     roomName: string;
   };
 }) => {
@@ -40,7 +40,7 @@ const VideoRoom = ({
         appId: sessionData.appId,
         sessionId: sessionData.sessionId,
         token: sessionData.token,
-      };
+      } as any;
       createCall(credentials, roomContainer.current, userName);
     }
 

@@ -1,7 +1,6 @@
 "use client";
 import { useState, useRef, useCallback, useEffect } from "react";
 import _ from "lodash";
-import * as VideoExpress from "@vonage/video-express";
 
 interface Credentials {
   appId: string;
@@ -153,6 +152,7 @@ export default function useRoom() {
       if (!appId || !sessionId || !token) {
         throw new Error("Check your credentials");
       }
+      const VideoExpress = await import("@vonage/video-express");
 
       roomRef.current = new VideoExpress.Room({
         apiKey: appId,
@@ -165,7 +165,7 @@ export default function useRoom() {
           layoutMode: "grid",
           speakerHighlightEnabled: true,
         },
-      }) as VideoExpress.Room;
+      }) as any;
 
       startRoomListeners();
 
