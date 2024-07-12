@@ -4,8 +4,6 @@ import AppointmentsList from "@/app/[locale]/(protected)/appointments/appointmen
 const AppointmentsPage = async () => {
   const appointments = await getAppointments();
 
-  console.log("appointments", appointments);
-
   return <AppointmentsList appointments={appointments} />;
 };
 

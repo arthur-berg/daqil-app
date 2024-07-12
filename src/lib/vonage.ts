@@ -23,7 +23,7 @@ const options = {};
 
 const videoClient = new Video(credentials, options);
 
-const TOKEN_EXPIRATION_TIME = 60 * 60 * 24; // 24 hours in seconds
+const TOKEN_EXPIRATION_TIME = 60 * 60; // 1 hour in seconds
 
 const getExpireTime = () =>
   Math.floor(Date.now() / 1000) + TOKEN_EXPIRATION_TIME;
@@ -31,19 +31,15 @@ const getExpireTime = () =>
 const getExpirationDate = () =>
   new Date(Date.now() + TOKEN_EXPIRATION_TIME * 1000);
 
-// TODO
-// Experiment with expiresAt time for tokens, set to 1 minute and see that they expires
-// Ask Vonage what they recommend as roles for the token for therapist and patient
-
 export const createSessionAndToken = async () => {
   try {
     const session = await videoClient.createSession({
       mediaMode: MediaMode.RELAYED,
     });
 
-    const token = videoClient.generateClientToken(session.sessionId);
-
-    console.log("token", token);
+    const token = videoClient.generateClientToken(session.sessionId, {
+      expireTime: getExpireTime(),
+    });
 
     return {
       sessionId: session.sessionId,
@@ -57,7 +53,9 @@ export const createSessionAndToken = async () => {
 };
 
 export const generateToken = (sessionId: string) => {
-  const token = videoClient.generateClientToken(sessionId);
+  const token = videoClient.generateClientToken(sessionId, {
+    expireTime: getExpireTime(),
+  });
 
   return {
     token: token,

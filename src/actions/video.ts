@@ -23,10 +23,11 @@ if (!process.env.VONAGE_VIDEO_APP_ID) {
   }
 }; */
 
-const getTokenExpiresAt = async (user: any, session: any) => {
+const getTokenExpiresAt = (user: any, session: any) => {
   const isTherapist = user?.role === "THERAPIST";
 
   if (isTherapist) {
+    console.log("session.hostTokenExpiresAt", session.hostTokenExpiresAt);
     return session.hostTokenExpiresAt;
   }
 
@@ -42,12 +43,26 @@ const isUserAuthorized = async (session: any, user: any) => {
 
   const isTherapist = role === "THERAPIST";
   const isPatient = role === "USER";
-  const isNotAuthorizedTherapist = isTherapist && session.hostId === user?.id;
-  const isNotAuthorizedPatient =
-    isPatient &&
-    session.participants.find((participant: any) => participant.id);
 
-  return isNotAuthorizedTherapist || isNotAuthorizedPatient;
+  if (isTherapist) {
+    const isAuthorizedTherapist = isTherapist && session.hostId === user?.id;
+    return isAuthorizedTherapist;
+  }
+
+  if (isPatient) {
+    const isAuthorizedPatient = isPatient && getPatient(session, user);
+    return isAuthorizedPatient;
+  }
+
+  return false;
+};
+
+const getPatient = (session: any, user: any) => {
+  const patient = session.participants.find(
+    (participant: any) => participant.id === user?.id
+  );
+
+  return patient;
 };
 
 export const getSessionData = async (appointmentId: string) => {
@@ -74,12 +89,21 @@ export const getSessionData = async (appointmentId: string) => {
       const now = new Date();
 
       const tokenExpiresAt = getTokenExpiresAt(user, session);
-      //tokenExpiresAt > now
-      if (false) {
+
+      if (tokenExpiresAt > now) {
         console.log("Valid token found...");
+        console.log("session", session);
+        let token;
+        if (isTherapist) {
+          token = session.hostToken;
+        }
+        if (isPatient) {
+          const patient = getPatient(session, user);
+          token = patient.token;
+        }
         return {
           sessionId: session.sessionId,
-          token: session.token,
+          token: token,
           appId: process.env.VONAGE_VIDEO_APP_ID as any,
           roomName: session.roomName,
         };
@@ -136,7 +160,7 @@ export const getSessionData = async (appointmentId: string) => {
           appointmentId: appointment._id,
           hostId: appointment.therapistId,
           hostToken: data?.token,
-          tokenExpiresAt: data?.expiresAt,
+          hostTokenExpiresAt: data?.expiresAt,
           participants: [
             {
               userId: appointment.patientId,
