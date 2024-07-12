@@ -1,7 +1,7 @@
 const apiKey = process.env.VONAGE_API_KEY;
 const apiSecret = process.env.VONAGE_API_SECRET;
-const appId = process.env.VONAGE_VIDEO_APP_ID;
-const privateKey = process.env.VONAGE_VIDEO_PRIVATE_KEY_PATH;
+const appId = process.env.VONAGE_APP_ID;
+const privateKey = process.env.VONAGE_PRIVATE_KEY_PATH;
 
 if (!apiKey || !apiSecret || !appId || !privateKey) {
   throw new Error(

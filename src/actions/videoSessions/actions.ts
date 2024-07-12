@@ -10,8 +10,8 @@ import { createSessionAndToken, generateToken } from "@/lib/vonage";
 import Appointment from "@/models/Appointment";
 import VideoSession from "@/models/VideoSession";
 
-if (!process.env.VONAGE_VIDEO_APP_ID) {
-  throw new Error("Missing config values for env params VONAGE_VIDEO_APP_ID ");
+if (!process.env.VONAGE_APP_ID) {
+  throw new Error("Missing config values for env params VONAGE_APP_ID ");
 }
 
 export const getSessionData = async (appointmentId: string) => {
