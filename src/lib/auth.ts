@@ -24,8 +24,6 @@ const verifyUserSession = async () => {
     throw new Error("Unauthorized");
   }
 
-  console.log("user", user);
-
   const dbUser = await getUserById(user.id);
   if (!dbUser) {
     throw new Error("Unauthorized");
