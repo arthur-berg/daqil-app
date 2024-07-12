@@ -1,5 +1,5 @@
 import VideoRoom from "@/app/[locale]/(protected)/appointments/[appointmentId]/video-room";
-import { getSessionData } from "@/actions/video";
+import { getSessionData } from "@/actions/videoSessions/actions";
 
 const AppointmentSessionPage = async ({
   params,
@@ -11,8 +11,6 @@ const AppointmentSessionPage = async ({
   if (!sessionData) return;
 
   return <VideoRoom sessionData={sessionData} />;
-
-  /*  return <VideoRoom credentials={credentials} roomName={roomName} />; */
 };
 
 export default AppointmentSessionPage;

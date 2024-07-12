@@ -11,7 +11,11 @@ export const getCurrentUser = async () => {
 export const getCurrentRole = async () => {
   const session = await auth();
 
-  return session?.user?.role;
+  return {
+    role: session?.user?.role,
+    isTherapist: session?.user?.role === "THERAPIST",
+    isPatient: session?.user?.role === "USER",
+  };
 };
 
 const verifyUserSession = async () => {
