@@ -43,7 +43,13 @@ const VideoRoom = ({
       };
       createCall(credentials, roomContainer.current, userName);
     }
-  }, [createCall, sessionData, user, userName]);
+
+    return () => {
+      if (room) {
+        room.leave();
+      }
+    };
+  }, [createCall, sessionData, user, userName, room]);
 
   return (
     <div id="callContainer" className="h-screen relative bg-[#20262D] w-full">

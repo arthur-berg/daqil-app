@@ -18,14 +18,7 @@ const videoSessionSchema = new Schema(
       ref: "User",
       required: false,
     },
-    hostToken: {
-      type: String,
-      required: false,
-    },
-    hostTokenExpiresAt: {
-      type: Date,
-      required: false,
-    },
+
     appointmentId: {
       type: String,
       ref: "Appointment",
@@ -37,8 +30,6 @@ const videoSessionSchema = new Schema(
           type: String,
           ref: "User",
         },
-        token: String,
-        tokenExpiresAt: Date,
       },
     ],
   },

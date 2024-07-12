@@ -2,8 +2,6 @@
 
 import {
   getCreatePayload,
-  getSavedToken,
-  getTokenExpiresAt,
   getUpdatePayload,
   isUserAuthorized,
 } from "@/actions/videoSessions/utils";
@@ -40,49 +38,23 @@ export const getSessionData = async (appointmentId: string) => {
         throw new Error("User is not authorized");
       }
 
-      const now = new Date();
+      const data = generateToken(session.sessionId);
 
-      const tokenExpiresAt = await getTokenExpiresAt(
-        session,
-        isTherapist,
-        user?.id
+      const videoSessionPayload = getUpdatePayload(data, isTherapist, user?.id);
+
+      await VideoSession.updateOne(
+        {
+          appointmentId: appointment._id,
+        },
+        videoSessionPayload
       );
 
-      if (tokenExpiresAt > now) {
-        console.log("Valid token found...");
-        console.log("session", session);
-
-        return {
-          sessionId: session.sessionId,
-          token: await getSavedToken(session, isTherapist, user?.id),
-          appId: process.env.VONAGE_VIDEO_APP_ID as any,
-          roomName: session.roomName,
-        };
-      } else {
-        console.log("Valid expires. Generating a new one...");
-
-        const data = generateToken(session.sessionId);
-
-        const videoSessionPayload = getUpdatePayload(
-          data,
-          isTherapist,
-          user?.id
-        );
-
-        await VideoSession.updateOne(
-          {
-            appointmentId: appointment._id,
-          },
-          videoSessionPayload
-        );
-
-        return {
-          sessionId: session.sessionId,
-          token: data.token,
-          appId: data.appId,
-          roomName: session.roomName,
-        };
-      }
+      return {
+        sessionId: session.sessionId,
+        token: data.token,
+        appId: data.appId,
+        roomName: session.roomName,
+      };
     } else {
       console.log("Session not found. Creating a new one...");
       const data = await createSessionAndToken();

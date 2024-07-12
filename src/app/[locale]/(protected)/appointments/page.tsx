@@ -1,10 +1,10 @@
 import { getAppointments } from "@/actions/appointments";
+import AppointmentsBody from "@/app/[locale]/(protected)/appointments/appointments-body";
 import AppointmentsList from "@/app/[locale]/(protected)/appointments/appointments-list";
+import { Suspense } from "react";
 
 const AppointmentsPage = async () => {
-  const appointments = await getAppointments();
-
-  return <AppointmentsList appointments={appointments} />;
+  return <AppointmentsBody />;
 };
 
 export default AppointmentsPage;

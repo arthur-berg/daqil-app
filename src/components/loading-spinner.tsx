@@ -1,4 +1,4 @@
-const LoadingSpinner = () => {
+const LoadingSpinner = ({ black }: { black?: boolean }) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -6,7 +6,7 @@ const LoadingSpinner = () => {
       height="48"
       viewBox="0 0 24 24"
       fill="none"
-      stroke="currentColor"
+      stroke={black ? "currentColor" : "#FFFFFF"}
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"

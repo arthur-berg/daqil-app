@@ -1,35 +1,3 @@
-export const getTokenExpiresAt = async (
-  session: any,
-  isTherapist: boolean,
-  userId?: string
-) => {
-  if (isTherapist) {
-    return session.hostTokenExpiresAt;
-  }
-
-  const patient = session.participants.find(
-    (participant: any) => participant.id === userId
-  );
-
-  return patient.tokenExpiresAt;
-};
-
-export const getSavedToken = async (
-  session: any,
-  isTherapist: boolean,
-  userId?: string
-) => {
-  if (isTherapist) {
-    return session.hostToken;
-  }
-
-  const patient = session.participants.find(
-    (participant: any) => participant.id === userId
-  );
-
-  return patient.token;
-};
-
 export const getUpdatePayload = (
   data: any,
   isTherapist: boolean,

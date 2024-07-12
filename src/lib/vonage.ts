@@ -23,28 +23,17 @@ const options = {};
 
 const videoClient = new Video(credentials, options);
 
-const TOKEN_EXPIRATION_TIME = 60 * 60; // 1 hour in seconds
-
-const getExpireTime = () =>
-  Math.floor(Date.now() / 1000) + TOKEN_EXPIRATION_TIME;
-
-const getExpirationDate = () =>
-  new Date(Date.now() + TOKEN_EXPIRATION_TIME * 1000);
-
 export const createSessionAndToken = async () => {
   try {
     const session = await videoClient.createSession({
       mediaMode: MediaMode.RELAYED,
     });
 
-    const token = videoClient.generateClientToken(session.sessionId, {
-      expireTime: getExpireTime(),
-    });
+    const token = videoClient.generateClientToken(session.sessionId);
 
     return {
       sessionId: session.sessionId,
       token: token,
-      expiresAt: getExpirationDate(),
       appId: appId,
     };
   } catch (error) {
@@ -53,13 +42,10 @@ export const createSessionAndToken = async () => {
 };
 
 export const generateToken = (sessionId: string) => {
-  const token = videoClient.generateClientToken(sessionId, {
-    expireTime: getExpireTime(),
-  });
+  const token = videoClient.generateClientToken(sessionId);
 
   return {
     token: token,
-    expiresAt: getExpirationDate(),
     appId: appId,
   };
 };
