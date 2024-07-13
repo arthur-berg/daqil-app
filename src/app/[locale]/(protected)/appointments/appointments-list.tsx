@@ -22,7 +22,7 @@ const AppointmentsList = ({ appointments }: { appointments: any }) => {
         {appointments?.map((appointment: any) => (
           <Card
             key={appointment._id.toString()}
-            className="p-4 flex flex-col justify-between w-full md:w-[calc(50%-1.5rem)] lg:w-[calc(33.333%-1.5rem)]"
+            className="p-4 flex flex-col justify-between w-full"
           >
             <div>
               <CardHeader>

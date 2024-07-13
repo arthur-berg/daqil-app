@@ -57,7 +57,7 @@ const ToolBar = ({
   const endCall = () => {
     if (room) {
       room.leave();
-      router.push(`/video/ended`);
+      router.push(`/appointments/ended`);
     }
   };
 

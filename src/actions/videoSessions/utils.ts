@@ -31,14 +31,10 @@ export const getCreatePayload = (
       sessionId: data?.sessionId,
       roomName: appointment.title,
       appointmentId: appointment._id,
-      hostId: appointment.therapistId,
+      hostId: appointment.hostId,
       hostToken: data?.token,
       hostTokenExpiresAt: data?.expiresAt,
-      participants: [
-        {
-          userId: appointment.patientId,
-        },
-      ],
+      participants: appointment.participants,
     };
   }
 
@@ -46,13 +42,7 @@ export const getCreatePayload = (
     sessionId: data?.sessionId,
     roomName: appointment.title,
     appointmentId: appointment._id,
-    participants: [
-      {
-        userId: appointment.patientId,
-        token: data?.token,
-        tokenExpiresAt: data?.expiresAt,
-      },
-    ],
+    participants: appointment.participants,
   };
 };
 

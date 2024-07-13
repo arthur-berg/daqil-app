@@ -43,10 +43,6 @@ export const AppointmentSchema = z.object({
     required_error: "Start date is required",
     invalid_type_error: "Start date must be a date",
   }),
-  endDate: z.date({
-    required_error: "End date is required",
-    invalid_type_error: "End date must be a date",
-  }),
   title: z.string({
     required_error: "Title is required",
     invalid_type_error: "Title must be a string",
@@ -54,7 +50,7 @@ export const AppointmentSchema = z.object({
   patientId: z.string({
     required_error: "You must select a patient",
   }),
-
+  appointmentTypeId: z.string(),
   description: z.string().optional(),
   paid: z.boolean().optional().default(false),
   status: z

@@ -12,14 +12,21 @@ const appointmentSchema = new Schema(
       type: Date,
       required: true,
     },
-    therapistId: {
+    hostId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
-    patientId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+    participants: [
+      {
+        userId: {
+          type: String,
+          ref: "User",
+        },
+      },
+    ],
+    durationInMinutes: {
+      type: Number,
       required: true,
     },
     title: {
@@ -30,24 +37,45 @@ const appointmentSchema = new Schema(
       type: String,
       default: "",
     },
+    price: {
+      type: Number,
+      required: false,
+      validate: {
+        validator: function (this: any, value: number): boolean {
+          return value === undefined || this.credits === undefined;
+        },
+        message: "Either price or credits must be set, not both.",
+      },
+    },
+    credits: {
+      type: Number,
+      required: false,
+      validate: {
+        validator: function (this: any, value: number): boolean {
+          return value === undefined || this.price === undefined;
+        },
+        message: "Either credits or price must be set, not both.",
+      },
+    },
+    currency: {
+      type: String,
+      enum: ["USD", "AED", "EUR"],
+      required: false,
+    },
     paid: {
       type: Boolean,
       default: false,
     },
     status: {
       type: String,
-      default: "confirmed", // Example statuses: 'confirmed', 'canceled', 'completed'
-    },
-    createdAt: {
-      type: Date,
-      default: Date.now,
-    },
-    updatedAt: {
-      type: Date,
-      default: Date.now,
+      enum: ["confirmed", "canceled", "completed", "pending"],
+      default: "confirmed",
     },
   },
-  { collection: "appointments" }
+  {
+    collection: "appointments",
+    timestamps: true,
+  }
 );
 
 export default mongoose.models?.Appointment ||

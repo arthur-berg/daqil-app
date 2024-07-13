@@ -7,6 +7,7 @@ import { getUserById } from "@/data/user";
 import { Types } from "mongoose";
 import { UserRole } from "@/generalTypes";
 import User from "@/models/User";
+import { getAppointmentTypeById } from "@/data/appointment-types";
 
 export const getAppointments = async () => {
   await requireAuth([UserRole.THERAPIST]);
@@ -14,14 +15,16 @@ export const getAppointments = async () => {
   const user = await getCurrentUser();
 
   const appointments = await Appointment.find({
-    therapistId: user?.id,
+    hostId: user?.id,
   }).lean();
 
   const serializedAppointments = appointments.map((appointment: any) => ({
     ...appointment,
     _id: appointment._id.toString(),
-    therapistId: appointment.therapistId.toString(),
-    patientId: appointment.patientId.toString(),
+    hostId: appointment.hostId.toString(),
+    participants: appointment.participants.map((participant: any) =>
+      participant.userId.toString()
+    ),
     createdAt: appointment.createdAt.toISOString(),
     updatedAt: appointment.updatedAt.toISOString(),
   })) as any;
@@ -32,7 +35,7 @@ export const getAppointments = async () => {
 export const getPatients = async () => {
   await requireAuth([UserRole.THERAPIST]);
 
-  const patients = await User.find({ role: UserRole.USER });
+  const patients = await User.find({ role: UserRole.USER }).lean();
 
   console.log("patients", patients);
 
@@ -50,8 +53,40 @@ export const createAppointment = async (
     return { error: "Invalid fields!" };
   }
 
-  const { title, description, startDate, endDate, paid, status, patientId } =
-    validatedFields.data;
+  const {
+    title,
+    description,
+    startDate,
+    paid,
+    status,
+    patientId,
+    appointmentTypeId,
+  } = validatedFields.data;
+
+  const appointmentType = await getAppointmentTypeById(appointmentTypeId);
+
+  if (!appointmentType) {
+    return { error: "Invalid appointment type" };
+  }
+
+  let appointmentCost = {};
+
+  if ("price" in appointmentType) {
+    appointmentCost = {
+      price: appointmentType.price,
+      currency: appointmentType.currency,
+    };
+  }
+  if ("credits" in appointmentType) {
+    appointmentCost = { credits: appointmentType.credits };
+  }
+
+  const endDate = new Date(
+    startDate.getTime() + appointmentType.durationInMinutes * 60000
+  );
+
+  console.log("startDate", startDate);
+  console.log("endDate", endDate);
 
   await Appointment.create({
     title,
@@ -60,11 +95,11 @@ export const createAppointment = async (
     endDate,
     paid,
     status,
-    patientId: patientId,
-    therapistId: user.id,
+    participants: [{ userId: patientId }],
+    hostId: user.id,
+    durationInMinutes: appointmentType.durationInMinutes,
+    ...appointmentCost,
   });
 
   return { success: "Appointment successfully created" };
-
-  /*   await Appointment.create({}); */
 };

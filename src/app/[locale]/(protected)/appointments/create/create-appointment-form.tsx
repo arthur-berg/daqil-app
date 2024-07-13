@@ -35,23 +35,35 @@ import { DateTimePicker } from "@/components/ui/datetime-picker";
 import { ToastAction } from "@/components/ui/toast";
 import { Link, useRouter } from "@/navigation";
 
-const CreateAppointmentForm = ({ patients }: { patients: any }) => {
+const appointmentTypeId = "6692b4919a6b12347d0afac4";
+
+const CreateAppointmentForm = ({
+  patients,
+  appointmentType,
+}: {
+  patients: any;
+  appointmentType: any;
+}) => {
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
+  const user = useCurrentUser();
   const router = useRouter();
 
   const form = useForm<z.infer<typeof AppointmentSchema>>({
     resolver: zodResolver(AppointmentSchema),
     defaultValues: {
       startDate: undefined,
-      endDate: undefined,
-      title: "",
+      title:
+        user?.role === "THERAPIST"
+          ? `Therapy session with ${user?.firstName}`
+          : "",
       description: "",
       paid: false,
       status: "confirmed",
       patientId: "",
+      appointmentTypeId,
     },
   });
 
@@ -131,30 +143,31 @@ const CreateAppointmentForm = ({ patients }: { patients: any }) => {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="endDate"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>End Date</FormLabel>
-                    <FormControl>
-                      <DateTimePicker
-                        granularity="second"
-                        showClearButton={true}
-                        jsDate={field.value}
-                        onJsDateChange={field.onChange}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className="bg-gray-100 p-4 rounded-md mb-4">
+                <p className="font-semibold text-lg">Cost</p>
+                <p className="text-gray-700">
+                  {appointmentType?.price
+                    ? `${appointmentType?.price} ${appointmentType?.currency}`
+                    : `${appointmentType?.credits} credits`}
+                </p>
+              </div>
+              <div className="bg-gray-100 p-4 rounded-md mb-4">
+                <p className="font-semibold text-lg">Duration</p>
+                <p className="text-gray-700">
+                  {appointmentType.durationInMinutes} minutes
+                </p>
+              </div>
               <FormField
                 control={form.control}
                 name="title"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Title</FormLabel>
+                    <FormLabel>
+                      Title -{" "}
+                      <span className="text-xs italic">
+                        (Will be shown in patients calendar)
+                      </span>
+                    </FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -167,7 +180,12 @@ const CreateAppointmentForm = ({ patients }: { patients: any }) => {
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Description</FormLabel>
+                    <FormLabel>
+                      Description -{" "}
+                      <span className="text-xs italic">
+                        (Will not be shown to patient)
+                      </span>
+                    </FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>

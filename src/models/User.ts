@@ -75,17 +75,9 @@ const userSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "TwoFactorConfirmation",
     },
-    createdAt: {
-      type: Date,
-      default: Date.now,
-    },
-    updatedAt: {
-      type: Date,
-      default: Date.now,
-    },
   },
   {
-    timestamps: { createdAt: "createdAt", updatedAt: "updatedAt" },
+    timestamps: true,
   }
 );
 
