@@ -22,10 +22,6 @@ const appointmentTypeSchema = new Schema(
       required: true,
       default: true,
     },
-    maxParticipants: {
-      type: Number,
-      required: false,
-    },
     price: {
       type: Number,
       required: false,
@@ -50,18 +46,27 @@ const appointmentTypeSchema = new Schema(
       type: Number,
       required: true,
     },
+  },
+  {
+    collection: "appointment_types",
+  }
+);
+
+export default mongoose.models?.AppointmentType ||
+  mongoose.model("AppointmentType", appointmentTypeSchema);
+
+/* For later if we want to support group sessions
+
+   maxParticipants: {
+      type: Number,
+      required: false,
+    },
+
     type: {
       type: String,
       enum: ["appointment", "group"],
       required: true,
       default: "appointment",
     },
-  },
-  {
-    collection: "appointment_types",
-    timestamps: true,
-  }
-);
-
-export default mongoose.models?.AppointmentType ||
-  mongoose.model("AppointmentType", appointmentTypeSchema);
+    
+    */
