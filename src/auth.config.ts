@@ -21,7 +21,21 @@ export default {
         if (validatedFields.success) {
           const { email, password } = validatedFields.data;
 
-          const user = await getUserByEmail(email);
+          /* 
+          
+          TODO. Hämta användare med mongo atlas api. Använd denna wrapper https://www.npmjs.com/package/mongo-rest-client
+      
+          Eller kolla:
+
+          https://github.com/vercel/next.js/discussions/46722
+
+          T.ex
+          As a workaround, you can use an API route + useSWR (with refreshInterval) to keep the session alive. At least that is what I am doing for now..
+
+          Alternativt vänta med detta
+          */
+
+          const user = await getUserByEmail(email); // Kraschar i prod pga av edge + mongoose
           if (!user || !user.password) return null;
 
           const passwordsMatch = await bcrypt.compare(password, user.password);
