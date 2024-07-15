@@ -10,11 +10,8 @@ import {
   publicRoutes,
   apiAuthPrefix,
   authRoutes,
-  apiVideoPrefix,
-  apiMeetingPrefix,
 } from "@/routes";
 import { NextRequest } from "next/server";
-import User from "@/models/User";
 
 const intlMiddleware = createMiddleware({
   locales,
@@ -35,12 +32,10 @@ const authMiddleware = auth(async (req) => {
     : nextUrl.pathname;
 
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
-  const isApiVideoRoute = nextUrl.pathname.startsWith(apiVideoPrefix);
-  const isApiMeetingRoute = nextUrl.pathname.startsWith(apiMeetingPrefix);
   const isPublicRoute = publicRoutes.includes(pathWithoutLocale);
   const isAuthRoute = authRoutes.includes(pathWithoutLocale);
 
-  if (isApiAuthRoute || isApiVideoRoute || isApiMeetingRoute) {
+  if (isApiAuthRoute) {
     return;
   }
 

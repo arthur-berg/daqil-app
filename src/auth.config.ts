@@ -6,7 +6,6 @@ import { getTranslations } from "next-intl/server";
 import { LoginSchema } from "@/schemas";
 
 import type { NextAuthConfig } from "next-auth";
-import { getUserByEmail } from "@/data/user";
 
 export default {
   providers: [
@@ -35,11 +34,48 @@ export default {
           Alternativt vänta med detta
           */
 
-          const user = await getUserByEmail(email); // Kraschar i prod pga av edge + mongoose
-          if (!user || !user.password) return null;
+          var data = JSON.stringify({
+            collection: "users",
+            database: "dev",
+            dataSource: "dev-zakina-app",
+            filter: {
+              email: email,
+            },
+            projection: {
+              _id: 1,
+              email: 1,
+              password: 1,
+            },
+          });
 
-          const passwordsMatch = await bcrypt.compare(password, user.password);
-          if (passwordsMatch) return user;
+          try {
+            const response = await fetch(
+              "https://eu-west-2.aws.data.mongodb-api.com/app/data-tocirom/endpoint/data/v1/action/findOne",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  "Access-Control-Request-Headers": "*",
+                  "api-key": process.env.MONGODB_OPEN_API_SECRET as string,
+                },
+                body: data,
+              }
+            );
+
+            const { document: user } = await response.json();
+
+            if (!user || !user.password) return null;
+
+            const passwordsMatch = await bcrypt.compare(
+              password,
+              user.password
+            );
+            if (passwordsMatch) return user;
+          } catch (error) {
+            console.log(error);
+          }
+
+          /* const user = await getUserByEmail(email); */
         }
 
         throw new Error(t("invalidCredentials"));
