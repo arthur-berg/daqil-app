@@ -25,10 +25,10 @@ export default function MuteAudioButton({
   const title = hasAudio ? "Disable Microphone" : "Enable Microphone";
 
   const { deviceInfo } = useDevices();
-  const [devicesAvailable, setDevicesAvailable] = useState(null);
+  const [devicesAvailable, setDevicesAvailable] = useState<any>(null);
   const [options, setOptions] = useState([]);
   const [open, setOpen] = useState(false);
-  const anchorRef = useRef(null);
+  const anchorRef = useRef<any>(null);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [audioDeviceId, setAudioDeviceId] = useState("");
 
@@ -36,10 +36,10 @@ export default function MuteAudioButton({
     setDevicesAvailable(deviceInfo.audioInputDevices);
 
     if (cameraPublishing && devicesAvailable) {
-      getAudioSource().then((id) => setAudioDeviceId(id));
+      getAudioSource().then((id: any) => setAudioDeviceId(id));
 
       const indexOfSelectedElement = devicesAvailable.indexOf(
-        devicesAvailable.find((e) => e.deviceId === audioDeviceId)
+        devicesAvailable.find((e: any) => e.deviceId === audioDeviceId)
       );
 
       setSelectedIndex(indexOfSelectedElement);
@@ -54,27 +54,27 @@ export default function MuteAudioButton({
 
   useEffect(() => {
     if (devicesAvailable) {
-      const audioDevicesAvailable = devicesAvailable.map((e) => {
+      const audioDevicesAvailable = devicesAvailable.map((e: any) => {
         return e.label;
       });
       setOptions(audioDevicesAvailable);
     }
   }, [devicesAvailable]);
 
-  const handleChangeAudioSource = (event, index) => {
+  const handleChangeAudioSource = (event: any, index: any) => {
     setSelectedIndex(index);
     setOpen(false);
     const audioDeviceId = devicesAvailable.find(
-      (device) => device.label === event.target.textContent
+      (device: any) => device.label === event.target.textContent
     ).deviceId;
     changeAudioSource(audioDeviceId);
   };
 
-  const handleToggle = (e) => {
+  const handleToggle = (e: any) => {
     setOpen((prevOpen) => !prevOpen);
   };
 
-  const handleClose = (event) => {
+  const handleClose = (event: any) => {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
       return;
     }

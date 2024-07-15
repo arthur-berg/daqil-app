@@ -23,30 +23,32 @@ const OnboardingForm = () => {
 
   // Load saved answers from localStorage
   useEffect(() => {
-    const savedAnswers =
-      JSON.parse(localStorage.getItem("onboardingAnswers")) || {};
+    const onboardingAnswers = localStorage.getItem("onboardingAnswers");
+    const currentStep = localStorage.getItem("currentStep");
+
+    const savedAnswers = onboardingAnswers ? JSON.parse(onboardingAnswers) : {};
     Object.keys(savedAnswers).forEach((key) => {
       setValue(key, savedAnswers[key]);
     });
 
-    const savedStep = JSON.parse(localStorage.getItem("currentStep"));
+    const savedStep = currentStep ? JSON.parse(currentStep) : null;
     if (savedStep !== null) {
       setCurrentStep(savedStep);
     }
   }, [setValue]);
 
-  const saveAnswers = (data) => {
+  const saveAnswers = (data: any) => {
     localStorage.setItem(
       "onboardingAnswers",
       JSON.stringify({ ...getValues(), ...data })
     );
   };
 
-  const saveStep = (step) => {
+  const saveStep = (step: any) => {
     localStorage.setItem("currentStep", JSON.stringify(step));
   };
 
-  const onNext = (data) => {
+  const onNext = (data: any) => {
     saveAnswers(data);
     if (currentStep < questions.length - 1) {
       const nextStep = currentStep + 1;
@@ -63,7 +65,7 @@ const OnboardingForm = () => {
     }
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = (data: any) => {
     saveAnswers(data);
     console.log("Form submitted:", data);
     // Handle form submission (e.g., send data to server)

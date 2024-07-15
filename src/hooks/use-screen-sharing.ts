@@ -1,8 +1,8 @@
 import { useState, useCallback } from "react";
 
-export default function useScreenSharing({ room }) {
+export default function useScreenSharing({ room }: any) {
   const [screen, setScreen] = useState(null);
-  const [isScreenSharing, setIsScreenSharing] = useState(null);
+  const [isScreenSharing, setIsScreenSharing] = useState<boolean | null>(null);
 
   const startScreenSharing = useCallback(async () => {
     if (room) {
@@ -12,7 +12,7 @@ export default function useScreenSharing({ room }) {
           setScreen(screen);
           setIsScreenSharing(true);
         });
-        screen.on("stopped", (reason) => {
+        screen.on("stopped", (reason: string) => {
           console.warn(
             "[useScreensharing] - The screen sharing stopped because: ",
             reason
@@ -20,7 +20,7 @@ export default function useScreenSharing({ room }) {
           setScreen(null);
           setIsScreenSharing(false);
         });
-        screen.on("accessDenied", (reason) => {
+        screen.on("accessDenied", (reason: string) => {
           // console.log('[useScreensharing] - Access Denied', reason);
           setScreen(null);
           setIsScreenSharing(false);

@@ -20,24 +20,10 @@ export default {
         if (validatedFields.success) {
           const { email, password } = validatedFields.data;
 
-          /* 
-          
-          TODO. Hämta användare med mongo atlas api. Använd denna wrapper https://www.npmjs.com/package/mongo-rest-client
-      
-          Eller kolla:
-
-          https://github.com/vercel/next.js/discussions/46722
-
-          T.ex
-          As a workaround, you can use an API route + useSWR (with refreshInterval) to keep the session alive. At least that is what I am doing for now..
-
-          Alternativt vänta med detta
-          */
-
-          var data = JSON.stringify({
+          const data = JSON.stringify({
             collection: "users",
-            database: "dev",
-            dataSource: "dev-zakina-app",
+            database: process.env.MONGO_DB_NAME as string,
+            dataSource: process.env.MONGO_OPEN_API_DATASOURCE as string,
             filter: {
               email: email,
             },
@@ -50,7 +36,7 @@ export default {
 
           try {
             const response = await fetch(
-              "https://eu-west-2.aws.data.mongodb-api.com/app/data-tocirom/endpoint/data/v1/action/findOne",
+              `${process.env.MONGO_OPEN_API_ENDPOINT as string}/findOne`,
               {
                 method: "POST",
                 headers: {
@@ -67,7 +53,7 @@ export default {
             if (!user || !user.password) return null;
 
             const passwordsMatch = await bcrypt.compare(
-              password,
+              password as string,
               user.password
             );
             if (passwordsMatch) return user;

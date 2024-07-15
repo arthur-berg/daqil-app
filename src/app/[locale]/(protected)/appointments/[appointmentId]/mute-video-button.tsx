@@ -32,10 +32,10 @@ export default function MuteVideoButton({
 }: any) {
   const title = hasVideo ? "Disable Camera" : "Enable Camera";
   const { deviceInfo } = useDevices();
-  const [devicesAvailable, setDevicesAvailable] = useState(null);
+  const [devicesAvailable, setDevicesAvailable] = useState<any>(null);
   const [options, setOptions] = useState([]);
   const [open, setOpen] = useState(false);
-  const anchorRef = useRef(null);
+  const anchorRef = useRef<any>(null);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const user = useCurrentUser();
 
@@ -45,7 +45,7 @@ export default function MuteVideoButton({
       const currentDeviceId = getVideoSource()?.deviceId;
 
       const IndexOfSelectedElement = devicesAvailable.indexOf(
-        devicesAvailable.find((e) => e.deviceId === currentDeviceId)
+        devicesAvailable.find((e: any) => e.deviceId === currentDeviceId)
       );
       setSelectedIndex(IndexOfSelectedElement);
     }
@@ -53,7 +53,7 @@ export default function MuteVideoButton({
 
   useEffect(() => {
     if (devicesAvailable) {
-      const videoDevicesAvailable = devicesAvailable.map((e) => {
+      const videoDevicesAvailable = devicesAvailable.map((e: any) => {
         return e.label;
       });
       setOptions(videoDevicesAvailable);
@@ -62,20 +62,20 @@ export default function MuteVideoButton({
     //   setOptions(['Not available with Background Blurring']);
   }, [devicesAvailable]);
 
-  const handleChangeVideoSource = (event, index) => {
+  const handleChangeVideoSource = (event: any, index: any) => {
     setSelectedIndex(index);
     setOpen(false);
     const videoDeviceId = devicesAvailable.find(
-      (device) => device.label === event.target.textContent
+      (device: any) => device.label === event.target.textContent
     ).deviceId;
     changeVideoSource(videoDeviceId);
   };
 
-  const handleToggle = (e) => {
+  const handleToggle = (e: any) => {
     setOpen((prevOpen) => !prevOpen);
   };
 
-  const handleClose = (event) => {
+  const handleClose = (event: any) => {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
       return;
     }
@@ -124,78 +124,6 @@ export default function MuteVideoButton({
           </div>
         </TooltipProvider>
       </>
-      {/*   <ButtonGroup
-        className={classes.groupButton}
-        disableElevation
-        variant="contained"
-        ref={anchorRef}
-        aria-label="split button"
-      >
-        <Tooltip title={title} aria-label="add">
-          <IconButton
-            onClick={toggleVideo}
-            edge="start"
-            aria-label="videoCamera"
-            size="small"
-            className={`${classes.arrowButton} ${
-              !hasVideo ? classes.disabledButton : ""
-            }`}
-          >
-            {!hasVideo ? <VideocamOff /> : <VideoCam />}
-          </IconButton>
-        </Tooltip>
-        <IconButton
-          size="small"
-          aria-controls={open ? "split-button-menu" : undefined}
-          aria-expanded={open ? "true" : undefined}
-          aria-label="select merge strategy"
-          aria-haspopup="menu"
-          onClick={handleToggle}
-          className={classes.arrowButton}
-        >
-          <ArrowDropDownIcon />
-        </IconButton>
-      </ButtonGroup>
-
-      <Popper
-        open={open}
-        anchorEl={anchorRef.current}
-        role={undefined}
-        transition
-        disablePortal
-        style={{ zIndex: 101 }} 
-      >
-        {({ TransitionProps, placement }) => (
-          <Grow
-            {...TransitionProps}
-            style={{
-              transformOrigin:
-                placement === "bottom" ? "center top" : "center bottom",
-            }}
-          >
-            <Paper>
-              <ClickAwayListener onClickAway={handleClose}>
-                <MenuList id="split-button-menu">
-                  {options.map((option, index) => (
-                    <MenuItem
-                      key={option}
-                      selected={index === selectedIndex}
-                      onClick={(event) => handleChangeVideoSource(event, index)}
-                      classes={{
-                        selected: localClasses.selected,
-                        root: localClasses.root,
-                      }}
-                 
-                    >
-                      {option}
-                    </MenuItem>
-                  ))}
-                </MenuList>
-              </ClickAwayListener>
-            </Paper>
-          </Grow>
-        )}
-      </Popper> */}
     </>
   );
 }

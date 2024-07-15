@@ -5,25 +5,34 @@ import { FormSuccess } from "@/components/form-success";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { UserRole } from "@/generalTypes";
-import { toast } from "sonner";
+import { useToast } from "@/components/ui/use-toast";
 
 const AdminPage = () => {
+  const { toast } = useToast();
   const onServerActionClick = async () => {
     const data = await admin();
     if (data.error) {
-      toast.error(data.error);
+      toast({
+        title: data.error,
+      });
     }
     if (data.success) {
-      toast.success(data.success);
+      toast({
+        title: data.success,
+      });
     }
   };
 
   const onApiRouteClick = () => {
     fetch("/api/admin").then((response) => {
       if (response.ok) {
-        toast.success("Allowed API Route!");
+        toast({
+          title: "Allowed API Route!",
+        });
       } else {
-        toast.error("Forbidden API Route!");
+        toast({
+          title: "Forbidden API Route!",
+        });
       }
     });
   };

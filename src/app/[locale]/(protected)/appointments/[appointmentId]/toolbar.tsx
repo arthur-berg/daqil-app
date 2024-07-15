@@ -47,10 +47,10 @@ const ToolBar = ({
     }
   };
 
-  const changeVideoSource = (videoId) => {
+  const changeVideoSource = (videoId: string) => {
     room.camera.setVideoDevice(videoId);
   };
-  const changeAudioSource = (audioId) => {
+  const changeAudioSource = (audioId: string) => {
     room.camera.setAudioDevice(audioId);
   };
 
