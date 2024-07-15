@@ -21,6 +21,10 @@
     "alreadyHaveAccount": "هل لديك حساب بالفعل؟"
   },
   "ProfileAvatarDropdown": {
+    "forAllUsers": "لكل المستخدمين",
+    "forTherapists": "للمعالجين",
+    "createAppointments": "إنشاء مواعيد وجلسات فيديو",
+    "appointments": "المواعيد وجلسات الفيديو",
     "payment": "الاشتراك والرصيد",
     "settings": "الإعدادات",
     "logout": "تسجيل الخروج"

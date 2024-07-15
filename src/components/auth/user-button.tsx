@@ -8,6 +8,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -20,6 +21,9 @@ export const UserButton = () => {
   const user = useCurrentUser();
   const t = useTranslations("ProfileAvatarDropdown");
 
+  const canAccessAppointments =
+    user?.role === "THERAPIST" || user?.role === "ADMIN";
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
@@ -31,22 +35,42 @@ export const UserButton = () => {
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-40" align="end">
+        <div className="px-2 py-1 text-xs font-semibold text-gray-500">
+          {t("forTherapists")}
+        </div>
+        {canAccessAppointments ? (
+          <Link href={"/appointments"}>
+            <DropdownMenuItem>
+              <CardStackIcon className="h-4 w-4 mr-2" />
+              {t("createAppointments")}
+            </DropdownMenuItem>
+          </Link>
+        ) : (
+          <DropdownMenuItem className="opacity-50 cursor-not-allowed">
+            <CardStackIcon className="h-4 w-4 mr-2" />
+            {t("appointments")}
+          </DropdownMenuItem>
+        )}
+        <DropdownMenuSeparator />
+        <div className="px-2 py-1 text-xs font-semibold text-gray-500">
+          {t("forAllUsers")}
+        </div>
         <Link href="/pricing">
           <DropdownMenuItem>
             <CardStackIcon className="h-4 w-4 mr-2" />
-            Subscription & Credits
+            {t("payment")}
           </DropdownMenuItem>
         </Link>
         <Link href="/settings">
           <DropdownMenuItem>
             <GearIcon className="h-4 w-4 mr-2" />
-            Settings
+            {t("settings")}
           </DropdownMenuItem>
         </Link>
         <LogoutButton>
           <DropdownMenuItem>
             <ExitIcon className="h-4 w-4 mr-2" />
-            Logout
+            {t("logout")}
           </DropdownMenuItem>
         </LogoutButton>
       </DropdownMenuContent>

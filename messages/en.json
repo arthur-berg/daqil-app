@@ -22,6 +22,10 @@
     "alreadyHaveAccount": "Already have an account?"
   },
   "ProfileAvatarDropdown": {
+    "forAllUsers": "For all users",
+    "forTherapists": "For therapists",
+    "createAppointments": "Create Appointments & Video sessions",
+    "appointments": "Appointments & Video session",
     "payment": "Subscription & Credits",
     "settings": "Settings",
     "logout": "Logout"

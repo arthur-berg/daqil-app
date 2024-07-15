@@ -35,6 +35,18 @@ import {
 import { UserRole } from "@/generalTypes";
 import { useTranslations } from "next-intl";
 
+function getRole(role: string | undefined) {
+  if (!role) return "";
+
+  if (role === "USER") {
+    return "Patient";
+  }
+
+  // Convert the role to lowercase and capitalize the first letter
+  const lowercaseRole = role.toLowerCase();
+  return lowercaseRole.charAt(0).toUpperCase() + lowercaseRole.slice(1);
+}
+
 const SettingsForm = () => {
   const user = useCurrentUser();
   const [error, setError] = useState<string | undefined>();
@@ -42,8 +54,6 @@ const SettingsForm = () => {
   const [isPending, startTransition] = useTransition();
   const { update } = useSession();
   const t = useTranslations("SettingsPage");
-
-  console.log("user", user);
 
   const form = useForm<z.infer<typeof SettingsSchema>>({
     resolver: zodResolver(SettingsSchema),
@@ -162,7 +172,6 @@ const SettingsForm = () => {
                   />
                 </>
               )}
-
               <FormField
                 control={form.control}
                 name="role"
@@ -191,6 +200,42 @@ const SettingsForm = () => {
                   </FormItem>
                 )}
               />
+
+              {/*   {user?.role === "ADMIN" ? (
+                <FormField
+                  control={form.control}
+                  name="role"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t("roleLabel")}</FormLabel>
+                      <Select
+                        disabled={isPending}
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a role" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value={UserRole.ADMIN}>Admin</SelectItem>
+                          <SelectItem value={UserRole.USER}>User</SelectItem>
+                          <SelectItem value={UserRole.THERAPIST}>
+                            Therapist
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              ) : (
+                <div className="text-lg">
+                  Role: <span className="font-bold">{getRole(user?.role)}</span>
+                </div>
+              )} */}
+
               {user?.isOAuth === false && (
                 <FormField
                   control={form.control}
