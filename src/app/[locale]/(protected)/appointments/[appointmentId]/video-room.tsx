@@ -52,16 +52,21 @@ const VideoRoom = ({
   }, [createCall, sessionData, user, userName, room]);
 
   return (
-    <div id="callContainer" className="h-screen absolute bg-[#20262D] w-full">
+    <div
+      id="callContainer"
+      className="relative w-full bg-[#20262D] h-[calc(100vh-120px)]"
+    >
       <div
         id="roomContainer"
-        className="relative"
-        style={{ height: "calc(100vh - 90px)" }}
+        className="relative h-[calc(100vh-220px)]"
         ref={roomContainer}
       >
         {/*   <NetworkToast networkStatus={networkStatus} />  */}
 
-        <div id="screenSharingContainer" className="absolute top-2 left-2 z-10">
+        <div
+          id="screenSharingContainer"
+          className="absolute top-2 left-2 z-10 p-y"
+        >
           {isScreenSharing && (
             <div className="absolute inset-0 bg-black bg-opacity-40 z-10 flex justify-center items-center text-lg text-white">
               You Are Screensharing

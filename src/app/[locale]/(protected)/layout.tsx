@@ -16,7 +16,7 @@ export default async function ProtectedLayout({
       <NextIntlClientProvider messages={messages}>
         <Navbar />
       </NextIntlClientProvider>
-      <div className="container py-8">{children}</div>
+      <div className="container py-6">{children}</div>
     </SessionProvider>
   );
 }
