@@ -11,7 +11,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, inputSize = "md", ...props }, ref) => {
     const sizeClasses = {
       md: "h-9 px-3 py-1 text-sm",
-      lg: "h-12 px-5 py-3 text-lg",
+      lg: "h-12 px-5 py-3 md:text-lg",
     };
     return (
       <input

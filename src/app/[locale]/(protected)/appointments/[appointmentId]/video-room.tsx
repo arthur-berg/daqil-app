@@ -52,7 +52,7 @@ const VideoRoom = ({
   }, [createCall, sessionData, user, userName, room]);
 
   return (
-    <div id="callContainer" className="h-screen relative bg-[#20262D] w-full">
+    <div id="callContainer" className="h-screen absolute bg-[#20262D] w-full">
       <div
         id="roomContainer"
         className="relative"

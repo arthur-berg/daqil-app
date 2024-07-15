@@ -9,7 +9,7 @@ import LanguageSwitcher from "./language-switcher";
 export const Navbar = () => {
   const pathname = usePathname();
   return (
-    <nav className="bg-secondary flex justify-between items-center p-4 w-full  shadow-lg">
+    <nav className="bg-secondary flex justify-between items-center p-4 w-full shadow-lg">
       <div className="flex gap-x-2 container justify-end">
         {/* <Button
           asChild

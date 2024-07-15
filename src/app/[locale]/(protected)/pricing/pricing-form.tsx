@@ -56,7 +56,7 @@ const PricingForm = () => {
 
   return (
     <>
-      <Card className="w-[600px]">
+      <Card className="md:w-[600px]">
         <CardHeader>
           <p className="font-medium text-primary mb-5 text-center">Pricing</p>
           <p className="text-2xl font-semibold text-center">
