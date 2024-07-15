@@ -50,12 +50,15 @@ export default {
 
             const { document: user } = await response.json();
 
+            console.log("user", user);
+
             if (!user || !user.password) return null;
 
             const passwordsMatch = await bcrypt.compare(
               password as string,
               user.password
             );
+            console.log("passwordsMatch", passwordsMatch);
             if (passwordsMatch) return user;
           } catch (error) {
             console.log(error);
