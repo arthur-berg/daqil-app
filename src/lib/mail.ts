@@ -12,24 +12,34 @@ const domain = process.env.NEXT_PUBLIC_APP_URL;
 
 export const addUserToSubscriberList = async (email: string) => {
   try {
-    const existingMember = await mailchimpMarketing.lists.getListMember(
+    await mailchimpMarketing.lists.getListMember(
       process.env.MAILCHIMP_LIST_ID as string,
       email
     );
 
-    if (existingMember.status === "subscribed") {
-      return;
-    }
-
-    await mailchimpMarketing.lists.addListMember(
-      process.env.MAILCHIMP_LIST_ID as string,
-      {
-        email_address: email,
-        status: "subscribed",
+    // If we get here, the user exists, so no need to add them again
+    return { success: "User already exists in the list" };
+  } catch (error: any) {
+    if (error.status === 404) {
+      // If the error is a 404, it means the user does not exist
+      try {
+        await mailchimpMarketing.lists.addListMember(
+          process.env.MAILCHIMP_LIST_ID as string,
+          {
+            email_address: email,
+            status: "subscribed",
+          }
+        );
+        return { success: "User added to the subscriber list" };
+      } catch (addError) {
+        console.error("Error adding user to subscriber list", addError);
+        return { error: "Failed to add user to the subscriber list" };
       }
-    );
-  } catch (error) {
-    console.error(error);
+    } else {
+      // Log other errors
+      console.error("Error in add user to subscriber list", error);
+      return { error: "Something went wrong" };
+    }
   }
 };
 

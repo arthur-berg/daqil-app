@@ -43,6 +43,8 @@ const SettingsForm = () => {
   const { update } = useSession();
   const t = useTranslations("SettingsPage");
 
+  console.log("user", user);
+
   const form = useForm<z.infer<typeof SettingsSchema>>({
     resolver: zodResolver(SettingsSchema),
     defaultValues: {
