@@ -13,7 +13,7 @@ const AppointmentsList = ({ appointments }: { appointments: any }) => {
 
   return (
     <div className="space-y-8">
-      <div className="flex justify-end">
+      <div className="flex justify-start">
         <Link href="/appointments/create">
           <Button>Create New Appointment</Button>
         </Link>
@@ -22,7 +22,7 @@ const AppointmentsList = ({ appointments }: { appointments: any }) => {
         {appointments?.map((appointment: any) => (
           <Card
             key={appointment._id.toString()}
-            className="p-4 flex flex-col justify-between w-full"
+            className="p-4 flex flex-col justify-between xs:w-full md:w-72"
           >
             <div>
               <CardHeader>

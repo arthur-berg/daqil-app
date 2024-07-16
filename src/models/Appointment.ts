@@ -12,7 +12,7 @@ const appointmentSchema = new Schema(
       type: Date,
       required: true,
     },
-    hostId: {
+    hostUserId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,

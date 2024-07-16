@@ -21,6 +21,8 @@
     "alreadyHaveAccount": "هل لديك حساب بالفعل؟"
   },
   "ProfileAvatarDropdown": {
+    "forClients": "للعملاء",
+"bookSession": "احجز جلسة علاجية",
     "forAllUsers": "لكل المستخدمين",
     "forTherapists": "للمعالجين",
     "createAppointments": "إنشاء مواعيد وجلسات فيديو",

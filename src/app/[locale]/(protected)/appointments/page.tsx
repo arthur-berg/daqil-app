@@ -4,7 +4,11 @@ import AppointmentsList from "@/app/[locale]/(protected)/appointments/appointmen
 import { Suspense } from "react";
 
 const AppointmentsPage = async () => {
-  return <AppointmentsBody />;
+  return (
+    <div className="flex justify-center">
+      <AppointmentsBody />
+    </div>
+  );
 };
 
 export default AppointmentsPage;

@@ -6,7 +6,9 @@ const SettingsPage = async () => {
   const messages = await getMessages();
   return (
     <NextIntlClientProvider messages={messages}>
-      <SettingsForm />
+      <div className="flex justify-center">
+        <SettingsForm />
+      </div>
     </NextIntlClientProvider>
   );
 };

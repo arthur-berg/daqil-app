@@ -12,6 +12,16 @@ const userSchema = new Schema(
       type: String,
       required: false,
     },
+    userDescription: {
+      title: {
+        type: String,
+        required: false,
+      },
+      description: {
+        type: String,
+        required: false,
+      },
+    },
     hasAccess: {
       type: Boolean,
       default: false,
@@ -22,7 +32,6 @@ const userSchema = new Schema(
     },
     credits: {
       type: Number,
-      default: 0,
       required: false,
     },
     stripeCustomerId: {
@@ -57,8 +66,8 @@ const userSchema = new Schema(
     },
     role: {
       type: String,
-      enum: ["ADMIN", "USER", "THERAPIST"],
-      default: "USER",
+      enum: ["ADMIN", "CLIENT", "THERAPIST"],
+      default: "CLIENT",
     },
     accounts: [
       {

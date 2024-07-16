@@ -1,26 +1,3 @@
-export const getUpdatePayload = (
-  data: any,
-  isTherapist: boolean,
-  userId?: string
-) => {
-  if (isTherapist) {
-    return {
-      token: data.token,
-      hostTokenExpiresAt: data.expiresAt,
-    };
-  }
-
-  return {
-    participants: [
-      {
-        userId: userId,
-        token: data.token,
-        tokenExpiresAt: data.expiresAt,
-      },
-    ],
-  };
-};
-
 export const getCreatePayload = (
   data: any,
   isTherapist: boolean,
@@ -31,7 +8,7 @@ export const getCreatePayload = (
       sessionId: data?.sessionId,
       roomName: appointment.title,
       appointmentId: appointment._id,
-      hostId: appointment.hostId,
+      hostUserId: appointment.hostUserId,
       hostToken: data?.token,
       hostTokenExpiresAt: data?.expiresAt,
       participants: appointment.participants,
@@ -53,7 +30,7 @@ export const isUserAuthorized = async (
   userId?: string
 ) => {
   if (isTherapist) {
-    const isAuthorizedTherapist = isTherapist && session.hostId === userId;
+    const isAuthorizedTherapist = isTherapist && session.hostUserId === userId;
     return isAuthorizedTherapist;
   }
 

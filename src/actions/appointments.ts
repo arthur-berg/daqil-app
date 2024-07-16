@@ -15,13 +15,13 @@ export const getAppointments = async () => {
   const user = await getCurrentUser();
 
   const appointments = await Appointment.find({
-    hostId: user?.id,
+    hostUserId: user?.id,
   }).lean();
 
   const serializedAppointments = appointments.map((appointment: any) => ({
     ...appointment,
     _id: appointment._id.toString(),
-    hostId: appointment.hostId.toString(),
+    hostUserId: appointment.hostUserId.toString(),
     participants: appointment.participants.map((participant: any) =>
       participant.userId.toString()
     ),
@@ -35,7 +35,7 @@ export const getAppointments = async () => {
 export const getPatients = async () => {
   await requireAuth([UserRole.THERAPIST]);
 
-  const patients = await User.find({ role: UserRole.USER }).lean();
+  const patients = await User.find({ role: UserRole.CLIENT }).lean();
 
   console.log("patients", patients);
 
@@ -96,7 +96,7 @@ export const createAppointment = async (
     paid,
     status,
     participants: [{ userId: patientId }],
-    hostId: user.id,
+    hostUserId: user.id,
     durationInMinutes: appointmentType.durationInMinutes,
     ...appointmentCost,
   });

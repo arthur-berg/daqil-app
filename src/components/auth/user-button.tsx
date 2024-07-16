@@ -53,14 +53,25 @@ export const UserButton = () => {
         )}
         <DropdownMenuSeparator />
         <div className="px-2 py-1 text-xs font-semibold text-gray-500">
-          {t("forAllUsers")}
+          {t("forClients")}
         </div>
+        <Link href="/therapists">
+          <DropdownMenuItem>
+            <CardStackIcon className="h-4 w-4 mr-2" />
+            {t("bookSession")}
+          </DropdownMenuItem>
+        </Link>
         <Link href="/pricing">
           <DropdownMenuItem>
             <CardStackIcon className="h-4 w-4 mr-2" />
             {t("payment")}
           </DropdownMenuItem>
         </Link>
+        <DropdownMenuSeparator />
+        <div className="px-2 py-1 text-xs font-semibold text-gray-500">
+          {t("forAllUsers")}
+        </div>
+
         <Link href="/settings">
           <DropdownMenuItem>
             <GearIcon className="h-4 w-4 mr-2" />

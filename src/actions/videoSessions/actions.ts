@@ -2,7 +2,6 @@
 
 import {
   getCreatePayload,
-  getUpdatePayload,
   isUserAuthorized,
 } from "@/actions/videoSessions/utils";
 import { getCurrentRole, requireAuth } from "@/lib/auth";
@@ -15,7 +14,7 @@ if (!process.env.VONAGE_APP_ID) {
 }
 
 export const getSessionData = async (appointmentId: string) => {
-  const user = await requireAuth(["THERAPIST", "USER"]);
+  const user = await requireAuth(["THERAPIST", "CLIENT"]);
   const { isTherapist, isPatient } = await getCurrentRole();
 
   try {
@@ -39,15 +38,6 @@ export const getSessionData = async (appointmentId: string) => {
       }
 
       const data = generateToken(session.sessionId);
-
-      const videoSessionPayload = getUpdatePayload(data, isTherapist, user?.id);
-
-      await VideoSession.updateOne(
-        {
-          appointmentId: appointment._id,
-        },
-        videoSessionPayload
-      );
 
       return {
         sessionId: session.sessionId,

@@ -6,7 +6,7 @@ export const SettingsSchema = z
     firstName: z.optional(z.string()),
     lastName: z.optional(z.string()),
     isTwoFactorEnabled: z.optional(z.boolean()),
-    role: z.enum([UserRole.ADMIN, UserRole.USER, UserRole.THERAPIST]),
+    role: z.enum([UserRole.ADMIN, UserRole.CLIENT, UserRole.THERAPIST]),
     email: z.optional(z.string().email()),
     password: z.optional(z.string().min(6)),
     newPassword: z.optional(z.string().min(6)),

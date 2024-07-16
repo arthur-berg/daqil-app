@@ -38,8 +38,8 @@ import { useTranslations } from "next-intl";
 function getRole(role: string | undefined) {
   if (!role) return "";
 
-  if (role === "USER") {
-    return "Patient";
+  if (role === "CLIENT") {
+    return "Client";
   }
 
   // Convert the role to lowercase and capitalize the first letter
@@ -190,7 +190,7 @@ const SettingsForm = () => {
                       </FormControl>
                       <SelectContent>
                         <SelectItem value={UserRole.ADMIN}>Admin</SelectItem>
-                        <SelectItem value={UserRole.USER}>User</SelectItem>
+                        <SelectItem value={UserRole.CLIENT}>Client</SelectItem>
                         <SelectItem value={UserRole.THERAPIST}>
                           Therapist
                         </SelectItem>

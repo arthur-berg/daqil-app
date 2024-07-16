@@ -13,7 +13,7 @@ const videoSessionSchema = new Schema(
       type: String,
       required: true,
     },
-    hostId: {
+    hostUserId: {
       type: String,
       ref: "User",
       required: false,
