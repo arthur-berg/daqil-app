@@ -32,16 +32,15 @@ import { createAppointment } from "@/actions/appointments";
 import { useToast } from "@/components/ui/use-toast";
 
 import { DateTimePicker } from "@/components/ui/datetime-picker";
-import { ToastAction } from "@/components/ui/toast";
-import { Link, useRouter } from "@/navigation";
+import { useRouter } from "@/navigation";
 
 const appointmentTypeId = "6692b4919a6b12347d0afac4";
 
 const CreateAppointmentForm = ({
-  patients,
+  clients,
   appointmentType,
 }: {
-  patients: any;
+  clients: any;
   appointmentType: any;
 }) => {
   const [error, setError] = useState<string | undefined>();
@@ -62,7 +61,7 @@ const CreateAppointmentForm = ({
       description: "",
       paid: false,
       status: "confirmed",
-      patientId: "",
+      clientId: "",
       appointmentTypeId,
     },
   });
@@ -99,10 +98,10 @@ const CreateAppointmentForm = ({
             <div className="space-y-4">
               <FormField
                 control={form.control}
-                name="patientId"
+                name="clientId"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Patient</FormLabel>
+                    <FormLabel>Client</FormLabel>
                     <Select
                       disabled={isPending}
                       onValueChange={field.onChange}
@@ -110,13 +109,13 @@ const CreateAppointmentForm = ({
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select a patient" />
+                          <SelectValue placeholder="Select a client" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {patients?.map((patient: any) => (
-                          <SelectItem key={patient._id} value={patient._id}>
-                            {patient.firstName} {patient.lastName}
+                        {clients?.map((client: any) => (
+                          <SelectItem key={client._id} value={client._id}>
+                            {client.firstName} {client.lastName}
                           </SelectItem>
                         ))}
                       </SelectContent>

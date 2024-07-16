@@ -26,8 +26,7 @@
     "bookSession": "Book therapy session",
     "forAllUsers": "For all users",
     "forTherapists": "For therapists",
-    "createAppointments": "Create Appointments & Video sessions",
-    "appointments": "Appointments & Video session",
+    "myAppointments": "My appointments",
     "payment": "Subscription & Credits",
     "settings": "Settings",
     "logout": "Logout"

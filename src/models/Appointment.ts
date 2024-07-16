@@ -13,16 +13,14 @@ const appointmentSchema = new Schema(
       required: true,
     },
     hostUserId: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
     participants: [
       {
-        userId: {
-          type: String,
-          ref: "User",
-        },
+        type: Schema.Types.ObjectId,
+        ref: "User",
       },
     ],
     durationInMinutes: {

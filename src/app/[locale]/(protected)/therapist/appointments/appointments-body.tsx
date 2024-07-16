@@ -1,5 +1,5 @@
-import { getAppointments } from "@/actions/appointments";
-import AppointmentsList from "@/app/[locale]/(protected)/appointments/appointments-list";
+import AppointmentsList from "@/app/[locale]/(protected)/therapist/appointments/appointments-list";
+import { getAppointments } from "@/data/appointment";
 
 const AppointmentsBody = async () => {
   const appointments = await getAppointments();

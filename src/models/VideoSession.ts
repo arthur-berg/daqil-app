@@ -26,10 +26,8 @@ const videoSessionSchema = new Schema(
     },
     participants: [
       {
-        userId: {
-          type: String,
-          ref: "User",
-        },
+        type: String,
+        ref: "User",
       },
     ],
   },

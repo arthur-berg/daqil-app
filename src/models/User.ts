@@ -84,6 +84,12 @@ const userSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "TwoFactorConfirmation",
     },
+    appointments: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Appointment",
+      },
+    ],
   },
   {
     timestamps: true,

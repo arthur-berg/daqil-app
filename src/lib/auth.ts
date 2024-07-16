@@ -29,7 +29,7 @@ const verifyUserSession = async () => {
     throw new Error("Unauthorized");
   }
 
-  return dbUser;
+  return user;
 };
 
 export const requireAuth = async (requiredRoles: UserRole[]) => {

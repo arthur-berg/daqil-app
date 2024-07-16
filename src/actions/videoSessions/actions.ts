@@ -1,9 +1,6 @@
 "use server";
 
-import {
-  getCreatePayload,
-  isUserAuthorized,
-} from "@/actions/videoSessions/utils";
+import { isUserAuthorized } from "@/actions/videoSessions/utils";
 import { getCurrentRole, requireAuth } from "@/lib/auth";
 import { createSessionAndToken, generateToken } from "@/lib/vonage";
 import Appointment from "@/models/Appointment";
@@ -26,6 +23,8 @@ export const getSessionData = async (appointmentId: string) => {
     let session = await VideoSession.findOne({ appointmentId });
 
     if (session) {
+      console.log("Session found. Generating new token...");
+
       const userAuthorized = await isUserAuthorized(
         session,
         isTherapist,
@@ -49,13 +48,13 @@ export const getSessionData = async (appointmentId: string) => {
       console.log("Session not found. Creating a new one...");
       const data = await createSessionAndToken();
 
-      const videoSessionPayload = getCreatePayload(
-        data,
-        isTherapist,
-        appointment
-      );
-
-      await VideoSession.create(videoSessionPayload);
+      await VideoSession.create({
+        sessionId: data?.sessionId,
+        roomName: appointment.title,
+        hostUserId: appointment.hostUserId,
+        appointmentId: appointment._id,
+        participants: appointment.participants,
+      });
 
       return {
         roomName: appointment.title,

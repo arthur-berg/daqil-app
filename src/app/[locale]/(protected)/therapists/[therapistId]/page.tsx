@@ -1,18 +1,25 @@
-import BookingCalendar from "@/app/[locale]/(protected)/therapists/[userId]/booking-calendar";
+import BookingCalendar from "@/app/[locale]/(protected)/therapists/[therapistId]/booking-calendar";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { APPOINTMENT_TYPE_ID } from "@/contants/config";
+import { getAppointmentTypeById } from "@/data/appointment-types";
 import { getUserById } from "@/data/user";
 import { FaUser } from "react-icons/fa";
 
 const TherapistUserProfile = async ({
   params,
 }: {
-  params: { userId: string };
+  params: { therapistId: string };
 }) => {
-  const userId = params.userId;
-  const user = (await getUserById(userId)) as any;
+  const therapistId = params.therapistId;
+  const user = (await getUserById(therapistId)) as any;
+  const appointmentType = await getAppointmentTypeById(APPOINTMENT_TYPE_ID);
 
   if (!user) {
     return "Couldn't find therapist";
+  }
+
+  if (!appointmentType) {
+    return "Couldn't find appointment type";
   }
 
   return (
@@ -39,8 +46,10 @@ const TherapistUserProfile = async ({
         </div>
       </div>
       <div className="mt-6 bg-white shadow-md rounded-lg p-6">
-        <h2 className="text-xl font-bold mb-4">Calendar</h2>
-        <BookingCalendar />
+        <BookingCalendar
+          appointmentType={appointmentType}
+          therapistId={therapistId}
+        />
         {/* Calendar component will go here */}
       </div>
     </div>

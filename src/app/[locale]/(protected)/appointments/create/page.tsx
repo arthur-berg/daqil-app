@@ -1,20 +1,19 @@
-import { getPatients } from "@/actions/appointments";
+import { getClients } from "@/actions/appointments";
 import CreateAppointmentForm from "@/app/[locale]/(protected)/appointments/create/create-appointment-form";
+import { APPOINTMENT_TYPE_ID } from "@/contants/config";
 import { getAppointmentTypeById } from "@/data/appointment-types";
 
-const appointmentTypeId = "6692b4919a6b12347d0afac4";
-
 const AppointmentsCreatePage = async () => {
-  const [patients, appointmentType] = await Promise.all([
-    getPatients(),
-    getAppointmentTypeById(appointmentTypeId),
+  const [clients, appointmentType] = await Promise.all([
+    getClients(),
+    getAppointmentTypeById(APPOINTMENT_TYPE_ID),
   ]);
 
-  const stringifiedPatients = JSON.parse(JSON.stringify(patients));
+  const stringifiedClients = JSON.parse(JSON.stringify(clients));
 
   return (
     <CreateAppointmentForm
-      patients={stringifiedPatients}
+      clients={stringifiedClients}
       appointmentType={appointmentType}
     />
   );

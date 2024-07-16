@@ -4,42 +4,91 @@ import { getCurrentUser, requireAuth } from "@/lib/auth";
 import Appointment from "@/models/Appointment";
 import { AppointmentSchema } from "@/schemas";
 import { getUserById } from "@/data/user";
-import { Types } from "mongoose";
+import mongoose, { Types } from "mongoose";
 import { UserRole } from "@/generalTypes";
 import User from "@/models/User";
 import { getAppointmentTypeById } from "@/data/appointment-types";
 
-export const getAppointments = async () => {
+export const getClients = async () => {
   await requireAuth([UserRole.THERAPIST]);
 
-  const user = await getCurrentUser();
+  const clients = await User.find({ role: UserRole.CLIENT }).lean();
 
-  const appointments = await Appointment.find({
-    hostUserId: user?.id,
-  }).lean();
-
-  const serializedAppointments = appointments.map((appointment: any) => ({
-    ...appointment,
-    _id: appointment._id.toString(),
-    hostUserId: appointment.hostUserId.toString(),
-    participants: appointment.participants.map((participant: any) =>
-      participant.userId.toString()
-    ),
-    createdAt: appointment.createdAt.toISOString(),
-    updatedAt: appointment.updatedAt.toISOString(),
-  })) as any;
-
-  return serializedAppointments;
+  return clients;
 };
 
-export const getPatients = async () => {
-  await requireAuth([UserRole.THERAPIST]);
+export const bookAppointment = async (
+  appointmentType: any,
+  therapistId: string,
+  startDate: Date
+) => {
+  const user = await requireAuth([UserRole.CLIENT, UserRole.ADMIN]);
 
-  const patients = await User.find({ role: UserRole.CLIENT }).lean();
+  const therapist = await getUserById(therapistId);
 
-  console.log("patients", patients);
+  if (!therapist) {
+    return { error: "Invalid therapist" };
+  }
 
-  return patients;
+  if (!appointmentType) {
+    return { error: "Invalid appointment type" };
+  }
+
+  const endDate = new Date(
+    startDate.getTime() + appointmentType.durationInMinutes * 60000
+  );
+
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
+  try {
+    const appointment = await Appointment.create(
+      [
+        {
+          title: `Therapy session with ${therapist?.firstName}`,
+          startDate,
+          endDate,
+          participants: [user.id],
+          hostUserId: therapistId,
+          durationInMinutes: appointmentType.durationInMinutes,
+          paid: false,
+          status: "confirmed",
+          credits: appointmentType.credits,
+        },
+      ],
+      { session }
+    );
+
+    const appointmentId = appointment[0]._id; // As appointment.create returns an array
+
+    // Update the user who booked the appointment
+    await User.findByIdAndUpdate(
+      user.id,
+      {
+        $push: { appointments: appointmentId },
+      },
+      { session }
+    );
+
+    // Update the therapist
+    await User.findByIdAndUpdate(
+      therapistId,
+      {
+        $push: { appointments: appointmentId },
+      },
+      { session }
+    );
+
+    await session.commitTransaction();
+    session.endSession();
+
+    return { success: "Appointment successfully booked" };
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+    console.error("Error booking appointment:", error);
+    throw error;
+  }
 };
 
 export const createAppointment = async (
@@ -59,7 +108,7 @@ export const createAppointment = async (
     startDate,
     paid,
     status,
-    patientId,
+    clientId,
     appointmentTypeId,
   } = validatedFields.data;
 
@@ -69,37 +118,68 @@ export const createAppointment = async (
     return { error: "Invalid appointment type" };
   }
 
-  let appointmentCost = {};
+  let appointmentCost: Record<string, unknown> = {};
 
   if ("price" in appointmentType) {
-    appointmentCost = {
-      price: appointmentType.price,
-      currency: appointmentType.currency,
-    };
+    appointmentCost.price = appointmentType.price;
+    appointmentCost.currency = appointmentType.currency;
   }
   if ("credits" in appointmentType) {
-    appointmentCost = { credits: appointmentType.credits };
+    appointmentCost.credits = appointmentType.credits;
   }
 
   const endDate = new Date(
     startDate.getTime() + appointmentType.durationInMinutes * 60000
   );
 
-  console.log("startDate", startDate);
-  console.log("endDate", endDate);
+  const session = await mongoose.startSession();
+  session.startTransaction();
 
-  await Appointment.create({
-    title,
-    description,
-    startDate,
-    endDate,
-    paid,
-    status,
-    participants: [{ userId: patientId }],
-    hostUserId: user.id,
-    durationInMinutes: appointmentType.durationInMinutes,
-    ...appointmentCost,
-  });
+  try {
+    const appointment = await Appointment.create(
+      [
+        {
+          title,
+          description,
+          startDate,
+          endDate,
+          paid,
+          status,
+          participants: [clientId],
+          hostUserId: user.id,
+          durationInMinutes: appointmentType.durationInMinutes,
+          ...appointmentCost,
+        },
+      ],
+      { session }
+    );
 
-  return { success: "Appointment successfully created" };
+    const appointmentId = appointment[0]._id;
+
+    await User.findByIdAndUpdate(
+      clientId,
+      {
+        $push: { appointments: appointmentId },
+      },
+      { session }
+    );
+
+    await User.findByIdAndUpdate(
+      user.id,
+      {
+        $push: { appointments: appointmentId },
+      },
+      { session }
+    );
+
+    await session.commitTransaction();
+    session.endSession();
+
+    return { success: "Appointment successfully created" };
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+    console.error("Error booking appointment:", error);
+    throw error;
+  }
 };

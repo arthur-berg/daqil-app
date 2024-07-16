@@ -1,5 +1,6 @@
 import { UserRole } from "@/generalTypes";
 import User from "@/models/User";
+import { ExtendedUser } from "@/next-auth";
 
 export const getUserByEmail = async (email: string) => {
   try {
@@ -13,7 +14,7 @@ export const getUserByEmail = async (email: string) => {
 
 export const getUserById = async (id: string) => {
   try {
-    const user = await User.findById(id).lean();
+    const user = (await User.findById(id).lean()) as ExtendedUser;
 
     return user;
   } catch {

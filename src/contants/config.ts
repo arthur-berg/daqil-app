@@ -1,0 +1,1 @@
+export const APPOINTMENT_TYPE_ID = "6692b4919a6b12347d0afac4";

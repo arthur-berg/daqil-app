@@ -10,6 +10,7 @@ export type ExtendedUser = DefaultSession["user"] & {
   firstName: string;
   lastName: string;
   isOnboardingDone: boolean;
+  appointments: string[];
 };
 
 declare module "next-auth" {
