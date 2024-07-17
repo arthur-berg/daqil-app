@@ -22,11 +22,12 @@
   },
   "ProfileAvatarDropdown": {
     "forClients": "للعملاء",
-"bookSession": "احجز جلسة علاجية",
+    "calendar": "التقويم",
+    "appointments": "المواعيد",
+    "bookSession": "احجز جلسة علاجية",
     "forAllUsers": "لكل المستخدمين",
     "forTherapists": "للمعالجين",
     "createAppointments": "إنشاء مواعيد وجلسات فيديو",
-    "appointments": "المواعيد وجلسات الفيديو",
     "payment": "الاشتراك والرصيد",
     "settings": "الإعدادات",
     "logout": "تسجيل الخروج"

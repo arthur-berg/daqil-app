@@ -1,7 +1,12 @@
 "use client";
 
 import { FaUser } from "react-icons/fa";
-import { ExitIcon, GearIcon, CardStackIcon } from "@radix-ui/react-icons";
+import {
+  ExitIcon,
+  GearIcon,
+  CardStackIcon,
+  CalendarIcon,
+} from "@radix-ui/react-icons";
 
 import {
   DropdownMenu,
@@ -20,10 +25,16 @@ import { useTranslations } from "next-intl";
 const TherapistMenu = ({ t }: { t: any }) => {
   return (
     <>
+      <Link href={"/therapist/calendar"}>
+        <DropdownMenuItem>
+          <CalendarIcon className="h-4 w-4 mr-2" />
+          {t("calendar")}
+        </DropdownMenuItem>
+      </Link>
       <Link href={"/therapist/appointments"}>
         <DropdownMenuItem>
           <CardStackIcon className="h-4 w-4 mr-2" />
-          {t("myAppointments")}
+          {t("appointments")}
         </DropdownMenuItem>
       </Link>
     </>
@@ -36,7 +47,7 @@ const ClientMenu = ({ t }: { t: any }) => {
       <Link href="/client/appointments">
         <DropdownMenuItem>
           <CardStackIcon className="h-4 w-4 mr-2" />
-          {t("myAppointments")}
+          {t("appointments")}
         </DropdownMenuItem>
       </Link>
       <Link href="/therapists">

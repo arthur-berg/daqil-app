@@ -19,13 +19,11 @@ const TherapistsPage = async () => {
                   {therapist.firstName} {therapist.lastName}
                 </div>
                 <div className="text-gray-700 mb-2">{therapist.email}</div>
-                {therapist.userDescription && (
+                {therapist.workDetails && (
                   <>
                     <div className="text-sm text-gray-500">
-                      <div className="mb-2">
-                        {therapist.userDescription.title}
-                      </div>
-                      <div>{therapist.userDescription.description}</div>
+                      <div className="mb-2">{therapist.workDetails.title}</div>
+                      <div>{therapist.workDetails.description}</div>
                     </div>
                   </>
                 )}

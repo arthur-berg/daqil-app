@@ -59,6 +59,12 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         session.user.role = token.role as UserRole;
         session.user.email = token.email as string;
         session.user.isOAuth = token.isOAuth as boolean;
+        if (
+          session.user.role === "THERAPIST" ||
+          session.user.role === "ADMIN"
+        ) {
+          session.user.availableTimes = token.availableTimes as any;
+        }
       }
 
       return session;
@@ -78,6 +84,9 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       token.email = existingUser.email;
       token.role = existingUser.role;
       token.isTwoFactorEnabled = existingUser.isTwoFactorEnabled;
+      if (existingUser.role === "THERAPIST" || existingUser.role === "ADMIN") {
+        token.availableTimes = existingUser.availableTimes;
+      }
 
       return token;
     },

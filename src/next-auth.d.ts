@@ -11,6 +11,34 @@ export type ExtendedUser = DefaultSession["user"] & {
   lastName: string;
   isOnboardingDone: boolean;
   appointments: string[];
+  stripePaymentMethodId?: string;
+  stripeCustomerId?: string;
+  availableTimes?: {
+    blockedOutTimes: {
+      date: Date;
+      timeRanges: {
+        startDate: Date;
+        endDate: Date;
+      }[];
+    }[];
+    specificAvailableTimes: {
+      date: Date;
+      timeRanges: {
+        startDate: Date;
+        endDate: Date;
+      }[];
+    }[];
+    defaultAvailableTimes: {
+      day: string;
+      timeRanges: {
+        startTime: Date;
+        endTime: Date;
+      }[];
+    };
+  };
+  settings?: {
+    preferredCurrency?: "USD" | "AED" | "EUR";
+  };
 };
 
 declare module "next-auth" {

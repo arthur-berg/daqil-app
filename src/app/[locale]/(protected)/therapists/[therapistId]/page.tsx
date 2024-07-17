@@ -38,11 +38,9 @@ const TherapistUserProfile = async ({
             {user.firstName} {user.lastName}
           </div>
           <div className="text-xl text-gray-600 mb-2">
-            {user.userDescription?.title}
+            {user.workDetails?.title}
           </div>
-          <div className="text-gray-700">
-            {user.userDescription?.description}
-          </div>
+          <div className="text-gray-700">{user.workDetails?.description}</div>
         </div>
       </div>
       <div className="mt-6 bg-white shadow-md rounded-lg p-6">

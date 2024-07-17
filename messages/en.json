@@ -23,10 +23,11 @@
   },
   "ProfileAvatarDropdown": {
     "forClients": "For clients",
+    "calendar": "Calendar",
     "bookSession": "Book therapy session",
     "forAllUsers": "For all users",
     "forTherapists": "For therapists",
-    "myAppointments": "My appointments",
+    "appointments": "Appointments",
     "payment": "Subscription & Credits",
     "settings": "Settings",
     "logout": "Logout"

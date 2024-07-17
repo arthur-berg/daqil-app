@@ -2,6 +2,39 @@ import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
 
+const timeRangeSchema = new Schema({
+  startDate: {
+    type: Date,
+    required: false,
+  },
+  endDate: {
+    type: Date,
+    required: false,
+  },
+});
+
+const dateTimesSchema = new Schema({
+  date: {
+    type: Date,
+    required: false,
+  },
+  timeRanges: [timeRangeSchema],
+});
+
+const dayTimesSchema = new Schema({
+  day: {
+    type: String,
+    required: false,
+  },
+  timeRanges: [timeRangeSchema],
+});
+
+const availableTimesSchema = new Schema({
+  blockedOutTimes: [dateTimesSchema],
+  specificAvailableTimes: [dateTimesSchema],
+  defaultAvailableTimes: [dayTimesSchema],
+});
+
 const userSchema = new Schema(
   {
     firstName: {
@@ -12,7 +45,7 @@ const userSchema = new Schema(
       type: String,
       required: false,
     },
-    userDescription: {
+    workDetails: {
       title: {
         type: String,
         required: false,
@@ -35,6 +68,10 @@ const userSchema = new Schema(
       required: false,
     },
     stripeCustomerId: {
+      type: String,
+      required: false,
+    },
+    stripePaymentMethodId: {
       type: String,
       required: false,
     },
@@ -90,6 +127,14 @@ const userSchema = new Schema(
         ref: "Appointment",
       },
     ],
+    availableTimes: availableTimesSchema,
+    settings: {
+      preferredCurrency: {
+        type: String,
+        required: false,
+        default: "USD",
+      },
+    },
   },
   {
     timestamps: true,
