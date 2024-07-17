@@ -14,11 +14,9 @@ type Times = {
 };
 
 const AvailabilityBody = ({
-  occupiedTimes,
   appointmentType,
   availableTimes,
 }: {
-  occupiedTimes: Times[];
   appointmentType: any;
   availableTimes: any;
 }) => {
@@ -105,8 +103,7 @@ const AvailabilityBody = ({
         <TabsContent value="default-availability">
           <DefaultAvailabilityManager
             appointmentType={appointmentType}
-            availableTimes={availableTimes}
-            occupiedTimes={occupiedTimes}
+            defaultAvailable={availableTimes.defaultAvailable}
           />
         </TabsContent>
         <TabsContent value="specific-times">

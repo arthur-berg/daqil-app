@@ -38,15 +38,47 @@ export const SettingsSchema = z
     }
   );
 
+const timeStringOrDateSchema = z.union([
+  z.string().refine(
+    (val) => {
+      const [hour, minute] = val.split(":").map(Number);
+      return (
+        !isNaN(hour) &&
+        !isNaN(minute) &&
+        hour >= 0 &&
+        hour < 24 &&
+        minute >= 0 &&
+        minute < 60
+      );
+    },
+    {
+      message: "Invalid time format",
+    }
+  ),
+  z.date(),
+]);
+
 export const SaveDefaultAvailabilitySchema = z.object({
-  from: z.string({
-    required_error: "From time is required",
-  }),
-  to: z.string({
-    required_error: "To time is required",
-  }),
+  day: z.string(),
+  timeRanges: z.array(
+    z.object({
+      startDate: timeStringOrDateSchema,
+      endDate: timeStringOrDateSchema,
+    })
+  ),
 });
 
+export const DefaultAvailabilitySettingsSchema = z.object({
+  interval: z.number().min(1, "Interval must be at least 1 minute").default(15),
+  fullDayRange: z.object({
+    from: z.string({
+      required_error: "From time is required",
+    }),
+    to: z.string({
+      required_error: "To time is required",
+    }),
+  }),
+});
 /*
 
   const timeRangeSchema = z.object({

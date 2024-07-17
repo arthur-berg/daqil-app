@@ -13,15 +13,9 @@ const AvailabilityPage = async () => {
   const availableTimes = user.availableTimes;
   const appointmentType = await getAppointmentTypeById(APPOINTMENT_TYPE_ID);
 
-  const occupiedTimes = appointments.map((appointment: any) => ({
-    startDate: appointment.startDate,
-    endDate: appointment.endDate,
-  }));
-
   return (
     <div>
       <AvailabilityBody
-        occupiedTimes={occupiedTimes}
         availableTimes={availableTimes}
         appointmentType={appointmentType}
       />

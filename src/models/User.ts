@@ -32,7 +32,25 @@ const dayTimesSchema = new Schema({
 const availableTimesSchema = new Schema({
   blockedOutTimes: [dateTimesSchema],
   specificAvailableTimes: [dateTimesSchema],
-  defaultAvailableTimes: [dayTimesSchema],
+  defaultAvailable: {
+    settings: {
+      interval: {
+        type: Number,
+        required: false,
+      },
+      fullDayRange: {
+        from: {
+          type: String,
+          required: false,
+        },
+        to: {
+          type: String,
+          required: false,
+        },
+      },
+    },
+    availableTimes: [dayTimesSchema],
+  },
 });
 
 const userSchema = new Schema(

@@ -28,11 +28,14 @@ export type ExtendedUser = DefaultSession["user"] & {
         endDate: Date;
       }[];
     }[];
-    defaultAvailableTimes: {
-      day: string;
-      timeRanges: {
-        startTime: Date;
-        endTime: Date;
+    defaultAvailable: {
+      settings: {};
+      availableTimes: {
+        day: string;
+        timeRanges: {
+          startTime: Date;
+          endTime: Date;
+        }[];
       }[];
     };
   };
