@@ -28,7 +28,7 @@ const TherapistMenu = ({ t }: { t: any }) => {
       <Link href={"/therapist/calendar"}>
         <DropdownMenuItem>
           <CalendarIcon className="h-4 w-4 mr-2" />
-          {t("calendar")}
+          {t("availability")}
         </DropdownMenuItem>
       </Link>
       <Link href={"/therapist/appointments"}>

@@ -21,6 +21,7 @@
     "alreadyHaveAccount": "هل لديك حساب بالفعل؟"
   },
   "ProfileAvatarDropdown": {
+    "availability": "التوفر",
     "forClients": "للعملاء",
     "calendar": "التقويم",
     "appointments": "المواعيد",

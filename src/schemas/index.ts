@@ -38,6 +38,38 @@ export const SettingsSchema = z
     }
   );
 
+export const SaveDefaultAvailabilitySchema = z.object({
+  from: z.string({
+    required_error: "From time is required",
+  }),
+  to: z.string({
+    required_error: "To time is required",
+  }),
+});
+
+/*
+
+  const timeRangeSchema = z.object({
+  from: z.string({
+    required_error: "From time is required",
+  }),
+  to: z.string({
+    required_error: "To time is required",
+  }),
+});
+
+const settingsSchema = z.object({
+  interval: z.number().min(1, "Interval must be at least 1 minute"),
+  fullDayRange: z.object({
+    from: z.string({
+      required_error: "From time is required",
+    }),
+    to: z.string({
+      required_error: "To time is required",
+    }),
+  }),
+});*/
+
 export const AppointmentSchema = z.object({
   startDate: z.date({
     required_error: "Start date is required",

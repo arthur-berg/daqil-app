@@ -22,6 +22,7 @@
     "alreadyHaveAccount": "Already have an account?"
   },
   "ProfileAvatarDropdown": {
+    "availability": "Availability",
     "forClients": "For clients",
     "calendar": "Calendar",
     "bookSession": "Book therapy session",
