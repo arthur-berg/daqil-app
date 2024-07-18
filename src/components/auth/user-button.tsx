@@ -25,7 +25,7 @@ import { useTranslations } from "next-intl";
 const TherapistMenu = ({ t }: { t: any }) => {
   return (
     <>
-      <Link href={"/therapist/calendar"}>
+      <Link href={"/therapist/availability"}>
         <DropdownMenuItem>
           <CalendarIcon className="h-4 w-4 mr-2" />
           {t("availability")}
