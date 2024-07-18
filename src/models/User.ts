@@ -30,27 +30,28 @@ const dayTimesSchema = new Schema({
 });
 
 const availableTimesSchema = new Schema({
-  blockedOutTimes: [dateTimesSchema],
-  specificAvailableTimes: [dateTimesSchema],
-  defaultAvailable: {
-    settings: {
-      interval: {
-        type: Number,
+  settings: {
+    interval: {
+      type: Number,
+      required: false,
+      default: 15,
+    },
+    fullDayRange: {
+      from: {
+        type: String,
         required: false,
+        default: "09:00",
       },
-      fullDayRange: {
-        from: {
-          type: String,
-          required: false,
-        },
-        to: {
-          type: String,
-          required: false,
-        },
+      to: {
+        type: String,
+        required: false,
+        default: "17:00",
       },
     },
-    availableTimes: [dayTimesSchema],
   },
+  blockedOutTimes: [dateTimesSchema],
+  specificAvailableTimes: [dateTimesSchema],
+  defaultAvailableTimes: [dayTimesSchema],
 });
 
 const userSchema = new Schema(

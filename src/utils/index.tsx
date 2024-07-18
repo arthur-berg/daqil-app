@@ -9,3 +9,7 @@ export const currencyToSymbol = (currency: "USD" | "AED" | "EUR") => {
     return "";
   }
 };
+
+export const capitalizeFirstLetter = (string: string) => {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+};

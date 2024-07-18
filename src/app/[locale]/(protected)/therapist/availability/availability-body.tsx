@@ -8,11 +8,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import DefaultAvailabilityManager from "./default-availability-manager";
 
-type Times = {
-  startDate: Date;
-  endDate: Date;
-};
-
 const AvailabilityBody = ({
   appointmentType,
   availableTimes,
@@ -103,7 +98,8 @@ const AvailabilityBody = ({
         <TabsContent value="default-availability">
           <DefaultAvailabilityManager
             appointmentType={appointmentType}
-            defaultAvailable={availableTimes.defaultAvailable}
+            settings={availableTimes?.settings}
+            defaultAvailableTimes={availableTimes?.defaultAvailableTimes}
           />
         </TabsContent>
         <TabsContent value="specific-times">

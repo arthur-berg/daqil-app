@@ -14,6 +14,13 @@ export type ExtendedUser = DefaultSession["user"] & {
   stripePaymentMethodId?: string;
   stripeCustomerId?: string;
   availableTimes?: {
+    settings: {
+      interval: number;
+      fullDayRange: {
+        from: string;
+        to;
+      };
+    };
     blockedOutTimes: {
       date: Date;
       timeRanges: {
@@ -28,14 +35,11 @@ export type ExtendedUser = DefaultSession["user"] & {
         endDate: Date;
       }[];
     }[];
-    defaultAvailable: {
-      settings: {};
-      availableTimes: {
-        day: string;
-        timeRanges: {
-          startTime: Date;
-          endTime: Date;
-        }[];
+    defaultAvailableTimes: {
+      day: string;
+      timeRanges: {
+        startTime: Date;
+        endTime: Date;
       }[];
     };
   };

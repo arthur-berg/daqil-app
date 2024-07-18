@@ -68,8 +68,28 @@ export const SaveDefaultAvailabilitySchema = z.object({
   ),
 });
 
-export const DefaultAvailabilitySettingsSchema = z.object({
+export const DefaultAvailabilitySettingsSchemaBE = z.object({
   interval: z.number().min(1, "Interval must be at least 1 minute").default(15),
+  fullDayRange: z.object({
+    from: z.string({
+      required_error: "From time is required",
+    }),
+    to: z.string({
+      required_error: "To time is required",
+    }),
+  }),
+});
+
+export const DefaultAvailabilitySettingsSchemaFE = z.object({
+  interval: z.string().refine(
+    (val) => {
+      const num = Number(val);
+      return !isNaN(num) && num >= 1;
+    },
+    {
+      message: "Interval must be at least 1 minute and a valid number",
+    }
+  ),
   fullDayRange: z.object({
     from: z.string({
       required_error: "From time is required",

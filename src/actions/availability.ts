@@ -6,12 +6,12 @@ import { requireAuth } from "@/lib/auth";
 import User from "@/models/User";
 import {
   SaveDefaultAvailabilitySchema,
-  DefaultAvailabilitySettingsSchema,
+  DefaultAvailabilitySettingsSchemaBE,
 } from "@/schemas";
 import { getTranslations } from "next-intl/server";
 
 export const updateDefaultAvailabilitySettings = async (
-  values: z.infer<typeof DefaultAvailabilitySettingsSchema>
+  values: z.infer<typeof DefaultAvailabilitySettingsSchemaBE>
 ) => {
   try {
     const user = (await requireAuth([
@@ -24,7 +24,8 @@ export const updateDefaultAvailabilitySettings = async (
       getTranslations("ErrorMessages"),
     ]);
 
-    const validatedFields = DefaultAvailabilitySettingsSchema.safeParse(values);
+    const validatedFields =
+      DefaultAvailabilitySettingsSchemaBE.safeParse(values);
 
     if (!validatedFields.success) {
       return { error: tError("invalidFields") };
@@ -34,21 +35,19 @@ export const updateDefaultAvailabilitySettings = async (
       user.availableTimes = {
         blockedOutTimes: [],
         specificAvailableTimes: [],
-        defaultAvailable: { settings: {} },
+        defaultAvailableTimes: [],
+        settings: {
+          interval: 15,
+          fullDayRange: { from: "09:00", to: "17:00" },
+        },
       };
-    }
-
-    if (!user.availableTimes.defaultAvailable) {
-      user.availableTimes.defaultAvailable = { settings: {} };
     }
 
     await User.findByIdAndUpdate(user.id, {
       $set: {
-        "availableTimes.defaultAvailable.settings.interval": values.interval,
-        "availableTimes.defaultAvailable.settings.fullDayRange.from":
-          values.fullDayRange.from,
-        "availableTimes.defaultAvailable.settings.fullDayRange.to":
-          values.fullDayRange.to,
+        "availableTimes.settings.interval": values.interval,
+        "availableTimes.settings.fullDayRange.from": values.fullDayRange.from,
+        "availableTimes.settings.fullDayRange.to": values.fullDayRange.to,
       },
     });
 
@@ -81,25 +80,31 @@ export const saveDefaultAvailableTimes = async (
 
     const data = validatedFields.data;
 
+    console.log("validatedFields", validatedFields);
+
     if (!user.availableTimes) {
       user.availableTimes = {
+        settings: {
+          interval: 15,
+          fullDayRange: { from: "09:00", to: "17:00" },
+        },
         blockedOutTimes: [],
         specificAvailableTimes: [],
-        defaultAvailable: {},
+        defaultAvailableTimes: [],
       };
     }
 
     const filteredAvailableTimes =
-      user.availableTimes.defaultAvailable?.availableTimes.filter(
+      user.availableTimes.defaultAvailableTimes?.filter(
         (availableTime: any) => availableTime.day !== data.day
       ) ?? {};
 
     const mergedDefaultTimes = [...filteredAvailableTimes, data];
 
-    user.availableTimes.defaultAvailable.availableTimes = mergedDefaultTimes;
+    user.availableTimes.defaultAvailableTimes = mergedDefaultTimes;
 
     await User.findByIdAndUpdate(user.id, {
-      "availableTimes.defaultAvailable.availableTimes": mergedDefaultTimes,
+      "availableTimes.defaultAvailableTimes": mergedDefaultTimes,
     });
 
     return { success: "Available times saved successfully." };

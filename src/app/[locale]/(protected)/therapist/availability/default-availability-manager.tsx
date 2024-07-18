@@ -14,18 +14,19 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { DefaultAvailabilitySettingsSchema } from "@/schemas";
+import { DefaultAvailabilitySettingsSchemaFE } from "@/schemas";
 import { updateDefaultAvailabilitySettings } from "@/actions/availability";
 import { useToast } from "@/components/ui/use-toast";
+import { capitalizeFirstLetter } from "@/utils";
 
 const daysOfWeek = [
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-  "Sunday",
+  "monday",
+  "tuesday",
+  "wednesday",
+  "thursday",
+  "friday",
+  "saturday",
+  "sunday",
 ];
 
 const initialEditModes = daysOfWeek.reduce((acc, day) => {
@@ -35,10 +36,12 @@ const initialEditModes = daysOfWeek.reduce((acc, day) => {
 
 const DefaultAvailabilityManager = ({
   appointmentType,
-  defaultAvailable,
+  defaultAvailableTimes,
+  settings,
 }: {
   appointmentType: any;
-  defaultAvailable: any;
+  defaultAvailableTimes: any[];
+  settings: any;
 }) => {
   const [isPending, startTransition] = useTransition();
 
@@ -50,27 +53,29 @@ const DefaultAvailabilityManager = ({
   );
   const { toast } = useToast();
 
+  const fullDayRange = {
+    from: settings?.fullDayRange?.from || "09:00",
+    to: settings?.fullDayRange?.to || "17:00",
+  };
+
   const defaultAvailabilityForm = useForm({
-    resolver: zodResolver(DefaultAvailabilitySettingsSchema),
+    resolver: zodResolver(DefaultAvailabilitySettingsSchemaFE),
     defaultValues: {
       interval: 15,
-      fullDayRange: {
-        from: defaultAvailable?.settings?.fullDayRange?.from || "09:00",
-        to: defaultAvailable?.settings?.fullDayRange?.to || "17:00",
-      },
+      fullDayRange,
     },
   });
 
   useEffect(() => {
     const initialTimeRanges = {};
-    defaultAvailable.availableTimes.forEach(({ day, timeRanges }) => {
+    defaultAvailableTimes.forEach(({ day, timeRanges }) => {
       initialTimeRanges[day] = timeRanges.map(({ startDate, endDate }) => ({
         from: new Date(startDate).toTimeString().slice(0, 5),
         to: new Date(endDate).toTimeString().slice(0, 5),
       }));
     });
     setTimeRangeInputs(initialTimeRanges);
-  }, [defaultAvailable.availableTimes]);
+  }, [defaultAvailableTimes]);
 
   const toggleEditModeForDay = (day: string) => {
     setEditModes((prev) => {
@@ -96,7 +101,7 @@ const DefaultAvailabilityManager = ({
   };
 
   const onSubmitDefaultAvailability = (
-    values: z.infer<typeof DefaultAvailabilitySettingsSchema>
+    values: z.infer<typeof DefaultAvailabilitySettingsSchemaFE>
   ) => {
     startTransition(async () => {
       const data = await updateDefaultAvailabilitySettings(values);
@@ -200,7 +205,9 @@ const DefaultAvailabilityManager = ({
       {daysOfWeek.map((day) => (
         <div key={day} className="mb-8">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-semibold">{day}</h3>
+            <h3 className="text-lg font-semibold">
+              {capitalizeFirstLetter(day)}
+            </h3>
             <Button
               variant="outline"
               onClick={() => toggleEditModeForDay(day)}
@@ -219,7 +226,7 @@ const DefaultAvailabilityManager = ({
               day={day}
               timeRangeInputs={timeRangeInputs}
               setTimeRangeInputs={setTimeRangeInputs}
-              fullDayRange={defaultAvailable?.settings?.fullDayRange}
+              fullDayRange={fullDayRange}
             />
           ) : (
             <div className="flex flex-col space-y-2">
