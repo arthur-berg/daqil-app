@@ -24,6 +24,7 @@
   "ProfileAvatarDropdown": {
     "availability": "Availability",
     "forClients": "For clients",
+    "admin": "Admin dashboard",
     "calendar": "Calendar",
     "bookSession": "Book therapy session",
     "forAllUsers": "For all users",

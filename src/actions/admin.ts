@@ -1,7 +1,15 @@
 "use server";
-
+import * as z from "zod";
+import bcrypt from "bcryptjs";
 import { UserRole } from "@/generalTypes";
-import { getCurrentRole } from "@/lib/auth";
+import { getCurrentRole, requireAuth } from "@/lib/auth";
+import { InviteTherapistSchema } from "@/schemas";
+import { getTranslations } from "next-intl/server";
+import User from "@/models/User";
+import { getUserByEmail } from "@/data/user";
+import { generatePassword } from "@/utils";
+import { addUserToSubscriberList, sendVerificationEmail } from "@/lib/mail";
+import { generateVerificationToken } from "@/lib/tokens";
 
 export const admin = async () => {
   const { role } = await getCurrentRole();
@@ -11,4 +19,57 @@ export const admin = async () => {
   }
 
   return { error: "Forbidden Server Action!" };
+};
+
+export const inviteTherapist = async (
+  values: z.infer<typeof InviteTherapistSchema>
+) => {
+  try {
+    const user = await requireAuth([UserRole.ADMIN]);
+    const [tSuccess, tError] = await Promise.all([
+      getTranslations("SuccessMessages"),
+      getTranslations("ErrorMessages"),
+    ]);
+
+    const validatedFields = InviteTherapistSchema.safeParse(values);
+
+    if (!validatedFields.success) {
+      return { error: tError("invalidFields") };
+    }
+
+    const { email } = validatedFields.data;
+
+    const existingUser = await getUserByEmail(email);
+
+    if (existingUser) {
+      return {
+        error: "A user with this email already exists.",
+      };
+    }
+
+    const password = generatePassword();
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    await User.create({
+      email,
+      password: hashedPassword,
+      role: UserRole.THERAPIST,
+    });
+
+    const verificationToken = await generateVerificationToken(email, 168); // 7 days
+
+    await sendVerificationEmail(
+      verificationToken.email,
+      verificationToken.token,
+      password
+    );
+
+    await addUserToSubscriberList(verificationToken.email, UserRole.THERAPIST);
+
+    return { success: "Therapist was invited successfully" };
+  } catch (error) {
+    console.error("Error inviting therapist", error);
+    return { error: "Something went wrong" };
+  }
 };

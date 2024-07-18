@@ -6,6 +6,7 @@ import {
   GearIcon,
   CardStackIcon,
   CalendarIcon,
+  DashboardIcon,
 } from "@radix-ui/react-icons";
 
 import {
@@ -72,6 +73,7 @@ export const UserButton = () => {
 
   const isTherapist = user?.role === "THERAPIST";
   const isClient = user?.role === "CLIENT";
+  const isAdmin = user?.role === "ADMIN";
 
   return (
     <DropdownMenu>
@@ -94,12 +96,14 @@ export const UserButton = () => {
           <TherapistMenu t={t} />
         ) : isClient ? (
           <ClientMenu t={t} />
-        ) : (
-          <>
-            <TherapistMenu t={t} />
-            <ClientMenu t={t} />
-          </>
-        )}
+        ) : isAdmin ? (
+          <Link href="/admin">
+            <DropdownMenuItem>
+              <DashboardIcon className="h-4 w-4 mr-2" />
+              {t("admin")}
+            </DropdownMenuItem>
+          </Link>
+        ) : null}
         <Link href="/settings">
           <DropdownMenuItem>
             <GearIcon className="h-4 w-4 mr-2" />

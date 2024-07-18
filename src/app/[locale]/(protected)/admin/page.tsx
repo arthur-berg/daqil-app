@@ -1,58 +1,18 @@
-"use client";
-import { admin } from "@/actions/admin";
-import { RoleGate } from "@/components/auth/role-gate";
-import { FormSuccess } from "@/components/form-success";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { UserRole } from "@/generalTypes";
-import { useToast } from "@/components/ui/use-toast";
+import { Link } from "@/navigation";
 
 const AdminPage = () => {
-  const { toast } = useToast();
-  const onServerActionClick = async () => {
-    const data = await admin();
-    if (data.error) {
-      toast({
-        title: data.error,
-      });
-    }
-    if (data.success) {
-      toast({
-        title: data.success,
-      });
-    }
-  };
-
-  const onApiRouteClick = () => {
-    fetch("/api/admin").then((response) => {
-      if (response.ok) {
-        toast({
-          title: "Allowed API Route!",
-        });
-      } else {
-        toast({
-          title: "Forbidden API Route!",
-        });
-      }
-    });
-  };
-
   return (
-    <Card className="w-[600px]">
+    <Card className="w-full md:w-[600px]">
       <CardHeader>
-        <p>🔑 Admin</p>
+        <p>🔑 Admin Dashboard</p>
       </CardHeader>
       <CardContent className="space-y-4">
-        <RoleGate allowedRole={UserRole.ADMIN}>
-          <FormSuccess message="You are allowed to see this content!" />
-        </RoleGate>
-        <div className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-md">
-          <p className="text-sm font-medium">Admin-only API Route</p>
-          <Button onClick={onApiRouteClick}>Click to test</Button>
-        </div>
-        <div className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-md">
-          <p className="text-sm font-medium">Admin-only Server Action</p>
-          <Button onClick={onServerActionClick}>Click to test</Button>
+        <div className="flex flex-row items-center justify-between p-3 ">
+          <Link href="/admin/therapists">
+            <Button>Manage therapists</Button>
+          </Link>
         </div>
       </CardContent>
     </Card>

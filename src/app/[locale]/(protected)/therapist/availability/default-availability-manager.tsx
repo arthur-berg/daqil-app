@@ -68,7 +68,7 @@ const DefaultAvailabilityManager = ({
 
   useEffect(() => {
     const initialTimeRanges = {};
-    defaultAvailableTimes.forEach(({ day, timeRanges }) => {
+    defaultAvailableTimes?.forEach(({ day, timeRanges }) => {
       initialTimeRanges[day] = timeRanges.map(({ startDate, endDate }) => ({
         from: new Date(startDate).toTimeString().slice(0, 5),
         to: new Date(endDate).toTimeString().slice(0, 5),

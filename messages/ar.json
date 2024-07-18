@@ -23,6 +23,7 @@
   "ProfileAvatarDropdown": {
     "availability": "التوفر",
     "forClients": "للعملاء",
+    "admin": "لوحة تحكم المشرف",
     "calendar": "التقويم",
     "appointments": "المواعيد",
     "bookSession": "احجز جلسة علاجية",

@@ -1,5 +1,6 @@
 import mailchimp from "@mailchimp/mailchimp_transactional";
 import mailchimpMarketing from "@mailchimp/mailchimp_marketing";
+import { UserRole } from "@/generalTypes";
 
 mailchimpMarketing.setConfig({
   apiKey: process.env.MAILCHIMP_MARKETING_KEY,
@@ -10,17 +11,23 @@ const mailchimpTx = mailchimp(process.env.MAILCHIMP_TRANSACTIONAL_KEY || "");
 
 const domain = process.env.NEXT_PUBLIC_APP_URL;
 
-export const addUserToSubscriberList = async (email: string) => {
+export const addUserToSubscriberList = async (
+  email: string,
+  userRole?: UserRole
+) => {
+  //TODO! SEE WHY THIS FUNCTION IS NOT WORKING ANYMORE
   try {
-    await mailchimpMarketing.lists.getListMember(
-      process.env.MAILCHIMP_LIST_ID as string,
-      email
-    );
+    const listId =
+      userRole && userRole === UserRole.THERAPIST
+        ? process.env.MAILCHIMP_THERAPIST_LIST_ID
+        : process.env.MAILCHIMP_LIST_ID;
+
+    await mailchimpMarketing.lists.getListMember(listId as string, email);
 
     // If we get here, the user exists, so no need to add them again
     return { success: "User already exists in the list" };
   } catch (error: any) {
-    if (error.status === 404) {
+    if (error?.status === 404) {
       // If the error is a 404, it means the user does not exist
       try {
         await mailchimpMarketing.lists.addListMember(

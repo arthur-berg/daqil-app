@@ -14,7 +14,8 @@ export const getCurrentRole = async () => {
   return {
     role: session?.user?.role,
     isTherapist: session?.user?.role === "THERAPIST",
-    isPatient: session?.user?.role === "CLIENT",
+    isAdmin: session?.user?.role === "ADMIN",
+    isClient: session?.user?.role === "CLIENT",
   };
 };
 

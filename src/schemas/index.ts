@@ -153,6 +153,10 @@ export const ResetSchema = z.object({
   email: z.string().email({ message: "Email is required" }),
 });
 
+export const InviteTherapistSchema = z.object({
+  email: z.string().email({ message: "Email is required" }),
+});
+
 export const LoginSchema = z.object({
   email: z.string().email({ message: "Email is required" }),
   password: z.optional(

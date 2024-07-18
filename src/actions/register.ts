@@ -8,16 +8,7 @@ import { RegisterSchema } from "@/schemas";
 import { getUserByEmail } from "@/data/user";
 import { generateVerificationToken } from "@/lib/tokens";
 import { addUserToSubscriberList, sendVerificationEmail } from "@/lib/mail";
-
-const generatePassword = (length = 12) => {
-  const charset =
-    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+<>?";
-  let password = "";
-  for (let i = 0, n = charset.length; i < length; ++i) {
-    password += charset.charAt(Math.floor(Math.random() * n));
-  }
-  return password;
-};
+import { generatePassword } from "@/utils";
 
 export const register = async (values: z.infer<typeof RegisterSchema>) => {
   const validatedFields = RegisterSchema.safeParse(values);
