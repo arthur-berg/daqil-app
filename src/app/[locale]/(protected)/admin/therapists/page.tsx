@@ -31,8 +31,8 @@ const AdminTherapistsPage = async () => {
               <InviteTherapistForm />
             </NextIntlClientProvider>
           </div>
+          <div className="text-center mt-8 mb-4">All therapists</div>
           <Table>
-            <TableCaption>Therapists</TableCaption>
             <TableHeader>
               <TableRow>
                 <TableHead className="w-[100px]">Name</TableHead>

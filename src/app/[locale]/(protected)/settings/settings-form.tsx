@@ -172,7 +172,7 @@ const SettingsForm = () => {
                   />
                 </>
               )}
-              <FormField
+              {/*  <FormField
                 control={form.control}
                 name="role"
                 render={({ field }) => (
@@ -199,7 +199,7 @@ const SettingsForm = () => {
                     <FormMessage />
                   </FormItem>
                 )}
-              />
+              /> */}
 
               {/*   {user?.role === "ADMIN" ? (
                 <FormField
