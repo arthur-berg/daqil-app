@@ -15,7 +15,47 @@ import { addMinutes, isAfter, isBefore, isEqual, set } from "date-fns";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { useToast } from "@/components/ui/use-toast";
-import { TrashIcon } from "@radix-ui/react-icons";
+import { TrashIcon, CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
+
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { PopoverClose } from "@radix-ui/react-popover";
+
+const generateTimeIntervals = (intervalMinutes = 15) => {
+  const times = [];
+  const start = set(new Date(), {
+    hours: 7, // Start at 9:00
+    minutes: 0,
+    seconds: 0,
+    milliseconds: 0,
+  });
+  const end = set(new Date(), {
+    hours: 23,
+    minutes: 59,
+    seconds: 0,
+    milliseconds: 0,
+  });
+
+  let current = start;
+  while (isBefore(current, end)) {
+    times.push(current.toTimeString().slice(0, 5));
+    current = addMinutes(current, intervalMinutes);
+  }
+  return times;
+};
+
+const timeOptions = generateTimeIntervals(15);
 
 const DefaultAvailabilityForm = ({
   day,
@@ -33,6 +73,7 @@ const DefaultAvailabilityForm = ({
   fullDayRange: any;
 }) => {
   const [isPending, startTransition] = useTransition();
+  const [popoverOpen, setIsPopoverOpen] = useState(false);
 
   const { toast } = useToast();
 
@@ -150,22 +191,60 @@ const DefaultAvailabilityForm = ({
                         render={({ field }) => (
                           <FormItem>
                             <FormControl>
-                              <input
-                                type="time"
-                                {...field}
-                                value={field.value || range.from}
-                                disabled={!editModes[day]}
-                                onChange={(e) => {
-                                  field.onChange(e);
-                                  handleTimeRangeChange(
-                                    day,
-                                    index,
-                                    "from",
-                                    e.target.value
-                                  );
-                                }}
-                                className="border rounded px-2 py-1 w-24"
-                              />
+                              <Popover>
+                                <PopoverTrigger asChild>
+                                  <Button
+                                    variant="outline"
+                                    role="combobox"
+                                    className="w-[150px] justify-between"
+                                  >
+                                    {field.value ? field.value : "Select time"}
+                                    <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                  </Button>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-[150px] p-0">
+                                  <Command>
+                                    <CommandInput placeholder="Search time..." />
+                                    <CommandList>
+                                      <CommandEmpty>
+                                        No time found.
+                                      </CommandEmpty>
+
+                                      <CommandGroup>
+                                        {timeOptions.map((time) => (
+                                          <CommandItem
+                                            value={time}
+                                            key={time}
+                                            onSelect={() => {
+                                              console.log("time", time);
+                                              form.setValue(
+                                                `timeRanges.${index}.startDate`,
+                                                time
+                                              );
+
+                                              handleTimeRangeChange(
+                                                day,
+                                                index,
+                                                "from",
+                                                time
+                                              );
+                                            }}
+                                          >
+                                            <CheckIcon
+                                              className={`mr-2 h-4 w-4 ${
+                                                time === field.value
+                                                  ? "opacity-100"
+                                                  : "opacity-0"
+                                              }`}
+                                            />
+                                            {time}
+                                          </CommandItem>
+                                        ))}
+                                      </CommandGroup>
+                                    </CommandList>
+                                  </Command>
+                                </PopoverContent>
+                              </Popover>
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -177,22 +256,60 @@ const DefaultAvailabilityForm = ({
                         render={({ field }) => (
                           <FormItem>
                             <FormControl>
-                              <input
-                                type="time"
-                                {...field}
-                                value={field.value || range.to}
-                                disabled={!editModes[day]}
-                                onChange={(e) => {
-                                  field.onChange(e);
-                                  handleTimeRangeChange(
-                                    day,
-                                    index,
-                                    "to",
-                                    e.target.value
-                                  );
-                                }}
-                                className="border rounded px-2 py-1 w-24"
-                              />
+                              <Popover>
+                                <PopoverTrigger asChild>
+                                  <Button
+                                    variant="outline"
+                                    role="combobox"
+                                    className="w-[150px] justify-between"
+                                  >
+                                    {field.value ? field.value : "Select time"}
+                                    <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                  </Button>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-[150px] p-0">
+                                  <Command>
+                                    <CommandInput placeholder="Search time..." />
+                                    <CommandList>
+                                      <CommandEmpty>
+                                        No time found.
+                                      </CommandEmpty>
+                                      <CommandGroup>
+                                        {timeOptions.map((time) => (
+                                          <CommandItem
+                                            value={time}
+                                            key={time}
+                                            onSelect={() => {
+                                              form.setValue(
+                                                `timeRanges.${index}.endDate`,
+                                                time
+                                              );
+
+                                              handleTimeRangeChange(
+                                                day,
+                                                index,
+                                                "to",
+                                                time
+                                              );
+                                            }}
+                                          >
+                                            {
+                                              <CheckIcon
+                                                className={`mr-2 h-4 w-4 ${
+                                                  time === field.value
+                                                    ? "opacity-100"
+                                                    : "opacity-0"
+                                                }`}
+                                              />
+                                            }
+                                            {time}
+                                          </CommandItem>
+                                        ))}
+                                      </CommandGroup>
+                                    </CommandList>
+                                  </Command>
+                                </PopoverContent>
+                              </Popover>
                             </FormControl>
                             <FormMessage />
                           </FormItem>
