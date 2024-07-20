@@ -12,10 +12,15 @@ const dmSans = DM_Sans({ subsets: ["latin"], weight: ["400", "600"] });
 
 const initializeScheduledJobs = async () => {
   const now = new Date();
-  const pendingAppointments = await Appointment.find({
-    endDate: { $gte: now },
-    status: "confirmed",
+  const pastAppointments = await Appointment.find({
+    endDate: { $lt: now },
+    status: { $in: ["confirmed", "pending"] },
   });
+  const futureAppointments = await Appointment.find({
+    endDate: { $gte: now },
+    status: { $in: ["confirmed", "pending"] },
+  });
+  const pendingAppointments = [...pastAppointments, ...futureAppointments];
 
   pendingAppointments.forEach((appointment) => {
     scheduleJobToCheckAppointmentStatus(appointment._id, appointment.endDate);

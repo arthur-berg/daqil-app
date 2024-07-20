@@ -5,21 +5,43 @@ export const scheduleJobToCheckAppointmentStatus = (
   appointmentId: string,
   endDate: Date
 ) => {
-  schedule.scheduleJob(endDate, async () => {
-    const appointment = await Appointment.findById(appointmentId);
-    if (!appointment) {
-      console.error("Appointment not found");
-      return;
-    }
+  const now = new Date();
 
-    const allParticipantsShowUp = appointment.participants.every(
-      (p: any) => p.showUp
-    );
-    if (appointment.hostShowUp && allParticipantsShowUp) {
-      appointment.status = "completed";
-    } else if (!allParticipantsShowUp) {
-      appointment.status = "no-show";
-    }
-    await appointment.save();
+  if (endDate < now) {
+    // If the endDate is in the past, run the job immediately
+    updateAppointmentStatus(appointmentId);
+  } else {
+    // Schedule the job for future endDates
+    schedule.scheduleJob(endDate, async () => {
+      await updateAppointmentStatus(appointmentId);
+    });
+  }
+};
+
+const updateAppointmentStatus = async (appointmentId: string) => {
+  const appointment = await Appointment.findById(appointmentId);
+
+  if (!appointment) {
+    return;
+  }
+
+  let newStatus = "completed";
+  const { hostShowUp, participants } = appointment;
+
+  const allParticipantsShowedUp = participants.every(
+    (participant: any) => participant.showUp
+  );
+
+  if (!hostShowUp && !allParticipantsShowedUp) {
+    newStatus = "no-show-both";
+  } else if (!hostShowUp) {
+    newStatus = "no-show-host";
+  } else if (!allParticipantsShowedUp) {
+    newStatus = "no-show-participant";
+  }
+
+  appointment.status = newStatus;
+  await Appointment.findByIdAndUpdate(appointmentId, {
+    status: newStatus,
   });
 };
