@@ -19,7 +19,7 @@ export const isUserAuthorized = async (
 
 export const getClient = (session: any, userId?: string) => {
   const patient = session.participants.find(
-    (participantId: any) => participantId === userId
+    (participant: any) => participant.userId === userId
   );
 
   return patient;

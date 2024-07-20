@@ -5,8 +5,22 @@ import { getLangDir } from "rtl-detect";
 import "@/app/globals.css";
 
 import connectToMongoDB from "@/lib/mongoose";
+import { scheduleJobToCheckAppointmentStatus } from "@/lib/schedulerJobs";
+import Appointment from "@/models/Appointment";
 
 const dmSans = DM_Sans({ subsets: ["latin"], weight: ["400", "600"] });
+
+const initializeScheduledJobs = async () => {
+  const now = new Date();
+  const pendingAppointments = await Appointment.find({
+    endDate: { $gte: now },
+    status: "confirmed",
+  });
+
+  pendingAppointments.forEach((appointment) => {
+    scheduleJobToCheckAppointmentStatus(appointment._id, appointment.endDate);
+  });
+};
 
 export const metadata: Metadata = {
   title: "Zakina app",
@@ -22,7 +36,9 @@ export default async function LocaleLayout({
 }>) {
   try {
     await connectToMongoDB();
-    console.log("Mongo connected");
+    await initializeScheduledJobs();
+
+    console.log("Mongo connected and scheduler jobs running for appointments");
   } catch {
     console.log("Mongo connection failed");
   }

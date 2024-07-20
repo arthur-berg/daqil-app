@@ -26,7 +26,7 @@ import {
 const AppointmentList = ({ appointments }: { appointments: any }) => {
   const [filter, setFilter] = useState("confirmed");
 
-  const filteredAppointments = appointments.filter(
+  const filteredAppointments = appointments?.filter(
     (appointment: any) => appointment.status === filter
   );
 
@@ -57,7 +57,7 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
               </div>
             </div>
             <Accordion type="single" collapsible className="w-full">
-              {filteredAppointments.map((appointment: any) => (
+              {filteredAppointments?.map((appointment: any) => (
                 <AccordionItem
                   className="bg-white"
                   key={appointment._id.toString()}

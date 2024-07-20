@@ -19,8 +19,15 @@ const appointmentSchema = new Schema(
     },
     participants: [
       {
-        type: Schema.Types.ObjectId,
-        ref: "User",
+        userId: {
+          type: Schema.Types.ObjectId,
+          ref: "User",
+          required: true,
+        },
+        showUp: {
+          type: Boolean,
+          default: false,
+        },
       },
     ],
     durationInMinutes: {
@@ -66,8 +73,20 @@ const appointmentSchema = new Schema(
     },
     status: {
       type: String,
-      enum: ["confirmed", "canceled", "completed", "pending"],
+      enum: [
+        "confirmed",
+        "canceled",
+        "completed",
+        "pending",
+        "no-show-both",
+        "no-show-host",
+        "no-show-participant",
+      ],
       default: "confirmed",
+    },
+    hostShowUp: {
+      type: Boolean,
+      default: false,
     },
   },
   {

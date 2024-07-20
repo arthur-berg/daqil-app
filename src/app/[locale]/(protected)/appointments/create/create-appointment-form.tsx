@@ -28,7 +28,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { createAppointment } from "@/actions/appointments";
+import { scheduleAppointment } from "@/actions/appointments";
 import { useToast } from "@/components/ui/use-toast";
 
 import { DateTimePicker } from "@/components/ui/datetime-picker";
@@ -69,7 +69,7 @@ const CreateAppointmentForm = ({
   const onSubmit = (values: z.infer<typeof AppointmentSchema>) => {
     startTransition(async () => {
       try {
-        const data = await createAppointment(values);
+        const data = await scheduleAppointment(values);
         if (data.error) {
           setError(data.error);
         }

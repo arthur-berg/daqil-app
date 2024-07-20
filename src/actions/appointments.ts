@@ -1,6 +1,6 @@
 "use server";
 import * as z from "zod";
-import { getCurrentUser, requireAuth } from "@/lib/auth";
+import { requireAuth } from "@/lib/auth";
 import Appointment from "@/models/Appointment";
 import { AppointmentSchema } from "@/schemas";
 import { getUserById } from "@/data/user";
@@ -8,6 +8,7 @@ import mongoose, { Types } from "mongoose";
 import { UserRole } from "@/generalTypes";
 import User from "@/models/User";
 import { getAppointmentTypeById } from "@/data/appointment-types";
+import { scheduleJobToCheckAppointmentStatus } from "@/lib/schedulerJobs";
 
 export const getClients = async () => {
   await requireAuth([UserRole.THERAPIST]);
@@ -15,6 +16,18 @@ export const getClients = async () => {
   const clients = await User.find({ role: UserRole.CLIENT }).lean();
 
   return clients;
+};
+
+const createAppointment = async (appointmentData: any, session: any) => {
+  const appointment = await Appointment.create([appointmentData], { session });
+  const appointmentItem = appointment[0]; // As appointment.create returns an array
+
+  scheduleJobToCheckAppointmentStatus(
+    appointmentItem._id,
+    appointmentItem.endDate
+  );
+
+  return appointment;
 };
 
 export const bookAppointment = async (
@@ -42,22 +55,19 @@ export const bookAppointment = async (
   session.startTransaction();
 
   try {
-    const appointment = await Appointment.create(
-      [
-        {
-          title: `Therapy session with ${therapist?.firstName}`,
-          startDate,
-          endDate,
-          participants: [user.id],
-          hostUserId: therapistId,
-          durationInMinutes: appointmentType.durationInMinutes,
-          paid: false,
-          status: "confirmed",
-          credits: appointmentType.credits,
-        },
-      ],
-      { session }
-    );
+    const appointmentData = {
+      title: `Therapy session with ${therapist?.firstName}`,
+      startDate,
+      endDate,
+      participants: [{ userId: user.id, showUp: false }],
+      hostUserId: therapistId,
+      durationInMinutes: appointmentType.durationInMinutes,
+      paid: false,
+      status: "confirmed",
+      credits: appointmentType.credits,
+    };
+
+    const appointment = await createAppointment(appointmentData, session);
 
     const appointmentId = appointment[0]._id; // As appointment.create returns an array
 
@@ -91,7 +101,7 @@ export const bookAppointment = async (
   }
 };
 
-export const createAppointment = async (
+export const scheduleAppointment = async (
   values: z.input<typeof AppointmentSchema>
 ) => {
   const user = await requireAuth([UserRole.THERAPIST]);
@@ -145,7 +155,7 @@ export const createAppointment = async (
           endDate,
           paid,
           status,
-          participants: [clientId],
+          participants: [{ userId: clientId, showUp: false }],
           hostUserId: user.id,
           durationInMinutes: appointmentType.durationInMinutes,
           ...appointmentCost,

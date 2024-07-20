@@ -12,10 +12,29 @@ if (!process.env.VONAGE_APP_ID) {
 
 export const getSessionData = async (appointmentId: string) => {
   const user = await requireAuth(["THERAPIST", "CLIENT"]);
-  const { isTherapist, isPatient } = await getCurrentRole();
+  const { isTherapist, isClient } = await getCurrentRole();
 
   try {
-    const appointment = await Appointment.findById(appointmentId);
+    let updatePayload: Record<string, unknown> = {};
+
+    if (isTherapist) {
+      updatePayload.hostShowUp = true;
+    } else if (isClient) {
+      updatePayload["participants.$[elem].showUp"] = true;
+    }
+
+    const updateOptions: Record<string, unknown> = { new: true };
+
+    if (isClient) {
+      updateOptions.arrayFilters = [{ "elem.userId": user.id }];
+    }
+
+    const appointment = await Appointment.findByIdAndUpdate(
+      appointmentId,
+      { $set: updatePayload },
+      updateOptions
+    );
+
     if (!appointment) {
       throw new Error("Appointment not found");
     }
@@ -28,7 +47,7 @@ export const getSessionData = async (appointmentId: string) => {
       const userAuthorized = await isUserAuthorized(
         session,
         isTherapist,
-        isPatient,
+        isClient,
         user?.id
       );
 
