@@ -6,7 +6,6 @@ import * as z from "zod";
 import DefaultAvailabilityForm from "@/app/[locale]/(protected)/therapist/availability/default-availability-form";
 import { BeatLoader } from "react-spinners";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
@@ -69,7 +68,7 @@ const generateTimeIntervals = (intervalMinutes = 15) => {
 
 const timeOptions = generateTimeIntervals(15);
 
-const initialEditModes = daysOfWeek.reduce((acc, day) => {
+const initialEditModes = daysOfWeek.reduce((acc: any, day: any) => {
   acc[day] = false;
   return acc;
 }, {});
@@ -107,12 +106,16 @@ const DefaultAvailabilityManager = ({
   });
 
   useEffect(() => {
-    const initialTimeRanges = {};
+    const initialTimeRanges: {
+      [key: string]: { from: string; to: string }[];
+    } = {};
     defaultAvailableTimes?.forEach(({ day, timeRanges }) => {
-      initialTimeRanges[day] = timeRanges.map(({ startDate, endDate }) => ({
-        from: new Date(startDate).toTimeString().slice(0, 5),
-        to: new Date(endDate).toTimeString().slice(0, 5),
-      }));
+      initialTimeRanges[day] = timeRanges.map(
+        ({ startDate, endDate }: { startDate: any; endDate: any }) => ({
+          from: new Date(startDate).toTimeString().slice(0, 5),
+          to: new Date(endDate).toTimeString().slice(0, 5),
+        })
+      );
     });
     setTimeRangeInputs(initialTimeRanges);
   }, [defaultAvailableTimes]);
@@ -220,7 +223,7 @@ const DefaultAvailabilityManager = ({
                     The interval determines the time gaps between each available
                     slot. For example, if you set the interval to 15 minutes,
                     your available slots will be at 9:00, 9:15, 9:30, etc. We
-                    don't recommend an interval of less than 15 minutes to
+                    don&apos;t recommend an interval of less than 15 minutes to
                     ensure you have enough time between sessions.
                   </p>
                 </FormItem>

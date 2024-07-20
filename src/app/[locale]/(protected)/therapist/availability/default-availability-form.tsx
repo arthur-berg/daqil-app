@@ -82,7 +82,7 @@ const DefaultAvailabilityForm = ({
     defaultValues: {
       day,
       timeRanges:
-        timeRangeInputs[day]?.map(({ from, to }) => ({
+        timeRangeInputs[day]?.map(({ from, to }: { from: any; to: any }) => ({
           startDate: from,
           endDate: to,
         })) || [],
@@ -90,12 +90,14 @@ const DefaultAvailabilityForm = ({
   });
 
   const isTimeRangeComplete = (day: string) => {
-    return (timeRangeInputs[day] || []).every(({ from, to }) => from && to);
+    return (timeRangeInputs[day] || []).every(
+      ({ from, to }: { from: any; to: any }) => from && to
+    );
   };
 
   const setAvailableFullDay = (day: string) => {
     const { from, to } = fullDayRange;
-    setTimeRangeInputs((prev) => ({
+    setTimeRangeInputs((prev: any) => ({
       ...prev,
       [day]: [{ from, to }],
     }));
@@ -106,7 +108,7 @@ const DefaultAvailabilityForm = ({
   };
 
   const removeTimeRange = (day: string, index: number) => {
-    setTimeRangeInputs((prev) => {
+    setTimeRangeInputs((prev: any) => {
       const newRanges = [...(prev[day] || [])];
       newRanges.splice(index, 1);
 
@@ -130,7 +132,7 @@ const DefaultAvailabilityForm = ({
     field: "from" | "to",
     value: string
   ) => {
-    setTimeRangeInputs((prev) => {
+    setTimeRangeInputs((prev: any) => {
       const newRanges = [...(prev[day] || [])];
       newRanges[index][field] = value;
       return { ...prev, [day]: newRanges };
@@ -140,16 +142,21 @@ const DefaultAvailabilityForm = ({
   const onSubmitDay = (
     values: z.infer<typeof SaveDefaultAvailabilitySchema>
   ) => {
-    const newTimes = values.timeRanges.map(({ startDate, endDate }) => {
-      const [fromHour, fromMinute] = startDate.split(":").map(Number);
-      const [toHour, toMinute] = endDate.split(":").map(Number);
-      const startDateObj = set(new Date(), {
-        hours: fromHour,
-        minutes: fromMinute,
-      });
-      const endDateObj = set(new Date(), { hours: toHour, minutes: toMinute });
-      return { startDate: startDateObj, endDate: endDateObj };
-    });
+    const newTimes = values.timeRanges.map(
+      ({ startDate, endDate }: { startDate: any; endDate: any }) => {
+        const [fromHour, fromMinute] = startDate.split(":").map(Number);
+        const [toHour, toMinute] = endDate.split(":").map(Number);
+        const startDateObj = set(new Date(), {
+          hours: fromHour,
+          minutes: fromMinute,
+        });
+        const endDateObj = set(new Date(), {
+          hours: toHour,
+          minutes: toMinute,
+        });
+        return { startDate: startDateObj, endDate: endDateObj };
+      }
+    );
 
     const structuredData = {
       day: values.day,
@@ -163,13 +170,13 @@ const DefaultAvailabilityForm = ({
           variant: "success",
           title: data.success,
         });
-        setEditModes((prev) => ({ ...prev, [day]: false }));
+        setEditModes((prev: any) => ({ ...prev, [day]: false }));
       }
     });
   };
 
   const addTimeRange = (day: string) => {
-    setTimeRangeInputs((prev) => ({
+    setTimeRangeInputs((prev: any) => ({
       ...prev,
       [day]: [...(prev[day] || []), { from: "", to: "" }],
     }));
