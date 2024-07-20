@@ -12,15 +12,21 @@ export const getAppointments = async () => {
 
   const appointments = await Appointment.find({
     _id: { $in: dbUser.appointments },
-  }).lean();
-
+  })
+    .lean()
+    .populate("participants", "firstName lastName email")
+    .populate("hostUserId", "firstName lastName email");
   const serializedAppointments = appointments?.map((appointment: any) => ({
     ...appointment,
+    participants: appointment.participants.map((participant: any) => ({
+      ...participant,
+      _id: participant._id.toString(),
+    })),
     _id: appointment._id.toString(),
-    hostUserId: appointment.hostUserId.toString(),
-    participants: appointment.participants.map((participant: any) =>
-      participant.toString()
-    ),
+    hostUserId: {
+      ...appointment.hostUserId,
+      _id: appointment.hostUserId._id.toString(),
+    },
     createdAt: appointment.createdAt.toISOString(),
     updatedAt: appointment.updatedAt.toISOString(),
   })) as any;

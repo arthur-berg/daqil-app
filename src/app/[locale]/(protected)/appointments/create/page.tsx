@@ -12,10 +12,12 @@ const AppointmentsCreatePage = async () => {
   const stringifiedClients = JSON.parse(JSON.stringify(clients));
 
   return (
-    <CreateAppointmentForm
-      clients={stringifiedClients}
-      appointmentType={appointmentType}
-    />
+    <div className="flex justify-center">
+      <CreateAppointmentForm
+        clients={stringifiedClients}
+        appointmentType={appointmentType}
+      />
+    </div>
   );
 };
 

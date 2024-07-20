@@ -45,10 +45,10 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
     password
   );
 
-  const response = await addUserToSubscriberList(verificationToken.email);
-  if (response?.error) {
+  await addUserToSubscriberList(verificationToken.email);
+  /*  if (response?.error) {
     return { error: "Something went wrong" };
-  }
+  } */
 
   return {
     success:
