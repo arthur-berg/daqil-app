@@ -45,7 +45,7 @@ const availableTimesSchema = new Schema({
       to: {
         type: String,
         required: false,
-        default: "17:00",
+        default: "18:00",
       },
     },
   },

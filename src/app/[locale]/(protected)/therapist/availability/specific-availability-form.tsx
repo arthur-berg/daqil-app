@@ -29,7 +29,6 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import { SpecificAvailabilitySchemaFE } from "@/schemas";
 import { saveSpecificAvailableTimes } from "@/actions/availability";
-import { formatToLocalTime } from "@/utils";
 
 // Utility function to generate time options
 const generateTimeIntervals = (intervalMinutes = 15) => {
@@ -118,7 +117,7 @@ const SpecificAvailabilityForm = ({
         Select Specific Available Times
       </h2>
 
-      <div className="mb-8">
+      <div className="mb-8 flex">
         <h3 className="text-lg font-semibold">
           Overview of Specific Available Times
         </h3>
@@ -161,9 +160,10 @@ const SpecificAvailabilityForm = ({
           months:
             "flex w-full flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0 flex-1",
           month: "space-y-4 w-full flex-col",
-          table: "w-full h-full border-collapse space-y-1",
+          table: "w-full border-collapse space-y-1",
           head_row: "",
-          row: "w-full mt-2",
+          row: "w-full",
+          cell: "relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected])]:rounded-md pb-2 pt-2",
         }}
       />
 

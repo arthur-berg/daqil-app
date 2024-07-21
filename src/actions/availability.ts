@@ -33,17 +33,6 @@ export const saveSpecificAvailableTimes = async (
       return { error: tError("invalidFields") };
     }
 
-    if (!user.availableTimes) {
-      user.availableTimes = {
-        blockedOutTimes: [],
-        specificAvailableTimes: [],
-        recurringAvailableTimes: [],
-        settings: {
-          interval: 15,
-          fullDayRange: { from: "09:00", to: "17:00" },
-        },
-      };
-    }
     const data = validatedFields.data;
 
     const filteredAvailableTimes =
@@ -88,18 +77,6 @@ export const updateRecurringAvailabilitySettings = async (
       return { error: tError("invalidFields") };
     }
 
-    if (!user.availableTimes) {
-      user.availableTimes = {
-        blockedOutTimes: [],
-        specificAvailableTimes: [],
-        recurringAvailableTimes: [],
-        settings: {
-          interval: 15,
-          fullDayRange: { from: "09:00", to: "17:00" },
-        },
-      };
-    }
-
     await User.findByIdAndUpdate(user.id, {
       $set: {
         "availableTimes.settings.interval": values.interval,
@@ -136,18 +113,6 @@ export const saveRecurringAvailableTimes = async (
     }
 
     const data = validatedFields.data;
-
-    if (!user.availableTimes) {
-      user.availableTimes = {
-        settings: {
-          interval: 15,
-          fullDayRange: { from: "09:00", to: "17:00" },
-        },
-        blockedOutTimes: [],
-        specificAvailableTimes: [],
-        recurringAvailableTimes: [],
-      };
-    }
 
     const filteredAvailableTimes =
       user.availableTimes.recurringAvailableTimes?.filter(

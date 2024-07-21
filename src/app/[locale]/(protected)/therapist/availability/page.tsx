@@ -10,7 +10,7 @@ const AvailabilityPage = async () => {
 
   const availableTimes = user.availableTimes;
   const appointmentType = await getAppointmentTypeById(APPOINTMENT_TYPE_ID);
-
+  console.log("availableTimes", availableTimes);
   return (
     <div>
       <AvailabilityBody

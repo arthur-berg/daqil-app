@@ -14,7 +14,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { DefaultAvailabilitySettingsSchemaFE } from "@/schemas";
-import { updateDefaultAvailabilitySettings } from "@/actions/availability";
+import { updateRecurringAvailabilitySettings } from "@/actions/availability";
 import { useToast } from "@/components/ui/use-toast";
 import { capitalizeFirstLetter } from "@/utils";
 import {
@@ -94,7 +94,7 @@ const DefaultAvailabilityManager = ({
 
   const fullDayRange = {
     from: settings?.fullDayRange?.from || "09:00",
-    to: settings?.fullDayRange?.to || "17:00",
+    to: settings?.fullDayRange?.to || "18:00",
   };
 
   const form = useForm({
@@ -151,7 +151,7 @@ const DefaultAvailabilityManager = ({
         ...values,
         interval: parseInt(values.interval),
       };
-      const data = await updateDefaultAvailabilitySettings(structuredData);
+      const data = await updateRecurringAvailabilitySettings(structuredData);
       if (data.success) {
         toast({
           variant: "success",
@@ -234,6 +234,7 @@ const DefaultAvailabilityManager = ({
             <label className="block text-lg font-semibold mb-2">
               Available All Day Range
             </label>
+
             <div className="flex flex-wrap space-y-2 md:space-y-0">
               <FormField
                 control={form.control}
@@ -339,6 +340,7 @@ const DefaultAvailabilityManager = ({
               />
             </div>
           </div>
+
           <Button
             type="submit"
             variant="success"
@@ -349,58 +351,60 @@ const DefaultAvailabilityManager = ({
           </Button>
         </form>
       </Form>
-      {daysOfWeek.map((day) => (
-        <div key={day} className="mb-8 mt-8">
-          <div className="flex justify-between items-center mb-4">
-            <div className="flex items-center justify-between gap-2 mb-4">
-              <h3 className="text-lg font-semibold">
-                {capitalizeFirstLetter(day)}
-              </h3>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => toggleEditModeForDay(day)}
-                disabled={
-                  Object.values(editModes).some((mode) => mode) &&
-                  !editModes[day]
-                }
-                className="w-24"
-              >
-                {editModes[day] ? "Cancel" : "Edit"}
-              </Button>
+      <div>
+        {daysOfWeek.map((day) => (
+          <div key={day} className="mb-8 mt-8">
+            <div className="flex justify-between items-center mb-4">
+              <div className="flex items-center justify-between gap-2 mb-4">
+                <h3 className="text-lg font-semibold">
+                  {capitalizeFirstLetter(day)}
+                </h3>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => toggleEditModeForDay(day)}
+                  disabled={
+                    Object.values(editModes).some((mode) => mode) &&
+                    !editModes[day]
+                  }
+                  className="w-24"
+                >
+                  {editModes[day] ? "Cancel" : "Edit"}
+                </Button>
+              </div>
             </div>
+            {editModes[day] ? (
+              <DefaultAvailabilityForm
+                editModes={editModes}
+                setEditModes={setEditModes}
+                day={day}
+                timeRangeInputs={timeRangeInputs}
+                setTimeRangeInputs={setTimeRangeInputs}
+                fullDayRange={fullDayRange}
+              />
+            ) : (
+              <div className="flex flex-col space-y-2">
+                {timeRangeInputs[day] && timeRangeInputs[day].length > 0 ? (
+                  timeRangeInputs[day].map((range, index) => (
+                    <div key={index} className="flex items-center gap-4">
+                      <span className="border rounded px-2 py-1 w-24 text-center">
+                        {range.from}
+                      </span>
+                      <span className="border rounded px-2 py-1 w-24 text-center">
+                        {range.to}
+                      </span>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-gray-500">
+                    No recurring available times set
+                  </p>
+                )}
+              </div>
+            )}
           </div>
-          {editModes[day] ? (
-            <DefaultAvailabilityForm
-              editModes={editModes}
-              setEditModes={setEditModes}
-              day={day}
-              timeRangeInputs={timeRangeInputs}
-              setTimeRangeInputs={setTimeRangeInputs}
-              fullDayRange={fullDayRange}
-            />
-          ) : (
-            <div className="flex flex-col space-y-2">
-              {timeRangeInputs[day] && timeRangeInputs[day].length > 0 ? (
-                timeRangeInputs[day].map((range, index) => (
-                  <div key={index} className="flex items-center gap-4">
-                    <span className="border rounded px-2 py-1 w-24 text-center">
-                      {range.from}
-                    </span>
-                    <span className="border rounded px-2 py-1 w-24 text-center">
-                      {range.to}
-                    </span>
-                  </div>
-                ))
-              ) : (
-                <p className="text-gray-500">
-                  No recurring available times set
-                </p>
-              )}
-            </div>
-          )}
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   ) : (
     <BeatLoader />
