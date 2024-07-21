@@ -7,6 +7,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import DefaultAvailabilityManager from "./default-availability-manager";
+import SpecificAvailabilityForm from "./specific-availability-form";
 
 const AvailabilityBody = ({
   appointmentType,
@@ -17,9 +18,6 @@ const AvailabilityBody = ({
 }) => {
   const [blockOutDates, setBlockOutDates] = useState<Date[]>([]);
 
-  const [date, setDate] = useState<Date | undefined>(undefined);
-  const [selectedTimes, setSelectedTimes] = useState<Date[]>([]);
-
   const handleBlockOutDateSelection = (date: Date) => {
     setBlockOutDates((prev) => {
       if (prev.some((d) => isEqual(d, date))) {
@@ -28,28 +26,6 @@ const AvailabilityBody = ({
         return [...prev, date];
       }
     });
-  };
-
-  const handleTimeSelection = (time: Date) => {
-    if (selectedTimes.some((t) => isEqual(t, time))) {
-      setSelectedTimes(selectedTimes.filter((t) => !isEqual(t, time)));
-    } else {
-      setSelectedTimes([...selectedTimes, time]);
-    }
-  };
-
-  const saveTimes = () => {
-    // Save selected times to the server
-    // This is a placeholder for actual save logic
-    console.log(
-      "Saving times:",
-      selectedTimes.map((time) => ({
-        startDate: time,
-        endDate: new Date(
-          time.getTime() + appointmentType.durationInMinutes * 60000
-        ),
-      }))
-    );
   };
 
   const saveBlockOutDates = () => {
@@ -103,66 +79,9 @@ const AvailabilityBody = ({
           />
         </TabsContent>
         <TabsContent value="specific-times">
-          <div>
-            <h2 className="text-xl font-bold mb-4">
-              Select Specific Available Times
-            </h2>
-            <Calendar
-              mode="single"
-              selected={date}
-              onSelect={(date) => {
-                setDate(date);
-                setSelectedTimes([]);
-              }}
-              className="rounded-md border h-full w-full flex"
-              classNames={{
-                months:
-                  "flex w-full flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0 flex-1",
-                month: "space-y-4 w-full flex flex-col",
-                table: "w-full h-full border-collapse space-y-1",
-                head_row: "",
-                row: "w-full mt-2",
-              }}
-            />
-
-            {date && (
-              <>
-                <div className="mt-4">
-                  <h3 className="text-lg font-semibold">
-                    Available Times for {format(date, "PPPP")}
-                  </h3>
-                  <div className="flex gap-4 flex-wrap">
-                    {getTimesForDay(date).map((time, index) => (
-                      <div
-                        key={index}
-                        className={`rounded-sm p-2 ${
-                          selectedTimes.some((t) => isEqual(t, time))
-                            ? "bg-blue-500"
-                            : "bg-gray-100"
-                        }`}
-                      >
-                        <Button
-                          onClick={() => handleTimeSelection(time)}
-                          className={
-                            selectedTimes.some((t) => isEqual(t, time))
-                              ? "bg-blue-500"
-                              : ""
-                          }
-                        >
-                          {format(time, "kk:mm")}
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                {selectedTimes.length > 0 && (
-                  <div className="mt-4">
-                    <Button onClick={saveTimes}>Save Available Times</Button>
-                  </div>
-                )}
-              </>
-            )}
-          </div>
+          <SpecificAvailabilityForm
+            specificAvailableTimes={availableTimes.specificAvailableTimes}
+          />
         </TabsContent>
         <TabsContent value="block-dates">
           <div className="mb-6">
@@ -170,7 +89,7 @@ const AvailabilityBody = ({
             <Calendar
               mode="multiple"
               selected={blockOutDates}
-              onSelect={(date) => handleBlockOutDateSelection(date)}
+              onSelect={(date: any) => handleBlockOutDateSelection(date)}
               className="rounded-md border h-full w-full flex"
               classNames={{
                 months:
