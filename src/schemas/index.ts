@@ -81,7 +81,7 @@ export const DefaultAvailabilitySettingsSchemaBE = z.object({
 });
 
 export const SpecificAvailabilitySchemaFE = z.object({
-  date: z.string(),
+  date: z.date(),
   timeRanges: z.array(
     z.object({
       startDate: z.string({

@@ -29,21 +29,7 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import { SpecificAvailabilitySchemaFE } from "@/schemas";
 import { saveSpecificAvailableTimes } from "@/actions/availability";
-
-const toUTCDate = (date: Date, time: string) => {
-  const [hours, minutes] = time.split(":").map(Number);
-  return new Date(
-    Date.UTC(
-      date.getFullYear(),
-      date.getMonth(),
-      date.getDate(),
-      hours,
-      minutes,
-      0,
-      0
-    )
-  );
-};
+import { formatToLocalTime } from "@/utils";
 
 // Utility function to generate time options
 const generateTimeIntervals = (intervalMinutes = 15) => {
@@ -81,23 +67,32 @@ const SpecificAvailabilityForm = ({
   const { toast } = useToast();
   const form = useForm<z.infer<typeof SpecificAvailabilitySchemaFE>>({
     defaultValues: {
-      date: "",
+      date: new Date(),
       timeRanges: [{ startDate: "", endDate: "" }],
     },
   });
 
   const onSubmit = (values: any) => {
     const formattedData = {
-      date: new Date(
-        Date.UTC(date!.getFullYear(), date!.getMonth(), date!.getDate())
-      ), // Convert to UTC
+      date: values.date, // Use local date
       timeRanges: values.timeRanges.map(
         ({ startDate, endDate }: { startDate: string; endDate: string }) => ({
-          startDate: toUTCDate(date!, startDate),
-          endDate: toUTCDate(date!, endDate),
+          startDate: set(new Date(date!), {
+            hours: parseInt(startDate.split(":")[0], 10),
+            minutes: parseInt(startDate.split(":")[1], 10),
+            seconds: 0,
+            milliseconds: 0,
+          }),
+          endDate: set(new Date(date!), {
+            hours: parseInt(endDate.split(":")[0], 10),
+            minutes: parseInt(endDate.split(":")[1], 10),
+            seconds: 0,
+            milliseconds: 0,
+          }),
         })
       ),
     };
+
     startTransition(async () => {
       const data = await saveSpecificAvailableTimes(formattedData);
       if (data?.success) {
@@ -157,7 +152,7 @@ const SpecificAvailabilityForm = ({
         onSelect={(date) => {
           setDate(date);
           form.reset({
-            date: format(date!, "yyyy-MM-dd"),
+            date: date,
             timeRanges: [{ startDate: "", endDate: "" }],
           });
         }}
