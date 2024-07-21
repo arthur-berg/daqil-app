@@ -62,8 +62,8 @@ export const RecurringAvailabilitySchema = z.object({
   day: z.string(),
   timeRanges: z.array(
     z.object({
-      startDate: timeStringOrDateSchema,
-      endDate: timeStringOrDateSchema,
+      startTime: timeStringOrDateSchema,
+      endTime: timeStringOrDateSchema,
     })
   ),
 });

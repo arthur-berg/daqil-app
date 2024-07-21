@@ -15,9 +15,11 @@ type DateType = {
 const BookingCalendar = ({
   appointmentType,
   therapistId,
+  availableTimes,
 }: {
   appointmentType: any;
   therapistId: string;
+  availableTimes: any;
 }) => {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | undefined>();
@@ -28,16 +30,35 @@ const BookingCalendar = ({
   });
 
   const getTimes = () => {
-    if (!date.justDate) return;
+    if (!date.justDate) return [];
 
-    const { justDate } = date;
+    const specificDate = format(date.justDate, "yyyy-MM-dd");
 
-    const availableTimes = [
-      add(justDate, { hours: 9 }),
-      add(justDate, { hours: 17 }),
-    ]; // get from therapist available times in DB
+    // Find specific available times for the selected date
+    const specificAvailable = availableTimes.find(
+      (specific: any) =>
+        format(new Date(specific.date), "yyyy-MM-dd") === specificDate
+    );
 
-    return availableTimes;
+    // If there are specific available times for the selected date, use them
+    if (specificAvailable) {
+      return specificAvailable.availableTimes.map((time: string) => {
+        const [hours, minutes] = time.split(":").map(Number);
+        const start = set(new Date(specificAvailable.date), {
+          hours,
+          minutes,
+          seconds: 0,
+          milliseconds: 0,
+        });
+        return {
+          start,
+          end: add(start, { minutes: appointmentType.durationInMinutes }),
+        };
+      });
+    }
+
+    // If no specific or recurring times, return empty array
+    return [];
   };
 
   const times = getTimes();
@@ -47,6 +68,9 @@ const BookingCalendar = ({
     seconds: 0,
     milliseconds: 0,
   });
+
+  console.log("availableTimes", availableTimes);
+  console.log("times", times);
 
   return (
     <>
@@ -126,10 +150,11 @@ const BookingCalendar = ({
                     <Button
                       disabled={isPending}
                       onClick={() =>
-                        setDate((prev) => ({ ...prev, dateTime: time }))
+                        setDate((prev) => ({ ...prev, dateTime: time.start }))
                       }
                     >
-                      {format(time, "kk:mm")}
+                      {format(time.start, "kk:mm")} -{" "}
+                      {format(time.end, "kk:mm")}
                     </Button>
                   </div>
                 ))}

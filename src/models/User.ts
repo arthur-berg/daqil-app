@@ -13,6 +13,17 @@ const timeRangeSchema = new Schema({
   },
 });
 
+const timeRangeStringsSchema = new Schema({
+  startTime: {
+    type: String,
+    required: false,
+  },
+  endTime: {
+    type: String,
+    required: false,
+  },
+});
+
 const dateTimesSchema = new Schema({
   date: {
     type: Date,
@@ -26,7 +37,7 @@ const dayTimesSchema = new Schema({
     type: String,
     required: false,
   },
-  timeRanges: [timeRangeSchema],
+  timeRanges: [timeRangeStringsSchema],
 });
 
 const availableTimesSchema = new Schema({

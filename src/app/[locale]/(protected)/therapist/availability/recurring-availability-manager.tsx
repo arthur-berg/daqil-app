@@ -79,9 +79,9 @@ const getInitialTimeRanges = (recurringAvailableTimes: any) => {
   } = {};
   recurringAvailableTimes?.forEach(({ day, timeRanges }: any) => {
     initialTimeRanges[day] = timeRanges.map(
-      ({ startDate, endDate }: { startDate: any; endDate: any }) => ({
-        from: new Date(startDate).toTimeString().slice(0, 5),
-        to: new Date(endDate).toTimeString().slice(0, 5),
+      ({ startTime, endTime }: { startTime: string; endTime: string }) => ({
+        from: startTime,
+        to: endTime,
       })
     );
   });
@@ -122,6 +122,7 @@ const DefaultAvailabilityManager = ({
 
   useEffect(() => {
     const initialTimeRanges = getInitialTimeRanges(recurringAvailableTimes);
+    console.log("initialTimeRanges", initialTimeRanges);
     setTimeRangeInputs(initialTimeRanges);
   }, [recurringAvailableTimes]);
 
@@ -367,7 +368,7 @@ const DefaultAvailabilityManager = ({
         role="alert"
       >
         <span>
-          Clients will see your available times two weeks in the future
+          Clients will see your available times four weeks in the future
         </span>
       </div>
       <div>
