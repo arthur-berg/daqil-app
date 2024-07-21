@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import DefaultAvailabilityManager from "./default-availability-manager";
+import DefaultAvailabilityManager from "./recurring-availability-manager";
 import SpecificAvailabilityForm from "./specific-availability-form";
 
 const AvailabilityBody = ({

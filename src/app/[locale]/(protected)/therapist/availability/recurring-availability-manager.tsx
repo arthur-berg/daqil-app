@@ -3,7 +3,7 @@ import { useEffect, useState, useTransition } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import DefaultAvailabilityForm from "@/app/[locale]/(protected)/therapist/availability/default-availability-form";
+import DefaultAvailabilityForm from "@/app/[locale]/(protected)/therapist/availability/recurring-availability-form";
 import { BeatLoader } from "react-spinners";
 import { Button } from "@/components/ui/button";
 import {
@@ -73,6 +73,21 @@ const initialEditModes = daysOfWeek.reduce((acc: any, day: any) => {
   return acc;
 }, {});
 
+const getInitialTimeRanges = (recurringAvailableTimes: any) => {
+  const initialTimeRanges: {
+    [key: string]: { from: string; to: string }[];
+  } = {};
+  recurringAvailableTimes?.forEach(({ day, timeRanges }) => {
+    initialTimeRanges[day] = timeRanges.map(
+      ({ startDate, endDate }: { startDate: any; endDate: any }) => ({
+        from: new Date(startDate).toTimeString().slice(0, 5),
+        to: new Date(endDate).toTimeString().slice(0, 5),
+      })
+    );
+  });
+  return initialTimeRanges;
+};
+
 const DefaultAvailabilityManager = ({
   appointmentType,
   recurringAvailableTimes,
@@ -106,23 +121,17 @@ const DefaultAvailabilityManager = ({
   });
 
   useEffect(() => {
-    const initialTimeRanges: {
-      [key: string]: { from: string; to: string }[];
-    } = {};
-    recurringAvailableTimes?.forEach(({ day, timeRanges }) => {
-      initialTimeRanges[day] = timeRanges.map(
-        ({ startDate, endDate }: { startDate: any; endDate: any }) => ({
-          from: new Date(startDate).toTimeString().slice(0, 5),
-          to: new Date(endDate).toTimeString().slice(0, 5),
-        })
-      );
-    });
+    const initialTimeRanges = getInitialTimeRanges(recurringAvailableTimes);
     setTimeRangeInputs(initialTimeRanges);
   }, [recurringAvailableTimes]);
 
   const toggleEditModeForDay = (day: string) => {
     setEditModes((prev) => {
       const newEditModes = { ...prev };
+      if (newEditModes[day]) {
+        const initialTimeRanges = getInitialTimeRanges(recurringAvailableTimes);
+        setTimeRangeInputs(initialTimeRanges);
+      }
       Object.keys(newEditModes).forEach((key) => {
         newEditModes[key] = key === day ? !newEditModes[key] : false;
       });
@@ -130,7 +139,7 @@ const DefaultAvailabilityManager = ({
     });
   };
 
-  const handleTimeRangeChange = (
+  /*   const handleTimeRangeChange = (
     day: string,
     index: number,
     field: "from" | "to",
@@ -139,9 +148,11 @@ const DefaultAvailabilityManager = ({
     setTimeRangeInputs((prev) => {
       const newRanges = [...(prev[day] || [])];
       newRanges[index][field] = value;
-      return { ...prev, [day]: newRanges };
+      // Filter out empty ranges
+      const filteredRanges = newRanges.filter(({ from, to }) => from && to);
+      return { ...prev, [day]: filteredRanges };
     });
-  };
+  }; */
 
   const onSubmitDefaultAvailability = (
     values: z.infer<typeof DefaultAvailabilitySettingsSchemaFE>
@@ -230,7 +241,7 @@ const DefaultAvailabilityManager = ({
               )}
             />
           </div>
-          <div className="mt-4">
+          {/*    <div className="mt-4">
             <label className="block text-lg font-semibold mb-2">
               Available All Day Range
             </label>
@@ -339,7 +350,7 @@ const DefaultAvailabilityManager = ({
                 )}
               />
             </div>
-          </div>
+          </div> */}
 
           <Button
             type="submit"

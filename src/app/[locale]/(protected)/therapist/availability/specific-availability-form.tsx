@@ -172,7 +172,7 @@ const SpecificAvailabilityForm = ({
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className="mt-4">
               <h3 className="text-lg font-semibold">
-                Available Times for {format(date, "PPPP")}
+                Set Available Times for {format(date, "PPPP")}
               </h3>
               {form.watch("timeRanges").map((_: any, index: number) => (
                 <div key={index} className="flex gap-4 mt-4">

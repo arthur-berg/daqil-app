@@ -349,7 +349,7 @@ const DefaultAvailabilityForm = ({
               >
                 Add Time Range
               </Button>
-              <Button
+              {/*  <Button
                 className="block sm:inline"
                 type="button"
                 onClick={() => setAvailableFullDay(day)}
@@ -357,7 +357,7 @@ const DefaultAvailabilityForm = ({
                 variant="outline"
               >
                 Set Available Full Day
-              </Button>
+              </Button> */}
               <Button
                 className="block sm:inline"
                 variant="success"
