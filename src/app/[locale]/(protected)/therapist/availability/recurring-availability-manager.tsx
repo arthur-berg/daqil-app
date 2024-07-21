@@ -362,9 +362,17 @@ const DefaultAvailabilityManager = ({
           </Button>
         </form>
       </Form>
+      <div
+        className="bg-blue-100 border mt-4 border-blue-400 text-blue-700 px-4 py-3 rounded inline-flex text-sm"
+        role="alert"
+      >
+        <span>
+          Clients will see your available times two weeks in the future
+        </span>
+      </div>
       <div>
         {daysOfWeek.map((day) => (
-          <div key={day} className="mb-8 mt-8">
+          <div key={day} className="mb-8 mt-4">
             <div className="flex justify-between items-center mb-4">
               <div className="flex items-center justify-between gap-2 mb-4">
                 <h3 className="text-lg font-semibold">
