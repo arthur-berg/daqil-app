@@ -69,9 +69,6 @@ const BookingCalendar = ({
     milliseconds: 0,
   });
 
-  console.log("availableTimes", availableTimes);
-  console.log("times", times);
-
   return (
     <>
       {success || error ? (

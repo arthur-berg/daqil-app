@@ -66,10 +66,7 @@ export const getTherapistAvailableTimes = (availableTimes) => {
         date.setHours(0, 0, 0, 0)
       )
     );
-    console.log(
-      `Blocked times for ${date}:`,
-      blocked ? blocked.timeRanges : []
-    );
+
     return blocked ? blocked.timeRanges : [];
   };
 
@@ -104,9 +101,6 @@ export const getTherapistAvailableTimes = (availableTimes) => {
     const times = [];
     let current = startTime;
     while (isBefore(current, endTime)) {
-      console.log(
-        `Generated interval: ${current} to ${addMinutes(current, interval)}`
-      );
       times.push(current);
       current = addMinutes(current, interval);
     }
@@ -168,16 +162,6 @@ export const getTherapistAvailableTimes = (availableTimes) => {
           endsWithinBlockedRange ||
           spansBlockedRange ||
           endAdjustedWithinBlockedRange;
-
-        console.log(`Checking time: ${time} - intervalEnd: ${intervalEnd}`);
-        console.log(`Blocked range: ${blockedStart} - ${blockedEnd}`);
-        console.log(`Starts within blocked range: ${startsWithinBlockedRange}`);
-        console.log(`Ends within blocked range: ${endsWithinBlockedRange}`);
-        console.log(`Spans blocked range: ${spansBlockedRange}`);
-        console.log(
-          `End adjusted within blocked range: ${endAdjustedWithinBlockedRange}`
-        );
-        console.log(`Overlaps: ${overlaps}`);
 
         return overlaps;
       });
