@@ -35,9 +35,9 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
       <CardContent>
         <div className="flex justify-center py-8">
           <div className="space-y-8 w-full max-w-4xl">
-            <div className="flex justify-between mb-6">
+            <div className="flex  mb-6 flex-col lg:flex-row items-center lg:justify-between lg:items-baseline">
               <Link href="/appointments/create">
-                <Button>Create New Appointment</Button>
+                <Button className="mb-6 lg:mb-0">Create New Appointment</Button>
               </Link>
               <div className="flex justify-center items-center mb-6">
                 <div className="mr-4">Appointment Status: </div>

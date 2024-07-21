@@ -35,8 +35,8 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
       <CardContent>
         <div className="flex justify-center py-8">
           <div className="space-y-8 w-full max-w-4xl">
-            <div className="flex justify-between mb-6">
-              <div className="flex justify-center items-center mb-6">
+            <div className="flex justify-center mb-6">
+              <div className="flex justify-center items-center mb-6 flex-col md:flex-row">
                 <div className="mr-4">Appointment Status: </div>
                 <Select
                   defaultValue="confirmed"

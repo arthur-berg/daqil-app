@@ -234,7 +234,7 @@ const DefaultAvailabilityManager = ({
             <label className="block text-lg font-semibold mb-2">
               Available All Day Range
             </label>
-            <div className="flex">
+            <div className="flex flex-wrap space-y-2 md:space-y-0">
               <FormField
                 control={form.control}
                 name="fullDayRange.from"

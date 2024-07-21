@@ -41,6 +41,7 @@ const updateAppointmentStatus = async (appointmentId: string) => {
   }
 
   appointment.status = newStatus;
+
   await Appointment.findByIdAndUpdate(appointmentId, {
     status: newStatus,
   });

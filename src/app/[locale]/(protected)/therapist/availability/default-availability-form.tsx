@@ -189,7 +189,7 @@ const DefaultAvailabilityForm = ({
           <div className="flex flex-col space-y-2">
             {timeRangeInputs[day] && timeRangeInputs[day].length > 0 ? (
               timeRangeInputs[day].map((range: any, index: any) => (
-                <div key={index} className="flex items-center gap-4">
+                <div key={index} className="flex items-center gap-4 flex-wrap">
                   <div className="flex flex-col">
                     <div className="flex items-center gap-2">
                       <FormField
@@ -341,8 +341,9 @@ const DefaultAvailabilityForm = ({
             )}
           </div>
           {editModes[day] && (
-            <div className="mt-4 space-x-4">
+            <div className="mt-4 sm:space-x-4 space-y-4 sm:space-y-0">
               <Button
+                className="block sm:inline"
                 onClick={() => addTimeRange(day)}
                 variant="outline"
                 type="button"
@@ -351,6 +352,7 @@ const DefaultAvailabilityForm = ({
                 Add Time Range
               </Button>
               <Button
+                className="block sm:inline"
                 type="button"
                 onClick={() => setAvailableFullDay(day)}
                 disabled={isPending}
@@ -359,7 +361,7 @@ const DefaultAvailabilityForm = ({
                 Set Available Full Day
               </Button>
               <Button
-                className="ml-8"
+                className="block sm:inline"
                 variant="success"
                 type="submit"
                 disabled={!isTimeRangeComplete(day) || isPending}

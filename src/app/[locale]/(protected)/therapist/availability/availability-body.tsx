@@ -84,7 +84,7 @@ const AvailabilityBody = ({
 
   return (
     <Tabs defaultValue="default-availability" className="w-full">
-      <TabsList>
+      <TabsList className="flex items-center justify-start flex-wrap h-auto space-y-1">
         <TabsTrigger value="default-availability">
           Default Availability
         </TabsTrigger>
@@ -94,7 +94,7 @@ const AvailabilityBody = ({
         <TabsTrigger value="block-dates">Block Out Dates</TabsTrigger>
       </TabsList>
 
-      <div className="mt-6 bg-white shadow-md rounded-lg p-6 flex">
+      <div className="mt-6 bg-white shadow-md rounded-lg p-6">
         <TabsContent value="default-availability">
           <DefaultAvailabilityManager
             appointmentType={appointmentType}

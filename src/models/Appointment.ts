@@ -2,6 +2,8 @@ import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
 
+//Reason we have participants as array is req might change in the future to require multiple participants
+
 const appointmentSchema = new Schema(
   {
     startDate: {
