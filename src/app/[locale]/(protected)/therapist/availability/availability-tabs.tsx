@@ -8,8 +8,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import DefaultAvailabilityManager from "./recurring-availability-manager";
 import SpecificAvailabilityForm from "./specific-availability-form";
+import BlockAvailabilityForm from "./block-availability-form";
 
-const AvailabilityBody = ({
+const AvailabilityTabs = ({
   appointmentType,
   availableTimes,
 }: {
@@ -84,28 +85,13 @@ const AvailabilityBody = ({
           />
         </TabsContent>
         <TabsContent value="block-dates">
-          <div className="mb-6">
-            <h2 className="text-xl font-bold mb-4">Block Out Dates</h2>
-            <Calendar
-              mode="multiple"
-              selected={blockOutDates}
-              onSelect={(date: any) => handleBlockOutDateSelection(date)}
-              className="rounded-md border h-full w-full flex"
-              classNames={{
-                months:
-                  "flex w-full flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0 flex-1",
-                month: "space-y-4 w-full flex flex-col",
-                table: "w-full h-full border-collapse space-y-1",
-                head_row: "",
-                row: "w-full mt-2",
-              }}
-            />
-            <Button onClick={saveBlockOutDates}>Save Block Out Dates</Button>
-          </div>
+          <BlockAvailabilityForm
+            blockedOutTimes={availableTimes?.blockedOutTimes}
+          />
         </TabsContent>
       </div>
     </Tabs>
   );
 };
 
-export default AvailabilityBody;
+export default AvailabilityTabs;

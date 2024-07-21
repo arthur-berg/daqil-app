@@ -27,8 +27,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useToast } from "@/components/ui/use-toast";
-import { SpecificAvailabilitySchemaFE } from "@/schemas";
-import { saveSpecificAvailableTimes } from "@/actions/availability";
+import { BlockAvailabilitySchemaFE } from "@/schemas";
+import {
+  saveBlockedOutTimes,
+  saveSpecificAvailableTimes,
+} from "@/actions/availability";
 
 // Utility function to generate time options
 const generateTimeIntervals = (intervalMinutes = 15) => {
@@ -55,16 +58,16 @@ const generateTimeIntervals = (intervalMinutes = 15) => {
 
 const timeOptions = generateTimeIntervals(15);
 
-const SpecificAvailabilityForm = ({
-  specificAvailableTimes,
+const BlockAvailabilityForm = ({
+  blockedOutTimes,
 }: {
-  specificAvailableTimes: any;
+  blockedOutTimes: any;
 }) => {
   const [isPending, startTransition] = useTransition();
   const [date, setDate] = useState<any>();
 
   const { toast } = useToast();
-  const form = useForm<z.infer<typeof SpecificAvailabilitySchemaFE>>({
+  const form = useForm<z.infer<typeof BlockAvailabilitySchemaFE>>({
     defaultValues: {
       date: new Date(),
       timeRanges: [{ startDate: "", endDate: "" }],
@@ -93,11 +96,11 @@ const SpecificAvailabilityForm = ({
     };
 
     startTransition(async () => {
-      const data = await saveSpecificAvailableTimes(formattedData);
+      const data = await saveBlockedOutTimes(formattedData);
       if (data?.success) {
         toast({
           variant: "success",
-          title: "Specific times saved successfully.",
+          title: data.success,
         });
         form.reset();
         setDate(null);
@@ -105,7 +108,7 @@ const SpecificAvailabilityForm = ({
       if (data?.error) {
         toast({
           variant: "destructive",
-          title: "Something went wrong.",
+          title: data.error,
         });
       }
     });
@@ -114,37 +117,35 @@ const SpecificAvailabilityForm = ({
   return (
     <div>
       <h2 className="text-xl font-bold mb-4">
-        Select Specific Available Times
+        Select times to block out from your calendar
       </h2>
 
       <div className="mb-8">
         <h3 className="text-lg font-semibold mb-4">
-          Overview of Specific Available Times
+          Overview of blocked out times
         </h3>
         <div className="space-y-2 inline-flex">
-          {specificAvailableTimes?.map(
-            ({ date, timeRanges }: any, index: number) => (
-              <div
-                key={`${date}-${index}`}
-                className="border py-2 px-4 rounded"
-              >
-                <div className="font-semibold">
-                  {format(new Date(date), "PPPP")}
-                </div>
-                <div className="flex gap-2 flex-wrap">
-                  {timeRanges.map((time: any, index: number) => (
-                    <span
-                      key={index}
-                      className="bg-blue-500 text-white rounded px-2 py-1"
-                    >
-                      {format(new Date(time.startDate), "HH:mm")} -{" "}
-                      {format(new Date(time.endDate), "HH:mm")}
-                    </span>
-                  ))}
-                </div>
+          {blockedOutTimes?.map(({ date, timeRanges }: any, index: number) => (
+            <div
+              key={`${date}-${index}`}
+              className="border p-2 rounded px-4 py-2"
+            >
+              <div className="font-semibold">
+                {format(new Date(date), "PPPP")}
               </div>
-            )
-          )}
+              <div className="flex gap-2 flex-wrap">
+                {timeRanges.map((time: any, index: number) => (
+                  <span
+                    key={index}
+                    className="bg-blue-500 text-white rounded px-2 py-1"
+                  >
+                    {format(new Date(time.startDate), "HH:mm")} -{" "}
+                    {format(new Date(time.endDate), "HH:mm")}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
 
@@ -175,7 +176,7 @@ const SpecificAvailabilityForm = ({
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className="mt-4">
               <h3 className="text-lg font-semibold">
-                Set Available Times for {format(date, "PPPP")}
+                Block Times for {format(date, "PPPP")}
               </h3>
               {form.watch("timeRanges").map((_: any, index: number) => (
                 <div key={index} className="flex gap-4 mt-4">
@@ -319,4 +320,4 @@ const SpecificAvailabilityForm = ({
   );
 };
 
-export default SpecificAvailabilityForm;
+export default BlockAvailabilityForm;

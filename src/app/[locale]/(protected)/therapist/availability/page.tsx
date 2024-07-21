@@ -1,4 +1,4 @@
-import AvailabilityBody from "@/app/[locale]/(protected)/therapist/availability/availability-body";
+import AvailabilityTabs from "@/app/[locale]/(protected)/therapist/availability/availability-tabs";
 import { APPOINTMENT_TYPE_ID } from "@/contants/config";
 import { getAppointmentTypeById } from "@/data/appointment-types";
 import { UserRole } from "@/generalTypes";
@@ -13,7 +13,7 @@ const AvailabilityPage = async () => {
 
   return (
     <div>
-      <AvailabilityBody
+      <AvailabilityTabs
         availableTimes={availableTimes}
         appointmentType={appointmentType}
       />

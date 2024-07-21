@@ -77,7 +77,7 @@ const getInitialTimeRanges = (recurringAvailableTimes: any) => {
   const initialTimeRanges: {
     [key: string]: { from: string; to: string }[];
   } = {};
-  recurringAvailableTimes?.forEach(({ day, timeRanges }) => {
+  recurringAvailableTimes?.forEach(({ day, timeRanges }: any) => {
     initialTimeRanges[day] = timeRanges.map(
       ({ startDate, endDate }: { startDate: any; endDate: any }) => ({
         from: new Date(startDate).toTimeString().slice(0, 5),

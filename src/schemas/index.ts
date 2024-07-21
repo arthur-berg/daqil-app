@@ -108,6 +108,34 @@ export const SpecificAvailabilitySchemaBE = z.object({
   ),
 });
 
+export const BlockAvailabilitySchemaBE = z.object({
+  date: z.date(),
+  timeRanges: z.array(
+    z.object({
+      startDate: z.date({
+        required_error: "From time is required",
+      }),
+      endDate: z.date({
+        required_error: "To time is required",
+      }),
+    })
+  ),
+});
+
+export const BlockAvailabilitySchemaFE = z.object({
+  date: z.date(),
+  timeRanges: z.array(
+    z.object({
+      startDate: z.string({
+        required_error: "From time is required",
+      }),
+      endDate: z.string({
+        required_error: "To time is required",
+      }),
+    })
+  ),
+});
+
 export const DefaultAvailabilitySettingsSchemaFE = z.object({
   interval: z.string().refine(
     (val) => {

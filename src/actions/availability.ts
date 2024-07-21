@@ -8,10 +8,54 @@ import {
   RecurringAvailabilitySchema,
   RecurringAvailabilitySettingsSchemaBE,
   SpecificAvailabilitySchemaBE,
+  BlockAvailabilitySchemaBE,
 } from "@/schemas";
 import { getTranslations } from "next-intl/server";
 import { isSameDay } from "date-fns";
 import { revalidatePath } from "next/cache";
+
+export const saveBlockedOutTimes = async (
+  values: z.infer<typeof BlockAvailabilitySchemaBE>
+) => {
+  try {
+    const user = (await requireAuth([
+      UserRole.THERAPIST,
+      UserRole.ADMIN,
+    ])) as any;
+
+    const [tSuccess, tError] = await Promise.all([
+      getTranslations("SuccessMessages"),
+      getTranslations("ErrorMessages"),
+    ]);
+
+    const validatedFields = BlockAvailabilitySchemaBE.safeParse(values);
+
+    if (!validatedFields.success) {
+      return { error: tError("invalidFields") };
+    }
+
+    const data = validatedFields.data;
+
+    const filteredBlockedOutTimes =
+      user.availableTimes.blockedOutTimes?.filter(
+        (blockedOutTime: any) =>
+          !isSameDay(new Date(blockedOutTime.date), new Date(data.date))
+      ) ?? [];
+
+    const mergedBlockedTimes = [...filteredBlockedOutTimes, data];
+
+    await User.findByIdAndUpdate(user.id, {
+      "availableTimes.blockedOutTimes": mergedBlockedTimes,
+    });
+
+    revalidatePath("/therapist/availability");
+
+    return { success: "Blocked out times saved" };
+  } catch (error) {
+    console.error("Error saving specific available times", error);
+    return { error: "Failed to save specific available times." };
+  }
+};
 
 export const saveSpecificAvailableTimes = async (
   values: z.infer<typeof SpecificAvailabilitySchemaBE>
