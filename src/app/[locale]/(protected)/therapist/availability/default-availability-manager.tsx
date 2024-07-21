@@ -75,11 +75,11 @@ const initialEditModes = daysOfWeek.reduce((acc: any, day: any) => {
 
 const DefaultAvailabilityManager = ({
   appointmentType,
-  defaultAvailableTimes,
+  recurringAvailableTimes,
   settings,
 }: {
   appointmentType: any;
-  defaultAvailableTimes: any[];
+  recurringAvailableTimes: any[];
   settings: any;
 }) => {
   const [isPending, startTransition] = useTransition();
@@ -109,7 +109,7 @@ const DefaultAvailabilityManager = ({
     const initialTimeRanges: {
       [key: string]: { from: string; to: string }[];
     } = {};
-    defaultAvailableTimes?.forEach(({ day, timeRanges }) => {
+    recurringAvailableTimes?.forEach(({ day, timeRanges }) => {
       initialTimeRanges[day] = timeRanges.map(
         ({ startDate, endDate }: { startDate: any; endDate: any }) => ({
           from: new Date(startDate).toTimeString().slice(0, 5),
@@ -118,7 +118,7 @@ const DefaultAvailabilityManager = ({
       );
     });
     setTimeRangeInputs(initialTimeRanges);
-  }, [defaultAvailableTimes]);
+  }, [recurringAvailableTimes]);
 
   const toggleEditModeForDay = (day: string) => {
     setEditModes((prev) => {
@@ -165,7 +165,7 @@ const DefaultAvailabilityManager = ({
 
   return timeRangeInputs ? (
     <div className="mt-6 bg-white rounded-lg p-6">
-      <h2 className="text-xl font-bold mb-4">Default Availability</h2>
+      <h2 className="text-xl font-bold mb-4">Recurring times & settings</h2>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmitDefaultAvailability)}>
           <div className="mt-4">
@@ -393,7 +393,9 @@ const DefaultAvailabilityManager = ({
                   </div>
                 ))
               ) : (
-                <p className="text-gray-500">No default available times set</p>
+                <p className="text-gray-500">
+                  No recurring available times set
+                </p>
               )}
             </div>
           )}

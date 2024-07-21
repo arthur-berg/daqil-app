@@ -62,7 +62,7 @@ const AvailabilityBody = ({
     <Tabs defaultValue="default-availability" className="w-full">
       <TabsList className="flex items-center justify-start flex-wrap h-auto space-y-1">
         <TabsTrigger value="default-availability">
-          Default Availability
+          Recurring Available Times
         </TabsTrigger>
         <TabsTrigger value="specific-times">
           Select Specific Available Times
@@ -75,7 +75,7 @@ const AvailabilityBody = ({
           <DefaultAvailabilityManager
             appointmentType={appointmentType}
             settings={availableTimes?.settings}
-            defaultAvailableTimes={availableTimes?.defaultAvailableTimes}
+            recurringAvailableTimes={availableTimes?.recurringAvailableTimes}
           />
         </TabsContent>
         <TabsContent value="specific-times">

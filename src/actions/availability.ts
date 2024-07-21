@@ -5,8 +5,8 @@ import { UserRole } from "@/generalTypes";
 import { requireAuth } from "@/lib/auth";
 import User from "@/models/User";
 import {
-  DefaultAvailabilitySchema,
-  DefaultAvailabilitySettingsSchemaBE,
+  RecurringAvailabilitySchema,
+  RecurringAvailabilitySettingsSchemaBE,
   SpecificAvailabilitySchemaBE,
 } from "@/schemas";
 import { getTranslations } from "next-intl/server";
@@ -37,7 +37,7 @@ export const saveSpecificAvailableTimes = async (
       user.availableTimes = {
         blockedOutTimes: [],
         specificAvailableTimes: [],
-        defaultAvailableTimes: [],
+        recurringAvailableTimes: [],
         settings: {
           interval: 15,
           fullDayRange: { from: "09:00", to: "17:00" },
@@ -52,10 +52,10 @@ export const saveSpecificAvailableTimes = async (
           !isSameDay(new Date(availableTime.date), new Date(data.date))
       ) ?? [];
 
-    const mergedDefaultTimes = [...filteredAvailableTimes, data];
+    const mergedSpecificTimes = [...filteredAvailableTimes, data];
 
     await User.findByIdAndUpdate(user.id, {
-      "availableTimes.specificAvailableTimes": mergedDefaultTimes,
+      "availableTimes.specificAvailableTimes": mergedSpecificTimes,
     });
 
     revalidatePath("/therapist/availability");
@@ -67,8 +67,8 @@ export const saveSpecificAvailableTimes = async (
   }
 };
 
-export const updateDefaultAvailabilitySettings = async (
-  values: z.infer<typeof DefaultAvailabilitySettingsSchemaBE>
+export const updateRecurringAvailabilitySettings = async (
+  values: z.infer<typeof RecurringAvailabilitySettingsSchemaBE>
 ) => {
   try {
     const user = (await requireAuth([
@@ -82,7 +82,7 @@ export const updateDefaultAvailabilitySettings = async (
     ]);
 
     const validatedFields =
-      DefaultAvailabilitySettingsSchemaBE.safeParse(values);
+      RecurringAvailabilitySettingsSchemaBE.safeParse(values);
 
     if (!validatedFields.success) {
       return { error: tError("invalidFields") };
@@ -92,7 +92,7 @@ export const updateDefaultAvailabilitySettings = async (
       user.availableTimes = {
         blockedOutTimes: [],
         specificAvailableTimes: [],
-        defaultAvailableTimes: [],
+        recurringAvailableTimes: [],
         settings: {
           interval: 15,
           fullDayRange: { from: "09:00", to: "17:00" },
@@ -110,13 +110,13 @@ export const updateDefaultAvailabilitySettings = async (
 
     return { success: "Settings successfully updated" };
   } catch (error) {
-    console.error("Error saving default available settings", error);
+    console.error("Error saving availability settings", error);
     return { error: "Failed to save available times." };
   }
 };
 
-export const saveDefaultAvailableTimes = async (
-  values: z.infer<typeof DefaultAvailabilitySchema>
+export const saveRecurringAvailableTimes = async (
+  values: z.infer<typeof RecurringAvailabilitySchema>
 ) => {
   try {
     const user = (await requireAuth([
@@ -129,7 +129,7 @@ export const saveDefaultAvailableTimes = async (
       getTranslations("ErrorMessages"),
     ]);
 
-    const validatedFields = DefaultAvailabilitySchema.safeParse(values);
+    const validatedFields = RecurringAvailabilitySchema.safeParse(values);
 
     if (!validatedFields.success) {
       return { error: tError("invalidFields") };
@@ -145,21 +145,21 @@ export const saveDefaultAvailableTimes = async (
         },
         blockedOutTimes: [],
         specificAvailableTimes: [],
-        defaultAvailableTimes: [],
+        recurringAvailableTimes: [],
       };
     }
 
     const filteredAvailableTimes =
-      user.availableTimes.defaultAvailableTimes?.filter(
+      user.availableTimes.recurringAvailableTimes?.filter(
         (availableTime: any) => availableTime.day !== data.day
       ) ?? {};
 
-    const mergedDefaultTimes = [...filteredAvailableTimes, data];
+    const mergedRecurringTimes = [...filteredAvailableTimes, data];
 
-    user.availableTimes.defaultAvailableTimes = mergedDefaultTimes;
+    user.availableTimes.recurringAvailableTimes = mergedRecurringTimes;
 
     await User.findByIdAndUpdate(user.id, {
-      "availableTimes.defaultAvailableTimes": mergedDefaultTimes,
+      "availableTimes.recurringAvailableTimes": mergedRecurringTimes,
     });
 
     return { success: "Available times saved successfully." };

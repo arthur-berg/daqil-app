@@ -1,6 +1,6 @@
 "use client";
 import * as z from "zod";
-import { saveDefaultAvailableTimes } from "@/actions/availability";
+import { saveRecurringAvailableTimes } from "@/actions/availability";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -9,7 +9,7 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { DefaultAvailabilitySchema } from "@/schemas";
+import { RecurringAvailabilitySchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { addMinutes, isAfter, isBefore, isEqual, set } from "date-fns";
 import { useState, useTransition } from "react";
@@ -78,7 +78,7 @@ const DefaultAvailabilityForm = ({
   const { toast } = useToast();
 
   const form = useForm({
-    resolver: zodResolver(DefaultAvailabilitySchema),
+    resolver: zodResolver(RecurringAvailabilitySchema),
     defaultValues: {
       day,
       timeRanges:
@@ -139,7 +139,7 @@ const DefaultAvailabilityForm = ({
     });
   };
 
-  const onSubmitDay = (values: z.infer<typeof DefaultAvailabilitySchema>) => {
+  const onSubmitDay = (values: z.infer<typeof RecurringAvailabilitySchema>) => {
     const newTimes = values.timeRanges.map(
       ({ startDate, endDate }: { startDate: any; endDate: any }) => {
         const [fromHour, fromMinute] = startDate.split(":").map(Number);
@@ -162,7 +162,7 @@ const DefaultAvailabilityForm = ({
     };
 
     startTransition(async () => {
-      const data = await saveDefaultAvailableTimes(structuredData);
+      const data = await saveRecurringAvailableTimes(structuredData);
       if (data?.success) {
         toast({
           variant: "success",

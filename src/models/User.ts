@@ -51,7 +51,7 @@ const availableTimesSchema = new Schema({
   },
   blockedOutTimes: [dateTimesSchema],
   specificAvailableTimes: [dateTimesSchema],
-  defaultAvailableTimes: [dayTimesSchema],
+  recurringAvailableTimes: [dayTimesSchema],
 });
 
 const userSchema = new Schema(

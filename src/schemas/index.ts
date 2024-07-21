@@ -58,7 +58,7 @@ const timeStringOrDateSchema = z.union([
   z.date(),
 ]);
 
-export const DefaultAvailabilitySchema = z.object({
+export const RecurringAvailabilitySchema = z.object({
   day: z.string(),
   timeRanges: z.array(
     z.object({
@@ -68,7 +68,7 @@ export const DefaultAvailabilitySchema = z.object({
   ),
 });
 
-export const DefaultAvailabilitySettingsSchemaBE = z.object({
+export const RecurringAvailabilitySettingsSchemaBE = z.object({
   interval: z.number().min(1, "Interval must be at least 1 minute").default(15),
   fullDayRange: z.object({
     from: z.string({
