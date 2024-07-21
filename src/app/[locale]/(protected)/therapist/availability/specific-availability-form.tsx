@@ -1,9 +1,15 @@
 "use client";
-
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { format, set, addMinutes, isBefore } from "date-fns";
-import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
+import * as z from "zod";
+import { useState, useTransition } from "react";
+import { useForm, Controller } from "react-hook-form";
+import { format, set, addMinutes, isBefore, parseISO } from "date-fns";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@/components/ui/popover";
 import {
   Command,
   CommandList,
@@ -12,22 +18,34 @@ import {
   CommandGroup,
   CommandEmpty,
 } from "@/components/ui/command";
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from "@/components/ui/popover";
-import { useToast } from "@/components/ui/use-toast";
+import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import {
   Form,
-  FormControl,
   FormField,
   FormItem,
+  FormControl,
   FormMessage,
 } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
+import { useToast } from "@/components/ui/use-toast";
+import { SpecificAvailabilitySchemaFE } from "@/schemas";
+import { saveSpecificAvailableTimes } from "@/actions/availability";
 
+const toUTCDate = (date: Date, time: string) => {
+  const [hours, minutes] = time.split(":").map(Number);
+  return new Date(
+    Date.UTC(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+      hours,
+      minutes,
+      0,
+      0
+    )
+  );
+};
+
+// Utility function to generate time options
 const generateTimeIntervals = (intervalMinutes = 15) => {
   const times = [];
   const start = set(new Date(), {
@@ -57,28 +75,48 @@ const SpecificAvailabilityForm = ({
 }: {
   specificAvailableTimes: any;
 }) => {
+  const [isPending, startTransition] = useTransition();
+  const [date, setDate] = useState<any>();
+
   const { toast } = useToast();
-
-  const [date, setDate] = useState<Date | undefined>();
-
-  const form = useForm({
+  const form = useForm<z.infer<typeof SpecificAvailabilitySchemaFE>>({
     defaultValues: {
+      date: "",
       timeRanges: [{ startDate: "", endDate: "" }],
     },
   });
 
   const onSubmit = (values: any) => {
-    const formattedDate = format(date, "yyyy-MM-dd");
-    const times = values.timeRanges.map(({ startDate, endDate }) => ({
-      from: startDate,
-      to: endDate,
-    }));
-
-    toast({
-      variant: "success",
-      title: "Specific times saved successfully.",
+    const formattedData = {
+      date: new Date(
+        Date.UTC(date!.getFullYear(), date!.getMonth(), date!.getDate())
+      ), // Convert to UTC
+      timeRanges: values.timeRanges.map(
+        ({ startDate, endDate }: { startDate: string; endDate: string }) => ({
+          startDate: toUTCDate(date!, startDate),
+          endDate: toUTCDate(date!, endDate),
+        })
+      ),
+    };
+    startTransition(async () => {
+      const data = await saveSpecificAvailableTimes(formattedData);
+      if (data?.success) {
+        toast({
+          variant: "success",
+          title: "Specific times saved successfully.",
+        });
+        form.reset();
+        setDate(null);
+      }
+      if (data?.error) {
+        toast({
+          variant: "destructive",
+          title: "Something went wrong.",
+        });
+      }
     });
   };
+
   return (
     <div>
       <h2 className="text-xl font-bold mb-4">
@@ -90,23 +128,26 @@ const SpecificAvailabilityForm = ({
           Overview of Specific Available Times
         </h3>
         <div className="space-y-2">
-          {specificAvailableTimes.map(({ date, times }, index) => (
-            <div key={index} className="border p-2 rounded">
-              <div className="font-semibold">
-                {format(new Date(date), "PPPP")}
+          {specificAvailableTimes?.map(
+            ({ date, timeRanges }: any, index: number) => (
+              <div key={`${date}-${index}`} className="border p-2 rounded">
+                <div className="font-semibold">
+                  {format(new Date(date), "PPPP")}
+                </div>
+                <div className="flex gap-2 flex-wrap">
+                  {timeRanges.map((time: any, index: number) => (
+                    <span
+                      key={index}
+                      className="bg-blue-500 text-white rounded px-2 py-1"
+                    >
+                      {format(new Date(time.startDate), "HH:mm")} -{" "}
+                      {format(new Date(time.endDate), "HH:mm")}
+                    </span>
+                  ))}
+                </div>
               </div>
-              <div className="flex gap-2 flex-wrap">
-                {times.map((time, i) => (
-                  <span
-                    key={i}
-                    className="bg-blue-500 text-white rounded px-2 py-1"
-                  >
-                    {time.from} - {time.to}
-                  </span>
-                ))}
-              </div>
-            </div>
-          ))}
+            )
+          )}
         </div>
       </div>
 
@@ -115,13 +156,16 @@ const SpecificAvailabilityForm = ({
         selected={date}
         onSelect={(date) => {
           setDate(date);
-          form.reset({ timeRanges: [{ startDate: "", endDate: "" }] });
+          form.reset({
+            date: format(date!, "yyyy-MM-dd"),
+            timeRanges: [{ startDate: "", endDate: "" }],
+          });
         }}
         className="rounded-md border h-full w-full flex"
         classNames={{
           months:
             "flex w-full flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0 flex-1",
-          month: "space-y-4 w-full flex flex-col",
+          month: "space-y-4 w-full flex-col",
           table: "w-full h-full border-collapse space-y-1",
           head_row: "",
           row: "w-full mt-2",
@@ -135,7 +179,7 @@ const SpecificAvailabilityForm = ({
               <h3 className="text-lg font-semibold">
                 Available Times for {format(date, "PPPP")}
               </h3>
-              {form.watch("timeRanges").map((_, index) => (
+              {form.watch("timeRanges").map((_: any, index: number) => (
                 <div key={index} className="flex gap-4 mt-4">
                   <FormField
                     control={form.control}

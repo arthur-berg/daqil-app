@@ -100,7 +100,7 @@ const DefaultAvailabilityManager = ({
   const form = useForm({
     resolver: zodResolver(DefaultAvailabilitySettingsSchemaFE),
     defaultValues: {
-      interval: settings.interval.toString() ?? "15",
+      interval: settings?.interval.toString() ?? "15",
       fullDayRange,
     },
   });

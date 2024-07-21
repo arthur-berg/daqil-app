@@ -9,7 +9,7 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { SaveDefaultAvailabilitySchema } from "@/schemas";
+import { DefaultAvailabilitySchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { addMinutes, isAfter, isBefore, isEqual, set } from "date-fns";
 import { useState, useTransition } from "react";
@@ -78,7 +78,7 @@ const DefaultAvailabilityForm = ({
   const { toast } = useToast();
 
   const form = useForm({
-    resolver: zodResolver(SaveDefaultAvailabilitySchema),
+    resolver: zodResolver(DefaultAvailabilitySchema),
     defaultValues: {
       day,
       timeRanges:
@@ -139,9 +139,7 @@ const DefaultAvailabilityForm = ({
     });
   };
 
-  const onSubmitDay = (
-    values: z.infer<typeof SaveDefaultAvailabilitySchema>
-  ) => {
+  const onSubmitDay = (values: z.infer<typeof DefaultAvailabilitySchema>) => {
     const newTimes = values.timeRanges.map(
       ({ startDate, endDate }: { startDate: any; endDate: any }) => {
         const [fromHour, fromMinute] = startDate.split(":").map(Number);

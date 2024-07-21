@@ -58,7 +58,7 @@ const timeStringOrDateSchema = z.union([
   z.date(),
 ]);
 
-export const SaveDefaultAvailabilitySchema = z.object({
+export const DefaultAvailabilitySchema = z.object({
   day: z.string(),
   timeRanges: z.array(
     z.object({
@@ -78,6 +78,34 @@ export const DefaultAvailabilitySettingsSchemaBE = z.object({
       required_error: "To time is required",
     }),
   }),
+});
+
+export const SpecificAvailabilitySchemaFE = z.object({
+  date: z.string(),
+  timeRanges: z.array(
+    z.object({
+      startDate: z.string({
+        required_error: "From time is required",
+      }),
+      endDate: z.string({
+        required_error: "To time is required",
+      }),
+    })
+  ),
+});
+
+export const SpecificAvailabilitySchemaBE = z.object({
+  date: z.date(),
+  timeRanges: z.array(
+    z.object({
+      startDate: z.date({
+        required_error: "From time is required",
+      }),
+      endDate: z.date({
+        required_error: "To time is required",
+      }),
+    })
+  ),
 });
 
 export const DefaultAvailabilitySettingsSchemaFE = z.object({

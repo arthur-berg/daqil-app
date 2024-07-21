@@ -5,10 +5,67 @@ import { UserRole } from "@/generalTypes";
 import { requireAuth } from "@/lib/auth";
 import User from "@/models/User";
 import {
-  SaveDefaultAvailabilitySchema,
+  DefaultAvailabilitySchema,
   DefaultAvailabilitySettingsSchemaBE,
+  SpecificAvailabilitySchemaBE,
 } from "@/schemas";
 import { getTranslations } from "next-intl/server";
+import { isSameDay } from "date-fns";
+import { revalidatePath } from "next/cache";
+
+export const saveSpecificAvailableTimes = async (
+  values: z.infer<typeof SpecificAvailabilitySchemaBE>
+) => {
+  try {
+    const user = (await requireAuth([
+      UserRole.THERAPIST,
+      UserRole.ADMIN,
+    ])) as any;
+
+    const [tSuccess, tError] = await Promise.all([
+      getTranslations("SuccessMessages"),
+      getTranslations("ErrorMessages"),
+    ]);
+
+    const validatedFields = SpecificAvailabilitySchemaBE.safeParse(values);
+
+    if (!validatedFields.success) {
+      return { error: tError("invalidFields") };
+    }
+
+    if (!user.availableTimes) {
+      user.availableTimes = {
+        blockedOutTimes: [],
+        specificAvailableTimes: [],
+        defaultAvailableTimes: [],
+        settings: {
+          interval: 15,
+          fullDayRange: { from: "09:00", to: "17:00" },
+        },
+      };
+    }
+    const data = validatedFields.data;
+
+    const filteredAvailableTimes =
+      user.availableTimes.specificAvailableTimes?.filter(
+        (availableTime: any) =>
+          !isSameDay(new Date(availableTime.date), new Date(data.date))
+      ) ?? [];
+
+    const mergedDefaultTimes = [...filteredAvailableTimes, data];
+
+    await User.findByIdAndUpdate(user.id, {
+      "availableTimes.specificAvailableTimes": mergedDefaultTimes,
+    });
+
+    revalidatePath("/therapist/availability");
+
+    return { success: "Specific availalbe times saved" };
+  } catch (error) {
+    console.error("Error saving specific available times", error);
+    return { error: "Failed to save specific available times." };
+  }
+};
 
 export const updateDefaultAvailabilitySettings = async (
   values: z.infer<typeof DefaultAvailabilitySettingsSchemaBE>
@@ -59,7 +116,7 @@ export const updateDefaultAvailabilitySettings = async (
 };
 
 export const saveDefaultAvailableTimes = async (
-  values: z.infer<typeof SaveDefaultAvailabilitySchema>
+  values: z.infer<typeof DefaultAvailabilitySchema>
 ) => {
   try {
     const user = (await requireAuth([
@@ -72,15 +129,13 @@ export const saveDefaultAvailableTimes = async (
       getTranslations("ErrorMessages"),
     ]);
 
-    const validatedFields = SaveDefaultAvailabilitySchema.safeParse(values);
+    const validatedFields = DefaultAvailabilitySchema.safeParse(values);
 
     if (!validatedFields.success) {
       return { error: tError("invalidFields") };
     }
 
     const data = validatedFields.data;
-
-    console.log("validatedFields", validatedFields);
 
     if (!user.availableTimes) {
       user.availableTimes = {

@@ -80,7 +80,7 @@ const AvailabilityBody = ({
         </TabsContent>
         <TabsContent value="specific-times">
           <SpecificAvailabilityForm
-            specificAvailableTimes={availableTimes.specificAvailableTimes}
+            specificAvailableTimes={availableTimes?.specificAvailableTimes}
           />
         </TabsContent>
         <TabsContent value="block-dates">
