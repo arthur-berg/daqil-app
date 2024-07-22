@@ -3,7 +3,6 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { APPOINTMENT_TYPE_ID } from "@/contants/config";
 import { getAppointmentTypeById } from "@/data/appointment-types";
 import { getUserById } from "@/data/user";
-import { getTherapistAvailableTimes } from "@/utils";
 import { FaUser } from "react-icons/fa";
 
 const TherapistUserProfile = async ({
@@ -14,7 +13,7 @@ const TherapistUserProfile = async ({
   const therapistId = params.therapistId;
   const therapist = (await getUserById(therapistId)) as any;
   const appointmentType = await getAppointmentTypeById(APPOINTMENT_TYPE_ID);
-  const availableTimes = getTherapistAvailableTimes(therapist.availableTimes);
+
   if (!therapist) {
     return "Couldn't find therapist";
   }
@@ -48,7 +47,7 @@ const TherapistUserProfile = async ({
       </div>
       <div className="mt-6 bg-white shadow-md rounded-lg p-6">
         <BookingCalendar
-          availableTimes={availableTimes}
+          therapistsAvailableTimes={JSON.stringify(therapist.availableTimes)}
           appointmentType={appointmentType}
           therapistId={therapistId}
         />

@@ -7,6 +7,9 @@ import { bookAppointment } from "@/actions/appointments";
 import { Link } from "@/navigation";
 import { currencyToSymbol } from "@/utils";
 
+import { getTherapistAvailableTimeSlots } from "./helpers";
+import { AvailableTimes } from "@/generalTypes";
+
 type DateType = {
   justDate: Date | undefined;
   dateTime: Date | undefined;
@@ -15,53 +18,35 @@ type DateType = {
 const BookingCalendar = ({
   appointmentType,
   therapistId,
-  availableTimes,
+  therapistsAvailableTimes,
 }: {
   appointmentType: any;
   therapistId: string;
-  availableTimes: any;
+  therapistsAvailableTimes: string;
 }) => {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
+  const [availableTimeSlots, setAvailableTimeSlots] = useState<
+    { start: Date; end: Date }[]
+  >([]);
   const [date, setDate] = useState<DateType>({
     justDate: undefined,
     dateTime: undefined,
   });
 
-  const getTimes = () => {
-    if (!date.justDate) return [];
+  const setTimeSlots = (selectedDate: Date) => {
+    if (!selectedDate) return [];
 
-    const specificDate = format(date.justDate, "yyyy-MM-dd");
-
-    // Find specific available times for the selected date
-    const specificAvailable = availableTimes.find(
-      (specific: any) =>
-        format(new Date(specific.date), "yyyy-MM-dd") === specificDate
+    const timeSlots = getTherapistAvailableTimeSlots(
+      JSON.parse(therapistsAvailableTimes),
+      appointmentType,
+      selectedDate
     );
 
-    // If there are specific available times for the selected date, use them
-    if (specificAvailable) {
-      return specificAvailable.availableTimes.map((time: string) => {
-        const [hours, minutes] = time.split(":").map(Number);
-        const start = set(new Date(specificAvailable.date), {
-          hours,
-          minutes,
-          seconds: 0,
-          milliseconds: 0,
-        });
-        return {
-          start,
-          end: add(start, { minutes: appointmentType.durationInMinutes }),
-        };
-      });
-    }
-
-    // If no specific or recurring times, return empty array
-    return [];
+    setAvailableTimeSlots(timeSlots);
   };
 
-  const times = getTimes();
   const today = set(new Date(), {
     hours: 0,
     minutes: 0,
@@ -103,7 +88,7 @@ const BookingCalendar = ({
         </div>
       ) : (
         <>
-          <div className="flex">
+          {/* <div className="flex">
             <h2 className="text-xl font-bold mb-4 mr-4">Calendar</h2>
             {date.justDate && (
               <Button
@@ -119,7 +104,7 @@ const BookingCalendar = ({
                 Go back
               </Button>
             )}
-          </div>
+          </div> */}
           {date.justDate ? (
             <>
               <Calendar
@@ -130,6 +115,9 @@ const BookingCalendar = ({
                     ...prev,
                     justDate: date ? date : today,
                   }));
+                  if (date) {
+                    setTimeSlots(date);
+                  }
                 }}
                 className="rounded-md border h-full w-full flex"
                 classNames={{
@@ -142,7 +130,7 @@ const BookingCalendar = ({
                 }}
               />
               <div className="flex gap-4 flex-wrap mt-2">
-                {times?.map((time, i) => (
+                {availableTimeSlots?.map((time, i) => (
                   <div key={`time-${i}`} className="rounded-sm bg-gray-100 p-2">
                     <Button
                       disabled={isPending}
@@ -206,6 +194,9 @@ const BookingCalendar = ({
                   ...prev,
                   justDate: date ? date : today,
                 }));
+                if (date) {
+                  setTimeSlots(date);
+                }
               }}
               className="rounded-md border h-full w-full flex"
               classNames={{
