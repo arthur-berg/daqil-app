@@ -1,3 +1,5 @@
+import { format } from "date-fns";
+
 export const currencyToSymbol = (currency: "USD" | "AED" | "EUR") => {
   if (currency === "USD") {
     return "$";
@@ -23,3 +25,6 @@ export const generatePassword = (length = 12) => {
   }
   return password;
 };
+
+export const formatDateTime = (date: Date): string =>
+  format(new Date(date), "HH:mm");

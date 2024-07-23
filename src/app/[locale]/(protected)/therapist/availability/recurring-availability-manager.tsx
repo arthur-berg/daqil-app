@@ -44,11 +44,6 @@ const daysOfWeek = [
   "sunday",
 ];
 
-const formatTime = (time: string): string =>
-  format(new Date(`1970-01-01T${time}:00`), "HH:mm");
-
-const formatDateTime = (date: Date): string => format(new Date(date), "HH:mm");
-
 const generateTimeIntervals = (intervalMinutes = 15) => {
   const times = [];
   const start = set(new Date(), {
@@ -416,11 +411,9 @@ const DefaultAvailabilityManager = ({
                       className="bg-blue-200 p-2 rounded-md text-blue-900 items-center inline-flex"
                     >
                       <span className="px-2 py-1 text-center">
-                        {formatTime(range.from)}
+                        {range.from}
                       </span>
-                      <span className="px-2 py-1 text-center">
-                        {formatTime(range.to)}
-                      </span>
+                      <span className="px-2 py-1 text-center">{range.to}</span>
                     </div>
                   ))
                 ) : (

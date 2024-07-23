@@ -5,12 +5,9 @@ import {
   TimeRangeStrings,
   TimeRange,
 } from "@/generalTypes";
+import { formatDateTime } from "@/utils";
 import { format } from "date-fns";
 import { FaClock, FaCalendarAlt, FaBan } from "react-icons/fa";
-
-const formatTime = (time: string): string =>
-  format(new Date(`1970-01-01T${time}:00`), "HH:mm");
-const formatDateTime = (date: Date): string => format(new Date(date), "HH:mm");
 
 const Overview = ({ availableTimes }: { availableTimes: AvailableTimes }) => {
   const { recurringAvailableTimes, specificAvailableTimes, blockedOutTimes } =
@@ -37,8 +34,7 @@ const Overview = ({ availableTimes }: { availableTimes: AvailableTimes }) => {
                     key={timeRange.startTime}
                     className="bg-blue-200 p-2 rounded-md text-blue-900 inline-flex mr-2"
                   >
-                    {formatTime(timeRange.startTime)} -{" "}
-                    {formatTime(timeRange.endTime)}
+                    {timeRange.startTime} - {timeRange.endTime}
                   </div>
                 ))}
               </div>

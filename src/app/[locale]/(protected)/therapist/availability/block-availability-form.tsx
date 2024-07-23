@@ -35,8 +35,7 @@ import {
 import { FaBan } from "react-icons/fa";
 import { TimeRange } from "@/generalTypes";
 import { Separator } from "@/components/ui/separator";
-
-const formatDateTime = (date: Date): string => format(new Date(date), "HH:mm");
+import { formatDateTime } from "@/utils";
 
 // Utility function to generate time options
 const generateTimeIntervals = (intervalMinutes = 15) => {
