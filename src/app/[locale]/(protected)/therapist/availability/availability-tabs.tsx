@@ -18,51 +18,9 @@ const AvailabilityTabs = ({
   appointmentType: any;
   availableTimes: any;
 }) => {
-  const [blockOutDates, setBlockOutDates] = useState<Date[]>([]);
-
-  const handleBlockOutDateSelection = (date: Date) => {
-    setBlockOutDates((prev) => {
-      if (prev.some((d) => isEqual(d, date))) {
-        return prev.filter((d) => !isEqual(d, date));
-      } else {
-        return [...prev, date];
-      }
-    });
-  };
-
-  const saveBlockOutDates = () => {
-    // Save block out dates to the server
-    console.log("Saving block out dates:", blockOutDates);
-  };
-
-  const getTimesForDay = (date: Date) => {
-    const times = [];
-    const startOfDay = set(date, {
-      hours: 7,
-      minutes: 0,
-      seconds: 0,
-      milliseconds: 0,
-    });
-    const endOfDay = set(date, {
-      hours: 19,
-      minutes: 0,
-      seconds: 0,
-      milliseconds: 0,
-    });
-
-    for (
-      let time = startOfDay;
-      isBefore(time, endOfDay);
-      time = addMinutes(time, 15)
-    ) {
-      times.push(time);
-    }
-    return times;
-  };
-
   return (
     <Tabs defaultValue="default-availability" className="w-full">
-      <TabsList className="flex items-center justify-start flex-wrap h-auto space-y-1">
+      <TabsList className="flex items-center justify-start flex-wrap h-auto">
         <TabsTrigger value="overview">Overview</TabsTrigger>
         <TabsTrigger value="default-availability">
           Recurring Available Times
