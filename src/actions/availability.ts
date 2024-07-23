@@ -171,6 +171,8 @@ export const saveRecurringAvailableTimes = async (
       "availableTimes.recurringAvailableTimes": mergedRecurringTimes,
     });
 
+    revalidatePath("/therapist/availability");
+
     return { success: "Available times saved successfully." };
   } catch (error) {
     console.error("Error saving available times", error);

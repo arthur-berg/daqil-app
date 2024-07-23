@@ -31,7 +31,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
-import { addMinutes, isBefore, set } from "date-fns";
+import { addMinutes, format, isBefore, set } from "date-fns";
+import { FaClock } from "react-icons/fa";
 
 const daysOfWeek = [
   "monday",
@@ -42,6 +43,11 @@ const daysOfWeek = [
   "saturday",
   "sunday",
 ];
+
+const formatTime = (time: string): string =>
+  format(new Date(`1970-01-01T${time}:00`), "HH:mm");
+
+const formatDateTime = (date: Date): string => format(new Date(date), "HH:mm");
 
 const generateTimeIntervals = (intervalMinutes = 15) => {
   const times = [];
@@ -371,27 +377,26 @@ const DefaultAvailabilityManager = ({
           Clients will see your available times four weeks in the future
         </span>
       </div>
-      <div>
+      <h2 className="text-xl md:text-2xl font-bold text-blue-600 flex items-center mb-4 mt-4">
+        <FaClock className="mr-2" /> Recurring Availability
+      </h2>
+      <div className="p-4 space-y-6 max-w-lg">
         {daysOfWeek.map((day) => (
-          <div key={day} className="mb-8 mt-4">
+          <div key={day} className="space-y-4">
             <div className="flex justify-between items-center mb-4">
-              <div className="flex items-center justify-between gap-2 mb-4">
-                <h3 className="text-lg font-semibold">
-                  {capitalizeFirstLetter(day)}
-                </h3>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => toggleEditModeForDay(day)}
-                  disabled={
-                    Object.values(editModes).some((mode) => mode) &&
-                    !editModes[day]
-                  }
-                  className="w-24"
-                >
-                  {editModes[day] ? "Cancel" : "Edit"}
-                </Button>
-              </div>
+              <h3 className="text-lg font-semibold text-blue-800">
+                {capitalizeFirstLetter(day)}
+              </h3>
+              <Button
+                variant="outline"
+                onClick={() => toggleEditModeForDay(day)}
+                disabled={
+                  Object.values(editModes).some((mode) => mode) &&
+                  !editModes[day]
+                }
+              >
+                {editModes[day] ? "Cancel" : "Edit"}
+              </Button>
             </div>
             {editModes[day] ? (
               <DefaultAvailabilityForm
@@ -403,15 +408,18 @@ const DefaultAvailabilityManager = ({
                 fullDayRange={fullDayRange}
               />
             ) : (
-              <div className="flex flex-col space-y-2">
+              <div className="space-y-2 space-x-2">
                 {timeRangeInputs[day] && timeRangeInputs[day].length > 0 ? (
                   timeRangeInputs[day].map((range, index) => (
-                    <div key={index} className="flex items-center gap-4">
-                      <span className="border rounded px-2 py-1 w-24 text-center">
-                        {range.from}
+                    <div
+                      key={index}
+                      className="bg-blue-200 p-2 rounded-md text-blue-900 items-center inline-flex"
+                    >
+                      <span className="px-2 py-1 text-center">
+                        {formatTime(range.from)}
                       </span>
-                      <span className="border rounded px-2 py-1 w-24 text-center">
-                        {range.to}
+                      <span className="px-2 py-1 text-center">
+                        {formatTime(range.to)}
                       </span>
                     </div>
                   ))

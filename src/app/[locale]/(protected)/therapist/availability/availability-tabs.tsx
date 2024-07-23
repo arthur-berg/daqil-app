@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import DefaultAvailabilityManager from "./recurring-availability-manager";
 import SpecificAvailabilityForm from "./specific-availability-form";
 import BlockAvailabilityForm from "./block-availability-form";
+import Overview from "./overview";
 
 const AvailabilityTabs = ({
   appointmentType,
@@ -62,16 +63,20 @@ const AvailabilityTabs = ({
   return (
     <Tabs defaultValue="default-availability" className="w-full">
       <TabsList className="flex items-center justify-start flex-wrap h-auto space-y-1">
+        <TabsTrigger value="overview">Overview</TabsTrigger>
         <TabsTrigger value="default-availability">
           Recurring Available Times
         </TabsTrigger>
         <TabsTrigger value="specific-times">
-          Select Specific Available Times
+          Specific Available Times
         </TabsTrigger>
         <TabsTrigger value="block-dates">Block Out Dates</TabsTrigger>
       </TabsList>
 
       <div className="mt-6 bg-white shadow-md rounded-lg p-6">
+        <TabsContent value="overview">
+          <Overview availableTimes={availableTimes} />
+        </TabsContent>
         <TabsContent value="default-availability">
           <DefaultAvailabilityManager
             appointmentType={appointmentType}

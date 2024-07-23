@@ -8,22 +8,22 @@ export type UserRole = (typeof UserRole)[keyof typeof UserRole];
 
 // Schema types
 
-type TimeRange = {
+export type TimeRange = {
   startDate?: Date;
   endDate?: Date;
 };
 
-type TimeRangeStrings = {
+export type TimeRangeStrings = {
   startTime?: string;
   endTime?: string;
 };
 
-type DateTimes = {
+export type DateTimes = {
   date?: Date;
   timeRanges: TimeRange[];
 };
 
-type DayTimes = {
+export type DayTimes = {
   day?: string;
   timeRanges: TimeRangeStrings[];
 };
