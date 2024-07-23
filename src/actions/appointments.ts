@@ -37,7 +37,7 @@ export const bookAppointment = async (
 ) => {
   const user = await requireAuth([UserRole.CLIENT, UserRole.ADMIN]);
 
-  const therapist = await getUserById(therapistId);
+  const therapist = (await getUserById(therapistId)) as any;
 
   if (!therapist) {
     return { error: "Invalid therapist" };

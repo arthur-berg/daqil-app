@@ -16,7 +16,7 @@ export const settings = async (values: z.input<typeof SettingsSchema>) => {
     return { error: "Unauthorized" };
   }
 
-  const dbUser = await getUserById(user.id);
+  const dbUser = (await getUserById(user.id)) as any;
 
   if (!dbUser) {
     return { error: "Unauthorized" };

@@ -98,7 +98,7 @@ const CustomToolbar = ({
 
 const AppointmentCalendar = ({ appointments }: { appointments: any }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [currentView, setCurrentView] = useState(Views.WEEK);
+  const [currentView, setCurrentView] = useState<View>(Views.WEEK);
   const [selectedAppointment, setSelectedAppointment] = useState<any>(null);
 
   const handleNavigate = (action: NavigateAction) => {

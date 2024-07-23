@@ -45,7 +45,6 @@ const InviteTherapistForm = () => {
           toast({
             title: data.error,
             variant: "destructive",
-            status: "destructive",
           });
         }
 
@@ -54,7 +53,6 @@ const InviteTherapistForm = () => {
           toast({
             title: data.success,
             variant: "success",
-            status: "success",
           });
           form.reset();
         }
