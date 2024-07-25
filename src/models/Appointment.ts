@@ -75,16 +75,21 @@ const appointmentSchema = new Schema(
     },
     status: {
       type: String,
-      enum: [
-        "confirmed",
-        "canceled",
-        "completed",
-        "pending",
-        "no-show-both",
-        "no-show-host",
-        "no-show-participant",
-      ],
+      enum: ["confirmed", "canceled", "completed", "pending"],
       default: "confirmed",
+    },
+    cancellationReason: {
+      type: String,
+      enum: ["no-show-both", "no-show-host", "no-show-participant", "custom"],
+      required: function (this: any) {
+        return this.status === "canceled";
+      },
+    },
+    customCancellationReason: {
+      type: String,
+      required: function (this: any) {
+        return this.cancellationReason === "custom";
+      },
     },
     hostShowUp: {
       type: Boolean,

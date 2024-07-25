@@ -9,6 +9,7 @@ import { UserRole } from "@/generalTypes";
 import User from "@/models/User";
 import { getAppointmentTypeById } from "@/data/appointment-types";
 import { scheduleJobToCheckAppointmentStatus } from "@/lib/schedulerJobs";
+import { revalidatePath } from "next/cache";
 
 export const getClients = async () => {
   await requireAuth([UserRole.THERAPIST]);
@@ -91,6 +92,8 @@ export const bookAppointment = async (
 
     await session.commitTransaction();
     session.endSession();
+
+    revalidatePath("/client/appointments");
 
     return { success: "Appointment successfully booked" };
   } catch (error) {

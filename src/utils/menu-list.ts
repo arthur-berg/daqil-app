@@ -1,0 +1,139 @@
+import {
+  GearIcon,
+  CardStackIcon,
+  CalendarIcon,
+  DashboardIcon,
+} from "@radix-ui/react-icons";
+
+type Submenu = {
+  href: string;
+  label: string;
+  active: boolean;
+};
+
+type Menu = {
+  href: string;
+  label: string;
+  active: boolean;
+  icon: React.ElementType;
+  submenus: Submenu[];
+};
+
+type Group = {
+  groupLabel: string;
+  menus: Menu[];
+};
+
+export const getAdmintMenuList = (pathname: string, t: any): Group[] => {
+  return [
+    {
+      groupLabel: "",
+      menus: [
+        {
+          href: "/admin",
+          label: t("admin"),
+          active: pathname.includes("/admin"),
+          icon: DashboardIcon,
+          submenus: [],
+        },
+        {
+          href: "/settings",
+          label: t("settings"),
+          active: pathname.includes("/settings"),
+          icon: GearIcon,
+          submenus: [],
+        },
+        /* {
+          href: "/logout",
+          label: t("logout"),
+          active: pathname.includes("/logout"),
+          icon: GearIcon,
+          submenus: [],
+        }, */
+      ],
+    },
+  ];
+};
+
+export const getClientMenuList = (pathname: string, t: any): Group[] => {
+  return [
+    {
+      groupLabel: "",
+      menus: [
+        {
+          href: "/client/appointments",
+          label: t("appointments"),
+          active: pathname.includes("/client/appointments"),
+          icon: CardStackIcon,
+          submenus: [],
+        },
+        {
+          href: "/therapists",
+          label: t("bookSession"),
+          active: pathname.includes("/therapists"),
+          icon: CardStackIcon,
+          submenus: [],
+        },
+        {
+          href: "/pricing",
+          label: t("payment"),
+          active: pathname.includes("/pricing"),
+          icon: CardStackIcon,
+          submenus: [],
+        },
+        {
+          href: "/settings",
+          label: t("settings"),
+          active: pathname.includes("/settings"),
+          icon: GearIcon,
+          submenus: [],
+        },
+        /* {
+          href: "/logout",
+          label: t("logout"),
+          active: pathname.includes("/logout"),
+          icon: GearIcon,
+          submenus: [],
+        }, */
+      ],
+    },
+  ];
+};
+
+export const getTherapistMenuList = (pathname: string, t: any): Group[] => {
+  return [
+    {
+      groupLabel: "",
+      menus: [
+        {
+          href: "/therapist/availability",
+          label: t("availability"),
+          active: pathname.includes("/therapist/availability"),
+          icon: CalendarIcon,
+          submenus: [],
+        },
+        {
+          href: "/therapist/appointments",
+          label: t("appointments"),
+          active: pathname.includes("/therapist/appointments"),
+          icon: CardStackIcon,
+          submenus: [],
+        },
+        {
+          href: "/settings",
+          label: t("settings"),
+          active: pathname.includes("/settings"),
+          icon: GearIcon,
+          submenus: [],
+        },
+        /* {
+          href: "/logout",
+          label: t("logout"),
+          active: pathname.includes("/logout"),
+          icon: GearIcon,
+          submenus: [],
+        }, */
+      ],
+    },
+  ];
+};

@@ -193,6 +193,27 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
                                         <strong>Status:</strong>{" "}
                                         {appointment.status}
                                       </p>
+                                      {appointment.status === "canceled" && (
+                                        <>
+                                          <p>
+                                            <strong>
+                                              Cancellation Reason:
+                                            </strong>{" "}
+                                            {appointment.cancellationReason}
+                                          </p>
+                                          {appointment.cancellationReason ===
+                                            "custom" && (
+                                            <p>
+                                              <strong>
+                                                Custom Cancellation Reason:
+                                              </strong>{" "}
+                                              {
+                                                appointment.customCancellationReason
+                                              }
+                                            </p>
+                                          )}
+                                        </>
+                                      )}
                                       <p>
                                         <strong>Paid:</strong>{" "}
                                         {appointment.paid ? "Yes" : "No"}

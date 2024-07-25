@@ -25,24 +25,30 @@ const updateAppointmentStatus = async (appointmentId: string) => {
     return;
   }
 
-  let newStatus = "completed";
   const { hostShowUp, participants } = appointment;
 
   const allParticipantsShowedUp = participants.every(
     (participant: any) => participant.showUp
   );
 
+  let updatePayload: Record<string, unknown> = { status: "completed" };
+
   if (!hostShowUp && !allParticipantsShowedUp) {
-    newStatus = "no-show-both";
+    updatePayload = {
+      status: "canceled",
+      cancellationReason: "no-show-both",
+    };
   } else if (!hostShowUp) {
-    newStatus = "no-show-host";
+    updatePayload = {
+      status: "canceled",
+      cancellationReason: "no-show-host",
+    };
   } else if (!allParticipantsShowedUp) {
-    newStatus = "no-show-participant";
+    updatePayload = {
+      status: "canceled",
+      cancellationReason: "no-show-participant",
+    };
   }
 
-  appointment.status = newStatus;
-
-  await Appointment.findByIdAndUpdate(appointmentId, {
-    status: newStatus,
-  });
+  await Appointment.findByIdAndUpdate(appointmentId, updatePayload);
 };

@@ -10,7 +10,7 @@ type RoleGateProps = {
 };
 
 export const RoleGate = ({ children, allowedRole }: RoleGateProps) => {
-  const role = useCurrentRole();
+  const { role } = useCurrentRole();
 
   if (role !== allowedRole) {
     return (

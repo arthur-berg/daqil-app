@@ -88,24 +88,65 @@ const BookingCalendar = ({
         </div>
       ) : (
         <>
-          {/* <div className="flex">
+          <div className="flex">
             <h2 className="text-xl font-bold mb-4 mr-4">Calendar</h2>
-            {date.justDate && (
+          </div>
+          {date.dateTime && date.justDate ? (
+            <>
               <Button
                 variant="outline"
                 disabled={isPending}
                 onClick={() =>
-                  setDate({
-                    justDate: undefined,
-                    dateTime: undefined,
+                  setDate((prev) => {
+                    return {
+                      ...prev,
+                      justDate: undefined,
+                    };
                   })
                 }
               >
                 Go back
               </Button>
-            )}
-          </div> */}
-          {date.justDate ? (
+              <div className="mt-4 p-4 bg-yellow-100 border border-yellow-300 rounded">
+                <p>Appointment Details:</p>
+                <p>Day: {format(date.dateTime, "eeee, MMMM d, yyyy")}</p>
+                <p>Time: {format(date.dateTime, "kk:mm")}</p>
+                <p>Duration: {appointmentType.durationInMinutes} minutes</p>
+                <p>
+                  Cost: {currencyToSymbol(appointmentType.currency)}
+                  {appointmentType.price}{" "}
+                </p>
+                <Button
+                  className="mt-2"
+                  disabled={isPending}
+                  onClick={() => {
+                    const combinedDateTime = set(date.justDate as Date, {
+                      hours: date?.dateTime?.getHours(),
+                      minutes: date?.dateTime?.getMinutes(),
+                    });
+                    // Add booking logic here
+                    startTransition(async () => {
+                      const data = await bookAppointment(
+                        appointmentType,
+                        therapistId,
+                        combinedDateTime
+                      );
+
+                      if (data.success) {
+                        setSuccess(data.success);
+                        setError(undefined);
+                      } else if (data.error) {
+                        setError(data.error);
+                        setSuccess(undefined);
+                      }
+                    });
+                  }}
+                >
+                  Confirm Booking
+                </Button>
+              </div>
+            </>
+          ) : date.justDate ? (
             <>
               <Calendar
                 mode="single"
@@ -144,51 +185,11 @@ const BookingCalendar = ({
                   </div>
                 ))}
               </div>
-              {date.dateTime && date.justDate && (
-                <div className="mt-4 p-4 bg-yellow-100 border border-yellow-300 rounded">
-                  <p>Appointment Details:</p>
-                  <p>Day: {format(date.dateTime, "eeee, MMMM d, yyyy")}</p>
-                  <p>Time: {format(date.dateTime, "kk:mm")}</p>
-                  <p>Duration: {appointmentType.durationInMinutes} minutes</p>
-                  <p>
-                    Cost: {currencyToSymbol(appointmentType.currency)}
-                    {appointmentType.price}{" "}
-                  </p>
-                  <Button
-                    className="mt-2"
-                    disabled={isPending}
-                    onClick={() => {
-                      const combinedDateTime = set(date.justDate as Date, {
-                        hours: date?.dateTime?.getHours(),
-                        minutes: date?.dateTime?.getMinutes(),
-                      });
-                      // Add booking logic here
-                      startTransition(async () => {
-                        const data = await bookAppointment(
-                          appointmentType,
-                          therapistId,
-                          combinedDateTime
-                        );
-
-                        if (data.success) {
-                          setSuccess(data.success);
-                          setError(undefined);
-                        } else if (data.error) {
-                          setError(data.error);
-                          setSuccess(undefined);
-                        }
-                      });
-                    }}
-                  >
-                    Confirm Booking
-                  </Button>
-                </div>
-              )}
             </>
           ) : (
             <Calendar
               mode="single"
-              selected={date.justDate ? date.justDate : today}
+              selected={date.justDate ? date.justDate : undefined}
               onSelect={(date) => {
                 setDate((prev) => ({
                   ...prev,

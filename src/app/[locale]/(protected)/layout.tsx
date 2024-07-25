@@ -3,6 +3,7 @@ import { auth } from "@/auth";
 import { Navbar } from "@/components/navbar";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
+import { Sidebar } from "@/components/sidebar/sidebar";
 
 export default async function ProtectedLayout({
   children,
@@ -14,7 +15,8 @@ export default async function ProtectedLayout({
   return (
     <SessionProvider session={session}>
       <NextIntlClientProvider messages={messages}>
-        <Navbar />
+        {/* <Navbar /> */}
+        <Sidebar />
       </NextIntlClientProvider>
       <div className="container py-6 h-[calc(100%-72px)]">{children}</div>
     </SessionProvider>

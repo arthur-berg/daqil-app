@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useRouter, usePathname } from "@/navigation";
 import { useState } from "react";
 import { useLocale } from "next-intl";
+import { GlobeIcon } from "@radix-ui/react-icons";
 
 const LanguageSwitcher = ({ secondary }: { secondary?: boolean }) => {
   const router = useRouter();
@@ -24,15 +25,16 @@ const LanguageSwitcher = ({ secondary }: { secondary?: boolean }) => {
       className="font-semibold flex items-center gap-1"
       onClick={() => handleLocaleChange(selectedLocale === "en" ? "ar" : "en")}
     >
+      <GlobeIcon className="h-4 w-4 mr-2" /> {/* Added language icon */}
       <span>
         {selectedLocale === "en" ? (
           <div className="flex items-center text-md flex-col">
             <div>التبديل إلى العربية</div>
-            <div>Switch to arabic</div>
+            <div>Switch to Arabic</div>
           </div>
         ) : (
           <div className="text-md flex items-center flex-col">
-            <div>Switch to english</div>
+            <div>Switch to English</div>
             <div>التبديل إلى اللغة الإنجليزية</div>
           </div>
         )}

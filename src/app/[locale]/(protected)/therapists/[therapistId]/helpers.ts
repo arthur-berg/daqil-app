@@ -18,13 +18,18 @@ type BlockedTime = {
   endDate: string;
 };
 
+type SpecificTimeRange = {
+  startDate: Date;
+  endDate: Date;
+};
+
 type AvailableTimes = {
   settings: {
     interval: number;
     fullDayRange: { startTime: string; endTime: string };
   };
   blockedOutTimes: BlockedTime[];
-  specificAvailableTimes: { date: string; timeRanges: TimeRange[] }[];
+  specificAvailableTimes: { date: string; timeRanges: SpecificTimeRange[] }[];
   recurringAvailableTimes: { day: string; timeRanges: TimeRange[] }[];
 };
 
@@ -65,7 +70,9 @@ export const getTherapistAvailableTimeSlots = (
     return blocked ? [blocked] : [];
   };
 
-  const getSpecificAvailableTimesForDate = (date: Date): TimeRange[] => {
+  const getSpecificAvailableTimesForDate = (
+    date: Date
+  ): SpecificTimeRange[] => {
     const specific = specificAvailableTimes.find((s) =>
       isSameDay(
         new Date(s.date).setHours(0, 0, 0, 0),
@@ -111,9 +118,17 @@ export const getTherapistAvailableTimeSlots = (
   let timeRanges = getTimeRangesForDay(dayOfWeek);
 
   const specificTimeRanges = getSpecificAvailableTimesForDate(selectedDate);
-  if (specificTimeRanges.length > 0) {
-    timeRanges = specificTimeRanges;
-  }
+
+  const formattedSpecificTimeRanges = specificTimeRanges.map((range) => ({
+    startTime: format(new Date(range.startDate), "HH:mm"),
+    endTime: format(new Date(range.endDate), "HH:mm"),
+  }));
+
+  timeRanges = [...timeRanges, ...formattedSpecificTimeRanges].sort(
+    (a, b) =>
+      new Date(`1970-01-01T${a.startTime}:00Z`).getTime() -
+      new Date(`1970-01-01T${b.startTime}:00Z`).getTime()
+  );
 
   const blockedTimes = getBlockedOutTimesForDate(selectedDate);
 
