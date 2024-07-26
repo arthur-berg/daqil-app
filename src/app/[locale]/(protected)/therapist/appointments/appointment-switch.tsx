@@ -5,9 +5,11 @@ import { FaCalendarAlt, FaList } from "react-icons/fa";
 import AppointmentList from "./appointment-list";
 import AppointmentCalendar from "./appointment-calendar";
 import { Button } from "@/components/ui/button";
+import { useTranslations } from "next-intl";
 
 const AppointmentSwitch = ({ appointments }: { appointments: any }) => {
   const [view, setView] = useState("list");
+  const t = useTranslations("AppointmentList");
 
   return (
     <div className="flex flex-col w-full">
@@ -15,14 +17,14 @@ const AppointmentSwitch = ({ appointments }: { appointments: any }) => {
         <Button
           variant={view === "list" ? undefined : "outline"}
           onClick={() => setView("list")}
-          className={`mr-2 flex items-center ${
+          className={`mr-2 rtl:mr-0 rtl:ml-2 flex items-center ${
             view === "list"
               ? "bg-primary text-white"
               : "bg-gray-200 text-gray-800"
           }`}
         >
-          <FaList className="mr-2" />
-          List View
+          <FaList className="mr-2 rtl:mr-0 rtl:ml-2" />
+          {t("listView")}
         </Button>
         <Button
           variant={view === "calendar" ? undefined : "outline"}
@@ -33,8 +35,8 @@ const AppointmentSwitch = ({ appointments }: { appointments: any }) => {
               : "bg-gray-200 text-gray-800"
           }`}
         >
-          <FaCalendarAlt className="mr-2" />
-          Calendar View
+          <FaCalendarAlt className="mr-2 rtl:ml-2 rtl:mr-0" />
+          {t("calendarView")}
         </Button>
       </div>
       {view === "calendar" ? (

@@ -123,7 +123,6 @@ const DefaultAvailabilityManager = ({
 
   useEffect(() => {
     const initialTimeRanges = getInitialTimeRanges(recurringAvailableTimes);
-    console.log("initialTimeRanges", initialTimeRanges);
     setTimeRangeInputs(initialTimeRanges);
   }, [recurringAvailableTimes]);
 

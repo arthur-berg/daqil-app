@@ -69,7 +69,7 @@ const ClientMenu = ({ t }: { t: any }) => {
 
 export const UserButton = () => {
   const user = useCurrentUser();
-  const t = useTranslations("ProfileAvatarDropdown");
+  const t = useTranslations("Sidebar");
 
   const isTherapist = user?.role === "THERAPIST";
   const isClient = user?.role === "CLIENT";

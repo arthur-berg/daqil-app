@@ -30,7 +30,7 @@ export default async function Home() {
         </div>
       </div>
       <div className="flex justify-center mt-12">
-        <LanguageSwitcher secondary />
+        <LanguageSwitcher />
       </div>
     </main>
   );

@@ -20,7 +20,7 @@
     "createAccount": "إنشاء حساب",
     "alreadyHaveAccount": "هل لديك حساب بالفعل؟"
   },
-  "ProfileAvatarDropdown": {
+  "Sidebar": {
     "availability": "التوفر",
     "forClients": "للعملاء",
     "admin": "لوحة تحكم المشرف",
@@ -33,6 +33,35 @@
     "payment": "الاشتراك والرصيد",
     "settings": "الإعدادات",
     "logout": "تسجيل الخروج"
+  },
+  "AppointmentList": {
+    "all": "الكل",
+    "confirmed": "مؤكد",
+    "canceled": "ملغى",
+    "completed": "مكتمل",
+    "pending": "قيد الانتظار",
+    "today": "اليوم",
+    "tomorrow": "غدًا",
+    "appointmentStatus": "حالة الموعد",
+    "selectStatus": "اختر الحالة",
+    "confirmedAppointments": "المواعيد المؤكدة",
+    "appointments": "المواعيد",
+    "noAppointments": "لا توجد مواعيد متاحة.",
+    "joinMeeting": "انضم إلى الاجتماع",
+    "startMeeting": "ابدأ الاجتماع",
+    "start": "بداية",
+    "duration": "المدة",
+    "status": "الحالة",
+    "cancellationReason": "سبب الإلغاء",
+    "customCancellationReason": "سبب الإلغاء المخصص",
+    "paid": "مدفوع",
+    "yes": "نعم",
+    "no": "لا",
+    "host": "المضيف",
+    "minutes": "دقائق",
+    "participants": "المشاركين",
+    "listView": "عرض القائمة",
+"calendarView": "عرض التقويم"
   },
   "SettingsPage": {
     "firstNameLabel": "الاسم الأول",

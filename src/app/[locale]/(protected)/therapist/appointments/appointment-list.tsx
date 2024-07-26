@@ -26,9 +26,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { FaCheck, FaTimes, FaClock, FaQuestion } from "react-icons/fa";
+import { useTranslations } from "next-intl";
 
 const AppointmentList = ({ appointments }: { appointments: any }) => {
   const [filter, setFilter] = useState("all");
+  const t = useTranslations("AppointmentList");
 
   const filteredAppointments =
     filter === "all"
@@ -65,8 +67,8 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
 
   const getDateLabel = (date: string) => {
     const parsedDate = new Date(date);
-    if (isToday(parsedDate)) return "Today";
-    if (isTomorrow(parsedDate)) return "Tomorrow";
+    if (isToday(parsedDate)) return t("today");
+    if (isTomorrow(parsedDate)) return t("tomorrow");
     return format(parsedDate, "eeee, MMMM d");
   };
 
@@ -78,6 +80,13 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
       })
     : [];
 
+  const statusTranslations: { [key: string]: string } = {
+    confirmed: t("confirmed"),
+    canceled: t("canceled"),
+    completed: t("completed"),
+    pending: t("pending"),
+  };
+
   return (
     <Card className="md:w-8/12">
       <CardContent>
@@ -85,21 +94,27 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
           <div className="space-y-8 w-full max-w-4xl">
             <div className="flex justify-center mb-6">
               <div className="flex justify-center items-center mb-6 flex-col md:flex-row">
-                <div className="mr-4">Appointment Status: </div>
+                <div className="mr-4 rtl:mr-0 rtl:ml-4">
+                  {t("appointmentStatus")}:{" "}
+                </div>
                 <Select
                   defaultValue="all"
                   onValueChange={(value) => setFilter(value)}
                 >
                   <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Select a status" />
+                    <SelectValue placeholder={t("selectStatus")} />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
-                      <SelectItem value="all">All</SelectItem>
-                      <SelectItem value="confirmed">Confirmed</SelectItem>
-                      <SelectItem value="canceled">Canceled</SelectItem>
-                      <SelectItem value="completed">Completed</SelectItem>
-                      <SelectItem value="pending">Pending</SelectItem>
+                      <SelectItem value="all">{t("all")}</SelectItem>
+                      <SelectItem value="confirmed">
+                        {t("confirmed")}
+                      </SelectItem>
+                      <SelectItem value="canceled">{t("canceled")}</SelectItem>
+                      <SelectItem value="completed">
+                        {t("completed")}
+                      </SelectItem>
+                      <SelectItem value="pending">{t("pending")}</SelectItem>
                     </SelectGroup>
                   </SelectContent>
                 </Select>
@@ -110,10 +125,8 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
                 <div key={status}>
                   <h2 className="text-xl font-bold mb-4">
                     {status === "confirmed"
-                      ? "Confirmed Appointments"
-                      : status.charAt(0).toUpperCase() +
-                        status.slice(1) +
-                        " Appointments"}
+                      ? t("confirmedAppointments")
+                      : `${statusTranslations[status]} ${t("appointments")}`}
                   </h2>
                   {Object.keys(groupedByStatus[status])
                     .sort((a, b) => {
@@ -179,49 +192,51 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
                                     </p>
                                     <div className="text-sm text-gray-500 space-y-1">
                                       <p>
-                                        <strong>Start:</strong>{" "}
+                                        <strong>{t("start")}: </strong>{" "}
                                         {format(
                                           new Date(appointment.startDate),
                                           "Pp"
                                         )}
                                       </p>
                                       <p>
-                                        <strong>Duration:</strong>{" "}
-                                        {appointment.durationInMinutes} minutes
+                                        <strong>{t("duration")}:</strong>{" "}
+                                        {appointment.durationInMinutes}{" "}
+                                        {t("minutes")}
                                       </p>
                                       <p>
-                                        <strong>Status:</strong>{" "}
+                                        <strong>{t("status")}:</strong>{" "}
                                         {appointment.status}
                                       </p>
                                       {appointment.status === "canceled" && (
                                         <>
-                                          <p>
-                                            <strong>
-                                              Cancellation Reason:
-                                            </strong>{" "}
-                                            {appointment.cancellationReason}
-                                          </p>
                                           {appointment.cancellationReason ===
-                                            "custom" && (
+                                          "custom" ? (
                                             <p>
                                               <strong>
-                                                Custom Cancellation Reason:
+                                                {t("cancellationReason")}:
                                               </strong>{" "}
                                               {
                                                 appointment.customCancellationReason
                                               }
                                             </p>
+                                          ) : (
+                                            <p>
+                                              <strong>
+                                                {t("cancellationReason")}:
+                                              </strong>{" "}
+                                              {appointment.cancellationReason}
+                                            </p>
                                           )}
                                         </>
                                       )}
                                       <p>
-                                        <strong>Paid:</strong>{" "}
-                                        {appointment.paid ? "Yes" : "No"}
+                                        <strong>{t("paid")}:</strong>{" "}
+                                        {appointment.paid ? t("yes") : t("no")}
                                       </p>
                                     </div>
                                     <div className="mt-4">
                                       <h4 className="text-md font-semibold">
-                                        Participants:
+                                        {t("participants")}:
                                       </h4>
                                       <ul className="text-sm text-gray-500 list-disc list-inside">
                                         {appointment.participants.map(
@@ -239,7 +254,7 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
                                       <Link
                                         href={`/appointments/${appointment._id}`}
                                       >
-                                        <Button>Start Meeting</Button>
+                                        <Button>{t("startMeeting")}</Button>
                                       </Link>
                                     </div>
                                   </div>
@@ -253,7 +268,7 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
                 </div>
               ))
             ) : (
-              <p>No appointments available.</p>
+              <p>{t("noAppointments")}</p>
             )}
           </div>
         </div>

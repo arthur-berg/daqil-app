@@ -1,15 +1,10 @@
-import { NextIntlClientProvider } from "next-intl";
 import SettingsForm from "./settings-form";
-import { getMessages } from "next-intl/server";
 
-const SettingsPage = async () => {
-  const messages = await getMessages();
+const SettingsPage = () => {
   return (
-    <NextIntlClientProvider messages={messages}>
-      <div className="flex justify-center">
-        <SettingsForm />
-      </div>
-    </NextIntlClientProvider>
+    <div className="flex justify-center">
+      <SettingsForm />
+    </div>
   );
 };
 

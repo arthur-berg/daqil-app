@@ -23,7 +23,7 @@ const LanguageSwitcher = ({ isOpen }: { isOpen?: boolean }) => {
       className="w-full justify-end md:justify-start h-10  mb-1"
       onClick={() => handleLocaleChange(selectedLocale === "en" ? "ar" : "en")}
     >
-      <span className={cn(isOpen === false ? "" : "mr-4")}>
+      <span className={cn(isOpen === false ? "" : "mr-4 rtl:mr-0 rtl:ml-4")}>
         <GlobeIcon className="h-4 w-4" />
       </span>
       <div

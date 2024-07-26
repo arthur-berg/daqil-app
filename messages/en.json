@@ -16,12 +16,41 @@
     "twoFactorCode": "Two factor code",
     "confirm": "Confirm"
   },
+  "AppointmentList": {
+    "all": "All",
+    "confirmed": "Confirmed",
+    "canceled": "Canceled",
+    "completed": "Completed",
+    "pending": "Pending",
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "appointmentStatus": "Appointment Status",
+    "selectStatus": "Select a status",
+    "confirmedAppointments": "Confirmed Appointments",
+    "appointments": "Appointments",
+    "noAppointments": "No appointments available.",
+    "joinMeeting": "Join Meeting",
+    "startMeeting": "Start Meeting",
+    "start": "Start",
+    "duration": "Duration",
+    "status": "Status",
+    "cancellationReason": "Cancellation Reason",
+    "customCancellationReason": "Custom Cancellation Reason",
+    "paid": "Paid",
+    "yes": "Yes",
+    "no": "No",
+    "host": "Host",
+    "minutes": "minutes",
+    "participants": "Participants",
+    "listView": "List view",
+    "calendarView": "Calendar view"
+  },
   "RegisterPage": {
     "emailLabel": "Email",
     "createAccount": "Create an account",
     "alreadyHaveAccount": "Already have an account?"
   },
-  "ProfileAvatarDropdown": {
+  "Sidebar": {
     "availability": "Availability",
     "forClients": "For clients",
     "admin": "Admin dashboard",

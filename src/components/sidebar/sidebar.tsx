@@ -1,5 +1,5 @@
 "use client";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { ChevronLeftIcon, HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -62,12 +62,11 @@ export function Sidebar({
         <div className="flex gap-x-2 container justify-end">
           <LanguageSwitcher />
         </div>
-        {/*  <UserButton /> */}
       </nav>
       <aside
         ref={sidebarMenuRef}
         className={cn(
-          "fixed bg-secondary top-0 left-0 z-20 h-screen transition-transform ease-in-out duration-300",
+          "fixed bg-secondary top-0 left-0 rtl:left-auto rtl:right-0 z-20 h-screen transition-transform ease-in-out duration-300",
           isOpen
             ? "translate-x-0 w-52 md:w-64"
             : "-translate-x-full lg:w-[90px] lg:translate-x-0"

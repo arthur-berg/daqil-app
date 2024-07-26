@@ -32,7 +32,7 @@ export function Menu({ isOpen }: MenuProps) {
   const pathname = usePathname();
   const { isTherapist, isClient } = useCurrentRole();
   const locale = useLocale();
-  const t = useTranslations("ProfileAvatarDropdown");
+  const t = useTranslations("Sidebar");
 
   const menuList = isTherapist
     ? getTherapistMenuList(pathname, t)
@@ -112,7 +112,7 @@ export function Menu({ isOpen }: MenuProps) {
                                 <Button
                                   variant="ghost"
                                   className={cn(
-                                    "w-full justify-start h-10 mb-1",
+                                    "w-full justify-start h-10 mb-1 rtl:flex-row-reverse",
                                     active ? "bg-primary text-white" : ""
                                   )}
                                   asChild
@@ -120,7 +120,9 @@ export function Menu({ isOpen }: MenuProps) {
                                   <Link href={href}>
                                     <span
                                       className={cn(
-                                        isOpen === false ? "" : "mr-4"
+                                        isOpen === false
+                                          ? ""
+                                          : "mr-4 rtl:mr-0 rtl:ml-4"
                                       )}
                                     >
                                       <Icon size={18} />
@@ -163,32 +165,6 @@ export function Menu({ isOpen }: MenuProps) {
             </ul>
           </nav>
         </ScrollArea>
-        {/*   <div className="mt-auto mb-5 px-2">
-        <TooltipProvider disableHoverableContent>
-          <Tooltip delayDuration={100}>
-            <TooltipTrigger asChild>
-              <div>
-                <LanguageSwitcher isOpen={isOpen} />
-              </div>
-            </TooltipTrigger>
-            {isOpen === false && (
-              <TooltipContent side="right">
-                {locale === "en" ? (
-                  <>
-                    <div>التبديل إلى العربية</div>
-                    <div>Switch to Arabic</div>
-                  </>
-                ) : (
-                  <>
-                    <div>Switch to English</div>
-                    <div>التبديل إلى اللغة الإنجليزية</div>
-                  </>
-                )}
-              </TooltipContent>
-            )}
-          </Tooltip>
-        </TooltipProvider>
-      </div> */}
         <div className="w-full px-2 mb-5">
           <TooltipProvider disableHoverableContent>
             <Tooltip delayDuration={100}>
@@ -199,7 +175,11 @@ export function Menu({ isOpen }: MenuProps) {
                     variant="ghost"
                     className="w-full justify-start h-10 mb-1"
                   >
-                    <span className={cn(isOpen === false ? "" : "mr-4")}>
+                    <span
+                      className={cn(
+                        isOpen === false ? "" : "mr-4 rtl:mr-0 rtl:ml-4"
+                      )}
+                    >
                       <ExitIcon className="h-4 w-4" />
                     </span>
                     <p

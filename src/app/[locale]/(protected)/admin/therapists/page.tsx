@@ -11,13 +11,10 @@ import {
 } from "@/components/ui/table";
 
 import InviteTherapistForm from "./invite-therapist-form";
-import { NextIntlClientProvider } from "next-intl";
-import { getMessages } from "next-intl/server";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 const AdminTherapistsPage = async () => {
   const therapists = await getTherapists();
-  const messages = await getMessages();
 
   return (
     <Card className="w-full md:w-[600px]">
@@ -27,9 +24,7 @@ const AdminTherapistsPage = async () => {
       <CardContent className="space-y-4">
         <div>
           <div>
-            <NextIntlClientProvider messages={messages}>
-              <InviteTherapistForm />
-            </NextIntlClientProvider>
+            <InviteTherapistForm />
           </div>
           <div className="text-center mt-8 mb-4">All therapists</div>
           <Table>
