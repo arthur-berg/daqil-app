@@ -9,12 +9,17 @@ import { getUserByEmail } from "@/data/user";
 import { generateVerificationToken } from "@/lib/tokens";
 import { addUserToSubscriberList, sendVerificationEmail } from "@/lib/mail";
 import { generatePassword } from "@/utils";
+import { getTranslations } from "next-intl/server";
 
 export const register = async (values: z.infer<typeof RegisterSchema>) => {
+  const [SuccessMessages, ErrorMessages] = await Promise.all([
+    getTranslations("SuccessMessages"),
+    getTranslations("ErrorMessages"),
+  ]);
   const validatedFields = RegisterSchema.safeParse(values);
 
   if (!validatedFields.success) {
-    return { error: "Invalid fields!" };
+    return { error: ErrorMessages("invalidFields") };
   }
 
   const { email } = validatedFields.data;
@@ -23,8 +28,7 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
 
   if (existingUser) {
     return {
-      error:
-        "Please check your input. If you believe you already have an account, please try logging in or use the password recovery option.",
+      error: ErrorMessages("pleaseCheckInput"),
     };
   }
 
@@ -51,7 +55,6 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
   } */
 
   return {
-    success:
-      "A link to activate your account has been emailed to the address provided",
+    success: SuccessMessages("linkToActive"),
   };
 };

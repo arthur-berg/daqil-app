@@ -10,6 +10,7 @@ import User from "@/models/User";
 import { getAppointmentTypeById } from "@/data/appointment-types";
 import { scheduleJobToCheckAppointmentStatus } from "@/lib/schedulerJobs";
 import { revalidatePath } from "next/cache";
+import { getTranslations } from "next-intl/server";
 
 export const getClients = async () => {
   await requireAuth([UserRole.THERAPIST]);
@@ -36,16 +37,21 @@ export const bookAppointment = async (
   therapistId: string,
   startDate: Date
 ) => {
+  const [SuccessMessages, ErrorMessages, t] = await Promise.all([
+    getTranslations("SuccessMessages"),
+    getTranslations("ErrorMessages"),
+    getTranslations("AppointmentAction"),
+  ]);
   const user = await requireAuth([UserRole.CLIENT, UserRole.ADMIN]);
 
   const therapist = (await getUserById(therapistId)) as any;
 
   if (!therapist) {
-    return { error: "Invalid therapist" };
+    return { error: ErrorMessages("therapistNotExist") };
   }
 
   if (!appointmentType) {
-    return { error: "Invalid appointment type" };
+    return { error: ErrorMessages("appointmentTypeNotExist") };
   }
 
   const endDate = new Date(
@@ -57,7 +63,7 @@ export const bookAppointment = async (
 
   try {
     const appointmentData = {
-      title: `Therapy session with ${therapist?.firstName}`,
+      title: `${t("therapySessionWith")} ${therapist?.firstName}`,
       startDate,
       endDate,
       participants: [{ userId: user.id, showUp: false }],
@@ -95,7 +101,7 @@ export const bookAppointment = async (
 
     revalidatePath("/client/appointments");
 
-    return { success: "Appointment successfully booked" };
+    return { success: SuccessMessages("appointmentBooked") };
   } catch (error) {
     await session.abortTransaction();
     session.endSession();
@@ -107,12 +113,16 @@ export const bookAppointment = async (
 export const scheduleAppointment = async (
   values: z.input<typeof AppointmentSchema>
 ) => {
+  const [SuccessMessages, ErrorMessages] = await Promise.all([
+    getTranslations("SuccessMessages"),
+    getTranslations("ErrorMessages"),
+  ]);
   const user = await requireAuth([UserRole.THERAPIST]);
 
   const validatedFields = AppointmentSchema.safeParse(values);
 
   if (!validatedFields.success) {
-    return { error: "Invalid fields!" };
+    return { error: ErrorMessages("invalidFields") };
   }
 
   const {
@@ -128,7 +138,7 @@ export const scheduleAppointment = async (
   const appointmentType = await getAppointmentTypeById(appointmentTypeId);
 
   if (!appointmentType) {
-    return { error: "Invalid appointment type" };
+    return { error: ErrorMessages("appointmentTypeNotExist") };
   }
 
   let appointmentCost: Record<string, unknown> = {};
@@ -188,7 +198,7 @@ export const scheduleAppointment = async (
     await session.commitTransaction();
     session.endSession();
 
-    return { success: "Appointment successfully created" };
+    return { success: SuccessMessages("appointmentCreated") };
   } catch (error) {
     await session.abortTransaction();
     session.endSession();

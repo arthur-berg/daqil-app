@@ -10,7 +10,7 @@ import { login } from "@/actions/login";
 import { getVerificationTokenByToken } from "@/data/verification-token";
 import VerificationToken from "@/models/VerificationToken";
 import { addUserNameToSubscriberProfile } from "@/lib/mail";
-import { getLocale } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 
 const verifyPasswordAndLogin = async ({
   existingUser,
@@ -21,6 +21,8 @@ const verifyPasswordAndLogin = async ({
   email,
   password,
   locale,
+  SuccessMessages,
+  ErrorMessages,
 }: {
   existingUser: any;
   currentPassword?: string;
@@ -30,10 +32,12 @@ const verifyPasswordAndLogin = async ({
   email: string;
   password: string;
   locale: string;
+  SuccessMessages: any;
+  ErrorMessages: any;
 }) => {
   if (!currentPassword) {
     return {
-      error: "Current password is required!",
+      error: ErrorMessages("currentPasswordIsRequired"),
       currentPasswordRequired: true,
     };
   }
@@ -43,7 +47,7 @@ const verifyPasswordAndLogin = async ({
     existingUser.password
   );
   if (!passwordsMatch) {
-    return { error: "Incorrect password!" };
+    return { error: ErrorMessages("incorrectPassword") };
   }
   await User.findByIdAndUpdate(existingUser._id, {
     password: hashedPassword,
@@ -54,7 +58,7 @@ const verifyPasswordAndLogin = async ({
 
   await login({ email, password }, locale);
 
-  return { success: "Account successfully setup" };
+  return { success: SuccessMessages("accountSuccessfullySetup") };
 };
 
 export const setupAccount = async (
@@ -62,10 +66,14 @@ export const setupAccount = async (
   locale: string,
   token?: string | null
 ) => {
+  const [SuccessMessages, ErrorMessages] = await Promise.all([
+    getTranslations("SuccessMessages"),
+    getTranslations("ErrorMessages"),
+  ]);
   const validatedFields = SetupAccountSchema.safeParse(values);
 
   if (!validatedFields.success) {
-    return { error: "Invalid fields!" };
+    return { error: ErrorMessages("invalidFields") };
   }
   const { email, password, firstName, lastName, currentPassword } =
     validatedFields.data;
@@ -73,7 +81,7 @@ export const setupAccount = async (
   const existingUser = await getUserByEmail(email);
 
   if (!existingUser) {
-    return { error: "Email does not exist!" };
+    return { error: ErrorMessages("emailNotExist") };
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -88,6 +96,8 @@ export const setupAccount = async (
       email,
       password,
       locale,
+      SuccessMessages,
+      ErrorMessages,
     });
   }
 
@@ -103,6 +113,8 @@ export const setupAccount = async (
       email,
       password,
       locale,
+      SuccessMessages,
+      ErrorMessages,
     });
   }
 
@@ -119,5 +131,5 @@ export const setupAccount = async (
 
   await login({ email, password }, locale);
 
-  return { success: "Account succesfully setup" };
+  return { success: SuccessMessages("accountSuccessfullySetup") };
 };

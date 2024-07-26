@@ -125,6 +125,14 @@ const AppointmentCalendar = ({ appointments }: { appointments: any }) => {
     }
   };
 
+  const formatAMPM = (date) => {
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const period = hours >= 12 ? t("pm") : t("am"); // Translate AM/PM
+    const adjustedHours = hours % 12 || 12; // Convert hours to 12-hour format
+    return `${adjustedHours}:${minutes < 10 ? "0" : ""}${minutes} ${period}`;
+  };
+
   const handleViewChange = (view: View) => {
     setCurrentView(view);
   };
@@ -145,6 +153,8 @@ const AppointmentCalendar = ({ appointments }: { appointments: any }) => {
     [appointments]
   );
 
+  console.log("selectedAppointment", selectedAppointment);
+
   return (
     <div className="p-4 space-y-6 bg-white md:w-9/12">
       <h2 className="text-xl md:text-2xl font-bold text-primary mb-4">
@@ -161,6 +171,13 @@ const AppointmentCalendar = ({ appointments }: { appointments: any }) => {
         localizer={localizer}
         events={events}
         toolbar={false}
+        formats={{
+          timeGutterFormat: (date, culture, localizer) => formatAMPM(date), // Use translated AM/PM
+          eventTimeRangeFormat: ({ start, end }, culture, localizer) =>
+            `${formatAMPM(start)} - ${formatAMPM(end)}`, // Time range format for events with translated AM/PM
+          agendaTimeRangeFormat: ({ start, end }, culture, localizer) =>
+            `${formatAMPM(start)} - ${formatAMPM(end)}`, // Time range format for agenda view with translated AM/PM
+        }}
         startAccessor="start"
         endAccessor="end"
         style={{ height: 600 }}
@@ -205,6 +222,19 @@ const AppointmentCalendar = ({ appointments }: { appointments: any }) => {
                   <strong>{t("description")}:</strong>{" "}
                   {selectedAppointment.description || t("noDescription")}
                 </p>
+                <p>
+                  <strong>{t("client")}:</strong>{" "}
+                  {selectedAppointment.participants.map(
+                    (participant, index) => (
+                      <span key={index}>
+                        {participant.firstName} {participant.lastName}
+                        {index < selectedAppointment.participants.length - 1
+                          ? ", "
+                          : ""}
+                      </span>
+                    )
+                  )}
+                </p>
               </DialogDescription>
             </DialogHeader>
             <DialogFooter className="rtl:space-x-reverse">
@@ -224,5 +254,17 @@ const AppointmentCalendar = ({ appointments }: { appointments: any }) => {
     </div>
   );
 };
+
+/*  components={{
+          event: () => null,
+        }}
+        formats={{
+          eventTimeRangeFormat: ({ start, end }, culture, localizer) =>
+            `${localizer.format(start, "HH:mm", culture)} - ${localizer.format(
+              end,
+              "HH:mm",
+              culture
+            )}`,
+        }} */
 
 export default AppointmentCalendar;

@@ -17,21 +17,20 @@ import { revalidatePath } from "next/cache";
 export const saveBlockedOutTimes = async (
   values: z.infer<typeof BlockAvailabilitySchemaBE>
 ) => {
+  const [SuccessMessages, ErrorMessages] = await Promise.all([
+    getTranslations("SuccessMessages"),
+    getTranslations("ErrorMessages"),
+  ]);
   try {
     const user = (await requireAuth([
       UserRole.THERAPIST,
       UserRole.ADMIN,
     ])) as any;
 
-    const [tSuccess, tError] = await Promise.all([
-      getTranslations("SuccessMessages"),
-      getTranslations("ErrorMessages"),
-    ]);
-
     const validatedFields = BlockAvailabilitySchemaBE.safeParse(values);
 
     if (!validatedFields.success) {
-      return { error: tError("invalidFields") };
+      return { error: ErrorMessages("invalidFields") };
     }
 
     const data = validatedFields.data;
@@ -50,31 +49,31 @@ export const saveBlockedOutTimes = async (
 
     revalidatePath("/therapist/availability");
 
-    return { success: "Blocked out times saved" };
+    return { success: SuccessMessages("blockedTimesSaved") };
   } catch (error) {
     console.error("Error saving specific available times", error);
-    return { error: "Failed to save specific available times." };
+    return { error: ErrorMessages("failedToSaveSpecificTimes") };
   }
 };
 
 export const saveSpecificAvailableTimes = async (
   values: z.infer<typeof SpecificAvailabilitySchemaBE>
 ) => {
+  const [SuccessMessages, ErrorMessages] = await Promise.all([
+    getTranslations("SuccessMessages"),
+    getTranslations("ErrorMessages"),
+  ]);
+
   try {
     const user = (await requireAuth([
       UserRole.THERAPIST,
       UserRole.ADMIN,
     ])) as any;
 
-    const [tSuccess, tError] = await Promise.all([
-      getTranslations("SuccessMessages"),
-      getTranslations("ErrorMessages"),
-    ]);
-
     const validatedFields = SpecificAvailabilitySchemaBE.safeParse(values);
 
     if (!validatedFields.success) {
-      return { error: tError("invalidFields") };
+      return { error: ErrorMessages("invalidFields") };
     }
 
     const data = validatedFields.data;
@@ -93,32 +92,31 @@ export const saveSpecificAvailableTimes = async (
 
     revalidatePath("/therapist/availability");
 
-    return { success: "Specific availalbe times saved" };
+    return { success: SuccessMessages("specifcTimesSaves") };
   } catch (error) {
     console.error("Error saving specific available times", error);
-    return { error: "Failed to save specific available times." };
+    return { error: ErrorMessages("failedToSaveSpecificTimes") };
   }
 };
 
 export const updateRecurringAvailabilitySettings = async (
   values: z.infer<typeof RecurringAvailabilitySettingsSchemaBE>
 ) => {
+  const [SuccessMessages, ErrorMessages] = await Promise.all([
+    getTranslations("SuccessMessages"),
+    getTranslations("ErrorMessages"),
+  ]);
   try {
     const user = (await requireAuth([
       UserRole.THERAPIST,
       UserRole.ADMIN,
     ])) as any;
 
-    const [tSuccess, tError] = await Promise.all([
-      getTranslations("SuccessMessages"),
-      getTranslations("ErrorMessages"),
-    ]);
-
     const validatedFields =
       RecurringAvailabilitySettingsSchemaBE.safeParse(values);
 
     if (!validatedFields.success) {
-      return { error: tError("invalidFields") };
+      return { error: ErrorMessages("invalidFields") };
     }
 
     await User.findByIdAndUpdate(user.id, {
@@ -129,31 +127,31 @@ export const updateRecurringAvailabilitySettings = async (
       },
     });
 
-    return { success: "Settings successfully updated" };
+    return { success: SuccessMessages("settingsUpdated") };
   } catch (error) {
     console.error("Error saving availability settings", error);
-    return { error: "Failed to save available times." };
+    return { error: ErrorMessages("failedToSaveAvailableTimes") };
   }
 };
 
 export const saveRecurringAvailableTimes = async (
   values: z.infer<typeof RecurringAvailabilitySchema>
 ) => {
+  const [SuccessMessages, ErrorMessages] = await Promise.all([
+    getTranslations("SuccessMessages"),
+    getTranslations("ErrorMessages"),
+  ]);
+
   try {
     const user = (await requireAuth([
       UserRole.THERAPIST,
       UserRole.ADMIN,
     ])) as any;
 
-    const [tSuccess, tError] = await Promise.all([
-      getTranslations("SuccessMessages"),
-      getTranslations("ErrorMessages"),
-    ]);
-
     const validatedFields = RecurringAvailabilitySchema.safeParse(values);
 
     if (!validatedFields.success) {
-      return { error: tError("invalidFields") };
+      return { error: ErrorMessages("invalidFields") };
     }
 
     const data = validatedFields.data;
@@ -173,9 +171,9 @@ export const saveRecurringAvailableTimes = async (
 
     revalidatePath("/therapist/availability");
 
-    return { success: "Available times saved successfully." };
+    return { success: SuccessMessages("availableTimesSaved") };
   } catch (error) {
     console.error("Error saving available times", error);
-    return { error: "Failed to save available times." };
+    return { error: ErrorMessages("failedToSaveAvailableTimes") };
   }
 };

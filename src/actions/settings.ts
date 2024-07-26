@@ -8,18 +8,23 @@ import { getCurrentUser } from "@/lib/auth";
 import User from "@/models/User";
 import { generateVerificationToken } from "@/lib/tokens";
 import { sendVerificationEmail } from "@/lib/mail";
+import { getTranslations } from "next-intl/server";
 
 export const settings = async (values: z.input<typeof SettingsSchema>) => {
   const user = await getCurrentUser();
+  const [SuccessMessages, ErrorMessages] = await Promise.all([
+    getTranslations("SuccessMessages"),
+    getTranslations("ErrorMessages"),
+  ]);
 
   if (!user) {
-    return { error: "Unauthorized" };
+    return { error: ErrorMessages("unauthorized") };
   }
 
   const dbUser = (await getUserById(user.id)) as any;
 
   if (!dbUser) {
-    return { error: "Unauthorized" };
+    return { error: ErrorMessages("unauthorized") };
   }
 
   if (user.isOAuth) {
@@ -33,7 +38,7 @@ export const settings = async (values: z.input<typeof SettingsSchema>) => {
     const existingUser = await getUserByEmail(values.email);
 
     if (existingUser && existingUser.id !== user.id) {
-      return { error: "Email already in use!" };
+      return { error: ErrorMessages("emailAlreadyInUse") };
     }
 
     const verificationToken = await generateVerificationToken(values.email);
@@ -43,7 +48,7 @@ export const settings = async (values: z.input<typeof SettingsSchema>) => {
       verificationToken.token
     );
 
-    return { success: "Verification email sent!" };
+    return { success: SuccessMessages("verificationEmailSent") };
   }
 
   if (values.password && values.newPassword && dbUser.password) {
@@ -53,7 +58,7 @@ export const settings = async (values: z.input<typeof SettingsSchema>) => {
     );
 
     if (!passwordsMatch) {
-      return { error: "Incorrect password!" };
+      return { error: ErrorMessages("incorrectPassword") };
     }
 
     const hashedPassword = await bcrypt.hash(values.newPassword, 10);
@@ -64,5 +69,5 @@ export const settings = async (values: z.input<typeof SettingsSchema>) => {
 
   await User.findByIdAndUpdate(dbUser.id, { ...values });
 
-  return { success: "Settings updated!" };
+  return { success: SuccessMessages("settingsUpdated") };
 };

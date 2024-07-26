@@ -24,17 +24,18 @@ export const admin = async () => {
 export const inviteTherapist = async (
   values: z.infer<typeof InviteTherapistSchema>
 ) => {
+  const [SuccessMessages, ErrorMessages] = await Promise.all([
+    getTranslations("SuccessMessages"),
+    getTranslations("ErrorMessages"),
+  ]);
+
   try {
-    const user = await requireAuth([UserRole.ADMIN]);
-    const [tSuccess, tError] = await Promise.all([
-      getTranslations("SuccessMessages"),
-      getTranslations("ErrorMessages"),
-    ]);
+    await requireAuth([UserRole.ADMIN]);
 
     const validatedFields = InviteTherapistSchema.safeParse(values);
 
     if (!validatedFields.success) {
-      return { error: tError("invalidFields") };
+      return { error: ErrorMessages("invalidFields") };
     }
 
     const { email } = validatedFields.data;
@@ -43,7 +44,7 @@ export const inviteTherapist = async (
 
     if (existingUser) {
       return {
-        error: "A user with this email already exists.",
+        error: ErrorMessages("userWithEmailExists"),
       };
     }
 
@@ -67,9 +68,9 @@ export const inviteTherapist = async (
 
     await addUserToSubscriberList(verificationToken.email, UserRole.THERAPIST);
 
-    return { success: "Therapist was invited successfully" };
+    return { success: SuccessMessages("therapistInvited") };
   } catch (error) {
     console.error("Error inviting therapist", error);
-    return { error: "Something went wrong" };
+    return { error: ErrorMessages("somethingWentWrong") };
   }
 };

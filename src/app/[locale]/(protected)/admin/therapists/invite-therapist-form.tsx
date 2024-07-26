@@ -24,7 +24,8 @@ const InviteTherapistForm = () => {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
-  const tError = useTranslations("ErrorMessages");
+  const ErrorMessages = useTranslations("ErrorMessages");
+  const t = useTranslations("InviteTherapistForm");
   const { toast } = useToast();
   const form = useForm<z.infer<typeof InviteTherapistSchema>>({
     resolver: zodResolver(InviteTherapistSchema),
@@ -57,21 +58,21 @@ const InviteTherapistForm = () => {
           form.reset();
         }
       } catch {
-        setError(tError("somethingWentWrong"));
+        setError(ErrorMessages("somethingWentWrong"));
       }
     });
   };
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <h1>Invite therapists</h1>
+        <h1>{t("inviteTherapists")}</h1>
 
         <FormField
           control={form.control}
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>{t("email")}</FormLabel>
               <FormControl>
                 <Input
                   inputSize="lg"
@@ -87,7 +88,7 @@ const InviteTherapistForm = () => {
         <FormError message={error} />
         <FormSuccess message={success} />
         <Button type="submit" className="w-full" disabled={isPending}>
-          Send invite
+          {t("sendInvite")}
         </Button>
       </form>
     </Form>

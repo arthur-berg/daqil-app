@@ -25,13 +25,13 @@ export const login = async (
   verifyAccountSetup?: boolean
 ) => {
   const validatedFields = LoginSchema.safeParse(values);
-  const [tSuccess, tError] = await Promise.all([
+  const [SuccessMessages, ErrorMessages] = await Promise.all([
     getTranslations("SuccessMessages"),
     getTranslations("ErrorMessages"),
   ]);
 
   if (!validatedFields.success) {
-    return { error: tError("invalidFields") };
+    return { error: ErrorMessages("invalidFields") };
   }
 
   /* if (verifyAccountSetup) {
@@ -65,7 +65,7 @@ export const login = async (
   const existingUser = await getUserByEmail(email);
 
   if (!existingUser || !existingUser.email) {
-    return { error: tError("invalidCredentials") };
+    return { error: ErrorMessages("invalidCredentials") };
   }
 
   if (!existingUser.emailVerified) {
@@ -78,7 +78,7 @@ export const login = async (
     );
 
     return {
-      success: tSuccess("activateLinkSent"),
+      success: SuccessMessages("activateLinkSent"),
       verificationEmailSent: true,
     };
   }
@@ -88,17 +88,17 @@ export const login = async (
       const twoFactorToken = await getTwoFactorTokenByEmail(existingUser.email);
 
       if (!twoFactorToken) {
-        return { error: tError("invalidCode") };
+        return { error: ErrorMessages("invalidCode") };
       }
 
       if (twoFactorToken.token !== code) {
-        return { error: tError("invalidCode") };
+        return { error: ErrorMessages("invalidCode") };
       }
 
       const hasExpired = new Date(twoFactorToken.expires) < new Date();
 
       if (hasExpired) {
-        return { error: tError("codeHasExpired") };
+        return { error: ErrorMessages("codeHasExpired") };
       }
 
       await TwoFactorToken.findByIdAndDelete(twoFactorToken._id);
@@ -134,7 +134,7 @@ export const login = async (
       if (error.cause?.err instanceof Error) {
         return { error: error.cause.err.message };
       }
-      return { error: tError("somethingWentWrong") };
+      return { error: ErrorMessages("somethingWentWrong") };
       /*  switch (error.type) {
         case "CredentialsSignin":
           return { error: "Invalid credentials" };

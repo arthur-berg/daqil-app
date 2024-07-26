@@ -139,7 +139,15 @@
     "next": "Next",
     "week": "Week",
     "month": "Month",
-    "noDescription": "No description provided."
+    "noDescription": "No description provided.",
+    "am": "AM",
+    "pm": "PM",
+    "client": "Client"
+  },
+  "InviteTherapistForm": {
+    "inviteTherapists": "Invite therapists",
+    "email": "Email",
+    "sendInvite": "Send invite"
   },
   "ErrorMessages": {
     "invalidFields": "Invalid fields!",
@@ -149,9 +157,40 @@
     "somethingWentWrong": "Something went wrong!",
     "therapistNotExist": "Therapist doesn't exist",
     "appointmentTypeNotExist": "Appointment type doesn't exist",
-    "userNotFound": "User not found"
+    "userNotFound": "User not found",
+    "userWithEmailExists": "A user with this email already exists.",
+    "failedToSaveSpecificTimes": "Failed to save specific available times.",
+    "failedToSaveAvailableTimes": "Failed to save available times.",
+    "missingToken": "Missing token!",
+    "invalidToken": "Invalid token!",
+    "tokenHasExpired": "Token has expired!",
+    "emailNotExist": "Email does not exist!",
+    "tokenNotExist": "Token does not exist!",
+    "pleaseCheckInput": "Please check your input. If you believe you already have an account, please try logging in or use the password recovery option.",
+    "invalidEmail": "Invalid email!",
+    "emailNotFound": "Email not found!",
+    "unauthorized": "Unauthorized",
+    "emailAlreadyInUse": "Email already in use!",
+    "incorrectPassword": "Incorrect password!",
+    "currentPasswordIsRequired": "Current password is required!"
   },
   "SuccessMessages": {
-    "activateLinkSent": "A link to activate your account has been emailed to the address provided"
+    "activateLinkSent": "A link to activate your account has been emailed to the address provided",
+    "therapistInvited": "Therapist was invited successfully",
+    "appointmentBooked": "Appointment successfully booked",
+    "appointmentCreated": "Appointment successfully created",
+    "blockedTimesSaved": "Blocked out times saved",
+    "specifcTimesSaves": "Specific availalbe times saved",
+    "settingsUpdated": "Settings successfully updated",
+    "availableTimesSaved": "Available times saved successfully.",
+    "passwordUpdated": "Password updated!",
+    "emailVerified": "Email verified!",
+    "linkToActivate": "A link to activate your account has been emailed to the address provided",
+    "resetEmailSent": "Reset email sent!",
+    "verificationEmailSent": "Verification email sent!",
+    "accountSuccessfullySetup": "Account succesfully setup"
+  },
+  "AppointmentAction": {
+    "therapySessionWith": "Therapy session with"
   }
 }

@@ -139,18 +139,58 @@
     "next": "التالي",
     "week": "الأسبوع",
     "month": "الشهر",
-    "noDescription": "لا يوجد وصف."
+    "noDescription": "لا يوجد وصف.",
+      "am": "صباحًا",
+  "pm": "مساءً",
+"client": "عميل"
+  },
+  "InviteTherapistForm": {
+    "inviteTherapists": "دعوة المعالجين",
+    "email": "البريد الإلكتروني",
+    "sendInvite": "إرسال الدعوة"
   },
   "ErrorMessages": {
     "invalidFields": "حقول غير صالحة!",
     "invalidCredentials": "بيانات الاعتماد غير صالحة!",
     "invalidCode": "رمز غير صالح!",
-    "codeHasExpired": "انتهت صلاحية الرمز!",
+    "codeHasExpired": "رمز منتهي الصلاحية!",
     "somethingWentWrong": "حدث خطأ ما!",
     "therapistNotExist": "المعالج غير موجود",
-    "appointmentTypeNotExist": "نوع الموعد غير موجود"
+    "appointmentTypeNotExist": "نوع الموعد غير موجود",
+    "userNotFound": "المستخدم غير موجود",
+    "userWithEmailExists": "يوجد مستخدم بالفعل بهذا البريد الإلكتروني.",
+    "failedToSaveSpecificTimes": "فشل في حفظ الأوقات المتاحة المحددة.",
+    "failedToSaveAvailableTimes": "فشل في حفظ الأوقات المتاحة.",
+    "missingToken": "رمز مفقود!",
+    "invalidToken": "رمز غير صالح!",
+    "tokenHasExpired": "رمز منتهي الصلاحية!",
+    "emailNotExist": "البريد الإلكتروني غير موجود!",
+    "tokenNotExist": "الرمز غير موجود!",
+    "pleaseCheckInput": "يرجى التحقق من إدخال البيانات. إذا كنت تعتقد أنك تمتلك حسابًا بالفعل، يرجى محاولة تسجيل الدخول أو استخدام خيار استعادة كلمة المرور.",
+    "invalidEmail": "البريد الإلكتروني غير صالح!",
+    "emailNotFound": "البريد الإلكتروني غير موجود!",
+    "unauthorized": "غير مصرح",
+    "emailAlreadyInUse": "البريد الإلكتروني مستخدم بالفعل!",
+    "incorrectPassword": "كلمة المرور غير صحيحة!",
+    "currentPasswordIsRequired": "كلمة المرور الحالية مطلوبة!"
   },
   "SuccessMessages": {
-    "activateLinkSent": "تم إرسال رابط لتفعيل حسابك إلى البريد الإلكتروني المقدم"
+    "activateLinkSent": "تم إرسال رابط لتفعيل حسابك إلى البريد الإلكتروني المقدم",
+    "therapistInvited": "تم دعوة المعالج بنجاح",
+    "appointmentBooked": "تم حجز الموعد بنجاح",
+    "appointmentCreated": "تم إنشاء الموعد بنجاح",
+    "blockedTimesSaved": "تم حفظ الأوقات المحجوبة",
+    "specifcTimesSaves": "تم حفظ الأوقات المتاحة المحددة",
+    "settingsUpdated": "تم تحديث الإعدادات بنجاح",
+    "availableTimesSaved": "تم حفظ الأوقات المتاحة بنجاح.",
+    "passwordUpdated": "تم تحديث كلمة المرور!",
+    "emailVerified": "تم التحقق من البريد الإلكتروني!",
+    "linkToActivate": "تم إرسال رابط لتفعيل حسابك إلى البريد الإلكتروني المقدم",
+    "resetEmailSent": "تم إرسال بريد إعادة التعيين!",
+    "verificationEmailSent": "تم إرسال بريد التحقق!",
+    "accountSuccessfullySetup": "تم إعداد الحساب بنجاح"
+  },
+  "AppointmentAction": {
+    "therapySessionWith": "جلسة علاجية مع"
   }
 }

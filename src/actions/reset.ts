@@ -6,12 +6,17 @@ import { ResetSchema } from "@/schemas";
 import { getUserByEmail } from "@/data/user";
 import { sendPasswordResetEmail } from "@/lib/mail";
 import { generatePasswordResetToken } from "@/lib/tokens";
+import { getTranslations } from "next-intl/server";
 
 export const reset = async (values: z.infer<typeof ResetSchema>) => {
+  const [SuccessMessages, ErrorMessages] = await Promise.all([
+    getTranslations("SuccessMessages"),
+    getTranslations("ErrorMessages"),
+  ]);
   const validatedFields = ResetSchema.safeParse(values);
 
   if (!validatedFields.success) {
-    return { error: "Invalid email!" };
+    return { error: ErrorMessages("invalidEmail") };
   }
 
   const { email } = validatedFields.data;
@@ -19,7 +24,7 @@ export const reset = async (values: z.infer<typeof ResetSchema>) => {
   const existingUser = await getUserByEmail(email);
 
   if (!existingUser) {
-    return { error: "Email not found!" };
+    return { error: ErrorMessages("emailNotFound") };
   }
 
   const passwordResetToken = await generatePasswordResetToken(email);
@@ -29,5 +34,5 @@ export const reset = async (values: z.infer<typeof ResetSchema>) => {
     passwordResetToken.token
   );
 
-  return { success: "Reset email sent!" };
+  return { success: SuccessMessages("resetEmailSent") };
 };
