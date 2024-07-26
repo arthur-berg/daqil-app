@@ -28,14 +28,12 @@ import {
 } from "@/components/ui/form";
 import { useToast } from "@/components/ui/use-toast";
 import { BlockAvailabilitySchemaFE } from "@/schemas";
-import {
-  saveBlockedOutTimes,
-  saveSpecificAvailableTimes,
-} from "@/actions/availability";
+import { saveBlockedOutTimes } from "@/actions/availability";
 import { FaBan } from "react-icons/fa";
 import { TimeRange } from "@/generalTypes";
 import { Separator } from "@/components/ui/separator";
 import { formatDateTime } from "@/utils";
+import { useTranslations } from "next-intl";
 
 // Utility function to generate time options
 const generateTimeIntervals = (intervalMinutes = 15) => {
@@ -70,6 +68,8 @@ const BlockAvailabilityForm = ({
   const [isPending, startTransition] = useTransition();
   const [date, setDate] = useState<any>();
   const [showCalendar, setShowCalendar] = useState(false);
+  const t = useTranslations("AvailabilityPage");
+  const ErrorMessages = useTranslations("ErrorMessages");
 
   const { toast } = useToast();
   const form = useForm<z.infer<typeof BlockAvailabilitySchemaFE>>({
@@ -106,7 +106,7 @@ const BlockAvailabilityForm = ({
       if (data?.success) {
         toast({
           variant: "success",
-          title: data.success,
+          title: t("blockedTimesSaved"),
         });
         form.reset();
         setDate(null);
@@ -114,7 +114,7 @@ const BlockAvailabilityForm = ({
       if (data?.error) {
         toast({
           variant: "destructive",
-          title: data.error,
+          title: ErrorMessages("somethingWentWrong"),
         });
       }
     });
@@ -124,7 +124,7 @@ const BlockAvailabilityForm = ({
     <div>
       <div className="mb-8">
         <h2 className="text-xl md:text-2xl font-bold text-red-600 flex items-center mb-4">
-          <FaBan className="mr-2" /> Blocked Out Times
+          <FaBan className="mr-2" /> {t("blockedOutTimes")}
         </h2>
         <div className="space-y-4 md:flex md:space-y-0 md:space-x-4">
           {!!blockedOutTimes && blockedOutTimes.length > 0 ? (
@@ -150,7 +150,7 @@ const BlockAvailabilityForm = ({
               </div>
             ))
           ) : (
-            <div>No time slots found</div>
+            <div>{t("noTimeSlotsFound")}</div>
           )}
         </div>
       </div>
@@ -161,7 +161,7 @@ const BlockAvailabilityForm = ({
         variant={showCalendar ? "destructive" : undefined}
         onClick={() => setShowCalendar(!showCalendar)}
       >
-        {showCalendar ? "Cancel" : "Add time slot"}
+        {showCalendar ? t("cancel") : t("addTimeSlot")}
       </Button>
       {showCalendar && (
         <>
@@ -192,7 +192,7 @@ const BlockAvailabilityForm = ({
               <form onSubmit={form.handleSubmit(onSubmit)}>
                 <div className="mt-4">
                   <h3 className="text-lg font-semibold">
-                    Block Times for {format(date, "PPPP")}
+                    {t("blockTimesFor")} {format(date, "PPPP")}
                   </h3>
                   {form.watch("timeRanges").map((_: any, index: number) => (
                     <div key={index} className="flex gap-4 mt-4">
@@ -211,16 +211,18 @@ const BlockAvailabilityForm = ({
                                   >
                                     {field.value
                                       ? field.value
-                                      : "Select start time"}
+                                      : t("selectStartTime")}
                                     <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                                   </Button>
                                 </PopoverTrigger>
                                 <PopoverContent className="w-[150px] p-0">
                                   <Command>
-                                    <CommandInput placeholder="Search time..." />
+                                    <CommandInput
+                                      placeholder={t("searchTime")}
+                                    />
                                     <CommandList>
                                       <CommandEmpty>
-                                        No time found.
+                                        {t("noTimeFound")}
                                       </CommandEmpty>
                                       <CommandGroup>
                                         {timeOptions.map((time) => (
@@ -269,16 +271,18 @@ const BlockAvailabilityForm = ({
                                   >
                                     {field.value
                                       ? field.value
-                                      : "Select end time"}
+                                      : t("selectEndTime")}
                                     <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                                   </Button>
                                 </PopoverTrigger>
                                 <PopoverContent className="w-[150px] p-0">
                                   <Command>
-                                    <CommandInput placeholder="Search time..." />
+                                    <CommandInput
+                                      placeholder={t("searchTime")}
+                                    />
                                     <CommandList>
                                       <CommandEmpty>
-                                        No time found.
+                                        {t("noTimeFound")}
                                       </CommandEmpty>
                                       <CommandGroup>
                                         {timeOptions.map((time) => (
@@ -325,13 +329,13 @@ const BlockAvailabilityForm = ({
                     variant="outline"
                     className="mt-4"
                   >
-                    Add Time Range
+                    {t("addTimeRange")}
                   </Button>
                 </div>
                 {form.watch("timeRanges").length > 0 && (
                   <div className="mt-4">
                     <Button type="submit" variant="success">
-                      Save Available Times
+                      {t("saveTimeRanges")}
                     </Button>
                   </div>
                 )}

@@ -1,25 +1,28 @@
-import BookingCalendar from "@/app/[locale]/(protected)/therapists/[therapistId]/booking-calendar";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { APPOINTMENT_TYPE_ID } from "@/contants/config";
 import { getAppointmentTypeById } from "@/data/appointment-types";
 import { getUserById } from "@/data/user";
+import { getTranslations } from "next-intl/server";
 import { FaUser } from "react-icons/fa";
+
+import BookingCalendar from "@/app/[locale]/(protected)/therapists/[therapistId]/booking-calendar";
 
 const TherapistUserProfile = async ({
   params,
 }: {
   params: { therapistId: string };
 }) => {
+  const ErrorMessages = await getTranslations("ErrorMessages");
   const therapistId = params.therapistId;
   const therapist = (await getUserById(therapistId)) as any;
   const appointmentType = await getAppointmentTypeById(APPOINTMENT_TYPE_ID);
 
   if (!therapist) {
-    return "Couldn't find therapist";
+    return ErrorMessages("therapistNotExist");
   }
 
   if (!appointmentType) {
-    return "Couldn't find appointment type";
+    return ErrorMessages("appointmentTypeNotExist");
   }
 
   return (
@@ -51,7 +54,6 @@ const TherapistUserProfile = async ({
           appointmentType={appointmentType}
           therapistId={therapistId}
         />
-        {/* Calendar component will go here */}
       </div>
     </div>
   );

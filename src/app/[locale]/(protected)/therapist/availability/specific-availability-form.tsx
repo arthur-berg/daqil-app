@@ -1,8 +1,8 @@
 "use client";
 import * as z from "zod";
 import { useState, useTransition } from "react";
-import { useForm, Controller } from "react-hook-form";
-import { format, set, addMinutes, isBefore, parseISO } from "date-fns";
+import { useForm } from "react-hook-form";
+import { format, set, addMinutes, isBefore } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -33,6 +33,7 @@ import { FaCalendarAlt } from "react-icons/fa";
 import { TimeRange } from "@/generalTypes";
 import { Separator } from "@/components/ui/separator";
 import { formatDateTime } from "@/utils";
+import { useTranslations } from "next-intl";
 
 // Utility function to generate time options
 const generateTimeIntervals = (intervalMinutes = 15) => {
@@ -68,6 +69,8 @@ const SpecificAvailabilityForm = ({
   const [date, setDate] = useState<any>();
   const [showCalendar, setShowCalendar] = useState(false);
   const { toast } = useToast();
+  const t = useTranslations("AvailabilityPage");
+  const ErrorMessages = useTranslations("ErrorMessages");
   const form = useForm<z.infer<typeof SpecificAvailabilitySchemaFE>>({
     defaultValues: {
       date: new Date(),
@@ -102,7 +105,7 @@ const SpecificAvailabilityForm = ({
       if (data?.success) {
         toast({
           variant: "success",
-          title: "Specific times saved successfully.",
+          title: t("specificTimesSaved"),
         });
         form.reset();
         setDate(null);
@@ -110,7 +113,7 @@ const SpecificAvailabilityForm = ({
       if (data?.error) {
         toast({
           variant: "destructive",
-          title: "Something went wrong.",
+          title: ErrorMessages("somethingWentWrong"),
         });
       }
     });
@@ -120,7 +123,7 @@ const SpecificAvailabilityForm = ({
     <div>
       <div className="mb-8">
         <h2 className="text-xl md:text-2xl font-bold text-green-600 flex items-center mb-4">
-          <FaCalendarAlt className="mr-2" /> Overview Specific Available Times
+          <FaCalendarAlt className="mr-2" /> {t("overviewSpecificTimes")}
         </h2>
         <div className="space-y-4 md:flex md:space-y-0 md:space-x-4">
           {!!specificAvailableTimes && specificAvailableTimes.length > 0 ? (
@@ -148,7 +151,7 @@ const SpecificAvailabilityForm = ({
               )
             )
           ) : (
-            <div className="italic">No time slots found</div>
+            <div className="italic">{t("noTimeSlotsFound")}</div>
           )}
         </div>
       </div>
@@ -158,7 +161,7 @@ const SpecificAvailabilityForm = ({
         variant={showCalendar ? "destructive" : undefined}
         onClick={() => setShowCalendar(!showCalendar)}
       >
-        {showCalendar ? "Cancel" : "Add time slot"}
+        {showCalendar ? t("cancel") : t("addTimeSlot")}
       </Button>
       {showCalendar && (
         <>
@@ -189,7 +192,7 @@ const SpecificAvailabilityForm = ({
               <form onSubmit={form.handleSubmit(onSubmit)}>
                 <div className="mt-4">
                   <h3 className="text-lg font-semibold">
-                    Set Available Times for {format(date, "PPPP")}
+                    {t("setAvailableTimesFor")} {format(date, "PPPP")}
                   </h3>
                   {form.watch("timeRanges").map((_: any, index: number) => (
                     <div key={index} className="flex gap-4 mt-4">
@@ -208,16 +211,18 @@ const SpecificAvailabilityForm = ({
                                   >
                                     {field.value
                                       ? field.value
-                                      : "Select start time"}
+                                      : t("selectStartTime")}
                                     <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                                   </Button>
                                 </PopoverTrigger>
                                 <PopoverContent className="w-[150px] p-0">
                                   <Command>
-                                    <CommandInput placeholder="Search time..." />
+                                    <CommandInput
+                                      placeholder={t("searchTime")}
+                                    />
                                     <CommandList>
                                       <CommandEmpty>
-                                        No time found.
+                                        {t("noTimeFound")}
                                       </CommandEmpty>
                                       <CommandGroup>
                                         {timeOptions.map((time) => (
@@ -266,16 +271,18 @@ const SpecificAvailabilityForm = ({
                                   >
                                     {field.value
                                       ? field.value
-                                      : "Select end time"}
+                                      : t("selectEndTime")}
                                     <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                                   </Button>
                                 </PopoverTrigger>
                                 <PopoverContent className="w-[150px] p-0">
                                   <Command>
-                                    <CommandInput placeholder="Search time..." />
+                                    <CommandInput
+                                      placeholder={t("searchTime")}
+                                    />
                                     <CommandList>
                                       <CommandEmpty>
-                                        No time found.
+                                        {t("noTimeFound")}
                                       </CommandEmpty>
                                       <CommandGroup>
                                         {timeOptions.map((time) => (
@@ -322,13 +329,13 @@ const SpecificAvailabilityForm = ({
                     variant="outline"
                     className="mt-4"
                   >
-                    Add Time Range
+                    {t("addTimeRange")}
                   </Button>
                 </div>
                 {form.watch("timeRanges").length > 0 && (
                   <div className="mt-4">
                     <Button type="submit" variant="success">
-                      Save Available Times
+                      {t("saveTimeRanges")}
                     </Button>
                   </div>
                 )}

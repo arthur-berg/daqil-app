@@ -77,12 +77,60 @@
   "PricingPage": {
     "heading": "Choose between subscriptions or buy a single session"
   },
+  "TherapistsPage": {
+    "therapists": "Therapists",
+    "bookSession": "Book session"
+  },
+  "BookingCalendar": {
+    "calendar": "Calendar",
+    "goToAppointmentsOverview": "Go to appointments overview",
+    "bookAnotherAppointment": "Book another appointment",
+    "appointmentDetails": "Appointment Details",
+    "day": "Day",
+    "time": "Time",
+    "duration": "Duration",
+    "cost": "Cost",
+    "confirmBooking": "Confirm Booking",
+    "goBack": "Go back",
+    "minutes": "minutes"
+  },
+  "AvailabilityPage": {
+    "recurringAvailableTimes": "Recurring available times",
+    "specificAvailableTimes": "Specific available times",
+    "blockedOutTimes": "Blocked out times",
+    "noSpecificAvailableTimes": "No specific available times",
+    "setInterval": "Set Interval (minutes)",
+    "noIntervalFound": "No interval found.",
+    "intervalDescription": "The interval determines the time gaps between each available slot. For example, if you set the interval to 15 minutes, your available slots will be at 9:00, 9:15, 9:30, etc. We don't recommend an interval of less than 15 minutes to ensure you have enough time between sessions.",
+    "saveSettings": "Save settings",
+    "clientsWillSee": "Clients will see your available times four weeks in the future",
+    "noRecurringSet": "No recurring available times set",
+    "noTimeFound": "No time found.",
+    "selectTime": "Select time",
+    "addTimeRange": "Add Time Range",
+    "saveTimeRanges": "Save Time Ranges",
+    "searchTime": "Search time...",
+    "specificTimesSaved": "Specific times saved successfully.",
+    "overviewSpecificTimes": "Overview Specific Available Times",
+    "noTimeSlotsFound": "No time slots found.",
+    "cancel": "Cancel",
+    "addTimeSlot": "Add Time Slot",
+    "setAvailableTimesFor": "Set Available Times for",
+    "selectStartTime": "Select start time",
+    "selectEndTime": "Select end time",
+    "blockedTimesSaved": "Blocked times saved successfully.",
+    "blockTimesFor": "Block Times for",
+    "overview": "Overview"
+  },
   "ErrorMessages": {
     "invalidFields": "Invalid fields!",
     "invalidCredentials": "Invalid credentials!",
     "invalidCode": "Invalid code!",
     "codeHasExpired": "Code has expired!",
-    "somethingWentWrong": "Something went wrong!"
+    "somethingWentWrong": "Something went wrong!",
+    "therapistNotExist": "Therapist doesn't exist",
+    "appointmentTypeNotExist": "Appointment type doesn't exist",
+    "userNotFound": "User not found"
   },
   "SuccessMessages": {
     "activateLinkSent": "A link to activate your account has been emailed to the address provided"

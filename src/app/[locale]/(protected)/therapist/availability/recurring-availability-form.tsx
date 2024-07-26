@@ -31,6 +31,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { PopoverClose } from "@radix-ui/react-popover";
+import { useTranslations } from "next-intl";
 
 const generateTimeIntervals = (intervalMinutes = 15) => {
   const times = [];
@@ -57,7 +58,7 @@ const generateTimeIntervals = (intervalMinutes = 15) => {
 
 const timeOptions = generateTimeIntervals(15);
 
-const DefaultAvailabilityForm = ({
+const RecurringAvailabilityForm = ({
   day,
   timeRangeInputs,
   setTimeRangeInputs,
@@ -75,9 +76,9 @@ const DefaultAvailabilityForm = ({
   const [isPending, startTransition] = useTransition();
   const [popoverOpen, setIsPopoverOpen] = useState(false);
 
-  const { toast } = useToast();
+  const t = useTranslations("AvailabilityPage");
 
-  console.log("timeRangeInputs", timeRangeInputs);
+  const { toast } = useToast();
 
   const form = useForm({
     resolver: zodResolver(RecurringAvailabilitySchema),
@@ -193,16 +194,18 @@ const DefaultAvailabilityForm = ({
                                       >
                                         {field.value
                                           ? field.value
-                                          : "Select time"}
+                                          : t("selectTime")}
                                         <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                                       </Button>
                                     </PopoverTrigger>
                                     <PopoverContent className="w-[150px] p-0">
                                       <Command>
-                                        <CommandInput placeholder="Search time..." />
+                                        <CommandInput
+                                          placeholder={t("searchTime")}
+                                        />
                                         <CommandList>
                                           <CommandEmpty>
-                                            No time found.
+                                            {t("noTimeFound")}
                                           </CommandEmpty>
                                           <CommandGroup>
                                             {timeOptions.map((time) => (
@@ -260,16 +263,18 @@ const DefaultAvailabilityForm = ({
                                       >
                                         {field.value
                                           ? field.value
-                                          : "Select time"}
+                                          : t("selectTime")}
                                         <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                                       </Button>
                                     </PopoverTrigger>
                                     <PopoverContent className="w-[150px] p-0">
                                       <Command>
-                                        <CommandInput placeholder="Search time..." />
+                                        <CommandInput
+                                          placeholder={t("searchTime")}
+                                        />
                                         <CommandList>
                                           <CommandEmpty>
-                                            No time found.
+                                            {t("noTimeFound")}
                                           </CommandEmpty>
                                           <CommandGroup>
                                             {timeOptions.map((time) => (
@@ -325,7 +330,7 @@ const DefaultAvailabilityForm = ({
                 </div>
               ))
             ) : (
-              <p className="text-gray-500">No default available times set</p>
+              <p className="text-gray-500">{t("noRecurringSet")}</p>
             )}
           </div>
           {editModes[day] && (
@@ -337,7 +342,7 @@ const DefaultAvailabilityForm = ({
                 type="button"
                 disabled={isPending}
               >
-                Add Time Range
+                {t("addTimeRange")}
               </Button>
               {/*  <Button
                 className="block sm:inline"
@@ -354,7 +359,7 @@ const DefaultAvailabilityForm = ({
                 type="submit"
                 disabled={!isTimeRangeComplete(day) || isPending}
               >
-                Save Time Ranges
+                {t("saveTimeRanges")}
               </Button>
             </div>
           )}
@@ -364,4 +369,4 @@ const DefaultAvailabilityForm = ({
   );
 };
 
-export default DefaultAvailabilityForm;
+export default RecurringAvailabilityForm;

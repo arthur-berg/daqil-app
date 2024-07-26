@@ -1,12 +1,9 @@
 "use client";
 
-import { useState } from "react";
-import { format, set, addMinutes, isBefore, isEqual } from "date-fns";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useTranslations } from "next-intl";
 
-import DefaultAvailabilityManager from "./recurring-availability-manager";
+import RecurringAvailabilityManager from "./recurring-availability-manager";
 import SpecificAvailabilityForm from "./specific-availability-form";
 import BlockAvailabilityForm from "./block-availability-form";
 import Overview from "./overview";
@@ -18,17 +15,18 @@ const AvailabilityTabs = ({
   appointmentType: any;
   availableTimes: any;
 }) => {
+  const t = useTranslations("AvailabilityPage");
   return (
     <Tabs defaultValue="default-availability" className="w-full">
       <TabsList className="flex items-center justify-start flex-wrap h-auto">
-        <TabsTrigger value="overview">Overview</TabsTrigger>
+        <TabsTrigger value="overview">{t("overview")}</TabsTrigger>
         <TabsTrigger value="default-availability">
-          Recurring Available Times
+          {t("recurringAvailableTimes")}
         </TabsTrigger>
         <TabsTrigger value="specific-times">
-          Specific Available Times
+          {t("specificAvailableTimes")}
         </TabsTrigger>
-        <TabsTrigger value="block-dates">Block Out Dates</TabsTrigger>
+        <TabsTrigger value="block-dates">{t("blockedOutTimes")}</TabsTrigger>
       </TabsList>
 
       <div className="mt-6 bg-white shadow-md rounded-lg p-6">
@@ -36,7 +34,7 @@ const AvailabilityTabs = ({
           <Overview availableTimes={availableTimes} />
         </TabsContent>
         <TabsContent value="default-availability">
-          <DefaultAvailabilityManager
+          <RecurringAvailabilityManager
             appointmentType={appointmentType}
             settings={availableTimes?.settings}
             recurringAvailableTimes={availableTimes?.recurringAvailableTimes}

@@ -1,14 +1,13 @@
 "use client";
 import { Calendar } from "@/components/ui/calendar";
 import { useState, useTransition } from "react";
-import { add, format, set } from "date-fns";
+import { format, set } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { bookAppointment } from "@/actions/appointments";
 import { Link } from "@/navigation";
 import { currencyToSymbol } from "@/utils";
-
 import { getTherapistAvailableTimeSlots } from "./helpers";
-import { AvailableTimes } from "@/generalTypes";
+import { useTranslations } from "next-intl";
 
 type DateType = {
   justDate: Date | undefined;
@@ -24,6 +23,7 @@ const BookingCalendar = ({
   therapistId: string;
   therapistsAvailableTimes: string;
 }) => {
+  const t = useTranslations("BookingCalendar");
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
@@ -62,11 +62,13 @@ const BookingCalendar = ({
             <div className="bg-green-100 border border-green-300 p-2 rounded">
               <p>{success}</p>
               <Link href="/client/appointments">
-                <Button className="mt-2">Go to appointments overview</Button>
+                <Button className="mt-2">
+                  {t("goToAppointmentsOverview")}
+                </Button>
               </Link>
               <Button
                 variant="outline"
-                className="ml-2"
+                className="ml-2 rtl:ml-0 rtl:mr-2"
                 onClick={() => {
                   setSuccess(undefined);
                   setError(undefined);
@@ -76,7 +78,7 @@ const BookingCalendar = ({
                   });
                 }}
               >
-                Book another appointment
+                {t("bookAnotherAppointment")}
               </Button>
             </div>
           )}
@@ -89,7 +91,7 @@ const BookingCalendar = ({
       ) : (
         <>
           <div className="flex">
-            <h2 className="text-xl font-bold mb-4 mr-4">Calendar</h2>
+            <h2 className="text-xl font-bold mb-4 mr-4">{t("calendar")}</h2>
           </div>
           {date.dateTime && date.justDate ? (
             <>
@@ -105,13 +107,20 @@ const BookingCalendar = ({
                   })
                 }
               >
-                Go back
+                {t("goBack")}
               </Button>
               <div className="mt-4 p-4 bg-yellow-100 border border-yellow-300 rounded">
-                <p>Appointment Details:</p>
-                <p>Day: {format(date.dateTime, "eeee, MMMM d, yyyy")}</p>
-                <p>Time: {format(date.dateTime, "kk:mm")}</p>
-                <p>Duration: {appointmentType.durationInMinutes} minutes</p>
+                <p>{t("appointmentDetails")}:</p>
+                <p>
+                  {t("day")}: {format(date.dateTime, "eeee, MMMM d, yyyy")}
+                </p>
+                <p>
+                  {t("time")}: {format(date.dateTime, "kk:mm")}
+                </p>
+                <p>
+                  {t("duration")}: {appointmentType.durationInMinutes}{" "}
+                  {t("minutes")}
+                </p>
                 <p>
                   Cost: {currencyToSymbol(appointmentType.currency)}
                   {appointmentType.price}{" "}
@@ -142,7 +151,7 @@ const BookingCalendar = ({
                     });
                   }}
                 >
-                  Confirm Booking
+                  {t("confirmBooking")}
                 </Button>
               </div>
             </>

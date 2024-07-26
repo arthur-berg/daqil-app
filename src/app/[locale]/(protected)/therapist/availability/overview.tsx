@@ -7,20 +7,31 @@ import {
 } from "@/generalTypes";
 import { formatDateTime } from "@/utils";
 import { format } from "date-fns";
+import { useTranslations } from "next-intl";
 import { FaClock, FaCalendarAlt, FaBan } from "react-icons/fa";
 
 const Overview = ({ availableTimes }: { availableTimes: AvailableTimes }) => {
   const { recurringAvailableTimes, specificAvailableTimes, blockedOutTimes } =
     availableTimes;
 
+  const t = useTranslations("AvailabilityPage");
+
+  const dayOrder = ["monday", "tuesday", "wednesday", "thursday", "friday"];
+
+  const sortedRecurringAvailableTimes = recurringAvailableTimes.sort(
+    (a: any, b: any) =>
+      dayOrder.indexOf(a.day.toLowerCase()) -
+      dayOrder.indexOf(b.day.toLowerCase())
+  );
+
   return (
     <div className="p-4 space-y-6">
       <div>
         <h2 className="text-xl md:text-2xl font-bold text-blue-600 flex items-center mb-4">
-          <FaClock className="mr-2" /> Recurring Availability
+          <FaClock className="mr-2" /> {t("recurringAvailableTimes")}
         </h2>
         <div className="space-y-4 md:flex md:space-y-0 md:space-x-4">
-          {recurringAvailableTimes.map((dayTime: DayTimes) =>
+          {sortedRecurringAvailableTimes.map((dayTime: DayTimes) =>
             dayTime?.day ? (
               <div
                 key={dayTime.day}
@@ -47,11 +58,11 @@ const Overview = ({ availableTimes }: { availableTimes: AvailableTimes }) => {
 
       <div>
         <h2 className="text-xl md:text-2xl font-bold text-green-600 flex items-center mb-4">
-          <FaCalendarAlt className="mr-2" /> Specific Available Times
+          <FaCalendarAlt className="mr-2" /> {t("specificAvailableTimes")}
         </h2>
         <div className="space-y-4 md:flex md:space-y-0 md:space-x-4">
           {specificAvailableTimes.length === 0 ? (
-            <p className="text-green-800">No specific available times.</p>
+            <p className="text-green-800">{t("noSpecificAvailableTimes")}</p>
           ) : (
             specificAvailableTimes.map((dateTime: DateTimes) => (
               <div
@@ -80,7 +91,7 @@ const Overview = ({ availableTimes }: { availableTimes: AvailableTimes }) => {
 
       <div>
         <h2 className="text-xl md:text-2xl font-bold text-red-600 flex items-center mb-4">
-          <FaBan className="mr-2" /> Blocked Out Times
+          <FaBan className="mr-2" /> {t("blockedOutTimes")}
         </h2>
         <div className="space-y-4 md:flex md:space-y-0 md:space-x-4">
           {blockedOutTimes.map((dateTime: DateTimes) => (

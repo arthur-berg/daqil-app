@@ -1,15 +1,17 @@
 import { Button } from "@/components/ui/button";
 import { getTherapists } from "@/data/user";
 import { Link } from "@/navigation";
+import { getTranslations } from "next-intl/server";
 
 const TherapistsPage = async () => {
   const therapists = await getTherapists();
+  const t = await getTranslations("TherapistsPage");
 
   return (
     <div className="flex justify-center">
       <div className="p-4 ">
         <div className="bg-secondary p-2 rounded-md mb-2">
-          <h1 className="text-2xl font-bold text-center">Therapists</h1>
+          <h1 className="text-2xl font-bold text-center">{t("therapists")}</h1>
         </div>
         <div className="flex flex-wrap gap-4">
           {therapists?.map((therapist) => (
@@ -29,7 +31,7 @@ const TherapistsPage = async () => {
                 )}
                 <div className="mt-2 flex justify-center">
                   <Link href={`/therapists/${therapist._id}`}>
-                    <Button>Book session</Button>
+                    <Button>{t("bookSession")}</Button>
                   </Link>
                 </div>
               </div>

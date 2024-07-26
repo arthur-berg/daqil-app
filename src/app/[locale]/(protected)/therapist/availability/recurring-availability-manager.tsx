@@ -3,7 +3,7 @@ import { useEffect, useState, useTransition } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import DefaultAvailabilityForm from "@/app/[locale]/(protected)/therapist/availability/recurring-availability-form";
+import RecurringAvailabilityForm from "@/app/[locale]/(protected)/therapist/availability/recurring-availability-form";
 import { BeatLoader } from "react-spinners";
 import { Button } from "@/components/ui/button";
 import {
@@ -33,6 +33,7 @@ import {
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { addMinutes, format, isBefore, set } from "date-fns";
 import { FaClock } from "react-icons/fa";
+import { useTranslations } from "next-intl";
 
 const daysOfWeek = [
   "monday",
@@ -107,6 +108,8 @@ const DefaultAvailabilityManager = ({
     initialEditModes
   );
   const { toast } = useToast();
+
+  const t = useTranslations("AvailabilityPage");
 
   const fullDayRange = {
     from: settings?.fullDayRange?.from || "09:00",
@@ -187,7 +190,7 @@ const DefaultAvailabilityManager = ({
               render={({ field }) => (
                 <FormItem>
                   <label className="block text-lg font-semibold mb-2">
-                    Set Interval (minutes)
+                    {t("setInterval")}
                   </label>
                   <FormControl>
                     <Popover>
@@ -204,7 +207,7 @@ const DefaultAvailabilityManager = ({
                       <PopoverContent className="w-[150px] p-0">
                         <Command>
                           <CommandList>
-                            <CommandEmpty>No interval found.</CommandEmpty>
+                            <CommandEmpty>{t("noIntervalFound")}</CommandEmpty>
                             <CommandGroup>
                               {intervalOptions.map((interval) => (
                                 <CommandItem
@@ -232,11 +235,7 @@ const DefaultAvailabilityManager = ({
                   </FormControl>
                   <FormMessage />
                   <p className="text-sm mt-2 max-w-72">
-                    The interval determines the time gaps between each available
-                    slot. For example, if you set the interval to 15 minutes,
-                    your available slots will be at 9:00, 9:15, 9:30, etc. We
-                    don&apos;t recommend an interval of less than 15 minutes to
-                    ensure you have enough time between sessions.
+                    {t("intervalDescription")}
                   </p>
                 </FormItem>
               )}
@@ -359,7 +358,7 @@ const DefaultAvailabilityManager = ({
             className="mt-4"
             disabled={isPending}
           >
-            Save Settings
+            {t("saveSettings")}
           </Button>
         </form>
       </Form>
@@ -367,12 +366,10 @@ const DefaultAvailabilityManager = ({
         className="bg-blue-100 border mt-4 border-blue-400 text-blue-700 px-4 py-3 rounded inline-flex text-sm"
         role="alert"
       >
-        <span>
-          Clients will see your available times four weeks in the future
-        </span>
+        <span>{t("clientsWillSee")}</span>
       </div>
       <h2 className="text-xl md:text-2xl font-bold text-blue-600 flex items-center mb-4 mt-4">
-        <FaClock className="mr-2" /> Recurring Availability
+        <FaClock className="mr-2" /> {t("recurringAvailableTimes")}
       </h2>
       <div className="p-4 space-y-6 max-w-lg">
         {daysOfWeek.map((day) => (
@@ -393,7 +390,7 @@ const DefaultAvailabilityManager = ({
               </Button>
             </div>
             {editModes[day] ? (
-              <DefaultAvailabilityForm
+              <RecurringAvailabilityForm
                 editModes={editModes}
                 setEditModes={setEditModes}
                 day={day}
@@ -416,9 +413,7 @@ const DefaultAvailabilityManager = ({
                     </div>
                   ))
                 ) : (
-                  <p className="text-gray-500">
-                    No recurring available times set
-                  </p>
+                  <p className="text-gray-500">{t("noRecurringSet")}</p>
                 )}
               </div>
             )}

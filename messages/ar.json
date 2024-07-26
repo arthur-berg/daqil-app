@@ -61,7 +61,7 @@
     "minutes": "دقائق",
     "participants": "المشاركين",
     "listView": "عرض القائمة",
-"calendarView": "عرض التقويم"
+    "calendarView": "عرض التقويم"
   },
   "SettingsPage": {
     "firstNameLabel": "الاسم الأول",
@@ -77,12 +77,59 @@
   "PricingPage": {
     "heading": "اختر بين الاشتراكات أو شراء جلسة واحدة"
   },
+  "TherapistsPage": {
+    "therapists": "المعالجون",
+    "bookSession": "احجز جلسة"
+  },
+  "BookingCalendar": {
+    "calendar": "التقويم",
+    "goToAppointmentsOverview": "اذهب إلى نظرة عامة على المواعيد",
+    "bookAnotherAppointment": "حجز موعد آخر",
+    "appointmentDetails": "تفاصيل الموعد",
+    "day": "اليوم",
+    "time": "الوقت",
+    "duration": "المدة",
+    "cost": "التكلفة",
+    "confirmBooking": "تأكيد الحجز",
+    "goBack": "العودة",
+    "minutes": "دقائق"
+  },
+  "AvailabilityPage": {
+    "recurringAvailableTimes": "أوقات التوافر المتكررة",
+    "specificAvailableTimes": "أوقات التوافر المحددة",
+    "blockedOutTimes": "الأوقات المحجوبة",
+    "noSpecificAvailableTimes": "لا توجد أوقات توافر محددة",
+    "setInterval": "تعيين الفاصل الزمني (بالدقائق)",
+    "noIntervalFound": "لم يتم العثور على فاصل زمني.",
+    "intervalDescription": "يحدد الفاصل الزمني الفجوات الزمنية بين كل فترة توافر. على سبيل المثال، إذا قمت بتعيين الفاصل الزمني إلى 15 دقيقة، ستكون الفترات المتاحة في 9:00، 9:15، 9:30، إلخ. لا نوصي بفاصل زمني أقل من 15 دقيقة لضمان وجود وقت كاف بين الجلسات.",
+    "saveSettings": "حفظ الإعدادات",
+    "clientsWillSee": "سيتمكن العملاء من رؤية أوقات التوافر الخاصة بك لأربعة أسابيع في المستقبل",
+    "noRecurringSet": "لم يتم تعيين أوقات توافر متكررة",
+    "noTimeFound": "لم يتم العثور على وقت.",
+    "selectTime": "اختر الوقت",
+    "addTimeRange": "إضافة فترة زمنية",
+    "saveTimeRanges": "حفظ الفترات الزمنية",
+    "searchTime": "البحث عن الوقت...",
+    "specificTimesSaved": "تم حفظ الأوقات المحددة بنجاح.",
+    "overviewSpecificTimes": "نظرة عامة على أوقات التوافر المحددة",
+    "noTimeSlotsFound": "لم يتم العثور على فترات زمنية.",
+    "cancel": "إلغاء",
+    "addTimeSlot": "إضافة فترة زمنية",
+    "setAvailableTimesFor": "تعيين أوقات التوافر لـ",
+    "selectStartTime": "اختر وقت البدء",
+    "selectEndTime": "اختر وقت الانتهاء",
+    "blockedTimesSaved": "تم حفظ الأوقات المحجوبة بنجاح.",
+    "blockTimesFor": "حجب الأوقات لـ",
+    "overview": "نظرة عامة"
+  },
   "ErrorMessages": {
     "invalidFields": "حقول غير صالحة!",
     "invalidCredentials": "بيانات الاعتماد غير صالحة!",
     "invalidCode": "رمز غير صالح!",
     "codeHasExpired": "انتهت صلاحية الرمز!",
-    "somethingWentWrong": "حدث خطأ ما!"
+    "somethingWentWrong": "حدث خطأ ما!",
+    "therapistNotExist": "المعالج غير موجود",
+    "appointmentTypeNotExist": "نوع الموعد غير موجود"
   },
   "SuccessMessages": {
     "activateLinkSent": "تم إرسال رابط لتفعيل حسابك إلى البريد الإلكتروني المقدم"
