@@ -1,12 +1,11 @@
-"use client";
-
 import { Button } from "@/components/ui/button";
 import { useRouter, usePathname } from "@/navigation";
 import { useState } from "react";
 import { useLocale } from "next-intl";
 import { GlobeIcon } from "@radix-ui/react-icons";
+import { cn } from "@/lib/utils";
 
-const LanguageSwitcher = ({ secondary }: { secondary?: boolean }) => {
+const LanguageSwitcher = ({ isOpen }: { isOpen?: boolean }) => {
   const router = useRouter();
   const locale = useLocale();
   const pathname = usePathname();
@@ -20,25 +19,33 @@ const LanguageSwitcher = ({ secondary }: { secondary?: boolean }) => {
 
   return (
     <Button
-      variant={secondary ? "secondary" : "ghost"}
-      size="sm"
-      className="font-semibold flex items-center gap-1"
+      variant="ghost"
+      className="w-full justify-start h-10 mb-1"
       onClick={() => handleLocaleChange(selectedLocale === "en" ? "ar" : "en")}
     >
-      <GlobeIcon className="h-4 w-4 mr-2" /> {/* Added language icon */}
-      <span>
+      <span className={cn(isOpen === false ? "" : "mr-4")}>
+        <GlobeIcon className="h-4 w-4" />
+      </span>
+      <p
+        className={cn(
+          "max-w-[200px] truncate",
+          isOpen === false
+            ? "-translate-x-96 opacity-0"
+            : "translate-x-0 opacity-100"
+        )}
+      >
         {selectedLocale === "en" ? (
-          <div className="flex items-center text-md flex-col">
+          <>
             <div>التبديل إلى العربية</div>
             <div>Switch to Arabic</div>
-          </div>
+          </>
         ) : (
-          <div className="text-md flex items-center flex-col">
+          <>
             <div>Switch to English</div>
             <div>التبديل إلى اللغة الإنجليزية</div>
-          </div>
+          </>
         )}
-      </span>
+      </p>
     </Button>
   );
 };
