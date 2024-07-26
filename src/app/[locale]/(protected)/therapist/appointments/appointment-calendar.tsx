@@ -8,6 +8,7 @@ import {
   View,
 } from "react-big-calendar";
 import moment from "moment";
+import datefns from "date-fns";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { useState, useMemo } from "react";
 import {
@@ -21,6 +22,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/navigation";
+import { useTranslations } from "next-intl";
 
 const localizer = momentLocalizer(moment);
 
@@ -29,11 +31,13 @@ const CustomToolbar = ({
   label,
   onView,
   view,
+  t,
 }: {
   onNavigate: (action: NavigateAction) => void;
   label: string;
   onView: (view: View) => void;
   view: View;
+  t: any;
 }) => {
   const goToBack = () => {
     onNavigate("PREV" as NavigateAction);
@@ -50,47 +54,40 @@ const CustomToolbar = ({
   return (
     <div className="flex justify-between items-center mb-4">
       <div className="flex items-center">
-        <button
+        <Button
           onClick={goToBack}
-          className="mr-4 p-2 bg-gray-200 rounded hover:bg-gray-300"
+          variant="secondary"
+          className="mr-4 p-2 rtl:mr-0 rtl:ml-4  rounded"
         >
-          Back
-        </button>
-        <button
+          {t("back")}
+        </Button>
+        <Button
           onClick={goToCurrent}
-          className="mr-4 p-2 bg-gray-200 rounded hover:bg-gray-300"
+          variant="secondary"
+          className="mr-4 rtl:mr-0 rtl:ml-4 p-2  rounded"
         >
-          Today
-        </button>
-        <button
-          onClick={goToNext}
-          className="p-2 bg-gray-200 rounded hover:bg-gray-300"
-        >
-          Next
-        </button>
+          {t("today")}
+        </Button>
+        <Button variant="secondary" onClick={goToNext} className="p-2 rounded">
+          {t("next")}
+        </Button>
       </div>
       <div className="text-lg font-bold">{label}</div>
       <div className="flex items-center">
-        <button
+        <Button
+          variant={view === Views.WEEK ? undefined : "secondary"}
           onClick={() => onView(Views.WEEK)}
-          className={`mr-4 p-2 rounded ${
-            view === Views.WEEK
-              ? "bg-gray-300"
-              : "bg-gray-200 hover:bg-gray-300"
-          }`}
+          className={`mr-4 rtl:mr-0 rtl:ml-4 p-2 rounded`}
         >
-          Week
-        </button>
-        <button
+          {t("week")}
+        </Button>
+        <Button
+          variant={view === Views.MONTH ? undefined : "secondary"}
           onClick={() => onView(Views.MONTH)}
-          className={`p-2 rounded ${
-            view === Views.MONTH
-              ? "bg-gray-300"
-              : "bg-gray-200 hover:bg-gray-300"
-          }`}
+          className={`p-2 rounded`}
         >
-          Month
-        </button>
+          {t("month")}
+        </Button>
       </div>
     </div>
   );
@@ -100,6 +97,8 @@ const AppointmentCalendar = ({ appointments }: { appointments: any }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [currentView, setCurrentView] = useState<View>(Views.WEEK);
   const [selectedAppointment, setSelectedAppointment] = useState<any>(null);
+
+  const t = useTranslations("AppointmentCalendar");
 
   const handleNavigate = (action: NavigateAction) => {
     const newDate = moment(currentDate).toDate();
@@ -149,13 +148,14 @@ const AppointmentCalendar = ({ appointments }: { appointments: any }) => {
   return (
     <div className="p-4 space-y-6 bg-white md:w-9/12">
       <h2 className="text-xl md:text-2xl font-bold text-primary mb-4">
-        Appointment Calendar
+        {t("appointmentsCalendar")}
       </h2>
       <CustomToolbar
         onNavigate={handleNavigate}
         label={moment(currentDate).format("MMMM YYYY")}
         onView={handleViewChange}
         view={currentView}
+        t={t}
       />
       <Calendar
         localizer={localizer}
@@ -190,33 +190,32 @@ const AppointmentCalendar = ({ appointments }: { appointments: any }) => {
               <DialogTitle>{selectedAppointment.title}</DialogTitle>
               <DialogDescription>
                 <p>
-                  <strong>Start:</strong>{" "}
+                  <strong>{t("start")}:</strong>{" "}
                   {moment(selectedAppointment.start).format(
                     "MMMM Do YYYY, h:mm a"
                   )}
                 </p>
                 <p>
-                  <strong>End:</strong>{" "}
+                  <strong>{t("end")}:</strong>{" "}
                   {moment(selectedAppointment.end).format(
                     "MMMM Do YYYY, h:mm a"
                   )}
                 </p>
                 <p>
-                  <strong>Description:</strong>{" "}
-                  {selectedAppointment.description ||
-                    "No description provided."}
+                  <strong>{t("description")}:</strong>{" "}
+                  {selectedAppointment.description || t("noDescription")}
                 </p>
               </DialogDescription>
             </DialogHeader>
-            <DialogFooter>
+            <DialogFooter className="rtl:space-x-reverse">
               <Link href={`/appointments/${selectedAppointment._id}`}>
-                <Button>Start Meeting</Button>
+                <Button>{t("startMeeting")}</Button>
               </Link>
               <Button
                 variant="outline"
                 onClick={() => setSelectedAppointment(null)}
               >
-                Close
+                {t("close")}
               </Button>
             </DialogFooter>
           </DialogContent>

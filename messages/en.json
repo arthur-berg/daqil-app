@@ -122,6 +122,25 @@
     "blockTimesFor": "Block Times for",
     "overview": "Overview"
   },
+  "LoadingPages": {
+    "loading": "Loading...",
+    "loadingAppointments": "Loading appointments...",
+    "loadingVideoSession": "Loading video session... Please wait"
+  },
+  "AppointmentCalendar": {
+    "appointmentsCalendar": "Appointment Calendar",
+    "start": "Start",
+    "end": "End",
+    "description": "Description",
+    "startMeeting": "Start Meeting",
+    "close": "Close",
+    "back": "Back",
+    "today": "Today",
+    "next": "Next",
+    "week": "Week",
+    "month": "Month",
+    "noDescription": "No description provided."
+  },
   "ErrorMessages": {
     "invalidFields": "Invalid fields!",
     "invalidCredentials": "Invalid credentials!",
