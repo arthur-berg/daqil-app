@@ -20,15 +20,15 @@ const LanguageSwitcher = ({ isOpen }: { isOpen?: boolean }) => {
   return (
     <Button
       variant="ghost"
-      className="w-full justify-start h-10 mb-1"
+      className="w-full justify-end md:justify-start h-10  mb-1"
       onClick={() => handleLocaleChange(selectedLocale === "en" ? "ar" : "en")}
     >
       <span className={cn(isOpen === false ? "" : "mr-4")}>
         <GlobeIcon className="h-4 w-4" />
       </span>
-      <p
+      <div
         className={cn(
-          "max-w-[200px] truncate",
+          "max-w-[200px] truncate text-xs",
           isOpen === false
             ? "-translate-x-96 opacity-0"
             : "translate-x-0 opacity-100"
@@ -45,7 +45,7 @@ const LanguageSwitcher = ({ isOpen }: { isOpen?: boolean }) => {
             <div>التبديل إلى اللغة الإنجليزية</div>
           </>
         )}
-      </p>
+      </div>
     </Button>
   );
 };

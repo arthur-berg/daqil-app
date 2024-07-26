@@ -35,8 +35,13 @@ function SidebarToggle({ isOpen, setIsOpen }: SidebarToggleProps) {
   );
 }
 
-export function Sidebar() {
-  const [isOpen, setIsOpen] = useState(true);
+export function Sidebar({
+  setIsOpen,
+  isOpen,
+}: {
+  setIsOpen: any;
+  isOpen: boolean;
+}) {
   const sidebarMenuRef = useRef<any>();
 
   return (
@@ -64,7 +69,7 @@ export function Sidebar() {
         className={cn(
           "fixed bg-secondary top-0 left-0 z-20 h-screen transition-transform ease-in-out duration-300",
           isOpen
-            ? "translate-x-0 w-52 md:w-72"
+            ? "translate-x-0 w-52 md:w-64"
             : "-translate-x-full lg:w-[90px] lg:translate-x-0"
         )}
       >

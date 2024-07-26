@@ -4,6 +4,7 @@ import { Navbar } from "@/components/navbar";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { Sidebar } from "@/components/sidebar/sidebar";
+import MainLayoutWrapper from "@/components/main-layout-wrapper";
 
 export default async function ProtectedLayout({
   children,
@@ -16,9 +17,10 @@ export default async function ProtectedLayout({
     <SessionProvider session={session}>
       <NextIntlClientProvider messages={messages}>
         {/* <Navbar /> */}
-        <Sidebar />
+        {/*  <Sidebar /> */}
+
+        <MainLayoutWrapper>{children}</MainLayoutWrapper>
       </NextIntlClientProvider>
-      <div className="container py-6 h-[calc(100%-72px)]">{children}</div>
     </SessionProvider>
   );
 }
