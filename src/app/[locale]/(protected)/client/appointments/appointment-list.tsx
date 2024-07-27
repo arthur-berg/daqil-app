@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import {
   format,
   isToday,
@@ -27,10 +27,16 @@ import {
 } from "@/components/ui/select";
 import { FaCheck, FaTimes, FaClock, FaQuestion } from "react-icons/fa";
 import { useTranslations } from "next-intl";
+import { useToast } from "@/components/ui/use-toast";
+import CancelAppointmentForm from "./cancel-appointment-form"; // Import your client CancelAppointmentForm
+import { BeatLoader } from "react-spinners";
 
 const AppointmentList = ({ appointments }: { appointments: any }) => {
-  const t = useTranslations("AppointmentList");
   const [filter, setFilter] = useState("all");
+  const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
+  const [selectedAppointment, setSelectedAppointment] = useState<any>(null);
+  const [isPending, startTransition] = useTransition();
+  const t = useTranslations("AppointmentList");
 
   const filteredAppointments =
     filter === "all"
@@ -158,6 +164,10 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
                                   isPast(new Date(appointment.startDate))
                                     ? "opacity-50"
                                     : ""
+                                } ${
+                                  appointment.status === "canceled"
+                                    ? "opacity-50"
+                                    : ""
                                 }`}
                                 key={appointment._id.toString()}
                                 value={appointment._id.toString()}
@@ -177,10 +187,7 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
                                   </span>
                                 </AccordionTrigger>
                                 <AccordionContent className="p-4 border-t border-gray-200">
-                                  <div>
-                                    <p className="text-gray-600 mb-4">
-                                      {appointment.description}
-                                    </p>
+                                  <div className="flex justify-between items-start">
                                     <div className="text-sm text-gray-500 space-y-1">
                                       <p>
                                         <strong>{t("start")}: </strong>{" "}
@@ -225,23 +232,39 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
                                         {appointment.paid ? "Yes" : "No"}
                                       </p>
                                     </div>
-                                    <div className="mt-4">
-                                      <h4 className="text-md font-semibold">
-                                        {t("host")}:
-                                      </h4>
-                                      <p className="text-sm text-gray-500">
-                                        {appointment.hostUserId.firstName}{" "}
-                                        {appointment.hostUserId.lastName} (
-                                        {appointment.hostUserId.email})
-                                      </p>
-                                    </div>
-                                    <div className="mt-6 flex justify-center">
-                                      <Link
-                                        href={`/appointments/${appointment._id}`}
+                                    {(appointment.status === "pending" ||
+                                      appointment.status === "confirmed") && (
+                                      <Button
+                                        disabled={isPending}
+                                        variant="secondary"
+                                        onClick={() => {
+                                          setSelectedAppointment(appointment);
+                                          setIsCancelDialogOpen(true);
+                                        }}
                                       >
-                                        <Button>{t("joinMeeting")}</Button>
-                                      </Link>
-                                    </div>
+                                        {t("cancelAppointment")}
+                                      </Button>
+                                    )}
+                                  </div>
+                                  <div className="mt-4">
+                                    <h4 className="text-md font-semibold">
+                                      {t("host")}:
+                                    </h4>
+                                    <p className="text-sm text-gray-500">
+                                      {appointment.hostUserId.firstName}{" "}
+                                      {appointment.hostUserId.lastName} (
+                                      {appointment.hostUserId.email})
+                                    </p>
+                                  </div>
+                                  <div className="mt-6 flex justify-center">
+                                    {appointment.status === "confirmed" &&
+                                      !isPending && (
+                                        <Link
+                                          href={`/appointments/${appointment._id}`}
+                                        >
+                                          <Button>{t("joinMeeting")}</Button>
+                                        </Link>
+                                      )}
                                   </div>
                                 </AccordionContent>
                               </AccordionItem>
@@ -258,6 +281,23 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
           </div>
         </div>
       </CardContent>
+
+      {selectedAppointment && (
+        <CancelAppointmentForm
+          selectedAppointment={selectedAppointment}
+          isPending={isPending}
+          startTransition={startTransition}
+          isCancelDialogOpen={isCancelDialogOpen}
+          setIsCancelDialogOpen={setIsCancelDialogOpen}
+        />
+      )}
+
+      {/* Loader Overlay */}
+      {isPending && (
+        <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center z-50">
+          <BeatLoader color="#ffffff" />
+        </div>
+      )}
     </Card>
   );
 };

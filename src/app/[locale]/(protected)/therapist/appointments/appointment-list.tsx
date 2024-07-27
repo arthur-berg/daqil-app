@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import {
   format,
   isToday,
@@ -27,9 +27,15 @@ import {
 } from "@/components/ui/select";
 import { FaCheck, FaTimes, FaClock, FaQuestion } from "react-icons/fa";
 import { useTranslations } from "next-intl";
+import BeatLoader from "react-spinners/BeatLoader";
+import CancelAppontmentForm from "./cancel-appointment-form";
 
 const AppointmentList = ({ appointments }: { appointments: any }) => {
   const [filter, setFilter] = useState("all");
+  const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
+  const [selectedAppointment, setSelectedAppointment] = useState<any>(null);
+  const [isPending, startTransition] = useTransition();
+  const [cancelReason, setCancelReason] = useState<string>("");
   const t = useTranslations("AppointmentList");
 
   const filteredAppointments =
@@ -158,6 +164,10 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
                                   isPast(new Date(appointment.startDate))
                                     ? "opacity-50"
                                     : ""
+                                } ${
+                                  appointment.status === "canceled"
+                                    ? "opacity-50"
+                                    : ""
                                 }`}
                                 key={appointment._id.toString()}
                                 value={appointment._id.toString()}
@@ -190,49 +200,66 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
                                     <p className="text-gray-600 mb-4">
                                       {appointment.description}
                                     </p>
-                                    <div className="text-sm text-gray-500 space-y-1">
-                                      <p>
-                                        <strong>{t("start")}: </strong>{" "}
-                                        {format(
-                                          new Date(appointment.startDate),
-                                          "Pp"
-                                        )}
-                                      </p>
-                                      <p>
-                                        <strong>{t("duration")}:</strong>{" "}
-                                        {appointment.durationInMinutes}{" "}
-                                        {t("minutes")}
-                                      </p>
-                                      <p>
-                                        <strong>{t("status")}:</strong>{" "}
-                                        {appointment.status}
-                                      </p>
-                                      {appointment.status === "canceled" && (
-                                        <>
-                                          {appointment.cancellationReason ===
-                                          "custom" ? (
-                                            <p>
-                                              <strong>
-                                                {t("cancellationReason")}:
-                                              </strong>{" "}
-                                              {
-                                                appointment.customCancellationReason
-                                              }
-                                            </p>
-                                          ) : (
-                                            <p>
-                                              <strong>
-                                                {t("cancellationReason")}:
-                                              </strong>{" "}
-                                              {appointment.cancellationReason}
-                                            </p>
+                                    <div className="flex justify-between">
+                                      <div className="text-sm text-gray-500 space-y-1">
+                                        <p>
+                                          <strong>{t("start")}: </strong>
+                                          {format(
+                                            new Date(appointment.startDate),
+                                            "Pp"
                                           )}
-                                        </>
+                                        </p>
+                                        <p>
+                                          <strong>{t("duration")}:</strong>{" "}
+                                          {appointment.durationInMinutes}{" "}
+                                          {t("minutes")}
+                                        </p>
+                                        <p>
+                                          <strong>{t("status")}:</strong>{" "}
+                                          {appointment.status}
+                                        </p>
+                                        {appointment.status === "canceled" && (
+                                          <>
+                                            {appointment.cancellationReason ===
+                                            "custom" ? (
+                                              <p>
+                                                <strong>
+                                                  {t("cancellationReason")}:
+                                                </strong>{" "}
+                                                {
+                                                  appointment.customCancellationReason
+                                                }
+                                              </p>
+                                            ) : (
+                                              <p>
+                                                <strong>
+                                                  {t("cancellationReason")}:
+                                                </strong>{" "}
+                                                {appointment.cancellationReason}
+                                              </p>
+                                            )}
+                                          </>
+                                        )}
+                                        <p>
+                                          <strong>{t("paid")}:</strong>{" "}
+                                          {appointment.paid
+                                            ? t("yes")
+                                            : t("no")}
+                                        </p>
+                                      </div>
+                                      {(appointment.status === "pending" ||
+                                        appointment.status === "confirmed") && (
+                                        <Button
+                                          disabled={isPending}
+                                          variant="secondary"
+                                          onClick={() => {
+                                            setSelectedAppointment(appointment);
+                                            setIsCancelDialogOpen(true);
+                                          }}
+                                        >
+                                          {t("cancelAppointment")}
+                                        </Button>
                                       )}
-                                      <p>
-                                        <strong>{t("paid")}:</strong>{" "}
-                                        {appointment.paid ? t("yes") : t("no")}
-                                      </p>
                                     </div>
                                     <div className="mt-4">
                                       <h4 className="text-md font-semibold">
@@ -251,11 +278,16 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
                                       </ul>
                                     </div>
                                     <div className="mt-6 flex justify-center">
-                                      <Link
-                                        href={`/appointments/${appointment._id}`}
-                                      >
-                                        <Button>{t("startMeeting")}</Button>
-                                      </Link>
+                                      {appointment.status === "confirmed" &&
+                                        !isPending && (
+                                          <Button disabled={isPending}>
+                                            <Link
+                                              href={`/appointments/${appointment._id}`}
+                                            >
+                                              {t("startMeeting")}
+                                            </Link>
+                                          </Button>
+                                        )}
                                     </div>
                                   </div>
                                 </AccordionContent>
@@ -273,6 +305,23 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
           </div>
         </div>
       </CardContent>
+
+      {selectedAppointment && (
+        <CancelAppontmentForm
+          selectedAppointment={selectedAppointment}
+          isPending={isPending}
+          startTransition={startTransition}
+          isCancelDialogOpen={isCancelDialogOpen}
+          setIsCancelDialogOpen={setIsCancelDialogOpen}
+        />
+      )}
+
+      {/* Loader Overlay */}
+      {isPending && (
+        <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center z-50">
+          <BeatLoader color="#ffffff" />
+        </div>
+      )}
     </Card>
   );
 };

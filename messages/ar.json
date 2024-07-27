@@ -61,7 +61,14 @@
     "minutes": "دقائق",
     "participants": "المشاركين",
     "listView": "عرض القائمة",
-    "calendarView": "عرض التقويم"
+    "calendarView": "عرض التقويم",
+    "cancelMeeting": "إلغاء الاجتماع",
+    "noDescription": "لم يتم تقديم وصف",
+    "cancelAppointment": "إلغاء الموعد",
+    "goBack": "العودة",
+    "areYouSure": "هل أنت متأكد أنك تريد إلغاء؟",
+    "therapist": "معالج",
+    "enterReason": "أدخل السبب"
   },
   "SettingsPage": {
     "firstNameLabel": "الاسم الأول",
@@ -140,9 +147,9 @@
     "week": "الأسبوع",
     "month": "الشهر",
     "noDescription": "لا يوجد وصف.",
-      "am": "صباحًا",
-  "pm": "مساءً",
-"client": "عميل"
+    "am": "صباحًا",
+    "pm": "مساءً",
+    "client": "عميل"
   },
   "InviteTherapistForm": {
     "inviteTherapists": "دعوة المعالجين",
@@ -172,7 +179,11 @@
     "unauthorized": "غير مصرح",
     "emailAlreadyInUse": "البريد الإلكتروني مستخدم بالفعل!",
     "incorrectPassword": "كلمة المرور غير صحيحة!",
-    "currentPasswordIsRequired": "كلمة المرور الحالية مطلوبة!"
+    "currentPasswordIsRequired": "كلمة المرور الحالية مطلوبة!",
+    "notAuthorized": "غير مفوض!",
+    "appointmentNotExist": "الموعد غير موجود",
+    "appointmentAlreadyCanceled": "الموعد تم إلغاؤه بالفعل",
+"appointmentAlreadyCompleted": "الموعد قد تم اكتماله بالفعل"
   },
   "SuccessMessages": {
     "activateLinkSent": "تم إرسال رابط لتفعيل حسابك إلى البريد الإلكتروني المقدم",
@@ -188,7 +199,8 @@
     "linkToActivate": "تم إرسال رابط لتفعيل حسابك إلى البريد الإلكتروني المقدم",
     "resetEmailSent": "تم إرسال بريد إعادة التعيين!",
     "verificationEmailSent": "تم إرسال بريد التحقق!",
-    "accountSuccessfullySetup": "تم إعداد الحساب بنجاح"
+    "accountSuccessfullySetup": "تم إعداد الحساب بنجاح",
+    "appointmentCancelled": "تم إلغاء الموعد بنجاح"
   },
   "AppointmentAction": {
     "therapySessionWith": "جلسة علاجية مع"

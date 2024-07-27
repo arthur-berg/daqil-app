@@ -1,6 +1,11 @@
 import { UserRole } from "@/generalTypes";
 import * as z from "zod";
 
+export const CancelAppointmentSchema = z.object({
+  appointmentId: z.string(),
+  reason: z.string(),
+});
+
 export const SettingsSchema = z
   .object({
     firstName: z.optional(z.string()),

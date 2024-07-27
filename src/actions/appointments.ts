@@ -1,8 +1,8 @@
 "use server";
 import * as z from "zod";
-import { requireAuth } from "@/lib/auth";
+import { getCurrentRole, requireAuth } from "@/lib/auth";
 import Appointment from "@/models/Appointment";
-import { AppointmentSchema } from "@/schemas";
+import { AppointmentSchema, CancelAppointmentSchema } from "@/schemas";
 import { getUserById } from "@/data/user";
 import mongoose, { Types } from "mongoose";
 import { UserRole } from "@/generalTypes";
@@ -30,6 +30,80 @@ const createAppointment = async (appointmentData: any, session: any) => {
   );
 
   return appointment;
+};
+
+export const cancelAppointment = async (
+  values: z.infer<typeof CancelAppointmentSchema>
+) => {
+  const [SuccessMessages, ErrorMessages] = await Promise.all([
+    getTranslations("SuccessMessages"),
+    getTranslations("ErrorMessages"),
+  ]);
+
+  const validatedFields = CancelAppointmentSchema.safeParse(values);
+
+  if (!validatedFields.success) {
+    return { error: ErrorMessages("invalidFields") };
+  }
+
+  const { appointmentId, reason } = validatedFields.data;
+
+  try {
+    const user = await requireAuth([
+      UserRole.THERAPIST,
+      UserRole.ADMIN,
+      UserRole.CLIENT,
+    ]);
+
+    const { isTherapist, isClient } = await getCurrentRole();
+
+    const appointment = await Appointment.findById(appointmentId).populate("");
+
+    if (!appointment) {
+      return { error: ErrorMessages("appointmentNotExist") };
+    }
+
+    if (appointment.status === "canceled") {
+      return { error: ErrorMessages("appointmentAlreadyCanceled") };
+    }
+
+    if (appointment.status === "completed") {
+      return { error: ErrorMessages("appointmentAlreadyCompleted") };
+    }
+
+    if (isTherapist) {
+      const isAuthorized =
+        user.id === appointment.hostUserId.toString() ||
+        user.role === UserRole.ADMIN;
+
+      if (!isAuthorized) {
+        return { error: ErrorMessages("notAuthorized") };
+      }
+    }
+
+    if (isClient) {
+      const participant = appointment.participants.some(
+        (p: any) => p.userId.toString() === user.id
+      );
+
+      if (!participant) {
+        return { error: ErrorMessages("notAuthorized") };
+      }
+    }
+
+    await Appointment.findByIdAndUpdate(appointmentId, {
+      status: "canceled",
+      cancellationReason: "custom",
+      customCancellationReason: reason,
+    });
+
+    revalidatePath("/therapist/appointments");
+
+    return { success: SuccessMessages("appointmentCancelled") };
+  } catch (error) {
+    console.error("Error cancelling appointment:", error);
+    throw error;
+  }
 };
 
 export const bookAppointment = async (

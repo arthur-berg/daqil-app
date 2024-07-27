@@ -43,7 +43,14 @@
     "minutes": "minutes",
     "participants": "Participants",
     "listView": "List view",
-    "calendarView": "Calendar view"
+    "calendarView": "Calendar view",
+    "cancelAppointment": "Cancel appointment",
+    "noDescription": "No description provided",
+    "title": "Title",
+    "goBack": "Go back",
+    "areYouSure": "Are you sure you want to cancel?",
+    "therapist": "Therapist",
+    "enterReason": "Enter reason"
   },
   "RegisterPage": {
     "emailLabel": "Email",
@@ -172,7 +179,11 @@
     "unauthorized": "Unauthorized",
     "emailAlreadyInUse": "Email already in use!",
     "incorrectPassword": "Incorrect password!",
-    "currentPasswordIsRequired": "Current password is required!"
+    "currentPasswordIsRequired": "Current password is required!",
+    "notAuthorized": "Not authorized!",
+    "appointmentNotExist": "Appointment does not exist",
+    "appointmentAlreadyCanceled": "Appointment already canceled",
+    "appointmentAlreadyCompleted": "Appointment already completed"
   },
   "SuccessMessages": {
     "activateLinkSent": "A link to activate your account has been emailed to the address provided",
@@ -188,7 +199,8 @@
     "linkToActivate": "A link to activate your account has been emailed to the address provided",
     "resetEmailSent": "Reset email sent!",
     "verificationEmailSent": "Verification email sent!",
-    "accountSuccessfullySetup": "Account succesfully setup"
+    "accountSuccessfullySetup": "Account succesfully setup",
+    "appointmentCancelled": "Appointment successfully cancelled"
   },
   "AppointmentAction": {
     "therapySessionWith": "Therapy session with"
