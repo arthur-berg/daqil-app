@@ -37,6 +37,6 @@ export type AvailableTimes = {
     };
   };
   blockedOutTimes: DateTimes[];
-  specificAvailableTimes: DateTimes[];
+  nonRecurringAvailableTimes: DateTimes[];
   recurringAvailableTimes: DayTimes[];
 };

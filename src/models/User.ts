@@ -61,7 +61,7 @@ const availableTimesSchema = new Schema({
     },
   },
   blockedOutTimes: [dateTimesSchema],
-  specificAvailableTimes: [dateTimesSchema],
+  nonRecurringAvailableTimes: [dateTimesSchema],
   recurringAvailableTimes: [dayTimesSchema],
 });
 

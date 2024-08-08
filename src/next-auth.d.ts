@@ -28,7 +28,7 @@ export type ExtendedUser = DefaultSession["user"] & {
         endDate: Date;
       }[];
     }[];
-    specificAvailableTimes: {
+    nonRecurringAvailableTimes: {
       date: Date;
       timeRanges: {
         startDate: Date;

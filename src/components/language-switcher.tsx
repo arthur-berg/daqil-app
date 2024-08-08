@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { useRouter, usePathname } from "@/navigation";
 import { useState } from "react";

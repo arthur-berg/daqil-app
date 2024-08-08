@@ -18,7 +18,7 @@ type BlockedTime = {
   endDate: string;
 };
 
-type SpecificTimeRange = {
+type NonRecurringTimeRange = {
   startDate: Date;
   endDate: Date;
 };
@@ -29,7 +29,10 @@ type AvailableTimes = {
     fullDayRange: { startTime: string; endTime: string };
   };
   blockedOutTimes: BlockedTime[];
-  specificAvailableTimes: { date: string; timeRanges: SpecificTimeRange[] }[];
+  nonRecurringAvailableTimes: {
+    date: string;
+    timeRanges: NonRecurringTimeRange[];
+  }[];
   recurringAvailableTimes: { day: string; timeRanges: TimeRange[] }[];
 };
 
@@ -50,7 +53,7 @@ export const getTherapistAvailableTimeSlots = (
   const {
     settings,
     blockedOutTimes,
-    specificAvailableTimes,
+    nonRecurringAvailableTimes,
     recurringAvailableTimes,
   } = availableTimes;
   const { interval } = settings;
@@ -70,16 +73,16 @@ export const getTherapistAvailableTimeSlots = (
     return blocked ? [blocked] : [];
   };
 
-  const getSpecificAvailableTimesForDate = (
+  const getNonRecurringAvailableTimesForDate = (
     date: Date
-  ): SpecificTimeRange[] => {
-    const specific = specificAvailableTimes.find((s) =>
+  ): NonRecurringTimeRange[] => {
+    const nonRecurring = nonRecurringAvailableTimes.find((s) =>
       isSameDay(
         new Date(s.date).setHours(0, 0, 0, 0),
         date.setHours(0, 0, 0, 0)
       )
     );
-    return specific ? specific.timeRanges : [];
+    return nonRecurring ? nonRecurring.timeRanges : [];
   };
 
   const generateTimeIntervals = (
@@ -117,14 +120,17 @@ export const getTherapistAvailableTimeSlots = (
   const dayOfWeek = format(selectedDate, "EEEE").toLowerCase();
   let timeRanges = getTimeRangesForDay(dayOfWeek);
 
-  const specificTimeRanges = getSpecificAvailableTimesForDate(selectedDate);
+  const nonRecurringTimeRanges =
+    getNonRecurringAvailableTimesForDate(selectedDate);
 
-  const formattedSpecificTimeRanges = specificTimeRanges.map((range) => ({
-    startTime: format(new Date(range.startDate), "HH:mm"),
-    endTime: format(new Date(range.endDate), "HH:mm"),
-  }));
+  const formattedNonRecurringTimeRanges = nonRecurringTimeRanges.map(
+    (range) => ({
+      startTime: format(new Date(range.startDate), "HH:mm"),
+      endTime: format(new Date(range.endDate), "HH:mm"),
+    })
+  );
 
-  timeRanges = [...timeRanges, ...formattedSpecificTimeRanges].sort(
+  timeRanges = [...timeRanges, ...formattedNonRecurringTimeRanges].sort(
     (a, b) =>
       new Date(`1970-01-01T${a.startTime}:00Z`).getTime() -
       new Date(`1970-01-01T${b.startTime}:00Z`).getTime()

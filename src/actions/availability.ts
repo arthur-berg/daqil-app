@@ -7,7 +7,7 @@ import User from "@/models/User";
 import {
   RecurringAvailabilitySchema,
   RecurringAvailabilitySettingsSchemaBE,
-  SpecificAvailabilitySchemaBE,
+  NonRecurringAvailabilitySchemaBE,
   BlockAvailabilitySchemaBE,
 } from "@/schemas";
 import { getTranslations } from "next-intl/server";
@@ -51,13 +51,13 @@ export const saveBlockedOutTimes = async (
 
     return { success: SuccessMessages("blockedTimesSaved") };
   } catch (error) {
-    console.error("Error saving specific available times", error);
-    return { error: ErrorMessages("failedToSaveSpecificTimes") };
+    console.error("Error saving non-recurring available times", error);
+    return { error: ErrorMessages("failedToSaveNonRecurringTimes") };
   }
 };
 
-export const saveSpecificAvailableTimes = async (
-  values: z.infer<typeof SpecificAvailabilitySchemaBE>
+export const saveNonRecurringAvailableTimes = async (
+  values: z.infer<typeof NonRecurringAvailabilitySchemaBE>
 ) => {
   const [SuccessMessages, ErrorMessages] = await Promise.all([
     getTranslations("SuccessMessages"),
@@ -70,7 +70,7 @@ export const saveSpecificAvailableTimes = async (
       UserRole.ADMIN,
     ])) as any;
 
-    const validatedFields = SpecificAvailabilitySchemaBE.safeParse(values);
+    const validatedFields = NonRecurringAvailabilitySchemaBE.safeParse(values);
 
     if (!validatedFields.success) {
       return { error: ErrorMessages("invalidFields") };
@@ -79,23 +79,23 @@ export const saveSpecificAvailableTimes = async (
     const data = validatedFields.data;
 
     const filteredAvailableTimes =
-      user.availableTimes.specificAvailableTimes?.filter(
+      user.availableTimes.nonRecurringAvailableTimes?.filter(
         (availableTime: any) =>
           !isSameDay(new Date(availableTime.date), new Date(data.date))
       ) ?? [];
 
-    const mergedSpecificTimes = [...filteredAvailableTimes, data];
+    const mergedNonRecurringTimes = [...filteredAvailableTimes, data];
 
     await User.findByIdAndUpdate(user.id, {
-      "availableTimes.specificAvailableTimes": mergedSpecificTimes,
+      "availableTimes.nonRecurringAvailableTimes": mergedNonRecurringTimes,
     });
 
     revalidatePath("/therapist/availability");
 
-    return { success: SuccessMessages("specifcTimesSaves") };
+    return { success: SuccessMessages("nonRecurringTimesSaves") };
   } catch (error) {
-    console.error("Error saving specific available times", error);
-    return { error: ErrorMessages("failedToSaveSpecificTimes") };
+    console.error("Error saving non-recurring available times", error);
+    return { error: ErrorMessages("failedToSaveNonRecurringTimes") };
   }
 };
 

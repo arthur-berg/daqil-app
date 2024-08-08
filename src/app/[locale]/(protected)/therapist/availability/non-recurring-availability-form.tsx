@@ -27,8 +27,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useToast } from "@/components/ui/use-toast";
-import { SpecificAvailabilitySchemaFE } from "@/schemas";
-import { saveSpecificAvailableTimes } from "@/actions/availability";
+import { NonRecurringAvailabilitySchemaFE } from "@/schemas";
+import { saveNonRecurringAvailableTimes } from "@/actions/availability";
 import { FaCalendarAlt } from "react-icons/fa";
 import { TimeRange } from "@/generalTypes";
 import { Separator } from "@/components/ui/separator";
@@ -60,10 +60,10 @@ const generateTimeIntervals = (intervalMinutes = 15) => {
 
 const timeOptions = generateTimeIntervals(15);
 
-const SpecificAvailabilityForm = ({
-  specificAvailableTimes,
+const NonRecurringAvailabilityForm = ({
+  nonRecurringAvailableTimes,
 }: {
-  specificAvailableTimes: any;
+  nonRecurringAvailableTimes: any;
 }) => {
   const [isPending, startTransition] = useTransition();
   const [date, setDate] = useState<any>();
@@ -71,7 +71,7 @@ const SpecificAvailabilityForm = ({
   const { toast } = useToast();
   const t = useTranslations("AvailabilityPage");
   const ErrorMessages = useTranslations("ErrorMessages");
-  const form = useForm<z.infer<typeof SpecificAvailabilitySchemaFE>>({
+  const form = useForm<z.infer<typeof NonRecurringAvailabilitySchemaFE>>({
     defaultValues: {
       date: new Date(),
       timeRanges: [{ startDate: "", endDate: "" }],
@@ -100,12 +100,12 @@ const SpecificAvailabilityForm = ({
     };
 
     startTransition(async () => {
-      const data = await saveSpecificAvailableTimes(formattedData);
+      const data = await saveNonRecurringAvailableTimes(formattedData);
       setShowCalendar(false);
       if (data?.success) {
         toast({
           variant: "success",
-          title: t("specificTimesSaved"),
+          title: t("nonRecurringTimesSaved"),
         });
         form.reset();
         setDate(null);
@@ -123,11 +123,12 @@ const SpecificAvailabilityForm = ({
     <div>
       <div className="mb-8">
         <h2 className="text-xl md:text-2xl font-bold text-green-600 flex items-center mb-4">
-          <FaCalendarAlt className="mr-2" /> {t("overviewSpecificTimes")}
+          <FaCalendarAlt className="mr-2" /> {t("overviewNonRecurringTimes")}
         </h2>
         <div className="space-y-4 md:flex md:space-y-0 md:space-x-4">
-          {!!specificAvailableTimes && specificAvailableTimes.length > 0 ? (
-            specificAvailableTimes?.map(
+          {!!nonRecurringAvailableTimes &&
+          nonRecurringAvailableTimes.length > 0 ? (
+            nonRecurringAvailableTimes?.map(
               ({ date, timeRanges }: any, index: number) => (
                 <div
                   key={date?.toString()}
@@ -348,4 +349,4 @@ const SpecificAvailabilityForm = ({
   );
 };
 
-export default SpecificAvailabilityForm;
+export default NonRecurringAvailabilityForm;

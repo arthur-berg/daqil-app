@@ -4,7 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useTranslations } from "next-intl";
 
 import RecurringAvailabilityManager from "./recurring-availability-manager";
-import SpecificAvailabilityForm from "./specific-availability-form";
+import NonRecurringAvailabilityForm from "./non-recurring-availability-form";
 import BlockAvailabilityForm from "./block-availability-form";
 import Overview from "./overview";
 
@@ -23,8 +23,8 @@ const AvailabilityTabs = ({
         <TabsTrigger value="default-availability">
           {t("recurringAvailableTimes")}
         </TabsTrigger>
-        <TabsTrigger value="specific-times">
-          {t("specificAvailableTimes")}
+        <TabsTrigger value="non-recurring-times">
+          {t("nonRecurringAvailableTimes")}
         </TabsTrigger>
         <TabsTrigger value="block-dates">{t("blockedOutTimes")}</TabsTrigger>
       </TabsList>
@@ -40,9 +40,11 @@ const AvailabilityTabs = ({
             recurringAvailableTimes={availableTimes?.recurringAvailableTimes}
           />
         </TabsContent>
-        <TabsContent value="specific-times">
-          <SpecificAvailabilityForm
-            specificAvailableTimes={availableTimes?.specificAvailableTimes}
+        <TabsContent value="non-recurring-times">
+          <NonRecurringAvailabilityForm
+            nonRecurringAvailableTimes={
+              availableTimes?.nonRecurringAvailableTimes
+            }
           />
         </TabsContent>
         <TabsContent value="block-dates">

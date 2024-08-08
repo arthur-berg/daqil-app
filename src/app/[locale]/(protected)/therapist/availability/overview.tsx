@@ -11,8 +11,11 @@ import { useTranslations } from "next-intl";
 import { FaClock, FaCalendarAlt, FaBan } from "react-icons/fa";
 
 const Overview = ({ availableTimes }: { availableTimes: AvailableTimes }) => {
-  const { recurringAvailableTimes, specificAvailableTimes, blockedOutTimes } =
-    availableTimes;
+  const {
+    recurringAvailableTimes,
+    nonRecurringAvailableTimes,
+    blockedOutTimes,
+  } = availableTimes;
 
   const t = useTranslations("AvailabilityPage");
 
@@ -58,13 +61,15 @@ const Overview = ({ availableTimes }: { availableTimes: AvailableTimes }) => {
 
       <div>
         <h2 className="text-xl md:text-2xl font-bold text-green-600 flex items-center mb-4">
-          <FaCalendarAlt className="mr-2" /> {t("specificAvailableTimes")}
+          <FaCalendarAlt className="mr-2" /> {t("nonRecurringAvailableTimes")}
         </h2>
         <div className="space-y-4 md:flex md:space-y-0 md:space-x-4">
-          {specificAvailableTimes.length === 0 ? (
-            <p className="text-green-800">{t("noSpecificAvailableTimes")}</p>
+          {nonRecurringAvailableTimes.length === 0 ? (
+            <p className="text-green-800">
+              {t("noNonRecurringAvailableTimes")}
+            </p>
           ) : (
-            specificAvailableTimes.map((dateTime: DateTimes) => (
+            nonRecurringAvailableTimes.map((dateTime: DateTimes) => (
               <div
                 key={dateTime.date?.toString()}
                 className="bg-green-100 shadow-md rounded-lg p-4 flex-1"

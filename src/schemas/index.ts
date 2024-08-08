@@ -85,7 +85,7 @@ export const RecurringAvailabilitySettingsSchemaBE = z.object({
   }),
 });
 
-export const SpecificAvailabilitySchemaFE = z.object({
+export const NonRecurringAvailabilitySchemaFE = z.object({
   date: z.date(),
   timeRanges: z.array(
     z.object({
@@ -99,7 +99,7 @@ export const SpecificAvailabilitySchemaFE = z.object({
   ),
 });
 
-export const SpecificAvailabilitySchemaBE = z.object({
+export const NonRecurringAvailabilitySchemaBE = z.object({
   date: z.date(),
   timeRanges: z.array(
     z.object({
