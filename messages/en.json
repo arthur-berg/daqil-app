@@ -50,7 +50,9 @@
     "goBack": "Go back",
     "areYouSure": "Are you sure you want to cancel?",
     "therapist": "Therapist",
-    "enterReason": "Enter reason"
+    "enterReason": "Enter reason",
+    "joinDisabledMessage": "The meeting will be accessible 20 minutes before it starts.",
+    "refreshMessage": "Refresh the page if you're within the window but still see this message."
   },
   "RegisterPage": {
     "emailLabel": "Email",

@@ -68,7 +68,9 @@
     "goBack": "العودة",
     "areYouSure": "هل أنت متأكد أنك تريد إلغاء؟",
     "therapist": "معالج",
-    "enterReason": "أدخل السبب"
+    "enterReason": "أدخل السبب",
+    "joinDisabledMessage": "سيكون بإمكانك الوصول إلى الاجتماع قبل 20 دقيقة من بدءه.",
+"refreshMessage": "قم بتحديث الصفحة إذا كنت داخل النافذة ولكنك لا تزال ترى هذه الرسالة."
   },
   "SettingsPage": {
     "firstNameLabel": "الاسم الأول",

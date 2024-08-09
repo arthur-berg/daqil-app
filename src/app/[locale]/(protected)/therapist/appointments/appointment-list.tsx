@@ -7,6 +7,7 @@ import {
   isPast,
   isAfter,
   parseISO,
+  differenceInMinutes,
 } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/navigation";
@@ -158,141 +159,190 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
                           className="w-full mb-4"
                         >
                           {groupedByStatus[status][date].map(
-                            (appointment: any) => (
-                              <AccordionItem
-                                className={`bg-white ${
-                                  isPast(new Date(appointment.startDate))
-                                    ? "opacity-50"
-                                    : ""
-                                } ${
-                                  appointment.status === "canceled"
-                                    ? "opacity-50"
-                                    : ""
-                                }`}
-                                key={appointment._id.toString()}
-                                value={appointment._id.toString()}
-                              >
-                                <AccordionTrigger className="flex justify-between p-4 bg-gray-100 rounded">
-                                  <span>
-                                    {format(
-                                      new Date(appointment.startDate),
-                                      "Pp"
-                                    )}{" "}
-                                    - {appointment.title}
-                                  </span>
-                                  <span className="flex items-center gap-2">
-                                    {getStatusIcon(appointment.status)}
-                                    {appointment.participants
-                                      .map(
-                                        ({
-                                          firstName,
-                                          lastName,
-                                        }: {
-                                          firstName: string;
-                                          lastName: string;
-                                        }) => `${firstName} ${lastName}`
-                                      )
-                                      .join(", ")}
-                                  </span>
-                                </AccordionTrigger>
-                                <AccordionContent className="p-4 border-t border-gray-200">
-                                  <div>
-                                    <p className="text-gray-600 mb-4">
-                                      {appointment.description}
-                                    </p>
-                                    <div className="flex justify-between">
-                                      <div className="text-sm text-gray-500 space-y-1">
-                                        <p>
-                                          <strong>{t("start")}: </strong>
-                                          {format(
-                                            new Date(appointment.startDate),
-                                            "Pp"
-                                          )}
-                                        </p>
-                                        <p>
-                                          <strong>{t("duration")}:</strong>{" "}
-                                          {appointment.durationInMinutes}{" "}
-                                          {t("minutes")}
-                                        </p>
-                                        <p>
-                                          <strong>{t("status")}:</strong>{" "}
-                                          {appointment.status}
-                                        </p>
-                                        {appointment.status === "canceled" && (
-                                          <>
-                                            {appointment.cancellationReason ===
-                                            "custom" ? (
-                                              <p>
-                                                <strong>
-                                                  {t("cancellationReason")}:
-                                                </strong>{" "}
-                                                {
-                                                  appointment.customCancellationReason
-                                                }
-                                              </p>
-                                            ) : (
-                                              <p>
-                                                <strong>
-                                                  {t("cancellationReason")}:
-                                                </strong>{" "}
-                                                {appointment.cancellationReason}
-                                              </p>
+                            (appointment: any) => {
+                              const timeUntilStart = differenceInMinutes(
+                                new Date(appointment.startDate),
+                                new Date()
+                              );
+
+                              const hasMeetingEnded =
+                                new Date() > new Date(appointment.endDate);
+
+                              const isJoinEnabled =
+                                timeUntilStart <= 20 &&
+                                timeUntilStart >= 0 &&
+                                !hasMeetingEnded;
+
+                              const disableAccordion =
+                                isPast(new Date(appointment.startDate)) &&
+                                hasMeetingEnded;
+                              return (
+                                <AccordionItem
+                                  className={`bg-white ${
+                                    disableAccordion
+                                      ? "opacity-50"
+                                      : ""
+                                  } ${
+                                    appointment.status === "canceled"
+                                      ? "opacity-50"
+                                      : ""
+                                  }`}
+                                  key={appointment._id.toString()}
+                                  value={appointment._id.toString()}
+                                >
+                                  <AccordionTrigger className="flex justify-between p-4 bg-gray-100 rounded">
+                                    <span>
+                                      {format(
+                                        new Date(appointment.startDate),
+                                        "Pp"
+                                      )}{" "}
+                                      - {appointment.title}
+                                    </span>
+                                    <span className="flex items-center gap-2">
+                                      {getStatusIcon(appointment.status)}
+                                      {appointment.participants
+                                        .map(
+                                          ({
+                                            firstName,
+                                            lastName,
+                                          }: {
+                                            firstName: string;
+                                            lastName: string;
+                                          }) => `${firstName} ${lastName}`
+                                        )
+                                        .join(", ")}
+                                    </span>
+                                  </AccordionTrigger>
+                                  <AccordionContent className="p-4 border-t border-gray-200">
+                                    <div>
+                                      <p className="text-gray-600 mb-4">
+                                        {appointment.description}
+                                      </p>
+                                      <div className="flex justify-between">
+                                        <div className="text-sm text-gray-500 space-y-1">
+                                          <p>
+                                            <strong>{t("start")}: </strong>
+                                            {format(
+                                              new Date(appointment.startDate),
+                                              "Pp"
                                             )}
-                                          </>
-                                        )}
-                                        <p>
-                                          <strong>{t("paid")}:</strong>{" "}
-                                          {appointment.paid
-                                            ? t("yes")
-                                            : t("no")}
-                                        </p>
-                                      </div>
-                                      {(appointment.status === "pending" ||
-                                        appointment.status === "confirmed") && (
-                                        <Button
-                                          disabled={isPending}
-                                          variant="secondary"
-                                          onClick={() => {
-                                            setSelectedAppointment(appointment);
-                                            setIsCancelDialogOpen(true);
-                                          }}
-                                        >
-                                          {t("cancelAppointment")}
-                                        </Button>
-                                      )}
-                                    </div>
-                                    <div className="mt-4">
-                                      <h4 className="text-md font-semibold">
-                                        {t("participants")}:
-                                      </h4>
-                                      <ul className="text-sm text-gray-500 list-disc list-inside">
-                                        {appointment.participants.map(
-                                          (participant: any) => (
-                                            <li key={participant.userId}>
-                                              {participant.firstName}{" "}
-                                              {participant.lastName} (
-                                              {participant.email})
-                                            </li>
-                                          )
-                                        )}
-                                      </ul>
-                                    </div>
-                                    <div className="mt-6 flex justify-center">
-                                      {appointment.status === "confirmed" &&
-                                        !isPending && (
-                                          <Button disabled={isPending}>
-                                            <Link
-                                              href={`/appointments/${appointment._id}`}
-                                            >
-                                              {t("startMeeting")}
-                                            </Link>
+                                          </p>
+                                          <p>
+                                            <strong>{t("duration")}:</strong>{" "}
+                                            {appointment.durationInMinutes}{" "}
+                                            {t("minutes")}
+                                          </p>
+                                          <p>
+                                            <strong>{t("status")}:</strong>{" "}
+                                            {appointment.status}
+                                          </p>
+                                          {appointment.status ===
+                                            "canceled" && (
+                                            <>
+                                              {appointment.cancellationReason ===
+                                              "custom" ? (
+                                                <p>
+                                                  <strong>
+                                                    {t("cancellationReason")}:
+                                                  </strong>{" "}
+                                                  {
+                                                    appointment.customCancellationReason
+                                                  }
+                                                </p>
+                                              ) : (
+                                                <p>
+                                                  <strong>
+                                                    {t("cancellationReason")}:
+                                                  </strong>{" "}
+                                                  {
+                                                    appointment.cancellationReason
+                                                  }
+                                                </p>
+                                              )}
+                                            </>
+                                          )}
+                                          <p>
+                                            <strong>{t("paid")}:</strong>{" "}
+                                            {appointment.paid
+                                              ? t("yes")
+                                              : t("no")}
+                                          </p>
+                                        </div>
+                                        {(appointment.status === "pending" ||
+                                          appointment.status ===
+                                            "confirmed") && (
+                                          <Button
+                                            disabled={isPending}
+                                            variant="secondary"
+                                            onClick={() => {
+                                              setSelectedAppointment(
+                                                appointment
+                                              );
+                                              setIsCancelDialogOpen(true);
+                                            }}
+                                          >
+                                            {t("cancelAppointment")}
                                           </Button>
                                         )}
+                                      </div>
+                                      <div className="mt-4">
+                                        <h4 className="text-md font-semibold">
+                                          {t("participants")}:
+                                        </h4>
+                                        <ul className="text-sm text-gray-500 list-disc list-inside">
+                                          {appointment.participants.map(
+                                            (participant: any) => (
+                                              <li key={participant.userId}>
+                                                {participant.firstName}{" "}
+                                                {participant.lastName} (
+                                                {participant.email})
+                                              </li>
+                                            )
+                                          )}
+                                        </ul>
+                                      </div>
+                                      <div className="mt-6 flex justify-center">
+                                        {appointment.status === "confirmed" &&
+                                          !isPending && (
+                                            <div className="flex flex-col align-items center">
+                                              {isJoinEnabled ? (
+                                                <Link
+                                                  className="text-center"
+                                                  href={`/appointments/${appointment._id}`}
+                                                >
+                                                  <Button
+                                                    disabled={!isJoinEnabled}
+                                                  >
+                                                    {t("startMeeting")}
+                                                  </Button>
+                                                </Link>
+                                              ) : (
+                                                <div className="text-center">
+                                                  <Button
+                                                    disabled={!isJoinEnabled}
+                                                  >
+                                                    {t("startMeeting")}
+                                                  </Button>
+                                                </div>
+                                              )}
+
+                                              {!isJoinEnabled && (
+                                                <p className="text-sm text-gray-500 mt-2 text-center">
+                                                  {t("joinDisabledMessage", {
+                                                    time: 20,
+                                                  })}
+                                                  <br />
+                                                  {t("refreshMessage")}
+                                                </p>
+                                              )}
+                                            </div>
+                                          )}
+                                      </div>
                                     </div>
-                                  </div>
-                                </AccordionContent>
-                              </AccordionItem>
-                            )
+                                  </AccordionContent>
+                                </AccordionItem>
+                              );
+                            }
                           )}
                         </Accordion>
                       </div>
