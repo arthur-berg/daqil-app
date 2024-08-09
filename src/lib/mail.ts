@@ -1,6 +1,11 @@
 import mailchimp from "@mailchimp/mailchimp_transactional";
 import mailchimpMarketing from "@mailchimp/mailchimp_marketing";
 import { UserRole } from "@/generalTypes";
+import {
+  twoFactorTokenTemplate,
+  verificationEmailTemplate,
+  passwordResetEmailTemplate,
+} from "./emailTemplates";
 
 mailchimpMarketing.setConfig({
   apiKey: process.env.MAILCHIMP_MARKETING_KEY,
@@ -9,13 +14,12 @@ mailchimpMarketing.setConfig({
 
 const mailchimpTx = mailchimp(process.env.MAILCHIMP_TRANSACTIONAL_KEY || "");
 
-const domain = process.env.NEXT_PUBLIC_APP_URL;
-
 export const addUserToSubscriberList = async (
   email: string,
   userRole?: UserRole
 ) => {
-  //TODO! SEE WHY THIS FUNCTION IS NOT WORKING ANYMORE
+  // TODO: Fix the function to work correctly
+  // No error on PC computer. Check if it's only the mac? Maybe due to IP?
   try {
     const listId =
       userRole && userRole === UserRole.THERAPIST
@@ -43,7 +47,6 @@ export const addUserToSubscriberList = async (
         return { error: "Failed to add user to the subscriber list" };
       }
     } else {
-      // Log other errors
       console.error("Error in add user to subscriber list", error);
       return { error: "Something went wrong" };
     }
@@ -83,8 +86,8 @@ export const addUserNameToSubscriberProfile = async (
 export const sendTwoFactorTokenEmail = async (email: string, token: string) => {
   const message = {
     from_email: "info@zakina-app.com",
-    subject: "2FA Code",
-    html: `<p>Your 2FA code ${token}</p>`,
+    subject: "Your Two-Factor Authentication Code",
+    html: twoFactorTokenTemplate(token),
     to: [
       {
         email,
@@ -105,21 +108,13 @@ export const sendTwoFactorTokenEmail = async (email: string, token: string) => {
 export const sendVerificationEmail = async (
   email: string,
   token: string,
-  password?: string
+  password?: string,
+  isTherapist?: boolean
 ) => {
-  const encodedToken = encodeURIComponent(token);
-  let confirmLink = `${domain}/auth/new-verification?token=${encodedToken}`;
-
-  const temporaryPasswordMessage = password
-    ? `Here is your temporary password: <strong>${password}</strong><br>`
-    : "";
-
   const message = {
     from_email: "info@zakina-app.com",
-    subject: "Confirm your email",
-    html: `<p>Welcome to Zakina. ${
-      temporaryPasswordMessage && `<p>${temporaryPasswordMessage}</p>`
-    } Click <a href="${confirmLink}">here</a> to confirm email, change password and finish your account setup.</p>`,
+    subject: "Confirm Your Email Address",
+    html: verificationEmailTemplate(token, password, isTherapist),
     to: [
       {
         email,
@@ -138,13 +133,10 @@ export const sendVerificationEmail = async (
 };
 
 export const sendPasswordResetEmail = async (email: string, token: string) => {
-  const encodedToken = encodeURIComponent(token);
-  const resetLink = `${domain}/auth/new-password?token=${encodedToken}`;
-
   const message = {
     from_email: "info@zakina-app.com",
-    subject: "Reset your password",
-    html: `<p>Click <a href="${resetLink}">here</a> to reset your password.</p>`,
+    subject: "Reset Your Password",
+    html: passwordResetEmailTemplate(token),
     to: [
       {
         email,

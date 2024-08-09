@@ -9,27 +9,34 @@ const TherapistsPage = async () => {
 
   return (
     <div className="flex justify-center">
-      <div className="p-4 ">
-        <div className="bg-secondary p-2 rounded-md mb-2">
-          <h1 className="text-2xl font-bold text-center">{t("therapists")}</h1>
+      <div className="p-4 max-w-6xl w-full">
+        <div className="bg-secondary p-4 rounded-md mb-6">
+          <h1 className="text-3xl font-bold text-center text-primary">
+            {t("therapists")}
+          </h1>
         </div>
-        <div className="flex flex-wrap gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {therapists?.map((therapist) => (
-            <div key={therapist.email} className="w-full lg:w-92 px-2 mb-4">
-              <div className="bg-white shadow-md rounded-lg p-6">
-                <div className="font-bold text-lg mb-2">
+            <div
+              key={therapist.email}
+              className="bg-white shadow-lg rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
+            >
+              <div className="p-6">
+                <div className="font-bold text-xl mb-1">
                   {therapist.firstName} {therapist.lastName}
                 </div>
-                <div className="text-gray-700 mb-2">{therapist.email}</div>
+                <div className="text-gray-600 mb-4">{therapist.email}</div>
                 {therapist.workDetails && (
-                  <>
-                    <div className="text-sm text-gray-500">
-                      <div className="mb-2">{therapist.workDetails.title}</div>
-                      <div>{therapist.workDetails.description}</div>
+                  <div className="text-sm text-gray-700 mb-4">
+                    <div className="font-semibold mb-2">
+                      {therapist.workDetails.title}
                     </div>
-                  </>
+                    <div className="leading-relaxed">
+                      {therapist.workDetails.description}
+                    </div>
+                  </div>
                 )}
-                <div className="mt-2 flex justify-center">
+                <div className="mt-4 flex justify-center">
                   <Link href={`/therapists/${therapist._id}`}>
                     <Button>{t("bookSession")}</Button>
                   </Link>

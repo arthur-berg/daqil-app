@@ -60,13 +60,22 @@ export const inviteTherapist = async (
 
     const verificationToken = await generateVerificationToken(email, 168); // 7 days
 
+    const isTherapist = true;
+
     await sendVerificationEmail(
       verificationToken.email,
       verificationToken.token,
-      password
+      password,
+      isTherapist
     );
 
-    await addUserToSubscriberList(verificationToken.email, UserRole.THERAPIST);
+    const response = await addUserToSubscriberList(verificationToken.email);
+    if (response?.error) {
+      console.error(response.error);
+    }
+    if (response?.success) {
+      console.log(response.success);
+    }
 
     return { success: SuccessMessages("therapistInvited") };
   } catch (error) {

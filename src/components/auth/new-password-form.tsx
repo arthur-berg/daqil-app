@@ -22,6 +22,7 @@ import { Button } from "@/components/ui/button";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 import { newPassword } from "@/actions/new-password";
+import { useTranslations } from "next-intl";
 
 export const NewPasswordForm = () => {
   const searchParams = useSearchParams();
@@ -30,6 +31,8 @@ export const NewPasswordForm = () => {
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
+
+  const t = useTranslations("AuthPage");
 
   const form = useForm<z.infer<typeof NewPasswordSchema>>({
     resolver: zodResolver(NewPasswordSchema),
@@ -51,8 +54,8 @@ export const NewPasswordForm = () => {
 
   return (
     <CardWrapper
-      headerLabel="Enter a new password"
-      backButtonLabel="Back to login"
+      headerLabel={t("enterNewPassword")}
+      backButtonLabel={t("backToLogin")}
       backButtonHref="/auth/login"
     >
       <Form {...form}>
@@ -63,7 +66,7 @@ export const NewPasswordForm = () => {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>{t("passwordLabel")}</FormLabel>
                   <FormControl>
                     <Input disabled={isPending} {...field} type="password" />
                   </FormControl>
@@ -75,7 +78,7 @@ export const NewPasswordForm = () => {
           <FormError message={error} />
           <FormSuccess message={success} />
           <Button type="submit" className="w-full" disabled={isPending}>
-            Reset password
+            {t("resetPassword")}
           </Button>
         </form>
       </Form>

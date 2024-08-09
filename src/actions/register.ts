@@ -49,12 +49,15 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
     password
   );
 
-  await addUserToSubscriberList(verificationToken.email);
-  /*  if (response?.error) {
-    return { error: "Something went wrong" };
-  } */
+  const response = await addUserToSubscriberList(verificationToken.email);
+  if (response?.error) {
+    console.error(response.error);
+  }
+  if (response?.success) {
+    console.log(response.success);
+  }
 
   return {
-    success: SuccessMessages("linkToActive"),
+    success: SuccessMessages("linkToActivate"),
   };
 };

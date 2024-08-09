@@ -5,7 +5,7 @@
     "login": "Log in",
     "signUp": "Sign up"
   },
-  "LoginPage": {
+  "AuthPage": {
     "welcomeBack": "Welcome back",
     "emailLabel": "Email",
     "passwordLabel": "Password",
@@ -14,7 +14,22 @@
     "continueWithGoogle": "Continue with google",
     "noAccount": "Don't have an account?",
     "twoFactorCode": "Two factor code",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "currentPassword": "Current password",
+    "newPassword": "New password",
+    "createAccount":"Create an account",
+    "redirecting": "Redirecting you to setup page...",
+    "confirmingVerification": "Confirming your verification",
+    "enterNewPassword": "Enter your new password",
+    "backToLogin": "Back to login",
+    "resetPassword": "Reset password",
+    "finishSettingUpAccount": "Finish setting up your account",
+    "alreadyHaveAccount":"Already have an account?",
+"somethingWentWrong": "Oops! Something went wrong!",
+"emailInUseWithProvider": "Email already in use with different provider!",
+"sendResetEmail": "Send reset email"
   },
   "AppointmentList": {
     "all": "All",

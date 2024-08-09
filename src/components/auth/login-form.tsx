@@ -29,12 +29,12 @@ import { NextIntlClientProvider, useLocale, useTranslations } from "next-intl";
 
 export const LoginForm = () => {
   const searchParams = useSearchParams();
-  const t = useTranslations("LoginPage");
+  const t = useTranslations("AuthPage");
   const tError = useTranslations("ErrorMessages");
   const callbackUrl = searchParams.get("callbackUrl");
   const urlError =
     searchParams.get("error") === "OAuthAccountNotLinked"
-      ? "Email already in use with different provider!"
+      ? t("emailInUseWithProvider")
       : "";
 
   const [showTwoFactor, setShowTwoFactor] = useState(false);

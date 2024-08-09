@@ -25,7 +25,7 @@ import { FormSuccess } from "@/components/form-success";
 import { useSearchParams } from "next/navigation";
 import { setupAccount } from "@/actions/setup-account";
 import { login } from "@/actions/login";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 export const SetupForm = () => {
   const [error, setError] = useState<string | undefined>("");
@@ -34,6 +34,8 @@ export const SetupForm = () => {
   const [isPending, startTransition] = useTransition();
   const searchParams = useSearchParams();
   const locale = useLocale();
+
+  const t = useTranslations("AuthPage");
 
   const email = searchParams.get("email");
   const token = searchParams.get("token");
@@ -69,8 +71,8 @@ export const SetupForm = () => {
 
   return (
     <CardWrapper
-      headerLabel="Finish setting up your account"
-      backButtonLabel="Already have an account?"
+      headerLabel={t("finishSettingUpAccount")}
+      backButtonLabel={t("alreadyHaveAccount")}
       backButtonHref="/auth/login"
     >
       <Form {...form}>
@@ -82,7 +84,7 @@ export const SetupForm = () => {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>{t("emailLabel")}</FormLabel>
                   <FormControl>
                     <Input
                       readOnly={!!email}
@@ -100,7 +102,7 @@ export const SetupForm = () => {
               name="firstName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>First name</FormLabel>
+                  <FormLabel>{t("firstName")}</FormLabel>
                   <FormControl>
                     <Input disabled={isPending} {...field} />
                   </FormControl>
@@ -113,7 +115,7 @@ export const SetupForm = () => {
               name="lastName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Last name</FormLabel>
+                  <FormLabel>{t("lastName")}</FormLabel>
                   <FormControl>
                     <Input disabled={isPending} {...field} />
                   </FormControl>
@@ -127,7 +129,7 @@ export const SetupForm = () => {
                 name="currentPassword"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Current password</FormLabel>
+                    <FormLabel>{t("currentPassword")}</FormLabel>
                     <FormControl>
                       <Input disabled={isPending} {...field} type="password" />
                     </FormControl>
@@ -141,7 +143,7 @@ export const SetupForm = () => {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>New Password</FormLabel>
+                  <FormLabel>{t("newPassword")}</FormLabel>
                   <FormControl>
                     <Input disabled={isPending} {...field} type="password" />
                   </FormControl>
@@ -153,7 +155,7 @@ export const SetupForm = () => {
           <FormError message={error} />
           <FormSuccess message={success} />
           <Button type="submit" className="w-full" disabled={isPending}>
-            Create an account
+            {t("createAccount")}
           </Button>
         </form>
       </Form>

@@ -9,7 +9,7 @@ import { useSearchParams } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 
 export const Social = () => {
-  const t = useTranslations("LoginPage");
+  const t = useTranslations("AuthPage");
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl");
 

@@ -33,9 +33,13 @@ export const getTherapistById = async (id: string) => {
   }
 };
 
+//emailVerified: { $ne: null },
+
 export const getTherapists = async () => {
   try {
-    const therapists = await User.find({ role: UserRole.THERAPIST }).lean();
+    const therapists = await User.find({
+      role: UserRole.THERAPIST,
+    }).lean();
 
     return therapists;
   } catch {

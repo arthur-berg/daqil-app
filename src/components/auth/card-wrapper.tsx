@@ -18,6 +18,7 @@ type CardWrapperProps = {
   backButtonLabel: string;
   backButtonHref: string;
   showSocial?: boolean;
+  hideLanguageSwitch?: boolean;
 };
 
 export const CardWrapper = ({
@@ -26,6 +27,7 @@ export const CardWrapper = ({
   backButtonLabel,
   backButtonHref,
   showSocial,
+  hideLanguageSwitch,
 }: CardWrapperProps) => {
   return (
     <Card className="w-[400px] shadow-md">
@@ -41,9 +43,11 @@ export const CardWrapper = ({
       <CardFooter>
         <div className="flex flex-col items-center w-full">
           <BackButton label={backButtonLabel} href={backButtonHref} />
-          <div className="mt-2">
-            <LanguageSwitcher />
-          </div>
+          {!hideLanguageSwitch && (
+            <div className="mt-2">
+              <LanguageSwitcher />
+            </div>
+          )}
         </div>
       </CardFooter>
     </Card>

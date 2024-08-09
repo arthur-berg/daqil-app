@@ -1,0 +1,77 @@
+const primaryColor = "#457bff"; // Hex color converted from HSL
+
+export const twoFactorTokenTemplate = (token: string) => `
+  <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
+    <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+      <div style="text-align: center; margin-bottom: 20px;">
+        <h1 style="color: ${primaryColor}; font-size: 24px; margin: 0;">Zakina</h1>
+      </div>
+      <div style="margin-top: 20px;">
+        <p>Your Two-Factor Authentication (2FA) code is:</p>
+        <h2 style="text-align: center; font-size: 28px; color: #333333;">${token}</h2>
+      </div>
+      <div style="margin-top: 20px; font-size: 12px; color: #888888; text-align: center;">
+        If you did not request this, please ignore this email.
+      </div>
+    </div>
+  </div>
+`;
+
+export const verificationEmailTemplate = (
+  token: string,
+  password?: string,
+  isTherapist?: boolean
+) => {
+  const encodedToken = encodeURIComponent(token);
+  const confirmLink = `${process.env.NEXT_PUBLIC_APP_URL}/auth/new-verification?token=${encodedToken}`;
+  const temporaryPasswordMessage = password
+    ? `<p>Here is your temporary password: <strong>${password}</strong></p>`
+    : "";
+
+  const therapistMessage = isTherapist
+    ? `<p>You have been invited to Zakina as a therapist</p>`
+    : "";
+
+  return `
+    <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
+      <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+        <div style="text-align: center; margin-bottom: 20px;">
+          <h1 style="color: ${primaryColor}; font-size: 24px; margin: 0;">Zakina</h1>
+        </div>
+        <div style="margin-top: 20px;">
+          <p>Welcome to Zakina!</p>
+          ${therapistMessage}
+          ${temporaryPasswordMessage}
+          
+          <p>Please confirm your email address to complete the registration process.</p>
+          <a href="${confirmLink}" style="display: inline-block; padding: 12px 24px; margin: 20px 0; background-color: #007bff; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: bold; text-align: center;">Confirm Email</a>
+        </div>
+        <div style="margin-top: 20px; font-size: 12px; color: #888888; text-align: center;">
+          If you did not sign up for this account, please ignore this email.
+        </div>
+      </div>
+    </div>
+  `;
+};
+
+export const passwordResetEmailTemplate = (token: string) => {
+  const encodedToken = encodeURIComponent(token);
+  const resetLink = `${process.env.NEXT_PUBLIC_APP_URL}/auth/new-password?token=${encodedToken}`;
+
+  return `
+    <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
+      <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+        <div style="text-align: center; margin-bottom: 20px;">
+          <h1 style="color: ${primaryColor}; font-size: 24px; margin: 0;">Zakina</h1>
+        </div>
+        <div style="margin-top: 20px;">
+          <p>We received a request to reset your password. You can do so by clicking the button below:</p>
+          <a href="${resetLink}" style="display: inline-block; padding: 12px 24px; margin: 20px 0; background-color: #007bff; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: bold; text-align: center;">Reset Password</a>
+        </div>
+        <div style="margin-top: 20px; font-size: 12px; color: #888888; text-align: center;">
+          If you did not request a password reset, please ignore this email.
+        </div>
+      </div>
+    </div>
+  `;
+};
