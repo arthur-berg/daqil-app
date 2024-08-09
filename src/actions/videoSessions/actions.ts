@@ -16,17 +16,32 @@ export const getSessionData = async (appointmentId: string) => {
 
   try {
     let updatePayload: Record<string, unknown> = {};
+    const updateOptions: Record<string, unknown> = { new: true };
 
     if (isTherapist) {
       updatePayload.hostShowUp = true;
-    } else if (isClient) {
-      updatePayload["participants.$[elem].showUp"] = true;
     }
 
-    const updateOptions: Record<string, unknown> = { new: true };
+    /*  const appointment = await Appointment.findById(appointmentId);
+    if (!appointment) {
+      throw new Error("Appointment not found");
+    } */
 
     if (isClient) {
       updateOptions.arrayFilters = [{ "elem.userId": user.id }];
+      updatePayload["participants.$[elem].showUp"] = true;
+      /* const participant = appointment.participants.find(
+        (participant: any) =>
+          participant.userId.toString() === user.id.toString()
+      );
+
+      updateOptions.arrayFilters = [{ "elem.userId": user.id }];
+
+      if (participant && participant.showUp) {
+        console.log("Participant already marked as showed up");
+      } else {
+        updatePayload["participants.$[elem].showUp"] = true;
+      } */
     }
 
     const appointment = await Appointment.findByIdAndUpdate(
@@ -39,11 +54,19 @@ export const getSessionData = async (appointmentId: string) => {
       throw new Error("Appointment not found");
     }
 
+    /*  if (Object.keys(updatePayload).length > 0) {
+      await Appointment.findByIdAndUpdate(
+        appointmentId,
+        { $set: updatePayload },
+        updateOptions
+      );
+    } */
+
     let session = await VideoSession.findOne({ appointmentId });
 
     if (session) {
       console.log("Session found. Generating new token...");
-
+      console.log("HERE");
       const userAuthorized = await isUserAuthorized(
         session,
         isTherapist,

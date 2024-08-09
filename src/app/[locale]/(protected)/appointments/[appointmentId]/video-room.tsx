@@ -52,39 +52,39 @@ const VideoRoom = ({
   }, [createCall, sessionData, user, userName, room]);
 
   return (
-    <div
-      id="callContainer"
-      className="relative w-full bg-[#20262D] h-[calc(100vh-120px)]"
-    >
+    <div className="h-screen w-full flex flex-col p-4 box-border">
       <div
-        id="roomContainer"
-        className="relative h-[calc(100vh-220px)]"
-        ref={roomContainer}
+        id="callContainer"
+        className="flex flex-col flex-grow w-full overflow-hidden"
       >
-        {/*   <NetworkToast networkStatus={networkStatus} />  */}
-
         <div
-          id="screenSharingContainer"
-          className="absolute top-2 left-2 z-10 p-y"
+          id="roomContainer"
+          className="flex-grow bg-[#20262D] overflow-hidden"
+          ref={roomContainer}
         >
-          {isScreenSharing && (
-            <div className="absolute inset-0 bg-black bg-opacity-40 z-10 flex justify-center items-center text-lg text-white">
-              You Are Screensharing
-            </div>
-          )}
+          <div
+            id="screenSharingContainer"
+            className="absolute top-2 left-2 z-10 p-y"
+          >
+            {isScreenSharing && (
+              <div className="absolute inset-0 bg-black bg-opacity-40 z-10 flex justify-center items-center text-lg text-white">
+                You Are Screensharing
+              </div>
+            )}
+          </div>
         </div>
+        <ToolBar
+          roomName={sessionData.roomName}
+          room={room}
+          participants={participants}
+          localParticipant={localParticipant}
+          connected={connected}
+          cameraPublishing={cameraPublishing}
+          isScreenSharing={isScreenSharing}
+          startScreenSharing={startScreenSharing}
+          stopScreenSharing={stopScreenSharing}
+        />
       </div>
-      <ToolBar
-        roomName={sessionData.roomName}
-        room={room}
-        participants={participants}
-        localParticipant={localParticipant}
-        connected={connected}
-        cameraPublishing={cameraPublishing}
-        isScreenSharing={isScreenSharing}
-        startScreenSharing={startScreenSharing}
-        stopScreenSharing={stopScreenSharing}
-      />
     </div>
   );
 };

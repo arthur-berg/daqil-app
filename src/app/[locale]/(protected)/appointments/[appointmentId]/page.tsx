@@ -1,11 +1,16 @@
-import AppointmentBody from "@/app/[locale]/(protected)/appointments/[appointmentId]/appointment-body";
+import { getSessionData } from "@/actions/videoSessions/actions";
+import VideoRoom from "@/app/[locale]/(protected)/appointments/[appointmentId]/video-room";
 
 const AppointmentSessionPage = async ({
   params,
 }: {
   params: { appointmentId: string };
 }) => {
-  return <AppointmentBody appointmentId={params.appointmentId} />;
+  const sessionData = await getSessionData(params.appointmentId);
+
+  if (!sessionData) return;
+
+  return <VideoRoom sessionData={sessionData} />;
 };
 
 export default AppointmentSessionPage;

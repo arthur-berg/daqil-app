@@ -80,7 +80,7 @@ const ToolBar = ({
   }, [connected, room]);
 
   return (
-    <div className="bg-[#41464D] flex justify-center items-center absolute bottom-0 left-0 right-0 h-[90px] m-2 rounded-md space-x-8 mx-4">
+    <div className="bg-[#41464D] flex justify-center items-center w-full h-[90px] p-4 rounded-md space-x-4">
       <MuteAudioButton
         toggleAudio={toggleAudio}
         hasAudio={hasAudio}

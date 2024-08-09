@@ -27,7 +27,6 @@ export const getAppointments = async () => {
   const appointmentIds = dbUser.appointments
     .map((appointment: any) => appointment.bookedAppointments)
     .flat();
-  console.log("appointmentIds", appointmentIds);
 
   const appointments = await Appointment.find({
     _id: { $in: appointmentIds },

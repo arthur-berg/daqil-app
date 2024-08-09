@@ -2,6 +2,18 @@ import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
 
+const participantSchema = new Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId, // Reference to the User model
+    ref: "User",
+    required: true,
+  },
+  showUp: {
+    type: Boolean,
+    default: false,
+  },
+});
+
 const videoSessionSchema = new Schema(
   {
     sessionId: {
@@ -24,12 +36,7 @@ const videoSessionSchema = new Schema(
       ref: "Appointment",
       required: true,
     },
-    participants: [
-      {
-        type: String,
-        ref: "User",
-      },
-    ],
+    participants: [participantSchema],
   },
   { collection: "video_sessions" }
 );
