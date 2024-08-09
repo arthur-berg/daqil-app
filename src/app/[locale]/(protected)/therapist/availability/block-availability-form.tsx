@@ -34,6 +34,7 @@ import { TimeRange } from "@/generalTypes";
 import { Separator } from "@/components/ui/separator";
 import { formatDateTime } from "@/utils";
 import { useTranslations } from "next-intl";
+import BlockedOutTimes from "./blocked-out-times";
 
 // Utility function to generate time options
 const generateTimeIntervals = (intervalMinutes = 15) => {
@@ -116,36 +117,7 @@ const BlockAvailabilityForm = ({
   return (
     <div>
       <div className="mb-8">
-        <h2 className="text-xl md:text-2xl font-bold text-red-600 flex items-center mb-4">
-          <FaBan className="mr-2" /> {t("blockedOutTimes")}
-        </h2>
-        <div className="space-y-4 md:flex md:space-y-0 md:space-x-4">
-          {!!blockedOutTimes && blockedOutTimes.length > 0 ? (
-            blockedOutTimes.map(({ date, timeRanges }: any, index: number) => (
-              <div
-                key={date?.toString()}
-                className="bg-red-100 shadow-md rounded-lg p-4 flex-1"
-              >
-                <h3 className="text-lg font-semibold text-red-800 mb-2">
-                  {format(new Date(date!), "yyyy-MM-dd")}
-                </h3>
-                <div className="space-y-2">
-                  {timeRanges.map((timeRange: TimeRange) => (
-                    <div
-                      key={timeRange.startDate?.toString()}
-                      className="bg-red-200 p-2 rounded-md text-red-900 inline-flex mr-2"
-                    >
-                      {formatDateTime(timeRange.startDate!)} -{" "}
-                      {formatDateTime(timeRange.endDate!)}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))
-          ) : (
-            <div>{t("noTimeSlotsFound")}</div>
-          )}
-        </div>
+        <BlockedOutTimes blockedOutTimes={blockedOutTimes} t={t} />
       </div>
       <Separator className="my-4" />
 

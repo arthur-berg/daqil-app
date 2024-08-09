@@ -34,6 +34,7 @@ import { TimeRange } from "@/generalTypes";
 import { Separator } from "@/components/ui/separator";
 import { formatDateTime } from "@/utils";
 import { useTranslations } from "next-intl";
+import NonRecurringTimes from "./non-recurring-times";
 
 // Utility function to generate time options
 const generateTimeIntervals = (intervalMinutes = 15) => {
@@ -113,40 +114,12 @@ const NonRecurringAvailabilityForm = ({
   return (
     <div>
       <div className="mb-8">
-        <h2 className="text-xl md:text-2xl font-bold text-green-600 flex items-center mb-4">
-          <FaCalendarAlt className="mr-2" /> {t("overviewNonRecurringTimes")}
-        </h2>
-        <div className="space-y-4 md:flex md:space-y-0 md:space-x-4">
-          {!!nonRecurringAvailableTimes &&
-          nonRecurringAvailableTimes.length > 0 ? (
-            nonRecurringAvailableTimes?.map(
-              ({ date, timeRanges }: any, index: number) => (
-                <div
-                  key={date?.toString()}
-                  className="bg-green-100 shadow-md rounded-lg p-4 flex-1"
-                >
-                  <h3 className="text-lg font-semibold text-green-800 mb-2">
-                    {format(new Date(date!), "yyyy-MM-dd")}
-                  </h3>
-                  <div className="space-y-2">
-                    {timeRanges.map((timeRange: TimeRange) => (
-                      <div
-                        key={timeRange.startDate?.toString()}
-                        className="bg-green-200 p-2 rounded-md text-green-900 inline-flex mr-2"
-                      >
-                        {formatDateTime(timeRange.startDate!)} -{" "}
-                        {formatDateTime(timeRange.endDate!)}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )
-            )
-          ) : (
-            <div className="italic">{t("noTimeSlotsFound")}</div>
-          )}
-        </div>
+        <NonRecurringTimes
+          nonRecurringAvailableTimes={nonRecurringAvailableTimes}
+          t={t}
+        />
       </div>
+
       <Separator className="my-4" />
       <Button
         className="mb-2"

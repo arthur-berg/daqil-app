@@ -17,7 +17,7 @@ const AvailabilityTabs = ({
 }) => {
   const t = useTranslations("AvailabilityPage");
   return (
-    <Tabs defaultValue="default-availability" className="w-full">
+    <Tabs defaultValue="overview" className="w-full">
       <TabsList className="flex items-center justify-start flex-wrap h-auto">
         <TabsTrigger value="overview">{t("overview")}</TabsTrigger>
         <TabsTrigger value="default-availability">
