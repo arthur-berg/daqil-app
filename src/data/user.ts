@@ -21,6 +21,18 @@ export const getUserById = async (id: string) => {
   }
 };
 
+export const getTherapistById = async (id: string) => {
+  try {
+    const therapist = await User.findById(id).populate(
+      "appointments.bookedAppointments"
+    );
+
+    return therapist;
+  } catch {
+    return null;
+  }
+};
+
 export const getTherapists = async () => {
   try {
     const therapists = await User.find({ role: UserRole.THERAPIST }).lean();

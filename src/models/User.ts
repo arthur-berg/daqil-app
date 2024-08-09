@@ -153,8 +153,13 @@ const userSchema = new Schema(
     },
     appointments: [
       {
-        type: Schema.Types.ObjectId,
-        ref: "Appointment",
+        date: String,
+        bookedAppointments: [
+          {
+            type: Schema.Types.ObjectId,
+            ref: "Appointment",
+          },
+        ],
       },
     ],
     availableTimes: availableTimesSchema,

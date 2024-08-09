@@ -11,6 +11,7 @@ import { getAppointmentTypeById } from "@/data/appointment-types";
 import { scheduleJobToCheckAppointmentStatus } from "@/lib/schedulerJobs";
 import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
+import { format } from "date-fns";
 
 export const getClients = async () => {
   await requireAuth([UserRole.THERAPIST]);
@@ -30,6 +31,55 @@ const createAppointment = async (appointmentData: any, session: any) => {
   );
 
   return appointment;
+};
+
+const updateAppointments = async (
+  userId: string,
+  appointmentDate: string,
+  appointmentId: string,
+  session: any
+) => {
+  // First, check if the date entry exists
+  const user = await User.findOne(
+    {
+      _id: userId,
+      "appointments.date": appointmentDate,
+    },
+    null, // Projection, keep it null
+    { session }
+  );
+
+  if (user) {
+    // If the date exists, update the bookedAppointments array
+    await User.findOneAndUpdate(
+      {
+        _id: userId,
+        "appointments.date": appointmentDate, // Match the specific date
+      },
+      {
+        $push: {
+          "appointments.$.bookedAppointments": appointmentId, // Push to the existing array for that date
+        },
+      },
+      { session }
+    );
+  } else {
+    // If the date doesn't exist, add a new date entry with the appointmentId
+    await User.findOneAndUpdate(
+      {
+        _id: userId,
+      },
+      {
+        $push: {
+          appointments: {
+            date: appointmentDate,
+            bookedAppointments: [appointmentId],
+          },
+        },
+      },
+      { session }
+    );
+  }
 };
 
 export const cancelAppointment = async (
@@ -152,22 +202,17 @@ export const bookAppointment = async (
 
     const appointmentId = appointment[0]._id; // As appointment.create returns an array
 
-    // Update the user who booked the appointment
-    await User.findByIdAndUpdate(
-      user.id,
-      {
-        $push: { appointments: appointmentId },
-      },
-      { session }
-    );
+    const appointmentDate = format(new Date(startDate), "yyyy-MM-dd");
 
-    // Update the therapist
-    await User.findByIdAndUpdate(
+    // Update the user who booked the appointment
+    await updateAppointments(user.id, appointmentDate, appointmentId, session);
+
+    // Update the therapist's appointments
+    await updateAppointments(
       therapistId,
-      {
-        $push: { appointments: appointmentId },
-      },
-      { session }
+      appointmentDate,
+      appointmentId,
+      session
     );
 
     await session.commitTransaction();
@@ -253,21 +298,13 @@ export const scheduleAppointment = async (
 
     const appointmentId = appointment[0]._id;
 
-    await User.findByIdAndUpdate(
-      clientId,
-      {
-        $push: { appointments: appointmentId },
-      },
-      { session }
-    );
+    const appointmentDate = format(new Date(startDate), "yyyy-MM-dd");
 
-    await User.findByIdAndUpdate(
-      user.id,
-      {
-        $push: { appointments: appointmentId },
-      },
-      { session }
-    );
+    // Update the clients appointments
+    await updateAppointments(clientId, appointmentDate, appointmentId, session);
+
+    // Update the therapist's appointments
+    await updateAppointments(user.id, appointmentDate, appointmentId, session);
 
     await session.commitTransaction();
     session.endSession();

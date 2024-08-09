@@ -48,7 +48,8 @@ type TimeSlot = {
 export const getTherapistAvailableTimeSlots = (
   availableTimes: AvailableTimes,
   appointmentType: AppointmentType,
-  selectedDate: Date
+  selectedDate: Date,
+  appointments: any[]
 ): TimeSlot[] => {
   const {
     settings,
@@ -58,6 +59,24 @@ export const getTherapistAvailableTimeSlots = (
   } = availableTimes;
   const { interval } = settings;
 
+  const appointmentDate = format(selectedDate, "yyyy-MM-dd");
+
+  const selectedAppointment = appointments.find(
+    (appointment) => appointment.date === appointmentDate
+  );
+
+  const bookedAppointments = selectedAppointment
+    ? selectedAppointment.bookedAppointments.filter(
+        (appointment: any) => appointment.status !== "cancelled"
+      )
+    : [];
+
+  const bookedAppointmentsForDate =
+    bookedAppointments?.map((appointment: any) => ({
+      startTime: format(new Date(appointment.startDate), "HH:mm"),
+      endTime: format(new Date(appointment.endDate), "HH:mm"),
+    })) || [];
+
   const getTimeRangesForDay = (day: string): TimeRange[] => {
     const recurring = recurringAvailableTimes.find((r) => r.day === day);
     return recurring ? recurring.timeRanges : [];
@@ -65,10 +84,7 @@ export const getTherapistAvailableTimeSlots = (
 
   const getBlockedOutTimesForDate = (date: Date): BlockedTime[] => {
     const blocked = blockedOutTimes.find((b) =>
-      isSameDay(
-        new Date(b.startDate).setHours(0, 0, 0, 0),
-        date.setHours(0, 0, 0, 0)
-      )
+      isSameDay(new Date(b.startDate), date)
     );
     return blocked ? [blocked] : [];
   };
@@ -77,10 +93,7 @@ export const getTherapistAvailableTimeSlots = (
     date: Date
   ): NonRecurringTimeRange[] => {
     const nonRecurring = nonRecurringAvailableTimes.find((s) =>
-      isSameDay(
-        new Date(s.date).setHours(0, 0, 0, 0),
-        date.setHours(0, 0, 0, 0)
-      )
+      isSameDay(new Date(s.date), date)
     );
     return nonRecurring ? nonRecurring.timeRanges : [];
   };
@@ -136,7 +149,15 @@ export const getTherapistAvailableTimeSlots = (
       new Date(`1970-01-01T${b.startTime}:00Z`).getTime()
   );
 
-  const blockedTimes = getBlockedOutTimesForDate(selectedDate);
+  const blockedTimes = [
+    ...getBlockedOutTimesForDate(selectedDate),
+    ...bookedAppointmentsForDate.map((range: any) => ({
+      startDate: new Date(`${appointmentDate}T${range.startTime}:00`),
+      endDate: new Date(`${appointmentDate}T${range.endTime}:00`),
+    })),
+  ];
+
+  const now = new Date();
 
   const availableTimeSlots = timeRanges.reduce<Date[]>((acc, range) => {
     const intervals = generateTimeIntervals(
@@ -155,37 +176,44 @@ export const getTherapistAvailableTimeSlots = (
       appointmentType.durationInMinutes
     );
 
-    return !blockedTimes.some((blocked) => {
-      const blockedStart = new Date(blocked.startDate);
-      const blockedEnd = new Date(blocked.endDate);
+    const isTimeInPast = isBefore(time, now);
 
-      const startsWithinBlockedRange =
-        (isAfter(time, blockedStart) || isEqual(time, blockedStart)) &&
-        (isBefore(time, blockedEnd) || isEqual(time, blockedEnd));
+    return (
+      !isTimeInPast &&
+      !blockedTimes.some((blocked) => {
+        const blockedStart = new Date(blocked.startDate);
+        const blockedEnd = new Date(blocked.endDate);
 
-      const endsWithinBlockedRange =
-        (isAfter(intervalEnd, blockedStart) ||
-          isEqual(intervalEnd, blockedStart)) &&
-        (isBefore(intervalEnd, blockedEnd) || isEqual(intervalEnd, blockedEnd));
+        const startsWithinBlockedRange =
+          (isAfter(time, blockedStart) || isEqual(time, blockedStart)) &&
+          (isBefore(time, blockedEnd) || isEqual(time, blockedEnd));
 
-      const spansBlockedRange =
-        (isBefore(time, blockedStart) || isEqual(time, blockedStart)) &&
-        (isAfter(intervalEnd, blockedEnd) || isEqual(intervalEnd, blockedEnd));
+        const endsWithinBlockedRange =
+          (isAfter(intervalEnd, blockedStart) ||
+            isEqual(intervalEnd, blockedStart)) &&
+          (isBefore(intervalEnd, blockedEnd) ||
+            isEqual(intervalEnd, blockedEnd));
 
-      const endAdjustedWithinBlockedRange =
-        (isAfter(intervalEndAdjusted, blockedStart) ||
-          isEqual(intervalEndAdjusted, blockedStart)) &&
-        (isBefore(intervalEndAdjusted, blockedEnd) ||
-          isEqual(intervalEndAdjusted, blockedEnd));
+        const spansBlockedRange =
+          (isBefore(time, blockedStart) || isEqual(time, blockedStart)) &&
+          (isAfter(intervalEnd, blockedEnd) ||
+            isEqual(intervalEnd, blockedEnd));
 
-      const overlaps =
-        startsWithinBlockedRange ||
-        endsWithinBlockedRange ||
-        spansBlockedRange ||
-        endAdjustedWithinBlockedRange;
+        const endAdjustedWithinBlockedRange =
+          (isAfter(intervalEndAdjusted, blockedStart) ||
+            isEqual(intervalEndAdjusted, blockedStart)) &&
+          (isBefore(intervalEndAdjusted, blockedEnd) ||
+            isEqual(intervalEndAdjusted, blockedEnd));
 
-      return overlaps;
-    });
+        const overlaps =
+          startsWithinBlockedRange ||
+          endsWithinBlockedRange ||
+          spansBlockedRange ||
+          endAdjustedWithinBlockedRange;
+
+        return overlaps;
+      })
+    );
   });
 
   const transformTimes = (

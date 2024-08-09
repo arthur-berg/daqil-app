@@ -1,7 +1,7 @@
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { APPOINTMENT_TYPE_ID } from "@/contants/config";
 import { getAppointmentTypeById } from "@/data/appointment-types";
-import { getUserById } from "@/data/user";
+import { getTherapistById } from "@/data/user";
 import { getTranslations } from "next-intl/server";
 import { FaUser } from "react-icons/fa";
 
@@ -14,7 +14,7 @@ const TherapistUserProfile = async ({
 }) => {
   const ErrorMessages = await getTranslations("ErrorMessages");
   const therapistId = params.therapistId;
-  const therapist = (await getUserById(therapistId)) as any;
+  const therapist = (await getTherapistById(therapistId)) as any;
   const appointmentType = await getAppointmentTypeById(APPOINTMENT_TYPE_ID);
 
   if (!therapist) {
@@ -51,6 +51,7 @@ const TherapistUserProfile = async ({
       <div className="mt-6 bg-white shadow-md rounded-lg p-6">
         <BookingCalendar
           therapistsAvailableTimes={JSON.stringify(therapist.availableTimes)}
+          appointments={JSON.stringify(therapist.appointments)}
           appointmentType={appointmentType}
           therapistId={therapistId}
         />

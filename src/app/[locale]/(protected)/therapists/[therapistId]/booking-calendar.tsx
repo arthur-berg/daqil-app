@@ -18,10 +18,12 @@ const BookingCalendar = ({
   appointmentType,
   therapistId,
   therapistsAvailableTimes,
+  appointments,
 }: {
   appointmentType: any;
   therapistId: string;
   therapistsAvailableTimes: string;
+  appointments: string;
 }) => {
   const t = useTranslations("BookingCalendar");
   const [isPending, startTransition] = useTransition();
@@ -41,7 +43,8 @@ const BookingCalendar = ({
     const timeSlots = getTherapistAvailableTimeSlots(
       JSON.parse(therapistsAvailableTimes),
       appointmentType,
-      selectedDate
+      selectedDate,
+      JSON.parse(appointments)
     );
 
     setAvailableTimeSlots(timeSlots);
