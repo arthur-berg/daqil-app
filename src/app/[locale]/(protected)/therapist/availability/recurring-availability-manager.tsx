@@ -107,7 +107,7 @@ const DefaultAvailabilityManager = ({
   const [editModes, setEditModes] = useState<{ [key: string]: boolean }>(
     initialEditModes
   );
-  const { toast } = useToast();
+  const { responseToast } = useToast();
 
   const t = useTranslations("AvailabilityPage");
 
@@ -167,12 +167,7 @@ const DefaultAvailabilityManager = ({
         interval: parseInt(values.interval),
       };
       const data = await updateRecurringAvailabilitySettings(structuredData);
-      if (data.success) {
-        toast({
-          variant: "success",
-          title: data.success,
-        });
-      }
+      responseToast(data);
     });
   };
 

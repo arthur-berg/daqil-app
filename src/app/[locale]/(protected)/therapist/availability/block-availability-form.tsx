@@ -71,7 +71,8 @@ const BlockAvailabilityForm = ({
   const t = useTranslations("AvailabilityPage");
   const ErrorMessages = useTranslations("ErrorMessages");
 
-  const { toast } = useToast();
+  const { responseToast } = useToast();
+
   const form = useForm<z.infer<typeof BlockAvailabilitySchemaFE>>({
     defaultValues: {
       date: new Date(),
@@ -103,19 +104,11 @@ const BlockAvailabilityForm = ({
     startTransition(async () => {
       const data = await saveBlockedOutTimes(formattedData);
       setShowCalendar(false);
+      responseToast(data);
+
       if (data?.success) {
-        toast({
-          variant: "success",
-          title: t("blockedTimesSaved"),
-        });
         form.reset();
         setDate(null);
-      }
-      if (data?.error) {
-        toast({
-          variant: "destructive",
-          title: ErrorMessages("somethingWentWrong"),
-        });
       }
     });
   };

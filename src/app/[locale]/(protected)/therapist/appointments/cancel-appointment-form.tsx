@@ -42,7 +42,7 @@ const CancelAppontmentForm = ({
   setIsCancelDialogOpen: any;
 }) => {
   const t = useTranslations("AppointmentList");
-  const { toast } = useToast();
+  const { responseToast } = useToast();
   const form = useForm<z.infer<typeof CancelAppointmentSchema>>({
     resolver: zodResolver(CancelAppointmentSchema),
     defaultValues: {
@@ -57,20 +57,9 @@ const CancelAppontmentForm = ({
       try {
         const data = await cancelAppointment(values);
 
-        if (data?.error) {
-          toast({
-            title: data.error,
-            variant: "destructive",
-          });
-        }
+        responseToast(data);
 
-        if (data?.success) {
-          toast({
-            title: data.success,
-            variant: "success",
-          });
-          form.reset();
-        }
+        form.reset();
       } catch {
         console.error("Error canceling appointment");
       }

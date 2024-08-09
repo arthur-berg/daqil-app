@@ -46,7 +46,7 @@ const CreateAppointmentForm = ({
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
   const [isPending, startTransition] = useTransition();
-  const { toast } = useToast();
+  const { responseToast } = useToast();
   const user = useCurrentUser();
   const router = useRouter();
 
@@ -70,15 +70,15 @@ const CreateAppointmentForm = ({
     startTransition(async () => {
       try {
         const data = await scheduleAppointment(values);
+
+        responseToast(data);
+
         if (data.error) {
           setError(data.error);
         }
         if (data.success) {
           setError(undefined);
           setSuccess(data.success);
-          toast({
-            title: data.success,
-          });
           router.push("/appointments");
         }
       } catch {

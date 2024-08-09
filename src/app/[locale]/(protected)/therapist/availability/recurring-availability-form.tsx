@@ -78,7 +78,7 @@ const RecurringAvailabilityForm = ({
 
   const t = useTranslations("AvailabilityPage");
 
-  const { toast } = useToast();
+  const { responseToast } = useToast();
 
   const form = useForm({
     resolver: zodResolver(RecurringAvailabilitySchema),
@@ -148,14 +148,10 @@ const RecurringAvailabilityForm = ({
   };
 
   const onSubmitDay = (values: z.infer<typeof RecurringAvailabilitySchema>) => {
-    console.log("values", values);
     startTransition(async () => {
       const data = await saveRecurringAvailableTimes(values);
+      responseToast(data);
       if (data?.success) {
-        toast({
-          variant: "success",
-          title: data.success,
-        });
         setEditModes((prev: any) => ({ ...prev, [day]: false }));
       }
     });

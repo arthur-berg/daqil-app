@@ -26,7 +26,7 @@ const InviteTherapistForm = () => {
   const [success, setSuccess] = useState<string | undefined>();
   const ErrorMessages = useTranslations("ErrorMessages");
   const t = useTranslations("InviteTherapistForm");
-  const { toast } = useToast();
+  const { responseToast } = useToast();
   const form = useForm<z.infer<typeof InviteTherapistSchema>>({
     resolver: zodResolver(InviteTherapistSchema),
     defaultValues: {
@@ -41,21 +41,16 @@ const InviteTherapistForm = () => {
       try {
         const data = await inviteTherapist(values);
 
+        responseToast(data);
+
+        form.reset();
+
         if (data?.error) {
           setError(data.error);
-          toast({
-            title: data.error,
-            variant: "destructive",
-          });
         }
 
         if (data?.success) {
           setSuccess(data.success as string);
-          toast({
-            title: data.success,
-            variant: "success",
-          });
-          form.reset();
         }
       } catch {
         setError(ErrorMessages("somethingWentWrong"));

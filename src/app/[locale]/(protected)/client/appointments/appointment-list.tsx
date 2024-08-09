@@ -28,7 +28,7 @@ import {
 } from "@/components/ui/select";
 import { FaCheck, FaTimes, FaClock, FaQuestion } from "react-icons/fa";
 import { useTranslations } from "next-intl";
-import { useToast } from "@/components/ui/use-toast";
+
 import CancelAppointmentForm from "./cancel-appointment-form"; // Import your client CancelAppointmentForm
 import { BeatLoader } from "react-spinners";
 

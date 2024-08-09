@@ -68,7 +68,7 @@ const NonRecurringAvailabilityForm = ({
   const [isPending, startTransition] = useTransition();
   const [date, setDate] = useState<any>();
   const [showCalendar, setShowCalendar] = useState(false);
-  const { toast } = useToast();
+  const { responseToast } = useToast();
   const t = useTranslations("AvailabilityPage");
   const ErrorMessages = useTranslations("ErrorMessages");
   const form = useForm<z.infer<typeof NonRecurringAvailabilitySchemaFE>>({
@@ -102,19 +102,10 @@ const NonRecurringAvailabilityForm = ({
     startTransition(async () => {
       const data = await saveNonRecurringAvailableTimes(formattedData);
       setShowCalendar(false);
+      responseToast(data);
       if (data?.success) {
-        toast({
-          variant: "success",
-          title: t("nonRecurringTimesSaved"),
-        });
         form.reset();
         setDate(null);
-      }
-      if (data?.error) {
-        toast({
-          variant: "destructive",
-          title: ErrorMessages("somethingWentWrong"),
-        });
       }
     });
   };
