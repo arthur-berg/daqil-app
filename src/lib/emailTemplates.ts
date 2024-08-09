@@ -75,3 +75,106 @@ export const passwordResetEmailTemplate = (token: string) => {
     </div>
   `;
 };
+
+export const appointmentCancellationTemplate = (
+  appointmentDetails: {
+    date: string;
+    time: string;
+    reason: string;
+    therapistName: string;
+    clientName: string;
+  },
+  isTherapist: boolean
+) => {
+  const subject = isTherapist
+    ? "Appointment Cancelled by Client"
+    : "Your Appointment has been Cancelled";
+
+  const appointmentsLink = isTherapist
+    ? `${process.env.NEXT_PUBLIC_APP_URL}/therapist/appointments`
+    : `${process.env.NEXT_PUBLIC_APP_URL}/client/appointments`;
+
+  const buttonText = isTherapist
+    ? "See all my appointments"
+    : "View my appointments";
+
+  return `
+    <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
+      <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+        <div style="text-align: center; margin-bottom: 20px;">
+          <h1 style="color: ${primaryColor}; font-size: 24px; margin: 0;">Zakina</h1>
+        </div>
+        <div style="margin-top: 20px;">
+          <p>${subject}</p>
+          <p><strong>Therapist:</strong> ${appointmentDetails.therapistName}</p>
+          <p><strong>Client:</strong> ${appointmentDetails.clientName}</p>
+          <p><strong>Date:</strong> ${appointmentDetails.date}</p>
+          <p><strong>Time:</strong> ${appointmentDetails.time}</p>
+          <p><strong>Reason:</strong> ${appointmentDetails.reason}</p>
+        </div>
+        <div style="text-align: center; margin-top: 20px;">
+          <a href="${appointmentsLink}" style="display: inline-block; padding: 12px 24px; margin: 20px 0; background-color: ${primaryColor}; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: bold;">
+            ${buttonText}
+          </a>
+        </div>
+        <div style="margin-top: 20px; font-size: 12px; color: #888888; text-align: center;">
+          Thank you for using Zakina.
+        </div>
+      </div>
+    </div>
+  `;
+};
+
+export const appointmentBookingConfirmationTemplate = (
+  appointmentDetails: {
+    date: string;
+    time: string;
+    therapistName: string;
+    clientName: string;
+  },
+  isTherapist: boolean
+) => {
+  const subject = isTherapist
+    ? "New Appointment Booking"
+    : "Appointment Confirmation";
+
+  const appointmentsLink = isTherapist
+    ? `${process.env.NEXT_PUBLIC_APP_URL}/therapist/appointments`
+    : `${process.env.NEXT_PUBLIC_APP_URL}/client/appointments`;
+
+  const buttonText = isTherapist
+    ? "See all my appointments"
+    : "View my appointments";
+
+  const additionalMessage = isTherapist
+    ? "To join the session and manage all your appointments, please visit your appointments page."
+    : "You can join your upcoming session and see an overview of all your appointments on your appointments page.";
+
+  return `
+    <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
+      <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+        <div style="text-align: center; margin-bottom: 20px;">
+          <h1 style="color: ${primaryColor}; font-size: 24px; margin: 0;">Zakina</h1>
+        </div>
+        <div style="margin-top: 20px;">
+          <p>${subject}</p>
+          <p><strong>Therapist:</strong> ${appointmentDetails.therapistName}</p>
+          <p><strong>Client:</strong> ${appointmentDetails.clientName}</p>
+          <p><strong>Date:</strong> ${appointmentDetails.date}</p>
+          <p><strong>Time:</strong> ${appointmentDetails.time}</p>
+        </div>
+        <div style="margin-top: 20px; font-size: 16px; color: #333333;">
+          <p>${additionalMessage}</p>
+        </div>
+        <div style="text-align: center; margin-top: 20px;">
+          <a href="${appointmentsLink}" style="display: inline-block; padding: 12px 24px; margin: 20px 0; background-color: ${primaryColor}; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: bold;">
+            ${buttonText}
+          </a>
+        </div>
+        <div style="margin-top: 20px; font-size: 12px; color: #888888; text-align: center;">
+          Thank you for using Zakina.
+        </div>
+      </div>
+    </div>
+  `;
+};

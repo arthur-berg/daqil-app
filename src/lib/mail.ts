@@ -5,6 +5,8 @@ import {
   twoFactorTokenTemplate,
   verificationEmailTemplate,
   passwordResetEmailTemplate,
+  appointmentCancellationTemplate,
+  appointmentBookingConfirmationTemplate,
 } from "./emailTemplates";
 
 mailchimpMarketing.setConfig({
@@ -19,7 +21,6 @@ export const addUserToSubscriberList = async (
   userRole?: UserRole
 ) => {
   // TODO: Fix the function to work correctly
-  // No error on PC computer. Check if it's only the mac? Maybe due to IP?
   try {
     const listId =
       userRole && userRole === UserRole.THERAPIST
@@ -28,11 +29,9 @@ export const addUserToSubscriberList = async (
 
     await mailchimpMarketing.lists.getListMember(listId as string, email);
 
-    // If we get here, the user exists, so no need to add them again
     return { success: "User already exists in the list" };
   } catch (error: any) {
     if (error?.status === 404) {
-      // If the error is a 404, it means the user does not exist
       try {
         await mailchimpMarketing.lists.addListMember(
           process.env.MAILCHIMP_LIST_ID as string,
@@ -151,5 +150,97 @@ export const sendPasswordResetEmail = async (email: string, token: string) => {
     });
   } catch (error) {
     console.error(error);
+  }
+};
+
+export const sendAppointmentCancellationEmail = async (
+  therapistEmail: string,
+  clientEmail: string,
+  appointmentDetails: {
+    date: string;
+    time: string;
+    reason: string;
+    therapistName: string;
+    clientName: string;
+  }
+) => {
+  const therapistMessage = {
+    from_email: "info@zakina-app.com",
+    subject: "Appointment Cancellation",
+    html: appointmentCancellationTemplate(appointmentDetails, true),
+    to: [
+      {
+        email: therapistEmail,
+        type: "to",
+      },
+    ],
+  };
+
+  const clientMessage = {
+    from_email: "info@zakina-app.com",
+    subject: "Appointment Cancellation",
+    html: appointmentCancellationTemplate(appointmentDetails, false),
+    to: [
+      {
+        email: clientEmail,
+        type: "to",
+      },
+    ],
+  };
+
+  try {
+    await Promise.all([
+      mailchimpTx.messages.send({ message: therapistMessage as any }),
+      mailchimpTx.messages.send({ message: clientMessage as any }),
+    ]);
+  } catch (error) {
+    console.error("Error sending appointment cancellation email:", error);
+  }
+};
+
+export const sendAppointmentBookingConfirmationEmail = async (
+  therapistEmail: string,
+  clientEmail: string,
+  appointmentDetails: {
+    date: string;
+    time: string;
+    therapistName: string;
+    clientName: string;
+  }
+) => {
+  const therapistMessage = {
+    from_email: "info@zakina-app.com",
+    subject: "New Appointment Booking",
+    html: appointmentBookingConfirmationTemplate(appointmentDetails, true),
+    to: [
+      {
+        email: therapistEmail,
+        type: "to",
+      },
+    ],
+  };
+
+  const clientMessage = {
+    from_email: "info@zakina-app.com",
+    subject: "Appointment Confirmation",
+    html: appointmentBookingConfirmationTemplate(appointmentDetails, false),
+    to: [
+      {
+        email: clientEmail,
+        type: "to",
+      },
+    ],
+  };
+
+  try {
+    await Promise.all([
+      mailchimpTx.messages.send({ message: therapistMessage as any }),
+      mailchimpTx.messages.send({ message: clientMessage as any }),
+    ]);
+  } catch (error) {
+    console.error(
+      "Error sending appointment booking confirmation email:",
+      error
+    );
   }
 };

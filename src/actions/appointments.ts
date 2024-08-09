@@ -12,6 +12,10 @@ import { scheduleJobToCheckAppointmentStatus } from "@/lib/schedulerJobs";
 import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { format } from "date-fns";
+import {
+  sendAppointmentBookingConfirmationEmail,
+  sendAppointmentCancellationEmail,
+} from "@/lib/mail";
 
 export const getClients = async () => {
   await requireAuth([UserRole.THERAPIST]);
@@ -107,7 +111,12 @@ export const cancelAppointment = async (
 
     const { isTherapist, isClient } = await getCurrentRole();
 
-    const appointment = await Appointment.findById(appointmentId).populate("");
+    const appointment = await Appointment.findById(appointmentId)
+      .populate({
+        path: "participants.userId",
+        select: "firstName lastName email",
+      })
+      .populate("hostUserId", "email firstName lastName");
 
     if (!appointment) {
       return { error: ErrorMessages("appointmentNotExist") };
@@ -133,7 +142,7 @@ export const cancelAppointment = async (
 
     if (isClient) {
       const participant = appointment.participants.some(
-        (p: any) => p.userId.toString() === user.id
+        (p: any) => p.userId._id.toString() === user.id
       );
 
       if (!participant) {
@@ -146,6 +155,25 @@ export const cancelAppointment = async (
       cancellationReason: "custom",
       customCancellationReason: reason,
     });
+
+    // Send cancellation emails to both therapist and client
+    const therapistEmail = appointment.hostUserId.email;
+    const clientEmail = appointment.participants[0].userId.email;
+    const appointmentDetails = {
+      date: format(appointment.startDate, "yyyy-MM-dd"),
+      time: format(appointment.startDate, "HH:mm"),
+      reason,
+      therapistName: `${appointment.hostUserId.firstName} ${appointment.hostUserId.lastName}`,
+      clientName: `${appointment.participants[0].userId.firstName} ${appointment.participants[0].userId.lastName}`,
+    };
+
+    console.log("appointmentDetails", appointmentDetails);
+
+    await sendAppointmentCancellationEmail(
+      therapistEmail,
+      clientEmail,
+      appointmentDetails
+    );
 
     revalidatePath("/therapist/appointments");
 
@@ -217,6 +245,21 @@ export const bookAppointment = async (
 
     await session.commitTransaction();
     session.endSession();
+
+    const therapistEmail = therapist.email;
+    const clientEmail = user.email;
+    const appointmentDetails = {
+      date: format(startDate, "yyyy-MM-dd"),
+      time: format(startDate, "HH:mm"),
+      therapistName: `${therapist.firstName} ${therapist.lastName}`,
+      clientName: `${user.firstName} ${user.lastName}`,
+    };
+
+    await sendAppointmentBookingConfirmationEmail(
+      therapistEmail,
+      clientEmail,
+      appointmentDetails
+    );
 
     revalidatePath("/client/appointments");
 
