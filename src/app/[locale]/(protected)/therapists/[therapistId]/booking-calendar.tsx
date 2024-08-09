@@ -57,6 +57,16 @@ const BookingCalendar = ({
     milliseconds: 0,
   });
 
+  const groupTimeSlots = (slots: { start: Date; end: Date }[]) => {
+    const morning = slots.filter((slot) => slot.start.getHours() < 12);
+    const afternoon = slots.filter(
+      (slot) => slot.start.getHours() >= 12 && slot.start.getHours() < 17
+    );
+    const evening = slots.filter((slot) => slot.start.getHours() >= 17);
+
+    return { morning, afternoon, evening };
+  };
+
   return (
     <>
       {success || error ? (
@@ -136,7 +146,6 @@ const BookingCalendar = ({
                       hours: date?.dateTime?.getHours(),
                       minutes: date?.dateTime?.getMinutes(),
                     });
-                    // Add booking logic here
                     startTransition(async () => {
                       const data = await bookAppointment(
                         appointmentType,
@@ -182,20 +191,43 @@ const BookingCalendar = ({
                   row: "w-full mt-2",
                 }}
               />
-              <div className="flex gap-4 flex-wrap mt-2">
-                {availableTimeSlots?.map((time, i) => (
-                  <div key={`time-${i}`} className="rounded-sm bg-gray-100 p-2">
-                    <Button
-                      disabled={isPending}
-                      onClick={() =>
-                        setDate((prev) => ({ ...prev, dateTime: time.start }))
-                      }
-                    >
-                      {format(time.start, "kk:mm")} -{" "}
-                      {format(time.end, "kk:mm")}
-                    </Button>
-                  </div>
-                ))}
+              <div className="mt-4">
+                <h3 className="text-lg font-semibold mb-2">
+                  {t("availableSlots")}
+                </h3>
+                {Object.entries(groupTimeSlots(availableTimeSlots)).map(
+                  ([timeOfDay, slots], idx) => (
+                    <div key={idx} className="mb-4">
+                      <h4 className="text-md font-medium mb-2 capitalize text-blue-600">
+                        {t(timeOfDay)}
+                      </h4>
+                      <div className="flex flex-wrap gap-2">
+                        {slots.length ? (
+                          slots.map((time, i) => (
+                            <Button
+                              key={`time-${i}`}
+                              disabled={isPending}
+                              className="mb-2"
+                              onClick={() =>
+                                setDate((prev) => ({
+                                  ...prev,
+                                  dateTime: time.start,
+                                }))
+                              }
+                            >
+                              {format(time.start, "kk:mm")} -{" "}
+                              {format(time.end, "kk:mm")}
+                            </Button>
+                          ))
+                        ) : (
+                          <p className="text-gray-500 italic">
+                            {t("noSlotsAvailable")}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  )
+                )}
               </div>
             </>
           ) : (

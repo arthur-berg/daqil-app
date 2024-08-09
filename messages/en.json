@@ -116,7 +116,12 @@
     "cost": "Cost",
     "confirmBooking": "Confirm Booking",
     "goBack": "Go back",
-    "minutes": "minutes"
+    "minutes": "minutes",
+    "noSlotsAvailable": "No slots available",
+    "availableSlots": "Available slots",
+    "morning": "Morning",
+    "afternoon": "Afternoon",
+    "evening": "Evening"
   },
   "AvailabilityPage": {
     "recurringAvailableTimes": "Recurring available times",

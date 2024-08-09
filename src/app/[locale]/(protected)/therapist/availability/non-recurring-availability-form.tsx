@@ -130,27 +130,29 @@ const NonRecurringAvailabilityForm = ({
       </Button>
       {showCalendar && (
         <>
-          <Calendar
-            mode="single"
-            selected={date}
-            onSelect={(date) => {
-              setDate(date);
-              form.reset({
-                date: date,
-                timeRanges: [{ startDate: "", endDate: "" }],
-              });
-            }}
-            className="rounded-md border h-full w-full flex"
-            classNames={{
-              months:
-                "flex w-full flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0 flex-1",
-              month: "space-y-4 w-full flex-col",
-              table: "w-full border-collapse space-y-1",
-              head_row: "",
-              row: "w-full",
-              cell: "relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected])]:rounded-md pb-2 pt-2",
-            }}
-          />
+          <div className="flex justify-center w-full">
+            <Calendar
+              mode="single"
+              selected={date}
+              onSelect={(date) => {
+                setDate(date);
+                form.reset({
+                  date: date,
+                  timeRanges: [{ startDate: "", endDate: "" }],
+                });
+              }}
+              className="rounded-md border h-full w-full flex max-w-2xl"
+              classNames={{
+                months:
+                  "flex w-full flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0 flex-1",
+                month: "space-y-4 w-full flex-col",
+                table: "w-full border-collapse space-y-1",
+                head_row: "",
+                row: "w-full",
+                cell: "relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected])]:rounded-md pb-2 pt-2",
+              }}
+            />
+          </div>
 
           {date && (
             <Form {...form}>
