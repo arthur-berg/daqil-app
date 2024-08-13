@@ -1,21 +1,25 @@
+import { getAppointmentTypeById } from "@/data/appointment-types";
 import SelectedTherapist from "./selected-therapist";
 import { Button } from "@/components/ui/button";
 
-import { getSelectedTherapist } from "@/data/user";
+import { getTherapistById } from "@/data/user";
 import { getCurrentUser } from "@/lib/auth";
 import { Link } from "@/navigation";
 import { getTranslations } from "next-intl/server";
+import { APPOINTMENT_TYPE_ID } from "@/contants/config";
 
 const BookAppointmentPage = async () => {
   const user = await getCurrentUser();
 
   const selectedTherapist = (
     user?.selectedTherapist
-      ? await getSelectedTherapist(user?.selectedTherapist)
+      ? await getTherapistById(user?.selectedTherapist)
       : null
   ) as any;
 
   const t = await getTranslations("BookAppointmentPage");
+
+  const appointmentType = await getAppointmentTypeById(APPOINTMENT_TYPE_ID);
 
   return (
     <>
@@ -30,6 +34,7 @@ const BookAppointmentPage = async () => {
 
             {selectedTherapist ? (
               <SelectedTherapist
+                appointmentType={appointmentType}
                 selectedTherapistData={JSON.stringify(selectedTherapist)}
               />
             ) : (

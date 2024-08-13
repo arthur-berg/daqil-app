@@ -11,11 +11,14 @@ import {
 } from "@/components/ui/dialog";
 import { Link } from "@/navigation";
 import { useTranslations } from "next-intl";
+import BookingCalendar from "@/app/[locale]/(protected)/book-appointment/[therapistId]/booking-calendar";
 
 const SelectedTherapist = ({
   selectedTherapistData,
+  appointmentType,
 }: {
   selectedTherapistData: any;
+  appointmentType: any;
 }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const t = useTranslations("BookAppointmentPage");
@@ -23,7 +26,7 @@ const SelectedTherapist = ({
 
   return (
     <>
-      <div className="bg-white shadow-lg rounded-lg p-6 mb-4 text-center">
+      <div className="bg-white shadow-lg rounded-lg p-6 mb-4 ">
         <div className="flex flex-col items-center">
           {/* Therapist Image or Placeholder */}
           {selectedTherapist.image ? (
@@ -45,6 +48,14 @@ const SelectedTherapist = ({
             {selectedTherapist.description}
           </p>
         </div>
+        <BookingCalendar
+          therapistsAvailableTimes={JSON.stringify(
+            selectedTherapist.availableTimes
+          )}
+          appointments={JSON.stringify(selectedTherapist.appointments)}
+          appointmentType={appointmentType}
+          therapistId={selectedTherapist._id}
+        />
         <div className="text-center mt-6">
           <Button variant="outline" onClick={() => setIsDialogOpen(true)}>
             {t("changeTherapistButton")}
