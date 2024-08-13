@@ -5,7 +5,7 @@ import { getTherapistById } from "@/data/user";
 import { getTranslations } from "next-intl/server";
 import { FaUser } from "react-icons/fa";
 
-import BookingCalendar from "@/app/[locale]/(protected)/therapists/[therapistId]/booking-calendar";
+import BookingCalendar from "@/app/[locale]/(protected)/book-appointment/[therapistId]/booking-calendar";
 
 const TherapistUserProfile = async ({
   params,
@@ -41,10 +41,10 @@ const TherapistUserProfile = async ({
             {therapist.firstName} {therapist.lastName}
           </div>
           <div className="text-xl text-gray-600 mb-2">
-            {therapist.workDetails?.title}
+            {therapist.therapistWorkProfile?.title}
           </div>
           <div className="text-gray-700">
-            {therapist.workDetails?.description}
+            {therapist.therapistWorkProfile?.description}
           </div>
         </div>
       </div>

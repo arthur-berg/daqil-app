@@ -86,7 +86,10 @@
     "therapist": "معالج",
     "enterReason": "أدخل السبب",
     "joinDisabledMessage": "سيكون بإمكانك الوصول إلى الاجتماع قبل 20 دقيقة من بدءه.",
-"refreshMessage": "قم بتحديث الصفحة إذا كنت داخل النافذة ولكنك لا تزال ترى هذه الرسالة."
+"refreshMessage": "قم بتحديث الصفحة إذا كنت داخل النافذة ولكنك لا تزال ترى هذه الرسالة.",
+  "noShowHost": "لم يحضر المعالج",
+  "noShowClient": "لم يحضر العميل",
+  "noShowBoth": "لم يحضر المعالج ولا العميل"
   },
   "SettingsPage": {
     "firstNameLabel": "الاسم الأول",
@@ -102,9 +105,31 @@
   "PricingPage": {
     "heading": "اختر بين الاشتراكات أو شراء جلسة واحدة"
   },
-  "TherapistsPage": {
+  "BookAppointmentPage": {
     "therapists": "المعالجون",
-    "bookSession": "احجز جلسة"
+    "bookSession": "احجز جلسة",
+    "introCallTitle": "احجز مكالمة تعريفية لمدة 15 دقيقة",
+    "introCallDescription": "احجز مكالمة تعريفية لمدة 15 دقيقة للبدء.",
+    "bookIntroCall": "احجز مكالمة تعريفية",
+    "recommendedForNewClients": "موصى به للعملاء الجدد.",
+    "browseTherapistsTitle": "تصفح المعالجين",
+    "browseTherapistsDescription": "إذا كنت تفضل تصفح المعالجين بنفسك، انقر هنا.",
+    "browseTherapistsButton": "تصفح المعالجين",
+    "scheduleIntroCall": "جدول مكالمتك التعريفية",
+    "goBackButton": "ارجع للخلف",
+    "bookAppointment": "احجز موعد",
+    "morning": "الصباح",
+    "afternoon": "بعد الظهر",
+    "evening": "المساء",
+    "availableSlots": "الأوقات المتاحة",
+    "noSlotsAvailable": "لا توجد أوقات متاحة",
+    "calendar": "التقويم",
+    "changeTherapistButton": "تغيير المعالج",
+    "areYouSure": "هل أنت متأكد أنك تريد تغيير المعالج؟",
+    "changeTherapistTitle": "غير معالجك",
+    "changeTherapistDescription": "يمكنك تصفح المعالجين واختيار معالج جديد إذا أردت. لاحظ أن معالجك سيتغير فقط بعد حجز موعد مع معالج جديد من القائمة.",
+    "close": "إغلاق",
+    "yourTherapist": "معالجك"
   },
   "BookingCalendar": {
   "calendar": "التقويم",

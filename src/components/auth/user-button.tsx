@@ -51,7 +51,7 @@ const ClientMenu = ({ t }: { t: any }) => {
           {t("appointments")}
         </DropdownMenuItem>
       </Link>
-      <Link href="/therapists">
+      <Link href="/book-appointment">
         <DropdownMenuItem>
           <CardStackIcon className="h-4 w-4 mr-2" />
           {t("bookSession")}

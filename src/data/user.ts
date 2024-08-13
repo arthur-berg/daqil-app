@@ -1,11 +1,22 @@
 import { UserRole } from "@/generalTypes";
 import User from "@/models/User";
+import { ExtendedUser } from "@/next-auth";
 
 export const getUserByEmail = async (email: string) => {
   try {
     const user = await User.findOne({ email });
 
     return user;
+  } catch {
+    return null;
+  }
+};
+
+export const getSelectedTherapist = async (selectedTherapistId: string) => {
+  try {
+    const therapist = await User.findById(selectedTherapistId).lean();
+
+    return therapist;
   } catch {
     return null;
   }

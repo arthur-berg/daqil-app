@@ -45,24 +45,36 @@ const availableTimesSchema = new Schema({
     interval: {
       type: Number,
       required: false,
-      default: 15,
     },
     fullDayRange: {
       from: {
         type: String,
         required: false,
-        default: "09:00",
       },
       to: {
         type: String,
         required: false,
-        default: "18:00",
       },
     },
   },
-  blockedOutTimes: [dateTimesSchema],
-  nonRecurringAvailableTimes: [dateTimesSchema],
-  recurringAvailableTimes: [dayTimesSchema],
+  blockedOutTimes: {
+    type: [dateTimesSchema],
+    default: function (this: any) {
+      return this.role === "THERAPIST" ? [] : undefined;
+    },
+  },
+  nonRecurringAvailableTimes: {
+    type: [dateTimesSchema],
+    default: function (this: any) {
+      return this.role === "THERAPIST" ? [] : undefined;
+    },
+  },
+  recurringAvailableTimes: {
+    type: [dayTimesSchema],
+    default: function (this: any) {
+      return this.role === "THERAPIST" ? [] : undefined;
+    },
+  },
 });
 
 const userSchema = new Schema(
@@ -75,7 +87,7 @@ const userSchema = new Schema(
       type: String,
       required: false,
     },
-    workDetails: {
+    therapistWorkProfile: {
       title: {
         type: String,
         required: false,
@@ -136,6 +148,19 @@ const userSchema = new Schema(
       enum: ["ADMIN", "CLIENT", "THERAPIST"],
       default: "CLIENT",
     },
+    selectedTherapist: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
+    assignedClients: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+        default: function (this: any) {
+          return this.role === "THERAPIST" ? [] : undefined;
+        },
+      },
+    ],
     accounts: [
       {
         type: Schema.Types.ObjectId,
@@ -162,7 +187,26 @@ const userSchema = new Schema(
         ],
       },
     ],
-    availableTimes: availableTimesSchema,
+    availableTimes: {
+      type: availableTimesSchema,
+      default: function (this: any) {
+        if (this.role === "THERAPIST") {
+          return {
+            blockedOutTimes: [],
+            nonRecurringAvailableTimes: [],
+            recurringAvailableTimes: [],
+            settings: {
+              interval: 15,
+              fullDayRange: {
+                from: "09:00",
+                to: "18:00",
+              },
+            },
+          };
+        }
+        return undefined;
+      },
+    },
     settings: {
       preferredCurrency: {
         type: String,

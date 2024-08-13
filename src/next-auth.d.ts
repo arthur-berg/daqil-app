@@ -13,6 +13,12 @@ export type ExtendedUser = DefaultSession["user"] & {
   appointments: string[];
   stripePaymentMethodId?: string;
   stripeCustomerId?: string;
+  selectedTherapist?: string;
+  assignedClients?: string[];
+  therapistWorkProfile?: {
+    title: string;
+    description: string;
+  };
   availableTimes?: {
     settings: {
       interval: number;

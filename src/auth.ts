@@ -59,6 +59,8 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         session.user.role = token.role as UserRole;
         session.user.email = token.email as string;
         session.user.isOAuth = token.isOAuth as boolean;
+        session.user.selectedTherapist = token.selectedTherapist as string;
+        session.user.assignedClients = token.assignedClients as string[];
         if (
           session.user.role === "THERAPIST" ||
           session.user.role === "ADMIN"
@@ -84,6 +86,8 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       token.email = existingUser.email;
       token.role = existingUser.role;
       token.isTwoFactorEnabled = existingUser.isTwoFactorEnabled;
+      token.selectedTherapist = existingUser.selectedTherapist;
+      token.assignedClients = existingUser.assignedClients;
       if (existingUser.role === "THERAPIST" || existingUser.role === "ADMIN") {
         token.availableTimes = existingUser.availableTimes;
       }

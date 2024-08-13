@@ -68,9 +68,9 @@ export const getClientMenuList = (pathname: string, t: any): Group[] => {
           submenus: [],
         },
         {
-          href: "/therapists",
+          href: "/book-appointment",
           label: t("bookSession"),
-          active: pathname.includes("/therapists"),
+          active: pathname.includes("/book-appointment"),
           icon: CardStackIcon,
           submenus: [],
         },

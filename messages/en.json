@@ -67,7 +67,10 @@
     "therapist": "Therapist",
     "enterReason": "Enter reason",
     "joinDisabledMessage": "The meeting will be accessible 20 minutes before it starts.",
-    "refreshMessage": "Refresh the page if you're within the window but still see this message."
+    "refreshMessage": "Refresh the page if you're within the window but still see this message.",
+    "noShowHost": "Therapist didn't show up",
+    "noShowClient": "Client didn't show up",
+    "noShowBoth": "Neither the therapist nor the client showed up."
   },
   "RegisterPage": {
     "emailLabel": "Email",
@@ -101,9 +104,31 @@
   "PricingPage": {
     "heading": "Choose between subscriptions or buy a single session"
   },
-  "TherapistsPage": {
+  "BookAppointmentPage": {
     "therapists": "Therapists",
-    "bookSession": "Book session"
+    "bookSession": "Book a Session",
+    "introCallTitle": "Book a 15-Minute Intro Call",
+    "introCallDescription": "Book a 15-minute intro call to get started.",
+    "bookIntroCall": "Book Intro Call",
+    "recommendedForNewClients": "Recommended for new clients.",
+    "browseTherapistsTitle": "Browse Therapists",
+    "browseTherapistsDescription": "If you prefer to browse therapists on your own, click here.",
+    "browseTherapistsButton": "Browse Therapists",
+    "scheduleIntroCall": "Schedule Your Introductory Call",
+     "goBackButton": "Go Back",
+     "bookAppointment": "Book Appointment",
+     "morning": "Morning",
+     "afternoon": "Afternoon",
+     "evening": "Evening",
+     "availableSlots": "Available times",
+     "noSlotsAvailable": "No times available",
+     "calendar": "Calendar",
+     "changeTherapistButton": "Change Therapist",
+     "areYouSure": "Are you sure you want to change therapist?",
+     "changeTherapistTitle": "Change Your Therapist",
+     "changeTherapistDescription": "You can browse therapists and choose a new one if you like. Note that your therapist will only be changed after you book an appointment with a new therapist from the list.",
+     "close": "Close",
+     "yourTherapist": "Your Therapist"
   },
   "BookingCalendar": {
     "calendar": "Calendar",

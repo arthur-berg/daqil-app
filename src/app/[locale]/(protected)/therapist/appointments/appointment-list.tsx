@@ -72,6 +72,19 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
     }
   };
 
+  const getCancellationReason = (cancellationReason: string) => {
+    switch (cancellationReason) {
+      case "no-show-host":
+        return t("noShowHost");
+      case "no-show-participant":
+        return t("noShowParticipant");
+      case "no-show-both":
+        return t("noShowBoth");
+      default:
+        return "";
+    }
+  };
+
   const getDateLabel = (date: string) => {
     const parsedDate = new Date(date);
     if (isToday(parsedDate)) return t("today");
@@ -179,9 +192,7 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
                               return (
                                 <AccordionItem
                                   className={`bg-white ${
-                                    disableAccordion
-                                      ? "opacity-50"
-                                      : ""
+                                    disableAccordion ? "opacity-50" : ""
                                   } ${
                                     appointment.status === "canceled"
                                       ? "opacity-50"
@@ -254,9 +265,9 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
                                                   <strong>
                                                     {t("cancellationReason")}:
                                                   </strong>{" "}
-                                                  {
+                                                  {getCancellationReason(
                                                     appointment.cancellationReason
-                                                  }
+                                                  )}
                                                 </p>
                                               )}
                                             </>

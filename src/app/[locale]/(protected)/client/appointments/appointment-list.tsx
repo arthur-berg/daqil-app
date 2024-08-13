@@ -72,6 +72,19 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
     }
   };
 
+  const getCancellationReason = (cancellationReason: string) => {
+    switch (cancellationReason) {
+      case "no-show-host":
+        return t("noShowHost");
+      case "no-show-participant":
+        return t("noShowParticipant");
+      case "no-show-both":
+        return t("noShowBoth");
+      default:
+        return "";
+    }
+  };
+
   const getDateLabel = (date: string) => {
     const parsedDate = new Date(date);
     if (isToday(parsedDate)) return t("today");
@@ -239,7 +252,9 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
                                                 <strong>
                                                   {t("cancellationReason")}:
                                                 </strong>{" "}
-                                                {appointment.cancellationReason}
+                                                {getCancellationReason(
+                                                  appointment.cancellationReason
+                                                )}
                                               </p>
                                             )}
                                           </>

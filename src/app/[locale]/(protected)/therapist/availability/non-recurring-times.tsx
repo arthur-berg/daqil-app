@@ -17,7 +17,7 @@ const NonRecurringTimes = ({
       </h2>
       <div className="space-y-4 md:flex md:space-y-0 md:space-x-4">
         {nonRecurringAvailableTimes.length === 0 ? (
-          <p className="text-green-800">{t("noNonRecurringAvailableTimes")}</p>
+          <p className="text-green-800">{t("noTimeSlotsFound")}</p>
         ) : (
           nonRecurringAvailableTimes.map((dateTime: DateTimes) => (
             <div

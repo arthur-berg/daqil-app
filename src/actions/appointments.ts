@@ -227,12 +227,39 @@ export const bookAppointment = async (
     };
 
     const appointment = await createAppointment(appointmentData, session);
-
     const appointmentId = appointment[0]._id; // As appointment.create returns an array
-
     const appointmentDate = format(new Date(startDate), "yyyy-MM-dd");
 
-    // Update the user who booked the appointment
+    // Handle therapist change
+    if (
+      user.selectedTherapist &&
+      user.selectedTherapist.toString() !== therapistId
+    ) {
+      // Remove client from old therapist's assignedClients list
+      await User.findByIdAndUpdate(
+        user.selectedTherapist,
+        { $pull: { assignedClients: user.id } },
+        { session }
+      );
+    }
+
+    // Update or set the client's selected therapist
+    await User.findByIdAndUpdate(
+      user.id,
+      { selectedTherapist: therapistId },
+      { session }
+    );
+
+    // Add client to new therapist's assignedClients list if not already present
+    if (!therapist.assignedClients.includes(user.id)) {
+      await User.findByIdAndUpdate(
+        therapistId,
+        { $addToSet: { assignedClients: user.id } }, // $addToSet ensures no duplicates
+        { session }
+      );
+    }
+
+    // Update the user's appointments
     await updateAppointments(user.id, appointmentDate, appointmentId, session);
 
     // Update the therapist's appointments
@@ -271,7 +298,6 @@ export const bookAppointment = async (
     throw error;
   }
 };
-
 export const scheduleAppointment = async (
   values: z.input<typeof AppointmentSchema>
 ) => {
@@ -342,6 +368,24 @@ export const scheduleAppointment = async (
     const appointmentId = appointment[0]._id;
 
     const appointmentDate = format(new Date(startDate), "yyyy-MM-dd");
+
+    // Check and update client's selected therapist
+    if (!user.selectedTherapist) {
+      await User.findByIdAndUpdate(
+        clientId,
+        { selectedTherapist: user.id },
+        { session }
+      );
+    }
+
+    // Check and update therapist's clients list
+    if (!user.assignedClients?.includes(user.id)) {
+      await User.findByIdAndUpdate(
+        user.id,
+        { $addToSet: { assignedClients: clientId } }, // $addToSet ensures no duplicates
+        { session }
+      );
+    }
 
     // Update the clients appointments
     await updateAppointments(clientId, appointmentDate, appointmentId, session);
