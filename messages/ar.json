@@ -48,7 +48,8 @@
     "createAppointments": "إنشاء مواعيد وجلسات فيديو",
     "payment": "الاشتراك والرصيد",
     "settings": "الإعدادات",
-    "logout": "تسجيل الخروج"
+    "logout": "تسجيل الخروج",
+    "myClients": "عملائي"
   },
   "AppointmentList": {
     "all": "الكل",

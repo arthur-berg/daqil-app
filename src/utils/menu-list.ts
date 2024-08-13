@@ -106,19 +106,27 @@ export const getTherapistMenuList = (pathname: string, t: any): Group[] => {
       groupLabel: "",
       menus: [
         {
-          href: "/therapist/availability",
-          label: t("availability"),
-          active: pathname.includes("/therapist/availability"),
-          icon: CalendarIcon,
-          submenus: [],
-        },
-        {
           href: "/therapist/appointments",
           label: t("appointments"),
           active: pathname.includes("/therapist/appointments"),
           icon: CardStackIcon,
           submenus: [],
         },
+        {
+          href: "/therapist/my-clients",
+          label: t("myClients"),
+          active: pathname.includes("/therapist/my-clients"),
+          icon: CardStackIcon,
+          submenus: [],
+        },
+        {
+          href: "/therapist/availability",
+          label: t("availability"),
+          active: pathname.includes("/therapist/availability"),
+          icon: CalendarIcon,
+          submenus: [],
+        },
+
         {
           href: "/settings",
           label: t("settings"),

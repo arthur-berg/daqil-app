@@ -21,6 +21,34 @@ export const getUserById = async (id: string) => {
   }
 };
 
+export const getClients = async (therapistId: string) => {
+  try {
+    const therapist = await User.findById(therapistId).populate({
+      path: "assignedClients",
+      select: "firstName lastName email appointments",
+    });
+
+    if (therapist) {
+      const clientsWithAppointmentCounts = therapist.assignedClients.map(
+        (client: any) => {
+          return {
+            firstName: client.firstName,
+            lastName: client.lastName,
+            email: client.email,
+            totalAppointments: client.appointments.length, // Counting the number of appointments
+          };
+        }
+      ) as any;
+
+      return clientsWithAppointmentCounts;
+    } else {
+      return null;
+    }
+  } catch {
+    return null;
+  }
+};
+
 export const getTherapistById = async (id: string) => {
   try {
     const therapist = await User.findById(id).populate(

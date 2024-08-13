@@ -4,7 +4,7 @@ import { getCurrentRole, requireAuth } from "@/lib/auth";
 import Appointment from "@/models/Appointment";
 import { AppointmentSchema, CancelAppointmentSchema } from "@/schemas";
 import { getUserById } from "@/data/user";
-import mongoose, { Types } from "mongoose";
+import mongoose from "mongoose";
 import { UserRole } from "@/generalTypes";
 import User from "@/models/User";
 import { getAppointmentTypeById } from "@/data/appointment-types";
@@ -194,7 +194,7 @@ export const bookAppointment = async (
     getTranslations("ErrorMessages"),
     getTranslations("AppointmentAction"),
   ]);
-  const user = await requireAuth([UserRole.CLIENT, UserRole.ADMIN]);
+  const client = await requireAuth([UserRole.CLIENT, UserRole.ADMIN]);
 
   const therapist = (await getUserById(therapistId)) as any;
 
@@ -218,7 +218,7 @@ export const bookAppointment = async (
       title: `${t("therapySessionWith")} ${therapist?.firstName}`,
       startDate,
       endDate,
-      participants: [{ userId: user.id, showUp: false }],
+      participants: [{ userId: client.id, showUp: false }],
       hostUserId: therapistId,
       durationInMinutes: appointmentType.durationInMinutes,
       paid: false,
@@ -232,35 +232,40 @@ export const bookAppointment = async (
 
     // Handle therapist change
     if (
-      user.selectedTherapist &&
-      user.selectedTherapist.toString() !== therapistId
+      client.selectedTherapist &&
+      client.selectedTherapist.toString() !== therapistId
     ) {
       // Remove client from old therapist's assignedClients list
       await User.findByIdAndUpdate(
-        user.selectedTherapist,
-        { $pull: { assignedClients: user.id } },
+        client.selectedTherapist,
+        { $pull: { assignedClients: client.id } },
+        { session }
+      );
+
+      // Update or set the client's selected therapist
+      await User.findByIdAndUpdate(
+        client.id,
+        { selectedTherapist: therapistId },
         { session }
       );
     }
 
-    // Update or set the client's selected therapist
-    await User.findByIdAndUpdate(
-      user.id,
-      { selectedTherapist: therapistId },
-      { session }
-    );
-
     // Add client to new therapist's assignedClients list if not already present
-    if (!therapist.assignedClients.includes(user.id)) {
+    if (!therapist.assignedClients.includes(client.id)) {
       await User.findByIdAndUpdate(
         therapistId,
-        { $addToSet: { assignedClients: user.id } }, // $addToSet ensures no duplicates
+        { $addToSet: { assignedClients: client.id } }, // $addToSet ensures no duplicates
         { session }
       );
     }
 
     // Update the user's appointments
-    await updateAppointments(user.id, appointmentDate, appointmentId, session);
+    await updateAppointments(
+      client.id,
+      appointmentDate,
+      appointmentId,
+      session
+    );
 
     // Update the therapist's appointments
     await updateAppointments(
@@ -274,12 +279,12 @@ export const bookAppointment = async (
     session.endSession();
 
     const therapistEmail = therapist.email;
-    const clientEmail = user.email;
+    const clientEmail = client.email;
     const appointmentDetails = {
       date: format(startDate, "yyyy-MM-dd"),
       time: format(startDate, "HH:mm"),
       therapistName: `${therapist.firstName} ${therapist.lastName}`,
-      clientName: `${user.firstName} ${user.lastName}`,
+      clientName: `${client.firstName} ${client.lastName}`,
     };
 
     await sendAppointmentBookingConfirmationEmail(
@@ -305,7 +310,7 @@ export const scheduleAppointment = async (
     getTranslations("SuccessMessages"),
     getTranslations("ErrorMessages"),
   ]);
-  const user = await requireAuth([UserRole.THERAPIST]);
+  const therapist = await requireAuth([UserRole.THERAPIST]);
 
   const validatedFields = AppointmentSchema.safeParse(values);
 
@@ -324,6 +329,8 @@ export const scheduleAppointment = async (
   } = validatedFields.data;
 
   const appointmentType = await getAppointmentTypeById(appointmentTypeId);
+
+  const client = await User.findById(clientId);
 
   if (!appointmentType) {
     return { error: ErrorMessages("appointmentTypeNotExist") };
@@ -357,7 +364,7 @@ export const scheduleAppointment = async (
           paid,
           status,
           participants: [{ userId: clientId, showUp: false }],
-          hostUserId: user.id,
+          hostUserId: therapist.id,
           durationInMinutes: appointmentType.durationInMinutes,
           ...appointmentCost,
         },
@@ -370,18 +377,30 @@ export const scheduleAppointment = async (
     const appointmentDate = format(new Date(startDate), "yyyy-MM-dd");
 
     // Check and update client's selected therapist
-    if (!user.selectedTherapist) {
+
+    if (
+      client.selectedTherapist &&
+      client.selectedTherapist.toString() !== therapist.id
+    ) {
+      // Remove client from old therapist's assignedClients list
+      await User.findByIdAndUpdate(
+        client.selectedTherapist,
+        { $pull: { assignedClients: client.id } },
+        { session }
+      );
+
+      // Update or set the client's selected therapist
       await User.findByIdAndUpdate(
         clientId,
-        { selectedTherapist: user.id },
+        { selectedTherapist: therapist.id },
         { session }
       );
     }
 
-    // Check and update therapist's clients list
-    if (!user.assignedClients?.includes(user.id)) {
+    // Add client to new therapist's assignedClients list if not already present
+    if (!therapist?.assignedClients?.includes(clientId)) {
       await User.findByIdAndUpdate(
-        user.id,
+        therapist.id,
         { $addToSet: { assignedClients: clientId } }, // $addToSet ensures no duplicates
         { session }
       );
@@ -391,7 +410,12 @@ export const scheduleAppointment = async (
     await updateAppointments(clientId, appointmentDate, appointmentId, session);
 
     // Update the therapist's appointments
-    await updateAppointments(user.id, appointmentDate, appointmentId, session);
+    await updateAppointments(
+      therapist.id,
+      appointmentDate,
+      appointmentId,
+      session
+    );
 
     await session.commitTransaction();
     session.endSession();

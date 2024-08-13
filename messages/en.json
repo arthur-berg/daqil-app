@@ -88,7 +88,8 @@
     "appointments": "Appointments",
     "payment": "Subscription & Credits",
     "settings": "Settings",
-    "logout": "Logout"
+    "logout": "Logout",
+    "myClients": "My Clients"
   },
   "SettingsPage": {
     "firstNameLabel": "First Name",
