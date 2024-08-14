@@ -245,7 +245,11 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
                                           </p>
                                           <p>
                                             <strong>{t("status")}:</strong>{" "}
-                                            {appointment.status}
+                                            {
+                                              statusTranslations[
+                                                appointment.status
+                                              ]
+                                            }
                                           </p>
                                           {appointment.status ===
                                             "canceled" && (

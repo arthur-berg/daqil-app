@@ -197,7 +197,14 @@
     "noDescription": "No description provided.",
     "am": "AM",
     "pm": "PM",
-    "client": "Client"
+    "client": "Client",
+    "joinDisabledMessage": "The meeting will be accessible 20 minutes before it starts.",
+    "refreshMessage": "Refresh the page if you're within the window but still see this message.",
+    "status": "Status",
+    "confirmed": "Confirmed",
+    "pending": "Pending",
+    "canceled": "Canceled",
+    "completed": "Completed"
   },
   "InviteTherapistForm": {
     "inviteTherapists": "Invite therapists",
