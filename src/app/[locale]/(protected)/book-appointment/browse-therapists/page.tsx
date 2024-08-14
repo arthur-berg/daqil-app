@@ -3,11 +3,17 @@ import { Button } from "@/components/ui/button";
 import { Link } from "@/navigation";
 import { getTranslations } from "next-intl/server";
 
-const BrowseTherapistsPage = async () => {
+const BrowseTherapistsPage = async ({
+  params,
+}: {
+  params: { locale: string };
+}) => {
+  const locale = params.locale;
   const therapists = await getTherapists();
   const t = await getTranslations("BookAppointmentPage");
+
   return (
-    <div>
+    <div className="px-10">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {therapists?.map((therapist: any) => (
           <div
@@ -22,10 +28,10 @@ const BrowseTherapistsPage = async () => {
               {therapist.therapistWorkProfile && (
                 <div className="text-sm text-gray-700 mb-4">
                   <div className="font-semibold mb-2">
-                    {therapist.therapistWorkProfile.title}
+                    {therapist.therapistWorkProfile[locale].title}
                   </div>
                   <div className="leading-relaxed">
-                    {therapist.therapistWorkProfile.description}
+                    {therapist.therapistWorkProfile[locale].description}
                   </div>
                 </div>
               )}

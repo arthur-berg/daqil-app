@@ -16,8 +16,14 @@ export type ExtendedUser = DefaultSession["user"] & {
   selectedTherapist?: string;
   assignedClients?: string[];
   therapistWorkProfile?: {
-    title: string;
-    description: string;
+    en: {
+      title: string;
+      description: string;
+    };
+    ar: {
+      title: string;
+      description: string;
+    };
   };
   availableTimes?: {
     settings: {

@@ -183,6 +183,16 @@
     "loadingAppointments": "Loading appointments...",
     "loadingVideoSession": "Loading video session... Please wait"
   },
+  "TherapistProfilePage": {
+    "workTitleLabelEn": "Work Title (EN)",
+    "workDescriptionLabelEn": "Work Description (EN)",
+    "workTitleLabelAr": "Work Title (AR)",
+    "workDescriptionLabelAr": "Work Description (AR)",
+    "englishSection": "English Language",
+    "arabicSection": "Arabic Language",
+    "uploadProfileImage": "Upload profile image",
+    "uploadSuccess": "Profile picture was successfully uploaded"
+  },
   "AppointmentCalendar": {
     "appointmentsCalendar": "Appointment Calendar",
     "start": "Start",
@@ -239,7 +249,9 @@
     "notAuthorized": "Not authorized!",
     "appointmentNotExist": "Appointment does not exist",
     "appointmentAlreadyCanceled": "Appointment already canceled",
-    "appointmentAlreadyCompleted": "Appointment already completed"
+    "appointmentAlreadyCompleted": "Appointment already completed",
+    "failedToUpdateTherapistProfile": "Failed to update therapist profile",
+    "failedToUploadProfileImage": "Failed to upload profile image"
   },
   "SuccessMessages": {
     "activateLinkSent": "A link to activate your account has been emailed to the address provided",
@@ -256,7 +268,9 @@
     "resetEmailSent": "Reset email sent!",
     "verificationEmailSent": "Verification email sent!",
     "accountSuccessfullySetup": "Account succesfully setup",
-    "appointmentCancelled": "Appointment successfully cancelled"
+    "appointmentCancelled": "Appointment successfully cancelled",
+    "therapistProfileUpdated": "Therapist profile updated",
+    "profileImageUploaded": "Profile image uploaded"
   },
   "AppointmentAction": {
     "therapySessionWith": "Therapy session with"

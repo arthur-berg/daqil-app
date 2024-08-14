@@ -184,6 +184,16 @@
     "loadingAppointments": "جار تحميل المواعيد...",
     "loadingVideoSession": "جار تحميل جلسة الفيديو... يرجى الانتظار"
   },
+  "TherapistProfilePage" : {
+    "workTitleLabelEn": "المسمى الوظيفي (EN)",
+    "workDescriptionLabelEn": "وصف العمل (EN)",
+    "workTitleLabelAr": "المسمى الوظيفي (AR)",
+    "workDescriptionLabelAr": "وصف العمل (AR)",
+    "englishSection": "اللغة الإنجليزية",
+    "arabicSection": "اللغة العربية",
+     "uploadProfileImage": "تحميل صورة الملف الشخصي",
+  "uploadSuccess": "تم تحميل صورة الملف الشخصي بنجاح"
+  },
   "AppointmentCalendar": {
     "appointmentsCalendar": "تقويم المواعيد",
     "start": "البداية",
@@ -240,7 +250,9 @@
     "notAuthorized": "غير مفوض!",
     "appointmentNotExist": "الموعد غير موجود",
     "appointmentAlreadyCanceled": "الموعد تم إلغاؤه بالفعل",
-    "appointmentAlreadyCompleted": "الموعد قد تم اكتماله بالفعل"
+    "appointmentAlreadyCompleted": "الموعد قد تم اكتماله بالفعل",
+    "failedToUpdateTherapistProfile": "فشل في تحديث ملف المعالج",
+    "failedToUploadProfileImage": "فشل في تحميل صورة الملف الشخصي"
   },
   "SuccessMessages": {
     "activateLinkSent": "تم إرسال رابط لتفعيل حسابك إلى البريد الإلكتروني المقدم",
@@ -257,7 +269,9 @@
     "resetEmailSent": "تم إرسال بريد إعادة التعيين!",
     "verificationEmailSent": "تم إرسال بريد التحقق!",
     "accountSuccessfullySetup": "تم إعداد الحساب بنجاح",
-    "appointmentCancelled": "تم إلغاء الموعد بنجاح"
+    "appointmentCancelled": "تم إلغاء الموعد بنجاح",
+    "therapistProfileUpdated": "تم تحديث ملف المعالج",
+    "profileImageUploaded": "تم تحميل صورة الملف الشخصي"
   },
   "AppointmentAction": {
     "therapySessionWith": "جلسة علاجية مع"

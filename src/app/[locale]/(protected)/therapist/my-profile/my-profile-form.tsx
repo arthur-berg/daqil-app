@@ -1,7 +1,23 @@
 "use client";
-
+import * as z from "zod";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { TherapistMyProfileSchema } from "@/schemas";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useTransition } from "react";
+import { useForm } from "react-hook-form";
+import {
+  Form,
+  FormField,
+  FormControl,
+  FormLabel,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
+import { useToast } from "@/components/ui/use-toast";
+import { updateTherapistProfile } from "@/actions/therapist-profile";
+import { Input } from "@/components/ui/input";
+import { useTranslations } from "next-intl";
+import { Textarea } from "@/components/ui/textarea";
 
 const MyProfileForm = ({
   therapist,
@@ -10,102 +26,117 @@ const MyProfileForm = ({
   therapist: any;
   setIsEditing: (isEditing: boolean) => void;
 }) => {
-  const [workTitleEn, setWorkTitleEn] = useState(
-    therapist?.therapistWorkProfile?.en?.title || ""
-  );
-  const [workDescriptionEn, setWorkDescriptionEn] = useState(
-    therapist?.therapistWorkProfile?.en?.description || ""
-  );
+  const [isPending, startTransition] = useTransition();
+  const { responseToast } = useToast();
+  const form = useForm<z.infer<typeof TherapistMyProfileSchema>>({
+    resolver: zodResolver(TherapistMyProfileSchema),
+    defaultValues: {
+      workTitleEn: therapist?.therapistWorkProfile?.en?.title || "",
+      workDescriptionEn: therapist?.therapistWorkProfile?.en?.description || "",
+      workTitleAr: therapist?.therapistWorkProfile?.ar?.title || "",
+      workDescriptionAr: therapist?.therapistWorkProfile?.ar?.description || "",
+    },
+  });
 
-  const [workTitleAr, setWorkTitleAr] = useState(
-    therapist?.therapistWorkProfile?.ar?.title || ""
-  );
-  const [workDescriptionAr, setWorkDescriptionAr] = useState(
-    therapist?.therapistWorkProfile?.ar?.description || ""
-  );
-  const [profileImage, setProfileImage] = useState(therapist?.image || "");
+  const t = useTranslations("TherapistProfilePage");
 
-  const handleSave = () => {
-    // Handle save logic here
-    console.log("Saving profile data:", {
-      profileImage,
-      therapistWorkProfile: {
-        en: {
-          title: workTitleEn,
-          description: workDescriptionEn,
-        },
-        ar: {
-          title: workTitleAr,
-          description: workDescriptionAr,
-        },
-      },
-    });
+  const handleCancel = () => {
+    form.reset();
     setIsEditing(false);
   };
 
-  const handleCancel = () => {
-    // Reset fields to original values
-    setProfileImage(therapist.image || "");
-    setWorkTitleEn(therapist.therapistWorkProfile?.en?.title || "");
-    setWorkDescriptionEn(therapist.therapistWorkProfile?.en?.description || "");
-    setWorkTitleAr(therapist.therapistWorkProfile?.ar?.title || "");
-    setWorkDescriptionAr(therapist.therapistWorkProfile?.ar?.description || "");
-    setIsEditing(false);
+  const onSubmit = (values: z.infer<typeof TherapistMyProfileSchema>) => {
+    startTransition(async () => {
+      const data = await updateTherapistProfile(values);
+      responseToast(data);
+      if (data.success) {
+        setIsEditing(false);
+        form.reset();
+      }
+    });
   };
 
   return (
-    <div>
-      {" "}
-      <input
-        type="file"
-        accept="image/*"
-        onChange={(e) => {
-          const file = e.target.files?.[0];
-          if (file) {
-            const reader = new FileReader();
-            reader.onload = () => setProfileImage(reader.result as string);
-            reader.readAsDataURL(file);
-          }
-        }}
-        className="mb-4"
-      />
-      <h3 className="text-lg font-semibold mb-2">English</h3>
-      <input
-        type="text"
-        value={workTitleEn}
-        onChange={(e) => setWorkTitleEn(e.target.value)}
-        placeholder="Title (EN)"
-        className="mb-2 p-2 border border-gray-300 rounded w-full"
-      />
-      <textarea
-        value={workDescriptionEn}
-        onChange={(e) => setWorkDescriptionEn(e.target.value)}
-        placeholder="Description (EN)"
-        className="p-2 border border-gray-300 rounded w-full mb-4"
-        rows={4}
-      />
-      <h3 className="text-lg font-semibold mb-2">Arabic</h3>
-      <input
-        type="text"
-        value={workTitleAr}
-        onChange={(e) => setWorkTitleAr(e.target.value)}
-        placeholder="Title (AR)"
-        className="mb-2 p-2 border border-gray-300 rounded w-full"
-      />
-      <textarea
-        value={workDescriptionAr}
-        onChange={(e) => setWorkDescriptionAr(e.target.value)}
-        placeholder="Description (AR)"
-        className="p-2 border border-gray-300 rounded w-full mb-4"
-        rows={4}
-      />
-      <div className="flex space-x-4">
-        <Button onClick={handleSave}>Save</Button>
-        <Button onClick={handleCancel} variant="secondary">
-          Cancel
-        </Button>
-      </div>
-    </div>
+    <Form {...form}>
+      <form className="space-y-8 w-full" onSubmit={form.handleSubmit(onSubmit)}>
+        <div className="space-y-6">
+          <h2 className="text-xl font-semibold">{t("englishSection")}</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <FormField
+              control={form.control}
+              name="workTitleEn"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t("workTitleLabelEn")}</FormLabel>
+                  <FormControl>
+                    <Input {...field} disabled={isPending} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="workDescriptionEn"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t("workDescriptionLabelEn")}</FormLabel>
+                  <FormControl>
+                    <Textarea {...field} disabled={isPending} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+        </div>
+
+        <div className="space-y-6">
+          <h2 className="text-xl font-semibold">{t("arabicSection")}</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <FormField
+              control={form.control}
+              name="workTitleAr"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t("workTitleLabelAr")}</FormLabel>
+                  <FormControl>
+                    <Input {...field} disabled={isPending} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="workDescriptionAr"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t("workDescriptionLabelAr")}</FormLabel>
+                  <FormControl>
+                    <Textarea {...field} disabled={isPending} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+        </div>
+
+        <div className="flex flex-col-reverse md:flex-row justify-end space-y-4 md:space-y-0 md:space-x-4">
+          <Button type="submit" disabled={isPending}>
+            Save
+          </Button>
+          <Button
+            onClick={handleCancel}
+            variant="secondary"
+            disabled={isPending}
+          >
+            Cancel
+          </Button>
+        </div>
+      </form>
+    </Form>
   );
 };
 
