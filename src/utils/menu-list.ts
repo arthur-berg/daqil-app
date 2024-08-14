@@ -77,13 +77,13 @@ export const getClientMenuList = (pathname: string, t: any): Group[] => {
           icon: CardStackIcon,
           submenus: [],
         },
-        {
+        /* {
           href: "/pricing",
           label: t("payment"),
           active: pathname.includes("/pricing"),
           icon: CardStackIcon,
           submenus: [],
-        },
+        }, */
         {
           href: "/settings",
           label: t("settings"),
