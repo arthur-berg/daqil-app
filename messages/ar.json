@@ -5,7 +5,7 @@
     "login": "تسجيل الدخول",
     "signUp": "الاشتراك"
   },
- "AuthPage": {
+  "AuthPage": {
     "welcomeBack": "Welcome back",
     "emailLabel": "Email",
     "passwordLabel": "Password",
@@ -19,17 +19,17 @@
     "lastName": "Last name",
     "currentPassword": "Current password",
     "newPassword": "New password",
-    "createAccount":"Create an account",
+    "createAccount": "Create an account",
     "redirecting": "Redirecting you to setup page...",
     "confirmingVerification": "Confirming your verification",
     "enterNewPassword": "Enter your new password",
     "backToLogin": "Back to login",
     "resetPassword": "Reset password",
     "finishSettingUpAccount": "Finish setting up your account",
-    "alreadyHaveAccount":"Already have an account?",
-"somethingWentWrong": "Oops! Something went wrong!",
-"emailInUseWithProvider": "Email already in use with different provider!",
-"sendResetEmail": "Send reset email"
+    "alreadyHaveAccount": "Already have an account?",
+    "somethingWentWrong": "Oops! Something went wrong!",
+    "emailInUseWithProvider": "Email already in use with different provider!",
+    "sendResetEmail": "Send reset email"
   },
   "RegisterPage": {
     "emailLabel": "البريد الإلكتروني",
@@ -49,7 +49,8 @@
     "payment": "الاشتراك والرصيد",
     "settings": "الإعدادات",
     "logout": "تسجيل الخروج",
-    "myClients": "عملائي"
+    "myClients": "عملائي",
+    "myProfile": "ملفي الشخصي"
   },
   "AppointmentList": {
     "all": "الكل",
@@ -87,10 +88,10 @@
     "therapist": "معالج",
     "enterReason": "أدخل السبب",
     "joinDisabledMessage": "سيكون بإمكانك الوصول إلى الاجتماع قبل 20 دقيقة من بدءه.",
-"refreshMessage": "قم بتحديث الصفحة إذا كنت داخل النافذة ولكنك لا تزال ترى هذه الرسالة.",
-  "noShowHost": "لم يحضر المعالج",
-  "noShowClient": "لم يحضر العميل",
-  "noShowBoth": "لم يحضر المعالج ولا العميل"
+    "refreshMessage": "قم بتحديث الصفحة إذا كنت داخل النافذة ولكنك لا تزال ترى هذه الرسالة.",
+    "noShowHost": "لم يحضر المعالج",
+    "noShowClient": "لم يحضر العميل",
+    "noShowBoth": "لم يحضر المعالج ولا العميل"
   },
   "SettingsPage": {
     "firstNameLabel": "الاسم الأول",
@@ -133,24 +134,24 @@
     "yourTherapist": "معالجك"
   },
   "BookingCalendar": {
-  "calendar": "التقويم",
-  "goToAppointmentsOverview": "اذهب إلى نظرة عامة على المواعيد",
-  "bookAnotherAppointment": "احجز موعدًا آخر",
-  "appointmentDetails": "تفاصيل الموعد",
-  "day": "اليوم",
-  "time": "الوقت",
-  "duration": "المدة",
-  "cost": "التكلفة",
-  "confirmBooking": "تأكيد الحجز",
-  "goBack": "العودة",
-  "minutes": "دقائق",
-  "noSlotsAvailable": "لا توجد فترات متاحة",
-  "availableSlots": "الفترات المتاحة",
-  "morning": "الصباح",
-  "afternoon": "بعد الظهر",
-  "evening": "المساء"
-},
- "AvailabilityPage": {
+    "calendar": "التقويم",
+    "goToAppointmentsOverview": "اذهب إلى نظرة عامة على المواعيد",
+    "bookAnotherAppointment": "احجز موعدًا آخر",
+    "appointmentDetails": "تفاصيل الموعد",
+    "day": "اليوم",
+    "time": "الوقت",
+    "duration": "المدة",
+    "cost": "التكلفة",
+    "confirmBooking": "تأكيد الحجز",
+    "goBack": "العودة",
+    "minutes": "دقائق",
+    "noSlotsAvailable": "لا توجد فترات متاحة",
+    "availableSlots": "الفترات المتاحة",
+    "morning": "الصباح",
+    "afternoon": "بعد الظهر",
+    "evening": "المساء"
+  },
+  "AvailabilityPage": {
     "recurringAvailableTimes": "أوقات متاحة متكررة",
     "nonRecurringAvailableTimes": "أوقات متاحة غير متكررة",
     "blockedOutTimes": "أوقات محجوبة",
@@ -177,36 +178,36 @@
     "blockedTimesSaved": "تم حفظ الأوقات المحجوبة بنجاح.",
     "blockTimesFor": "حجب الأوقات لـ",
     "overview": "نظرة عامة"
- },
+  },
   "LoadingPages": {
     "loading": "جار التحميل...",
     "loadingAppointments": "جار تحميل المواعيد...",
     "loadingVideoSession": "جار تحميل جلسة الفيديو... يرجى الانتظار"
   },
   "AppointmentCalendar": {
-  "appointmentsCalendar": "تقويم المواعيد",
-  "start": "البداية",
-  "end": "النهاية",
-  "description": "الوصف",
-  "startMeeting": "بدء الاجتماع",
-  "close": "إغلاق",
-  "back": "العودة",
-  "today": "اليوم",
-  "next": "التالي",
-  "week": "الأسبوع",
-  "month": "الشهر",
-  "noDescription": "لم يتم تقديم وصف.",
-  "am": "ص",
-  "pm": "م",
-  "client": "العميل",
-  "joinDisabledMessage": "سيكون الوصول إلى الاجتماع متاحًا قبل 20 دقيقة من بدايته.",
-  "refreshMessage": "قم بتحديث الصفحة إذا كنت في النافذة الزمنية وما زلت ترى هذه الرسالة.",
-  "status": "الحالة",
-  "confirmed": "مؤكد",
-  "pending": "قيد الانتظار",
-  "canceled": "ملغي",
-  "completed": "مكتمل"
-},
+    "appointmentsCalendar": "تقويم المواعيد",
+    "start": "البداية",
+    "end": "النهاية",
+    "description": "الوصف",
+    "startMeeting": "بدء الاجتماع",
+    "close": "إغلاق",
+    "back": "العودة",
+    "today": "اليوم",
+    "next": "التالي",
+    "week": "الأسبوع",
+    "month": "الشهر",
+    "noDescription": "لم يتم تقديم وصف.",
+    "am": "ص",
+    "pm": "م",
+    "client": "العميل",
+    "joinDisabledMessage": "سيكون الوصول إلى الاجتماع متاحًا قبل 20 دقيقة من بدايته.",
+    "refreshMessage": "قم بتحديث الصفحة إذا كنت في النافذة الزمنية وما زلت ترى هذه الرسالة.",
+    "status": "الحالة",
+    "confirmed": "مؤكد",
+    "pending": "قيد الانتظار",
+    "canceled": "ملغي",
+    "completed": "مكتمل"
+  },
   "InviteTherapistForm": {
     "inviteTherapists": "دعوة المعالجين",
     "email": "البريد الإلكتروني",
@@ -222,8 +223,8 @@
     "appointmentTypeNotExist": "نوع الموعد غير موجود",
     "userNotFound": "المستخدم غير موجود",
     "userWithEmailExists": "يوجد مستخدم بالفعل بهذا البريد الإلكتروني.",
-     "failedToSaveNonRecurringTimes": "فشل في حفظ الأوقات المتاحة غير المتكررة.",
-  "failedToSaveAvailableTimes": "فشل في حفظ الأوقات المتاحة.",
+    "failedToSaveNonRecurringTimes": "فشل في حفظ الأوقات المتاحة غير المتكررة.",
+    "failedToSaveAvailableTimes": "فشل في حفظ الأوقات المتاحة.",
     "missingToken": "رمز مفقود!",
     "invalidToken": "رمز غير صالح!",
     "tokenHasExpired": "رمز منتهي الصلاحية!",
@@ -239,7 +240,7 @@
     "notAuthorized": "غير مفوض!",
     "appointmentNotExist": "الموعد غير موجود",
     "appointmentAlreadyCanceled": "الموعد تم إلغاؤه بالفعل",
-"appointmentAlreadyCompleted": "الموعد قد تم اكتماله بالفعل"
+    "appointmentAlreadyCompleted": "الموعد قد تم اكتماله بالفعل"
   },
   "SuccessMessages": {
     "activateLinkSent": "تم إرسال رابط لتفعيل حسابك إلى البريد الإلكتروني المقدم",

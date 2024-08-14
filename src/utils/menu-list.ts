@@ -3,7 +3,10 @@ import {
   CardStackIcon,
   CalendarIcon,
   DashboardIcon,
+  PersonIcon,
 } from "@radix-ui/react-icons";
+
+import { MdGroup } from "react-icons/md";
 
 type Submenu = {
   href: string;
@@ -116,7 +119,7 @@ export const getTherapistMenuList = (pathname: string, t: any): Group[] => {
           href: "/therapist/my-clients",
           label: t("myClients"),
           active: pathname.includes("/therapist/my-clients"),
-          icon: CardStackIcon,
+          icon: MdGroup,
           submenus: [],
         },
         {
@@ -126,7 +129,13 @@ export const getTherapistMenuList = (pathname: string, t: any): Group[] => {
           icon: CalendarIcon,
           submenus: [],
         },
-
+        {
+          href: "/therapist/my-profile",
+          label: t("myProfile"),
+          active: pathname.includes("/therapist/my-profile"),
+          icon: PersonIcon,
+          submenus: [],
+        },
         {
           href: "/settings",
           label: t("settings"),

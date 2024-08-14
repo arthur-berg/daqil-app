@@ -88,13 +88,36 @@ const userSchema = new Schema(
       required: false,
     },
     therapistWorkProfile: {
-      title: {
-        type: String,
-        required: false,
+      type: {
+        en: {
+          title: {
+            type: String,
+            required: false,
+          },
+          description: {
+            type: String,
+            required: false,
+          },
+        },
+        ar: {
+          title: {
+            type: String,
+            required: false,
+          },
+          description: {
+            type: String,
+            required: false,
+          },
+        },
       },
-      description: {
-        type: String,
-        required: false,
+      default: function (this: any) {
+        if (this.role === "THERAPIST") {
+          return {
+            en: { title: "", description: "" },
+            ar: { title: "", description: "" },
+          };
+        }
+        return undefined;
       },
     },
     hasAccess: {
