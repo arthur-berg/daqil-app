@@ -2,6 +2,7 @@
 
 import axios, { AxiosProgressEvent, CancelTokenSource } from "axios";
 import { useCallback, useEffect, useState } from "react";
+import imageCompression from "browser-image-compression";
 import { useDropzone } from "../dropzone/react";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -59,11 +60,19 @@ const DropzoneComponent: React.FC<DropzoneComponentProps> = ({
         );
         return;
       }
+
       const fileUploadBatch = acceptedFiles.map(async (file) => {
         try {
+          // Compress the image before uploading
+          const compressedFile = await imageCompression(file, {
+            maxSizeMB: 1, // Adjust the max size to your needs
+            maxWidthOrHeight: 1024, // Adjust the width/height as needed
+            useWebWorker: true, // Enable web worker for faster compression
+          });
+
           const presignedUrlResponse = await getPreSignedUrl(
-            file.name,
-            file.type,
+            compressedFile.name,
+            compressedFile.type,
             dirInBucket
           );
           const { url, newFileName, bucketUrl, region } = presignedUrlResponse;
@@ -77,11 +86,16 @@ const DropzoneComponent: React.FC<DropzoneComponentProps> = ({
           const source = axios.CancelToken.source();
           setFilesToUpload((prev) => [
             ...prev,
-            { progress: 0, file, source, status: FileStatus.Uploading },
+            {
+              progress: 0,
+              file: compressedFile,
+              source,
+              status: FileStatus.Uploading,
+            },
           ]);
 
-          await axios.put(url, file, {
-            headers: { "Content-Type": file.type },
+          await axios.put(url, compressedFile, {
+            headers: { "Content-Type": compressedFile.type },
             cancelToken: source.token,
             onUploadProgress: (progressEvent: AxiosProgressEvent) => {
               const progress = Math.round(
@@ -89,7 +103,7 @@ const DropzoneComponent: React.FC<DropzoneComponentProps> = ({
               );
               setFilesToUpload((prevUploadProgress) =>
                 prevUploadProgress.map((item) =>
-                  item.file.name === file.name
+                  item.file.name === compressedFile.name
                     ? {
                         ...item,
                         progress,
@@ -105,7 +119,7 @@ const DropzoneComponent: React.FC<DropzoneComponentProps> = ({
           // After successful upload
           setFilesToUpload((prevUploadProgress) =>
             prevUploadProgress.map((item) =>
-              item.file.name === file.name
+              item.file.name === compressedFile.name
                 ? { ...item, status: FileStatus.Uploaded, newFileName }
                 : item
             )
