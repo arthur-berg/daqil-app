@@ -2,6 +2,30 @@ import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
 
+const therapistHistorySchema = new Schema({
+  therapist: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
+  startDate: {
+    type: Date,
+    required: true,
+    default: Date.now,
+  },
+  endDate: {
+    type: Date,
+    required: function (this: any) {
+      return !this.current;
+    },
+  },
+  current: {
+    type: Boolean,
+    required: true,
+    default: true,
+  },
+});
+
 const timeRangeSchema = new Schema({
   startDate: {
     type: Date,
@@ -171,6 +195,7 @@ const userSchema = new Schema(
       enum: ["ADMIN", "CLIENT", "THERAPIST"],
       default: "CLIENT",
     },
+    selectedTherapistHistory: [therapistHistorySchema],
     selectedTherapist: {
       type: Schema.Types.ObjectId,
       ref: "User",

@@ -63,6 +63,8 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         session.user.assignedClients = token.assignedClients as string[];
         session.user.therapistWorkProfile = token.therapistWorkProfile as any;
         session.user.image = token.image as string;
+        session.user.selectedTherapistHistory =
+          token.selectedTherapistHistory as any;
         if (
           session.user.role === "THERAPIST" ||
           session.user.role === "ADMIN"
@@ -92,6 +94,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       token.assignedClients = existingUser.assignedClients;
       token.therapistWorkProfile = existingUser.therapistWorkProfile;
       token.image = existingUser.image;
+      token.selectedTherapistHistory = existingUser.selectedTherapistHistory;
       if (existingUser.role === "THERAPIST" || existingUser.role === "ADMIN") {
         token.availableTimes = existingUser.availableTimes;
       }

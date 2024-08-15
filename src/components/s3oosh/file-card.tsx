@@ -59,7 +59,7 @@ const FileCard: React.FC<FileCardProps> = ({
         onClick={(e) => {
           e.stopPropagation();
           if (fileUploadProgress.source)
-            fileUploadProgress.source.cancel("Upload cancelled");
+            fileUploadProgress.source.cancel("Upload canceled");
           removeFile(fileUploadProgress.file);
         }}
         className="absolute top-1 right-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"

@@ -217,6 +217,20 @@
     "canceled": "Canceled",
     "completed": "Completed"
   },
+  "ScheduleAppointmentPage": {
+    "scheduleAnotherAppointment": "Schedule another appointment",
+    "goToAppointmentsOverview": "Go to appointments overview",
+    "scheduleAppointmentWith": "Schedule appointment with",
+    "startDate": "Start Date",
+    "cost": "Cost",
+    "duration": "Duration",
+    "minutes": "minutes",
+    "title": "Title -",
+    "willBeShownPatientCalendar": "Will be shown in patient's calendar",
+    "willNotBeShownPatientCalendar": "Will not be shown in patient's calendar",
+    "description": "Description -",
+    "schedule": "Schedule"
+  },
   "InviteTherapistForm": {
     "inviteTherapists": "Invite therapists",
     "email": "Email",
@@ -268,7 +282,7 @@
     "resetEmailSent": "Reset email sent!",
     "verificationEmailSent": "Verification email sent!",
     "accountSuccessfullySetup": "Account succesfully setup",
-    "appointmentCancelled": "Appointment successfully cancelled",
+    "appointmentCanceled": "Appointment successfully cancelled",
     "therapistProfileUpdated": "Therapist profile updated",
     "profileImageUploaded": "Profile image uploaded"
   },

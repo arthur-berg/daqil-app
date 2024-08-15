@@ -153,13 +153,20 @@ const MyProfileInfo = ({ therapistJson }: { therapistJson: any }) => {
             <DialogTitle>{t("uploadProfileImage")}</DialogTitle>
           </DialogHeader>
           {uploadSuccess ? (
-            <div className="flex flex-col items-center mt-4">
-              <div className="flex items-center text-green-600 mb-4">
-                <MdCheckCircle className="mr-2 text-2xl" />
-                <span>{t("uploadSuccess")}</span>
+            <>
+              <img
+                src={therapist.image}
+                alt="Uploaded profile"
+                className="w-24 h-24 rounded-full object-cover mb-4"
+              />
+              <div className="flex flex-col items-center mt-4">
+                <div className="flex items-center text-green-600 mb-4">
+                  <MdCheckCircle className="mr-2 text-2xl" />
+                  <span>{t("uploadSuccess")}</span>
+                </div>
+                <Button onClick={handleCloseDialog}>Close</Button>
               </div>
-              <Button onClick={handleCloseDialog}>Close</Button>
-            </div>
+            </>
           ) : (
             <S3oosh config={S3ooshConfig} />
           )}

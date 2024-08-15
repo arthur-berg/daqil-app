@@ -177,7 +177,7 @@ export const cancelAppointment = async (
 
     revalidatePath("/therapist/appointments");
 
-    return { success: SuccessMessages("appointmentCancelled") };
+    return { success: SuccessMessages("appointmentCanceled") };
   } catch (error) {
     console.error("Error cancelling appointment:", error);
     throw error;
@@ -235,17 +235,38 @@ export const bookAppointment = async (
       client.selectedTherapist &&
       client.selectedTherapist.toString() !== therapistId
     ) {
+      // Update the previous therapist in selectedTherapistHistory
+      await User.updateOne(
+        { _id: client.id, "selectedTherapistHistory.current": true },
+        {
+          $set: {
+            "selectedTherapistHistory.$.current": false,
+            "selectedTherapistHistory.$.endDate": new Date(),
+          },
+        },
+        { session }
+      );
+
+      // Add new therapist to selectedTherapistHistory
+      await User.findByIdAndUpdate(
+        client.id,
+        {
+          selectedTherapist: therapistId,
+          $push: {
+            selectedTherapistHistory: {
+              therapist: therapistId,
+              startDate: new Date(),
+              current: true,
+            },
+          },
+        },
+        { session }
+      );
+
       // Remove client from old therapist's assignedClients list
       await User.findByIdAndUpdate(
         client.selectedTherapist,
         { $pull: { assignedClients: client.id } },
-        { session }
-      );
-
-      // Update or set the client's selected therapist
-      await User.findByIdAndUpdate(
-        client.id,
-        { selectedTherapist: therapistId },
         { session }
       );
     }
@@ -317,7 +338,7 @@ export const scheduleAppointment = async (
   if (!validatedFields.success) {
     return { error: ErrorMessages("invalidFields") };
   }
-
+  console.log("validatedFields.data", validatedFields.data);
   const {
     title,
     description,
@@ -382,6 +403,18 @@ export const scheduleAppointment = async (
       client.selectedTherapist &&
       client.selectedTherapist.toString() !== therapist.id
     ) {
+      // Update the previous therapist in selectedTherapistHistory
+      await User.updateOne(
+        { _id: clientId, "selectedTherapistHistory.current": true },
+        {
+          $set: {
+            "selectedTherapistHistory.$.current": false,
+            "selectedTherapistHistory.$.endDate": new Date(),
+          },
+        },
+        { session }
+      );
+
       // Remove client from old therapist's assignedClients list
       await User.findByIdAndUpdate(
         client.selectedTherapist,
@@ -389,10 +422,19 @@ export const scheduleAppointment = async (
         { session }
       );
 
-      // Update or set the client's selected therapist
+      // Add new therapist to selectedTherapistHistory
       await User.findByIdAndUpdate(
         clientId,
-        { selectedTherapist: therapist.id },
+        {
+          selectedTherapist: therapist.id,
+          $push: {
+            selectedTherapistHistory: {
+              therapist: therapist.id,
+              startDate: new Date(),
+              current: true,
+            },
+          },
+        },
         { session }
       );
     }

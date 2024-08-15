@@ -218,6 +218,20 @@
     "canceled": "ملغي",
     "completed": "مكتمل"
   },
+  "ScheduleAppointmentPage": {
+    "scheduleAnotherAppointment": "جدولة موعد آخر",
+    "goToAppointmentsOverview": "الانتقال إلى نظرة عامة على المواعيد",
+    "scheduleAppointmentWith": "جدولة موعد مع",
+    "startDate": "تاريخ البدء",
+    "cost": "التكلفة",
+    "duration": "المدة",
+    "minutes": "دقائق",
+    "title": "العنوان -",
+    "willBeShownPatientCalendar": "سيظهر في تقويم المريض",
+    "willNotBeShownPatientCalendar": "لن يظهر في تقويم المريض",
+    "description": "الوصف -",
+    "schedule": "جدولة"
+},
   "InviteTherapistForm": {
     "inviteTherapists": "دعوة المعالجين",
     "email": "البريد الإلكتروني",
@@ -269,7 +283,7 @@
     "resetEmailSent": "تم إرسال بريد إعادة التعيين!",
     "verificationEmailSent": "تم إرسال بريد التحقق!",
     "accountSuccessfullySetup": "تم إعداد الحساب بنجاح",
-    "appointmentCancelled": "تم إلغاء الموعد بنجاح",
+    "appointmentCanceled": "تم إلغاء الموعد بنجاح",
     "therapistProfileUpdated": "تم تحديث ملف المعالج",
     "profileImageUploaded": "تم تحميل صورة الملف الشخصي"
   },

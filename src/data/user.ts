@@ -21,6 +21,70 @@ export const getUserById = async (id: string) => {
   }
 };
 
+export const getClientById = async (id: string) => {
+  try {
+    const client = await User.findById(id)
+      .select(
+        "firstName lastName email selectedTherapist selectedTherapistHistory appointments"
+      )
+      .populate({
+        path: "selectedTherapist",
+        select: "firstName lastName email",
+      })
+      .populate({
+        path: "selectedTherapistHistory.therapist",
+        select: "firstName lastName email",
+      })
+      .populate({
+        path: "appointments.bookedAppointments",
+        populate: {
+          path: "hostUserId",
+          select: "firstName lastName",
+        },
+        match: { status: { $ne: "canceled" } },
+      });
+
+    if (!client) {
+      return null;
+    }
+
+    // Calculate appointment counts for each therapist in the history
+    const therapistAppointmentCounts = client.selectedTherapistHistory.map(
+      (history: any) => {
+        const appointmentCount = client.appointments.flatMap(
+          (appointment: any) => {
+            return appointment.bookedAppointments.filter((appt: any) => {
+              return (
+                appt.hostUserId._id.toString() ===
+                  history.therapist._id.toString() && appt.status !== "canceled"
+              );
+            });
+          }
+        ).length;
+
+        return {
+          therapist: history.therapist,
+          appointmentCount,
+          startDate: history.startDate,
+          endDate: history.endDate,
+          current: history.current,
+        };
+      }
+    );
+
+    return {
+      firstName: client.firstName,
+      lastName: client.lastName,
+      email: client.email,
+      selectedTherapist: client.selectedTherapist,
+      therapistAppointmentCounts,
+    };
+  } catch (error) {
+    console.error("Error fetching client by ID:", error);
+    return null;
+  }
+};
+
 export const getClients = async (therapistId: string) => {
   try {
     const therapist = await User.findById(therapistId).populate({
@@ -32,6 +96,7 @@ export const getClients = async (therapistId: string) => {
       const clientsWithAppointmentCounts = therapist.assignedClients.map(
         (client: any) => {
           return {
+            id: client._id.toString(),
             firstName: client.firstName,
             lastName: client.lastName,
             email: client.email,

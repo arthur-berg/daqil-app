@@ -87,8 +87,8 @@ export const appointmentCancellationTemplate = (
   isTherapist: boolean
 ) => {
   const subject = isTherapist
-    ? "Appointment Cancelled by Client"
-    : "Your Appointment has been Cancelled";
+    ? "Appointment Canceled by Client"
+    : "Your Appointment has been Canceled";
 
   const appointmentsLink = isTherapist
     ? `${process.env.NEXT_PUBLIC_APP_URL}/therapist/appointments`

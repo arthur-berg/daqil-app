@@ -216,15 +216,37 @@ function CalendarCell({ state, date }: CalendarCellProps) {
 
 interface DateSegmentProps {
   segment: IDateSegment;
-  state: DateFieldState;
+  state: any;
 }
 
 function DateSegment({ segment, state }: DateSegmentProps) {
   const ref = useRef(null);
 
-  const {
-    segmentProps: { ...segmentProps },
-  } = useDateSegment(segment, state, ref);
+  const { segmentProps } = useDateSegment(segment, state, ref);
+
+  let segmentText = segment.text;
+
+  // Display hour segment in 24-hour format without altering the underlying value
+  if (segment.type === "hour") {
+    const hour = parseInt(segment.text, 10);
+    if (segment.isPlaceholder) {
+      segmentText = segment.text;
+    } else if (state.value.hour > 11 && hour < 12) {
+      segmentText = String(hour + 12).padStart(2, "0");
+    } else if (state.value.hour < 12 && hour === 12) {
+      segmentText = "00";
+    } else {
+      segmentText = segment.text.padStart(2, "0");
+    }
+  } else if (segment.type === "minute" || segment.type === "second") {
+    // Ensure minutes and seconds are always two digits
+    segmentText = segment.text.padStart(2, "0");
+  }
+
+  // Ignore AM/PM segment for 24-hour format
+  if (segment.type === "dayPeriod") {
+    return null;
+  }
 
   return (
     <div
@@ -236,7 +258,7 @@ function DateSegment({ segment, state }: DateSegmentProps) {
         segment.isPlaceholder && "text-muted-foreground"
       )}
     >
-      {segment.text}
+      {segmentText}
     </div>
   );
 }
@@ -262,12 +284,14 @@ function DateField(props: AriaDatePickerProps<DateValue>) {
       ref={ref}
       className={cn(
         "inline-flex h-10 flex-1 items-center rounded-l-md border-input bg-transparent px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-        props.isDisabled && "cursor-not-allowed opacity-50"
+        true && "cursor-default opacity-50"
       )}
     >
-      {state.segments.map((segment, i) => (
-        <DateSegment key={i} segment={segment} state={state} />
-      ))}
+      {state.segments
+        .filter((segment) => segment.type !== "dayPeriod") // Filter out AM/PM segment
+        .map((segment, i) => (
+          <DateSegment key={i} segment={segment} state={state} />
+        ))}
       {state.isInvalid && <span aria-hidden="true">🚫</span>}
     </div>
   );
@@ -280,10 +304,11 @@ function TimeField(props: AriaTimeFieldProps<TimeValue>) {
   const state = useTimeFieldState({
     ...props,
     locale,
+    hourCycle: 24, // Specify 24-hour format
   });
+
   const {
     fieldProps: { ...fieldProps },
-    labelProps,
   } = useTimeField({ ...props, "aria-label": "time-field" }, state, ref);
 
   return (

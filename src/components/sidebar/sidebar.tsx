@@ -19,7 +19,7 @@ function SidebarToggle({ isOpen, setIsOpen }: SidebarToggleProps) {
         "absolute top-[12px] z-20 transition-transform duration-300 ease-in-out",
         isOpen
           ? "translate-x-0 right-[-16px]"
-          : "translate-x-[100%] sm:-right-[-32px] md:-right-[-16px]"
+          : "translate-x-[100%] sm:-right-[-32px] lg:-right-[-16px]"
       )}
     >
       <Button
@@ -53,7 +53,7 @@ export function Sidebar({
 
   return (
     <>
-      <nav className="bg-secondary justify-between items-center p-4 w-full shadow-lg flex md:hidden">
+      <nav className="bg-secondary justify-between items-center p-4 w-full shadow-lg flex lg:hidden">
         <HamburgerMenuIcon
           className="h-6 w-6"
           onClick={() => {
@@ -75,8 +75,8 @@ export function Sidebar({
         className={cn(
           "fixed bg-secondary top-0 left-0 rtl:left-auto rtl:right-0 z-20 h-screen transition-transform ease-in-out duration-300",
           isOpen
-            ? "translate-x-0 w-52 md:w-64"
-            : "-translate-x-full md:w-[90px] md:translate-x-0"
+            ? "translate-x-0 w-52 lg:w-64"
+            : "-translate-x-full lg:w-[90px] lg:translate-x-0"
         )}
       >
         <SidebarToggle isOpen={isOpen} setIsOpen={setIsOpen} />

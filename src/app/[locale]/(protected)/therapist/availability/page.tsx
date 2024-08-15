@@ -14,7 +14,7 @@ const AvailabilityPage = async () => {
   const appointmentType = await getAppointmentTypeById(APPOINTMENT_TYPE_ID);
 
   return (
-    <div className="md:w-10/12 mx-auto">
+    <div className="lg:10/12 mx-auto">
       <AvailabilityTabs
         availableTimes={availableTimes}
         appointmentType={appointmentType}

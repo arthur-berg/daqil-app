@@ -67,7 +67,7 @@ export const getTherapistAvailableTimeSlots = (
 
   const bookedAppointments = selectedAppointment
     ? selectedAppointment.bookedAppointments.filter(
-        (appointment: any) => appointment.status !== "cancelled"
+        (appointment: any) => appointment.status !== "canceled"
       )
     : [];
 

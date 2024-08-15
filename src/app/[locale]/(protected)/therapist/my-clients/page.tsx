@@ -8,6 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Link } from "@/navigation";
 
 const MyClientsPage = async () => {
   const user = await getCurrentUser();
@@ -19,7 +20,7 @@ const MyClientsPage = async () => {
     return <div className="text-center p-4">No clients found.</div>;
   }
   return (
-    <div className="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-6">
+    <>
       <h1 className="text-3xl font-bold text-center mb-6">My Clients</h1>
       <Table>
         <TableHeader>
@@ -33,7 +34,9 @@ const MyClientsPage = async () => {
           {clients.map((client: any) => (
             <TableRow key={client.email}>
               <TableCell className="font-medium">
-                {client.firstName} {client.lastName}
+                <Link href={`/therapist/my-clients/${client.id}`}>
+                  {client.firstName} {client.lastName}
+                </Link>
               </TableCell>
               <TableCell>{client.email}</TableCell>
               <TableCell>{client.totalAppointments}</TableCell>
@@ -41,7 +44,7 @@ const MyClientsPage = async () => {
           ))}
         </TableBody>
       </Table>
-    </div>
+    </>
   );
 };
 
