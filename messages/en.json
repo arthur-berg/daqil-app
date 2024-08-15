@@ -236,6 +236,12 @@
     "email": "Email",
     "sendInvite": "Send invite"
   },
+  "Breadcrumbs": {
+    "myClients":"My Clients",
+    "client": "Client",
+    "scheduleAppointment":"Schedule appointment",
+    "appontmentDetails": "Appointment details"
+  },
   "ErrorMessages": {
     "invalidFields": "Invalid fields!",
     "invalidCredentials": "Invalid credentials!",

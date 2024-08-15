@@ -70,7 +70,7 @@ const ClientPage = async ({ params }: { params: { clientId: string } }) => {
 
       <div className="mt-6 flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0">
         <Link href={`/therapist/my-clients/${clientId}/schedule-appointment`}>
-          <Button>Schedule Appointment</Button>
+          <Button className="w-full sm:w-auto">Schedule Appointment</Button>
         </Link>
         {client.selectedTherapist && (
           <Link href={`/therapist-profile/${client.selectedTherapist._id}`}>

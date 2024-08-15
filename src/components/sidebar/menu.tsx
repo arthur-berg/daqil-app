@@ -23,16 +23,22 @@ import {
 import { LogoutButton } from "../auth/logout-button";
 import { ExitIcon } from "@radix-ui/react-icons";
 import LanguageSwitcher from "../language-switcher";
+import { useEffect } from "react";
 
 interface MenuProps {
   isOpen: boolean | undefined;
+  setIsOpen: any;
 }
 
-export function Menu({ isOpen }: MenuProps) {
+export function Menu({ isOpen, setIsOpen }: MenuProps) {
   const pathname = usePathname();
   const { isTherapist, isClient } = useCurrentRole();
   const locale = useLocale();
   const t = useTranslations("Sidebar");
+
+  useEffect(() => {
+    setIsOpen(false); // Close sidebar after navigating to a new route
+  }, [pathname, setIsOpen]);
 
   const menuList = isTherapist
     ? getTherapistMenuList(pathname, t)

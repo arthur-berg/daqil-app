@@ -184,15 +184,15 @@
     "loadingAppointments": "جار تحميل المواعيد...",
     "loadingVideoSession": "جار تحميل جلسة الفيديو... يرجى الانتظار"
   },
-  "TherapistProfilePage" : {
+  "TherapistProfilePage": {
     "workTitleLabelEn": "المسمى الوظيفي (EN)",
     "workDescriptionLabelEn": "وصف العمل (EN)",
     "workTitleLabelAr": "المسمى الوظيفي (AR)",
     "workDescriptionLabelAr": "وصف العمل (AR)",
     "englishSection": "اللغة الإنجليزية",
     "arabicSection": "اللغة العربية",
-     "uploadProfileImage": "تحميل صورة الملف الشخصي",
-  "uploadSuccess": "تم تحميل صورة الملف الشخصي بنجاح"
+    "uploadProfileImage": "تحميل صورة الملف الشخصي",
+    "uploadSuccess": "تم تحميل صورة الملف الشخصي بنجاح"
   },
   "AppointmentCalendar": {
     "appointmentsCalendar": "تقويم المواعيد",
@@ -231,11 +231,17 @@
     "willNotBeShownPatientCalendar": "لن يظهر في تقويم المريض",
     "description": "الوصف -",
     "schedule": "جدولة"
-},
+  },
   "InviteTherapistForm": {
     "inviteTherapists": "دعوة المعالجين",
     "email": "البريد الإلكتروني",
     "sendInvite": "إرسال الدعوة"
+  },
+  "Breadcrumbs": {
+    "myClients": "عملائي",
+    "client": "عميل",
+    "scheduleAppointment": "جدولة موعد",
+    "appontmentDetails": "تفاصيل الموعد"
   },
   "ErrorMessages": {
     "invalidFields": "حقول غير صالحة!",
