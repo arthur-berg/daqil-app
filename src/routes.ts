@@ -7,6 +7,7 @@
 export const publicRoutes = [
   "/auth/new-verification",
   "/api/webhook/stripe",
+  "/api/create-payment-intent",
   "/",
 ];
 
@@ -30,8 +31,6 @@ export const authRoutes = [
  * Routes that start with this prefix are used for API authentication purposes.
  * @type {string}
  */
-
-export const apiAuthPrefix = "/api/auth";
 
 /**
  * The default redirect path after logging in.

@@ -67,8 +67,6 @@ export default function AdminPanelLayout({
   const pathname = usePathname();
   const t = useTranslations("Breadcrumbs");
 
-  /*   const { isClient, isTherapist } = useCurrentRole(); */
-
   const shouldRenderWithoutSidebar = routesWithoutSidebar.some((route) =>
     matchesPath(pathname, route)
   );

@@ -9,6 +9,8 @@ import { currencyToSymbol } from "@/utils";
 import { getTherapistAvailableTimeSlots } from "./helpers";
 import { useTranslations } from "next-intl";
 
+import CheckoutWrapper from "./checkout-wrapper";
+
 type DateType = {
   justDate: Date | undefined;
   dateTime: Date | undefined;
@@ -26,7 +28,6 @@ const BookingCalendar = ({
   appointments: string;
 }) => {
   const t = useTranslations("BookingCalendar");
-  const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
   const [availableTimeSlots, setAvailableTimeSlots] = useState<
@@ -108,64 +109,13 @@ const BookingCalendar = ({
           </div>
           {date.dateTime && date.justDate ? (
             <>
-              <Button
-                variant="outline"
-                disabled={isPending}
-                onClick={() =>
-                  setDate((prev) => {
-                    return {
-                      ...prev,
-                      justDate: undefined,
-                    };
-                  })
-                }
-              >
-                {t("goBack")}
-              </Button>
-              <div className="mt-4 p-4 bg-yellow-100 border border-yellow-300 rounded">
-                <p>{t("appointmentDetails")}:</p>
-                <p>
-                  {t("day")}: {format(date.dateTime, "eeee, MMMM d, yyyy")}
-                </p>
-                <p>
-                  {t("time")}: {format(date.dateTime, "kk:mm")}
-                </p>
-                <p>
-                  {t("duration")}: {appointmentType.durationInMinutes}{" "}
-                  {t("minutes")}
-                </p>
-                <p>
-                  Cost: {currencyToSymbol(appointmentType.currency)}
-                  {appointmentType.price}{" "}
-                </p>
-                <Button
-                  className="mt-2"
-                  disabled={isPending}
-                  onClick={() => {
-                    const combinedDateTime = set(date.justDate as Date, {
-                      hours: date?.dateTime?.getHours(),
-                      minutes: date?.dateTime?.getMinutes(),
-                    });
-                    startTransition(async () => {
-                      const data = await bookAppointment(
-                        appointmentType,
-                        therapistId,
-                        combinedDateTime
-                      );
-
-                      if (data.success) {
-                        setSuccess(data.success);
-                        setError(undefined);
-                      } else if (data.error) {
-                        setError(data.error);
-                        setSuccess(undefined);
-                      }
-                    });
-                  }}
-                >
-                  {t("confirmBooking")}
-                </Button>
-              </div>
+              <CheckoutWrapper
+                therapistId={therapistId}
+                setSuccess={setSuccess}
+                appointmentType={appointmentType}
+                date={date}
+                setDate={setDate}
+              />
             </>
           ) : date.justDate ? (
             <>
@@ -206,7 +156,6 @@ const BookingCalendar = ({
                           slots.map((time, i) => (
                             <Button
                               key={`time-${i}`}
-                              disabled={isPending}
                               className="mb-2"
                               onClick={() =>
                                 setDate((prev) => ({

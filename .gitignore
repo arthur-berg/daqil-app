@@ -13,12 +13,16 @@
 /.next/
 /out/
 
+/tmp
+
 # production
 /build
 
 # misc
 .DS_Store
 *.pem
+
+anchor.toml
 
 # debug
 npm-debug.log*

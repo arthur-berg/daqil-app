@@ -5,12 +5,7 @@ import { locales } from "@/lib/config";
 
 const { auth } = NextAuth(authConfig);
 
-import {
-  DEFAULT_LOGIN_REDIRECT,
-  publicRoutes,
-  apiAuthPrefix,
-  authRoutes,
-} from "@/routes";
+import { DEFAULT_LOGIN_REDIRECT, publicRoutes, authRoutes } from "@/routes";
 import { NextRequest } from "next/server";
 
 const intlMiddleware = createMiddleware({
@@ -31,11 +26,13 @@ const authMiddleware = auth(async (req) => {
     ? `/${pathnameParts.slice(2).join("/")}`
     : nextUrl.pathname;
 
-  const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
   const isPublicRoute = publicRoutes.includes(pathWithoutLocale);
   const isAuthRoute = authRoutes.includes(pathWithoutLocale);
 
-  if (isApiAuthRoute) {
+  const isApiRoute = nextUrl.pathname.startsWith("/api");
+
+  if (isApiRoute) {
+    // Skip locale handling for API routes
     return;
   }
 

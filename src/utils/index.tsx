@@ -28,3 +28,7 @@ export const generatePassword = (length = 12) => {
 
 export const formatDateTime = (date: Date): string =>
   format(new Date(date), "HH:mm");
+
+export const convertToSubcurrency = (amount: number, factor = 100) => {
+  return Math.round(amount * factor);
+};

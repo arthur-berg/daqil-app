@@ -222,8 +222,10 @@ export const bookAppointment = async (
       hostUserId: therapistId,
       durationInMinutes: appointmentType.durationInMinutes,
       paid: false,
-      status: "confirmed",
+      status: "pending",
       credits: appointmentType.credits,
+      price: appointmentType.price,
+      currency: appointmentType.currency,
     };
 
     const appointment = await createAppointment(appointmentData, session);
@@ -313,6 +315,8 @@ export const bookAppointment = async (
       clientEmail,
       appointmentDetails
     );
+
+    console.log("Appointment booked");
 
     revalidatePath("/client/appointments");
 

@@ -52,15 +52,7 @@ export function Sidebar({
   const sidebarMenuRef = useRef<any>();
   const sidebarRef = useRef<any>();
 
-  // Close sidebar on menu item click
-  const handleMenuItemClick = () => {
-    if (isOpen) {
-      clearAllBodyScrollLocks();
-      setIsOpen(false);
-    }
-  };
-
-  // Close sidebar when clicking outside
+  // Close sidebar when clicking outside on screens smaller than lg
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
@@ -69,7 +61,8 @@ export function Sidebar({
       }
     };
 
-    if (isOpen) {
+    if (isOpen && window.innerWidth < 1024) {
+      // Only add event listener for screens smaller than lg
       document.addEventListener("mousedown", handleClickOutside);
     }
 
