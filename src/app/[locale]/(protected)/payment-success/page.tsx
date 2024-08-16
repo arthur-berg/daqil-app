@@ -1,16 +1,49 @@
-const PaymentSuccessPage = ({
-  searchParams: { amount },
+import { getAppointmentById } from "@/data/appointment";
+import { MdCheckCircle } from "react-icons/md"; // Import a suitable icon
+import { format } from "date-fns"; // Assuming you have date-fns installed for date formatting
+import { getTranslations } from "next-intl/server";
+
+const PaymentSuccessPage = async ({
+  searchParams: { appointmentId },
 }: {
-  searchParams: { amount: string };
+  searchParams: { appointmentId: string };
 }) => {
+  const appointment = await getAppointmentById(appointmentId);
+  const formattedStartDate = format(
+    new Date(appointment.startDate),
+    "MMMM dd, yyyy - h:mm a"
+  );
+  const formattedEndDate = format(new Date(appointment.endDate), "h:mm a");
+
+  const t = await getTranslations("PaymentSuccessPage");
+
   return (
-    <div className="bg-white shadow-lg rounded-lg p-6 mb-4 max-w-4xl mx-auto">
-      <div className="mt-10">
-        <h1 className="text-4xl font-extrabold mb-2">Thank you!</h1>
-        <h2 className="text-2xl">You successfully sent</h2>
-        <div className="p-2 rounded-md text-primary mt-5 text-4xl font-bold">
-          ${amount}
+    <div className="bg-white shadow-lg rounded-lg p-8 max-w-4xl mx-auto text-center mt-12">
+      <div className="flex flex-col items-center">
+        <MdCheckCircle className="text-green-500 text-6xl mb-4" />
+        <h1 className="text-4xl font-extrabold mb-2">{t("thankYou")}</h1>
+        <h2 className="text-2xl mb-6">{t("paymentSuccess")}</h2>
+        <div className="text-lg text-gray-700">
+          <p className="mb-2">
+            <span className="font-semibold">{t("appointment")}</span>{" "}
+            {appointment.title}
+          </p>
+          <p className="mb-2">
+            <span className="font-semibold">{t("date")}</span>{" "}
+            {formattedStartDate} - {formattedEndDate}
+          </p>
+          <p className="mb-2">
+            <span className="font-semibold">{t("duration")}</span>{" "}
+            {appointment.durationInMinutes} {t("minutes")}
+          </p>
+          <p className="mb-4">
+            <span className="font-semibold">{t("amountPaid")}</span>{" "}
+            {appointment.price} {appointment.currency}
+          </p>
         </div>
+        <p className="text-gray-500 mt-4">
+          You will receive a confirmation email with the appointment details.
+        </p>
       </div>
     </div>
   );

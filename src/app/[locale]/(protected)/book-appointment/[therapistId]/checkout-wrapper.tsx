@@ -32,7 +32,7 @@ const CheckoutWrapper = ({
   reservedAppointment: any;
   setReservedAppointment: any;
 }) => {
-  const t = useTranslations("BookingCalendar");
+  const t = useTranslations("Checkout");
 
   // Custom renderer for the countdown timer
   const renderer: CountdownRendererFn = ({ minutes, seconds, completed }) => {
@@ -89,9 +89,9 @@ const CheckoutWrapper = ({
         />
 
         <div className="mb-10">
-          <h1 className="text-4xl font-extrabold mb-2">Zakina</h1>
+          <h1 className="text-4xl font-extrabold mb-2">{t("zakina")}</h1>
           <h2 className="text-2xl">
-            has requested
+            {t("hasRequested")}
             <span className="font-bold">
               {" "}
               {currencyToSymbol(appointmentType.currency)}

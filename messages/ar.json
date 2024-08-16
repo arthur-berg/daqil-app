@@ -247,6 +247,22 @@
     "scheduleAppointment": "جدولة موعد",
     "appontmentDetails": "تفاصيل الموعد"
   },
+  "Checkout": {
+    "loading": "جار التحميل...",
+    "processing": "جار المعالجة...",
+    "zakina": "زكينا",
+    "hasRequested": "طلبت"
+  },
+  "PaymentSuccessPage": {
+    "thankYou": "شكرًا لك!",
+    "paymentSuccess": "تم الدفع بنجاح.",
+    "appointment": "الموعد:",
+    "date": "التاريخ:",
+    "duration": "المدة:",
+    "minutes": "دقائق",
+    "amountPaid": "المبلغ المدفوع:",
+    "receiveConfirmation": "ستتلقى رسالة تأكيد بالبريد الإلكتروني تحتوي على تفاصيل الموعد."
+  },
   "ErrorMessages": {
     "invalidFields": "حقول غير صالحة!",
     "invalidCredentials": "بيانات الاعتماد غير صالحة!",

@@ -152,7 +152,7 @@
     "timeLeftToPay": "Time left on your temporary reservation",
     "close": "Close",
     "bookAppointment": "Book appointment",
-    "changeTherapistButton":"Change Therapist"
+    "changeTherapistButton": "Change Therapist"
   },
   "AvailabilityPage": {
     "recurringAvailableTimes": "Recurring available times",
@@ -241,10 +241,26 @@
     "sendInvite": "Send invite"
   },
   "Breadcrumbs": {
-    "myClients":"My Clients",
+    "myClients": "My Clients",
     "client": "Client",
-    "scheduleAppointment":"Schedule appointment",
+    "scheduleAppointment": "Schedule appointment",
     "appontmentDetails": "Appointment details"
+  },
+  "Checkout": {
+    "loading": "Loading...",
+    "processing": "Processing...",
+    "zakina": "Zakina",
+    "hasRequested": "has requested"
+  },
+  "PaymentSuccessPage": {
+    "thankYou": "Thank you!",
+    "paymentSuccess": "Your payment was successful.",
+    "appointment": "Appointment:",
+    "date": "Date:",
+    "duration": "Duration:",
+    "minutes": "minutes",
+    "amountPaid": "Amount Paid:",
+    "receiveConfirmation": "You will receive a confirmation email with the appointment details."
   },
   "ErrorMessages": {
     "invalidFields": "Invalid fields!",

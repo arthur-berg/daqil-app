@@ -23,8 +23,7 @@ const Checkout = ({
   const [errorMessage, setErrorMessage] = useState<string>();
   const [clientSecret, setClientSecret] = useState("");
   const [loading, setLoading] = useState(false);
-  /* 
-  const t = useTranslations("Checkout"); */
+  const t = useTranslations("Checkout");
 
   useEffect(() => {
     fetch(`/api/payment/create-payment-intent`, {
@@ -39,7 +38,7 @@ const Checkout = ({
     })
       .then((res) => res.json())
       .then((data) => setClientSecret(data.clientSecret));
-  }, [amount]);
+  }, [amount]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -48,14 +47,6 @@ const Checkout = ({
     if (!stripe || !elements) {
       return;
     }
-
-    /*  const bookingResult = await handleBookAppointment();
-
-    if (!bookingResult.success) {
-      setErrorMessage("Failed to book appointment. Please try again.");
-      setLoading(false);
-      return;
-    } */
 
     const { error: submitError } = await elements.submit();
 
@@ -69,7 +60,7 @@ const Checkout = ({
       elements,
       clientSecret,
       confirmParams: {
-        return_url: `${process.env.NEXT_PUBLIC_APP_URL}/payment-success?amount=${amount}`,
+        return_url: `${process.env.NEXT_PUBLIC_APP_URL}/payment-success?appointmentId=${reservedAppointment.appointmentId}`,
       },
     });
 
@@ -82,8 +73,6 @@ const Checkout = ({
       // Your customer is redirected to your 'return_url'
     }
 
-    /*    await handleBookAppointment(); */
-
     setLoading(false);
   };
 
@@ -91,7 +80,7 @@ const Checkout = ({
     return (
       <div>
         <BeatLoader color="white" />
-        <div className="text-lg font-medium text-white">Loading...</div>
+        <div className="text-lg font-medium text-white">{t("loading")}</div>
       </div>
     );
   }
@@ -104,7 +93,7 @@ const Checkout = ({
 
       <div className="w-32 mx-auto">
         <Button disabled={!stripe || loading} className="mt-4 w-full">
-          {!loading ? `Pay $${amount}` : "Processing..."}
+          {!loading ? `Pay $${amount}` : t("processing")}
         </Button>
       </div>
     </form>

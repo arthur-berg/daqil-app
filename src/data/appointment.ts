@@ -17,6 +17,16 @@ const getStructuredParticipantData = (appointment: any) => {
   return transformedParticipants;
 };
 
+export const getAppointmentById = async (id: string) => {
+  try {
+    const appointment = await Appointment.findById(id);
+
+    return appointment;
+  } catch {
+    return null;
+  }
+};
+
 export const getAppointments = async () => {
   const user = await requireAuth([UserRole.THERAPIST, UserRole.CLIENT]);
   const dbUser = (await User.findById(user.id).lean()) as any;
