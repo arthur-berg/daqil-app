@@ -152,7 +152,8 @@
     "timeLeftToPay": "Time left on your temporary reservation",
     "close": "Close",
     "bookAppointment": "Book appointment",
-    "changeTherapistButton": "Change Therapist"
+    "changeTherapistButton": "Change Therapist",
+    "bookingAppointmentLoading": "Booking appointment... Please wait"
   },
   "AvailabilityPage": {
     "recurringAvailableTimes": "Recurring available times",
