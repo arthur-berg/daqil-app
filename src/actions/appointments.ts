@@ -184,7 +184,7 @@ export const cancelAppointment = async (
   }
 };
 
-export const bookAppointment = async (
+export const reserveAppointment = async (
   appointmentType: any,
   therapistId: string,
   startDate: Date
@@ -221,8 +221,12 @@ export const bookAppointment = async (
       participants: [{ userId: client.id, showUp: false }],
       hostUserId: therapistId,
       durationInMinutes: appointmentType.durationInMinutes,
-      paid: false,
-      status: "pending",
+      payment: {
+        method: "checkout",
+        status: "pending",
+        paymentExpiryDate: new Date(Date.now() + 15 * 60000),
+      },
+      status: "temporarily-reserved",
       credits: appointmentType.credits,
       price: appointmentType.price,
       currency: appointmentType.currency,
@@ -316,11 +320,13 @@ export const bookAppointment = async (
       appointmentDetails
     );
 
-    console.log("Appointment booked");
-
     revalidatePath("/client/appointments");
 
-    return { success: SuccessMessages("appointmentBooked") };
+    return {
+      success: SuccessMessages("appointmentReserved"),
+      appointmentId: appointmentId,
+      paymentExpiryDate: appointment[0].payment.paymentExpiryDate,
+    };
   } catch (error) {
     await session.abortTransaction();
     session.endSession();
@@ -386,8 +392,11 @@ export const scheduleAppointment = async (
           description,
           startDate,
           endDate,
-          paid,
-          status,
+          payment: {
+            method: "link",
+            status: "pending",
+          },
+          status: "confirmed",
           participants: [{ userId: clientId, showUp: false }],
           hostUserId: therapist.id,
           durationInMinutes: appointmentType.durationInMinutes,

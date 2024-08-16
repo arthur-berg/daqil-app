@@ -149,7 +149,11 @@
     "availableSlots": "الفترات المتاحة",
     "morning": "الصباح",
     "afternoon": "بعد الظهر",
-    "evening": "المساء"
+    "evening": "المساء",
+  "timeLeftToPay": "الوقت المتبقي على حجزك المؤقت",
+  "close": "إغلاق",
+  "bookAppointment": "احجز موعدًا",
+  "changeTherapistButton": "تغيير المعالج"
   },
   "AvailabilityPage": {
     "recurringAvailableTimes": "أوقات متاحة متكررة",
@@ -291,7 +295,8 @@
     "accountSuccessfullySetup": "تم إعداد الحساب بنجاح",
     "appointmentCanceled": "تم إلغاء الموعد بنجاح",
     "therapistProfileUpdated": "تم تحديث ملف المعالج",
-    "profileImageUploaded": "تم تحميل صورة الملف الشخصي"
+    "profileImageUploaded": "تم تحميل صورة الملف الشخصي",
+    "appointmentReserved": "تم حجز الموعد مؤقتًا"
   },
   "AppointmentAction": {
     "therapySessionWith": "جلسة علاجية مع"

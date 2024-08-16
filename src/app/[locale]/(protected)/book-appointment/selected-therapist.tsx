@@ -55,12 +55,8 @@ const SelectedTherapist = ({
           appointments={JSON.stringify(selectedTherapist.appointments)}
           appointmentType={appointmentType}
           therapistId={selectedTherapist._id}
+          setChangeTherapistDialogOpen={setIsDialogOpen}
         />
-        <div className="text-center mt-6">
-          <Button variant="outline" onClick={() => setIsDialogOpen(true)}>
-            {t("changeTherapistButton")}
-          </Button>
-        </div>
       </div>
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>

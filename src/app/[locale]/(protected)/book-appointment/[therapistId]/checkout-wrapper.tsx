@@ -1,17 +1,13 @@
 "use client";
 
-import { bookAppointment } from "@/actions/appointments";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
-import { currencyToSymbol } from "@/utils";
-import { format, set } from "date-fns";
 import { useTranslations } from "next-intl";
-import { useState, useTransition } from "react";
-
-import { Elements, useElements, useStripe } from "@stripe/react-stripe-js";
+import { format } from "date-fns";
+import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import { convertToSubcurrency } from "@/utils";
+import { convertToSubcurrency, currencyToSymbol } from "@/utils";
 import Checkout from "./checkout";
+import Countdown, { CountdownRendererFn } from "react-countdown";
 
 if (process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY === undefined) {
   throw new Error("NEXT_PUBLIC_STRIPE_PUBLIC_KEY is not defined");
@@ -25,46 +21,48 @@ const CheckoutWrapper = ({
   appointmentType,
   therapistId,
   setDate,
+  reservedAppointment,
+  setReservedAppointment,
 }: {
   date?: any;
   setSuccess: (success: string) => void;
   appointmentType: any;
   therapistId: string;
   setDate: any;
+  reservedAppointment: any;
+  setReservedAppointment: any;
 }) => {
-  const [isPending, startTransition] = useTransition();
   const t = useTranslations("BookingCalendar");
-  const { responseToast } = useToast();
 
-  const handleBookAppointment = async () => {
-    const combinedDateTime = set(date.justDate as Date, {
-      hours: date?.dateTime?.getHours(),
-      minutes: date?.dateTime?.getMinutes(),
-    });
-    startTransition(async () => {
-      console.log("bookAppointment");
-      const data = await bookAppointment(
-        appointmentType,
-        therapistId,
-        combinedDateTime
+  // Custom renderer for the countdown timer
+  const renderer: CountdownRendererFn = ({ minutes, seconds, completed }) => {
+    if (completed) {
+      // Render a message when the countdown is completed
+      return <span className="text-red-600 font-bold">{t("timeExpired")}</span>;
+    } else {
+      // Render the countdown
+      return (
+        <div className="text-center mb-6">
+          <p className="text-lg font-semibold">{t("timeLeftToPay")}</p>
+          <p className="text-3xl font-bold text-red-500">
+            {minutes}:{seconds < 10 ? `0${seconds}` : seconds} {t("minutes")}
+          </p>
+        </div>
       );
-      responseToast(data);
-    });
+    }
   };
 
   return (
     <>
       <Button
         variant="outline"
-        disabled={isPending}
-        onClick={() =>
-          setDate((prev: any) => {
-            return {
-              ...prev,
-              justDate: undefined,
-            };
-          })
-        }
+        onClick={() => {
+          setReservedAppointment(null);
+          setDate((prev: any) => ({
+            ...prev,
+            justDate: undefined,
+          }));
+        }}
       >
         {t("goBack")}
       </Button>
@@ -83,11 +81,12 @@ const CheckoutWrapper = ({
           <p>
             {t("duration")}: {appointmentType.durationInMinutes} {t("minutes")}
           </p>
-          <p>
-            {t("cost")}: {currencyToSymbol(appointmentType.currency)}
-            {appointmentType.price}
-          </p>
         </div>
+
+        <Countdown
+          date={new Date(reservedAppointment.paymentExpiryDate)}
+          renderer={renderer}
+        />
 
         <div className="mb-10">
           <h1 className="text-4xl font-extrabold mb-2">Zakina</h1>
@@ -100,6 +99,7 @@ const CheckoutWrapper = ({
             </span>
           </h2>
         </div>
+
         <Elements
           stripe={stripePromise}
           options={{
@@ -110,7 +110,7 @@ const CheckoutWrapper = ({
         >
           <Checkout
             amount={appointmentType.price}
-            handleBookAppointment={handleBookAppointment}
+            reservedAppointment={reservedAppointment}
           />
         </Elements>
       </div>

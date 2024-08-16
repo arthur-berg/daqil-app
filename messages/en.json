@@ -148,7 +148,11 @@
     "availableSlots": "Available slots",
     "morning": "Morning",
     "afternoon": "Afternoon",
-    "evening": "Evening"
+    "evening": "Evening",
+    "timeLeftToPay": "Time left on your temporary reservation",
+    "close": "Close",
+    "bookAppointment": "Book appointment",
+    "changeTherapistButton":"Change Therapist"
   },
   "AvailabilityPage": {
     "recurringAvailableTimes": "Recurring available times",
@@ -290,7 +294,8 @@
     "accountSuccessfullySetup": "Account succesfully setup",
     "appointmentCanceled": "Appointment successfully cancelled",
     "therapistProfileUpdated": "Therapist profile updated",
-    "profileImageUploaded": "Profile image uploaded"
+    "profileImageUploaded": "Profile image uploaded",
+    "appointmentReserved": "Appointment temporarily reserved"
   },
   "AppointmentAction": {
     "therapySessionWith": "Therapy session with"

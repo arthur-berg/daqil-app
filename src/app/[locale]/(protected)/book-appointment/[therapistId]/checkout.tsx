@@ -10,14 +10,13 @@ import { Button } from "@/components/ui/button";
 import { BeatLoader } from "react-spinners";
 import { useTranslations } from "next-intl";
 import { set } from "date-fns";
-import { bookAppointment } from "@/actions/appointments";
 
 const Checkout = ({
   amount,
-  handleBookAppointment,
+  reservedAppointment,
 }: {
   amount: number;
-  handleBookAppointment: any;
+  reservedAppointment: any;
 }) => {
   const stripe = useStripe();
   const elements = useElements();
@@ -33,7 +32,10 @@ const Checkout = ({
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ amount: convertToSubcurrency(amount) }),
+      body: JSON.stringify({
+        amount: convertToSubcurrency(amount),
+        appointmentId: reservedAppointment.appointmentId,
+      }),
     })
       .then((res) => res.json())
       .then((data) => setClientSecret(data.clientSecret));
@@ -47,13 +49,13 @@ const Checkout = ({
       return;
     }
 
-    const bookingResult = await handleBookAppointment();
+    /*  const bookingResult = await handleBookAppointment();
 
     if (!bookingResult.success) {
       setErrorMessage("Failed to book appointment. Please try again.");
       setLoading(false);
       return;
-    }
+    } */
 
     const { error: submitError } = await elements.submit();
 

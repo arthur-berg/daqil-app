@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 import Stripe from "stripe";
 import User from "@/models/User";
+import Appointment from "@/models/Appointment";
 
 // Initialize Stripe
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
@@ -48,7 +49,34 @@ export async function POST(req: Request): Promise<NextResponse> {
   eventType = event.type;
 
   try {
-    if (eventType === "checkout.session.completed") {
+    console.log("eventType");
+    if (eventType === "payment_intent.succeeded") {
+      const paymentIntent = event.data.object;
+      const appointmentId = paymentIntent.metadata.appointmentId;
+      console.log("appointmentId", appointmentId);
+      console.log("paymentIntent", paymentIntent);
+
+      if (appointmentId) {
+        // Connect to MongoDB if not already connected
+
+        try {
+          // Update the appointment status and payment status
+          await Appointment.findByIdAndUpdate(appointmentId, {
+            status: "confirmed",
+            "payment.status": "paid",
+          });
+
+          console.log(
+            `Appointment ${appointmentId} confirmed and payment marked as paid.`
+          );
+        } catch (err) {
+          console.error(
+            `Failed to update appointment ${appointmentId}: ${err.message}`
+          );
+        }
+      }
+    }
+    /*    if (eventType === "checkout.session.completed") {
       const session = await stripe.checkout.sessions.retrieve(data.object.id, {
         expand: ["line_items"],
       });
@@ -104,7 +132,6 @@ export async function POST(req: Request): Promise<NextResponse> {
         });
       }
 
-      // Update credits based on subscription plan or one-time payment
       let creditsToAdd = 0;
       if (session.mode === "subscription") {
         const subscription = (await stripe.subscriptions.retrieve(
@@ -135,7 +162,6 @@ export async function POST(req: Request): Promise<NextResponse> {
         }
       );
 
-      // Extra: Send email to dashboard
     }
 
     if (eventType === "customer.subscription.deleted") {
@@ -149,7 +175,7 @@ export async function POST(req: Request): Promise<NextResponse> {
           hasAccess: false,
         }
       );
-    }
+    } */
 
     // more cases
     //

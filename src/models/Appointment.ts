@@ -69,13 +69,45 @@ const appointmentSchema = new Schema(
       enum: ["USD", "AED", "EUR"],
       required: false,
     },
-    paid: {
-      type: Boolean,
-      default: false,
+    payment: {
+      method: {
+        type: String,
+        enum: ["checkout", "link"],
+        required: true,
+      },
+      status: {
+        type: String,
+        enum: ["pending", "paid"],
+        default: "pending",
+      },
+      intentId: {
+        type: String,
+        required: false,
+      },
+      paymentExpiryDate: {
+        type: Date,
+        required: function (this: any) {
+          return this.method === "checkout";
+        },
+        default: function (this: any) {
+          if (this.method === "checkout") {
+            const expiryTime = new Date();
+            expiryTime.setMinutes(expiryTime.getMinutes() + 15);
+            return expiryTime;
+          }
+          return undefined;
+        },
+      },
     },
     status: {
       type: String,
-      enum: ["confirmed", "canceled", "completed", "pending"],
+      enum: [
+        "confirmed",
+        "canceled",
+        "completed",
+        "pending",
+        "temporarily-reserved",
+      ],
       default: "confirmed",
     },
     cancellationReason: {
