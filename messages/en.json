@@ -153,7 +153,12 @@
     "close": "Close",
     "bookAppointment": "Book appointment",
     "changeTherapistButton": "Change Therapist",
-    "bookingAppointmentLoading": "Booking appointment... Please wait"
+    "bookingAppointmentLoading": "Booking appointment... Please wait",
+    "loading": "Loading...",
+    "processing": "Processing...",
+    "zakina": "Zakina",
+    "hasRequested": "has requested",
+    "weHaveReserved": "We have temporarily reserved your appointment for 15 minutes"
   },
   "AvailabilityPage": {
     "recurringAvailableTimes": "Recurring available times",
@@ -225,7 +230,7 @@
     "appointmentStatus":"Appointment Status",
     "all": "All",
     "selectStatus":"Select a status"
-  },
+    },
   "ScheduleAppointmentPage": {
     "scheduleAnotherAppointment": "Schedule another appointment",
     "goToAppointmentsOverview": "Go to appointments overview",
@@ -250,12 +255,6 @@
     "client": "Client",
     "scheduleAppointment": "Schedule appointment",
     "appontmentDetails": "Appointment details"
-  },
-  "Checkout": {
-    "loading": "Loading...",
-    "processing": "Processing...",
-    "zakina": "Zakina",
-    "hasRequested": "has requested"
   },
   "PaymentSuccessPage": {
     "thankYou": "Thank you!",

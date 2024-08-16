@@ -3,26 +3,16 @@ import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 import Stripe from "stripe";
 import Appointment from "@/models/Appointment";
+import User from "@/models/User"; // Assuming you have a User model
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
-
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET as string;
-
-type StripeEventData = {
-  object: {
-    id: string;
-    [key: string]: any;
-  };
-  [key: string]: any;
-};
 
 export async function POST(req: Request): Promise<NextResponse> {
   await connectToMongoDB();
   const body = await req.text();
   const signature = headers().get("stripe-signature");
 
-  let data: StripeEventData;
-  let eventType: string;
   let event: Stripe.Event;
 
   if (!signature) {
@@ -36,19 +26,32 @@ export async function POST(req: Request): Promise<NextResponse> {
     return NextResponse.json({ error: err.message }, { status: 400 });
   }
 
-  data = event.data as StripeEventData;
-  eventType = event.type;
+  const data = event.data.object as Stripe.PaymentIntent;
+  const eventType = event.type;
 
   try {
     if (eventType === "payment_intent.succeeded") {
-      const paymentIntent = event.data.object as any;
+      const paymentIntent = data;
       const appointmentId = paymentIntent.metadata.appointmentId;
+      const paymentMethodId = paymentIntent.payment_method as string;
 
       if (appointmentId) {
         try {
-          await Appointment.findByIdAndUpdate(appointmentId, {
-            status: "confirmed",
-            "payment.status": "paid",
+          const appointment = await Appointment.findByIdAndUpdate(
+            appointmentId,
+            {
+              status: "confirmed",
+              "payment.status": "paid",
+            }
+          );
+
+          const clientId = appointment.participants[0].userId;
+
+          // Update the user with the customer ID and payment method ID if not already stored
+          await User.findByIdAndUpdate(clientId, {
+            $set: {
+              stripePaymentMethodId: paymentMethodId,
+            },
           });
 
           console.log(

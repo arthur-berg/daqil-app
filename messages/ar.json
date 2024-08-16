@@ -154,7 +154,11 @@
     "close": "إغلاق",
     "bookAppointment": "احجز موعدًا",
     "changeTherapistButton": "تغيير المعالج",
-    "bookingAppointmentLoading": "جارٍ حجز الموعد... يرجى الانتظار"
+    "bookingAppointmentLoading": "جارٍ حجز الموعد... يرجى الانتظار",
+    "loading": "جار التحميل...",
+    "processing": "جار المعالجة...",
+    "zakina": "زكينا",
+    "hasRequested": "طلبت"
   },
   "AvailabilityPage": {
     "recurringAvailableTimes": "أوقات متاحة متكررة",
@@ -251,12 +255,6 @@
     "client": "عميل",
     "scheduleAppointment": "جدولة موعد",
     "appontmentDetails": "تفاصيل الموعد"
-  },
-  "Checkout": {
-    "loading": "جار التحميل...",
-    "processing": "جار المعالجة...",
-    "zakina": "زكينا",
-    "hasRequested": "طلبت"
   },
   "PaymentSuccessPage": {
     "thankYou": "شكرًا لك!",

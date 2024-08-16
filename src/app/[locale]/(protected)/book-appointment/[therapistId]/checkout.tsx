@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { BeatLoader } from "react-spinners";
 import { useTranslations } from "next-intl";
 import { set } from "date-fns";
+import { useCurrentUser } from "@/hooks/use-current-user";
 
 const Checkout = ({
   amount,
@@ -23,7 +24,7 @@ const Checkout = ({
   const [errorMessage, setErrorMessage] = useState<string>();
   const [clientSecret, setClientSecret] = useState("");
   const [loading, setLoading] = useState(false);
-  const t = useTranslations("Checkout");
+  const t = useTranslations("BookingCalendar");
 
   useEffect(() => {
     fetch(`/api/payment/create-payment-intent`, {

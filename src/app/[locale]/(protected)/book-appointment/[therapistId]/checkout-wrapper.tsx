@@ -8,6 +8,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { convertToSubcurrency, currencyToSymbol } from "@/utils";
 import Checkout from "./checkout";
 import Countdown, { CountdownRendererFn } from "react-countdown";
+import { useCurrentUser } from "@/hooks/use-current-user";
 
 if (process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY === undefined) {
   throw new Error("NEXT_PUBLIC_STRIPE_PUBLIC_KEY is not defined");
@@ -32,25 +33,7 @@ const CheckoutWrapper = ({
   reservedAppointment: any;
   setReservedAppointment: any;
 }) => {
-  const t = useTranslations("Checkout");
-
-  // Custom renderer for the countdown timer
-  const renderer: CountdownRendererFn = ({ minutes, seconds, completed }) => {
-    if (completed) {
-      // Render a message when the countdown is completed
-      return <span className="text-red-600 font-bold">{t("timeExpired")}</span>;
-    } else {
-      // Render the countdown
-      return (
-        <div className="text-center mb-6">
-          <p className="text-lg font-semibold">{t("timeLeftToPay")}</p>
-          <p className="text-3xl font-bold text-red-500">
-            {minutes}:{seconds < 10 ? `0${seconds}` : seconds} {t("minutes")}
-          </p>
-        </div>
-      );
-    }
-  };
+  const t = useTranslations("BookingCalendar");
 
   return (
     <>
@@ -83,10 +66,9 @@ const CheckoutWrapper = ({
           </p>
         </div>
 
-        <Countdown
-          date={new Date(reservedAppointment.paymentExpiryDate)}
-          renderer={renderer}
-        />
+        <div className="text-center mb-6">
+          <p className="text-lg font-semibold">{t("weHaveReserved")}</p>
+        </div>
 
         <div className="mb-10">
           <h1 className="text-4xl font-extrabold mb-2">{t("zakina")}</h1>
@@ -106,6 +88,7 @@ const CheckoutWrapper = ({
             mode: "payment",
             amount: convertToSubcurrency(appointmentType.price),
             currency: "usd",
+            setup_future_usage: "off_session",
           }}
         >
           <Checkout
