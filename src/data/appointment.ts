@@ -40,6 +40,7 @@ export const getAppointments = async () => {
 
   const appointments = await Appointment.find({
     _id: { $in: appointmentIds },
+    status: { $ne: "temporarily-reserved" },
   })
     .lean()
     .populate({

@@ -9,7 +9,7 @@ import {
 } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useTransition } from "react";
 import {
   Dialog,
   DialogTrigger,
@@ -23,6 +23,15 @@ import { Button } from "@/components/ui/button";
 import { Link } from "@/navigation";
 import { useTranslations } from "next-intl";
 import { format, isPast, differenceInMinutes } from "date-fns";
+import CancelAppontmentForm from "./cancel-appointment-form";
+import {
+  MultiSelector,
+  MultiSelectorTrigger,
+  MultiSelectorInput,
+  MultiSelectorContent,
+  MultiSelectorList,
+  MultiSelectorItem,
+} from "@/components/ui/multi-select";
 
 const localizer = momentLocalizer(moment);
 
@@ -97,6 +106,13 @@ const AppointmentCalendar = ({ appointments }: { appointments: any }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [currentView, setCurrentView] = useState<View>(Views.WEEK);
   const [selectedAppointment, setSelectedAppointment] = useState<any>(null);
+  const [showCancelForm, setShowCancelForm] = useState(false);
+  const [isPending, startTransition] = useTransition();
+  const [filters, setFilters] = useState<string[]>([
+    "confirmed",
+    "completed",
+    "pending",
+  ]);
 
   const t = useTranslations("AppointmentCalendar");
 
@@ -141,17 +157,6 @@ const AppointmentCalendar = ({ appointments }: { appointments: any }) => {
     setSelectedAppointment(event);
   };
 
-  const events = useMemo(
-    () =>
-      appointments.map((appointment: any) => ({
-        ...appointment,
-        start: new Date(appointment.startDate),
-        end: new Date(appointment.endDate),
-        title: appointment.title,
-      })),
-    [appointments]
-  );
-
   const getStatusTranslation = (status: string) => {
     switch (status) {
       case "confirmed":
@@ -167,6 +172,41 @@ const AppointmentCalendar = ({ appointments }: { appointments: any }) => {
     }
   };
 
+  const filteredAppointments = useMemo(() => {
+    if (filters.length === 0) {
+      return appointments;
+    }
+    return appointments.filter((appointment: any) =>
+      filters.includes(appointment.status)
+    );
+  }, [appointments, filters]);
+
+  const events = useMemo(
+    () =>
+      filteredAppointments.map((appointment: any) => ({
+        ...appointment,
+        start: new Date(appointment.startDate),
+        end: new Date(appointment.endDate),
+        title: appointment.title,
+      })),
+    [filteredAppointments]
+  );
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "confirmed":
+        return "#1B2233";
+      case "canceled":
+        return "#F14A4A";
+      case "completed":
+        return "#0A0E1A";
+      case "pending":
+        return "#738091";
+      default:
+        return "#D8E1E8";
+    }
+  };
+
   return (
     <div className="p-4 space-y-6 bg-white md:w-9/12">
       <h2 className="text-xl md:text-2xl font-bold text-primary mb-4">
@@ -179,6 +219,32 @@ const AppointmentCalendar = ({ appointments }: { appointments: any }) => {
         view={currentView}
         t={t}
       />
+      <div className="flex justify-center mb-6">
+        <div className="flex items-center mb-6 flex-col">
+          <div className="mr-4">{t("appointmentStatus")}:</div>
+          <MultiSelector values={filters} onValuesChange={setFilters}>
+            <MultiSelectorTrigger>
+              <MultiSelectorInput placeholder={t("selectStatus")} />
+            </MultiSelectorTrigger>
+            <MultiSelectorContent>
+              <MultiSelectorList>
+                <MultiSelectorItem value="confirmed">
+                  {t("confirmed")}
+                </MultiSelectorItem>
+                <MultiSelectorItem value="canceled">
+                  {t("canceled")}
+                </MultiSelectorItem>
+                <MultiSelectorItem value="completed">
+                  {t("completed")}
+                </MultiSelectorItem>
+                <MultiSelectorItem value="pending">
+                  {t("pending")}
+                </MultiSelectorItem>
+              </MultiSelectorList>
+            </MultiSelectorContent>
+          </MultiSelector>
+        </div>
+      </div>
       <Calendar
         localizer={localizer}
         events={events}
@@ -200,13 +266,27 @@ const AppointmentCalendar = ({ appointments }: { appointments: any }) => {
         scrollToTime={new Date(currentDate.setHours(8, 0, 0, 0))}
         onSelectEvent={handleEventClick}
         eventPropGetter={(event) => ({
-          className: "bg-blue-500 text-white p-1 rounded",
+          style: { backgroundColor: getStatusColor(event.status) },
         })}
         dayPropGetter={() => ({
           className: "border-b border-gray-200",
         })}
       />
-      {selectedAppointment && (
+      {showCancelForm && (
+        <CancelAppontmentForm
+          selectedAppointment={selectedAppointment}
+          isPending={isPending}
+          startTransition={startTransition}
+          isCancelDialogOpen={showCancelForm}
+          setIsCancelDialogOpen={(value: boolean, action: string) => {
+            setShowCancelForm(false);
+            if (action !== "goBack") {
+              setSelectedAppointment(null);
+            }
+          }}
+        />
+      )}
+      {selectedAppointment && !showCancelForm && (
         <Dialog
           open={!!selectedAppointment}
           onOpenChange={() => setSelectedAppointment(null)}
@@ -251,6 +331,21 @@ const AppointmentCalendar = ({ appointments }: { appointments: any }) => {
                   <strong>{t("status")}:</strong>{" "}
                   {getStatusTranslation(selectedAppointment.status)}
                 </p>
+                <div>
+                  {(selectedAppointment.status === "pending" ||
+                    selectedAppointment.status === "confirmed") && (
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      className="mt-4 mb-4"
+                      onClick={() => {
+                        setShowCancelForm(true);
+                      }}
+                    >
+                      {t("cancelAppointment")}
+                    </Button>
+                  )}
+                </div>
               </DialogDescription>
             </DialogHeader>
             <DialogFooter className="rtl:space-x-reverse">

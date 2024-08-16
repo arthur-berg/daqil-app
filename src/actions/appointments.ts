@@ -132,7 +132,7 @@ export const cancelAppointment = async (
 
     if (isTherapist) {
       const isAuthorized =
-        user.id === appointment.hostUserId.toString() ||
+        user.id === appointment.hostUserId._id.toString() ||
         user.role === UserRole.ADMIN;
 
       if (!isAuthorized) {
@@ -166,8 +166,6 @@ export const cancelAppointment = async (
       therapistName: `${appointment.hostUserId.firstName} ${appointment.hostUserId.lastName}`,
       clientName: `${appointment.participants[0].userId.firstName} ${appointment.participants[0].userId.lastName}`,
     };
-
-    console.log("appointmentDetails", appointmentDetails);
 
     await sendAppointmentCancellationEmail(
       therapistEmail,
@@ -348,7 +346,7 @@ export const scheduleAppointment = async (
   if (!validatedFields.success) {
     return { error: ErrorMessages("invalidFields") };
   }
-  console.log("validatedFields.data", validatedFields.data);
+
   const {
     title,
     description,

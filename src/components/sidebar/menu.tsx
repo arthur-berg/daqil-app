@@ -37,8 +37,10 @@ export function Menu({ isOpen, setIsOpen }: MenuProps) {
   const t = useTranslations("Sidebar");
 
   useEffect(() => {
-    setIsOpen(false); // Close sidebar after navigating to a new route
-  }, [pathname, setIsOpen]);
+    if (isOpen && window.innerWidth < 1024) {
+      setIsOpen(false);
+    }
+  }, [pathname, setIsOpen, isOpen]);
 
   const menuList = isTherapist
     ? getTherapistMenuList(pathname, t)

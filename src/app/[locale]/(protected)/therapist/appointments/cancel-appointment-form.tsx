@@ -118,7 +118,7 @@ const CancelAppontmentForm = ({
               <Button
                 variant="outline"
                 type="button"
-                onClick={() => setIsCancelDialogOpen(false)}
+                onClick={() => setIsCancelDialogOpen(false, "goBack")}
               >
                 {t("goBack")}
               </Button>

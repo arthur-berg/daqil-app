@@ -220,7 +220,11 @@
     "confirmed": "Confirmed",
     "pending": "Pending",
     "canceled": "Canceled",
-    "completed": "Completed"
+    "completed": "Completed",
+    "cancelAppointment":"Cancel appointment",
+    "appointmentStatus":"Appointment Status",
+    "all": "All",
+    "selectStatus":"Select a status"
   },
   "ScheduleAppointmentPage": {
     "scheduleAnotherAppointment": "Schedule another appointment",

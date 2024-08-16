@@ -1,5 +1,5 @@
 "use client";
-import { useState, useTransition } from "react";
+import { useMemo, useState, useTransition } from "react";
 import {
   format,
   isToday,
@@ -30,21 +30,35 @@ import { FaCheck, FaTimes, FaClock, FaQuestion } from "react-icons/fa";
 import { useTranslations } from "next-intl";
 import BeatLoader from "react-spinners/BeatLoader";
 import CancelAppontmentForm from "./cancel-appointment-form";
+import {
+  MultiSelector,
+  MultiSelectorContent,
+  MultiSelectorInput,
+  MultiSelectorItem,
+  MultiSelectorList,
+  MultiSelectorTrigger,
+} from "@/components/ui/multi-select";
 
 const AppointmentList = ({ appointments }: { appointments: any }) => {
-  const [filter, setFilter] = useState("all");
+  const [filters, setFilters] = useState<string[]>([
+    "confirmed",
+    "completed",
+    "pending",
+  ]);
   const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
   const [selectedAppointment, setSelectedAppointment] = useState<any>(null);
   const [isPending, startTransition] = useTransition();
   const [cancelReason, setCancelReason] = useState<string>("");
   const t = useTranslations("AppointmentList");
 
-  const filteredAppointments =
-    filter === "all"
-      ? appointments
-      : appointments?.filter(
-          (appointment: any) => appointment.status === filter
-        );
+  const filteredAppointments = useMemo(() => {
+    if (filters.length === 0) {
+      return appointments;
+    }
+    return appointments.filter((appointment: any) =>
+      filters.includes(appointment.status)
+    );
+  }, [appointments, filters]);
 
   const groupedByStatus = filteredAppointments?.reduce(
     (acc: any, appointment: any) => {
@@ -113,31 +127,31 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
         <div className="flex justify-center py-8">
           <div className="space-y-8 w-full max-w-4xl">
             <div className="flex justify-center mb-6">
-              <div className="flex justify-center items-center mb-6 flex-col md:flex-row">
+              <div className="flex justify-center items-center mb-6 flex-col whitespace-nowrap">
                 <div className="mr-4 rtl:mr-0 rtl:ml-4">
                   {t("appointmentStatus")}:{" "}
                 </div>
-                <Select
-                  defaultValue="all"
-                  onValueChange={(value) => setFilter(value)}
-                >
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder={t("selectStatus")} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectItem value="all">{t("all")}</SelectItem>
-                      <SelectItem value="confirmed">
+                <MultiSelector values={filters} onValuesChange={setFilters}>
+                  <MultiSelectorTrigger>
+                    <MultiSelectorInput placeholder={t("selectStatus")} />
+                  </MultiSelectorTrigger>
+                  <MultiSelectorContent>
+                    <MultiSelectorList>
+                      <MultiSelectorItem value="confirmed">
                         {t("confirmed")}
-                      </SelectItem>
-                      <SelectItem value="canceled">{t("canceled")}</SelectItem>
-                      <SelectItem value="completed">
+                      </MultiSelectorItem>
+                      <MultiSelectorItem value="canceled">
+                        {t("canceled")}
+                      </MultiSelectorItem>
+                      <MultiSelectorItem value="completed">
                         {t("completed")}
-                      </SelectItem>
-                      <SelectItem value="pending">{t("pending")}</SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
+                      </MultiSelectorItem>
+                      <MultiSelectorItem value="pending">
+                        {t("pending")}
+                      </MultiSelectorItem>
+                    </MultiSelectorList>
+                  </MultiSelectorContent>
+                </MultiSelector>
               </div>
             </div>
             {sortedStatuses.length ? (

@@ -150,11 +150,11 @@
     "morning": "الصباح",
     "afternoon": "بعد الظهر",
     "evening": "المساء",
-  "timeLeftToPay": "الوقت المتبقي على حجزك المؤقت",
-  "close": "إغلاق",
-  "bookAppointment": "احجز موعدًا",
-  "changeTherapistButton": "تغيير المعالج",
-  "bookingAppointmentLoading": "جارٍ حجز الموعد... يرجى الانتظار"
+    "timeLeftToPay": "الوقت المتبقي على حجزك المؤقت",
+    "close": "إغلاق",
+    "bookAppointment": "احجز موعدًا",
+    "changeTherapistButton": "تغيير المعالج",
+    "bookingAppointmentLoading": "جارٍ حجز الموعد... يرجى الانتظار"
   },
   "AvailabilityPage": {
     "recurringAvailableTimes": "أوقات متاحة متكررة",
@@ -221,7 +221,11 @@
     "confirmed": "مؤكد",
     "pending": "قيد الانتظار",
     "canceled": "ملغي",
-    "completed": "مكتمل"
+    "completed": "مكتمل",
+    "cancelAppointment": "إلغاء الموعد",
+    "appointmentStatus": "حالة الموعد",
+    "all": "الكل",
+    "selectStatus": "اختر الحالة"
   },
   "ScheduleAppointmentPage": {
     "scheduleAnotherAppointment": "جدولة موعد آخر",

@@ -14,7 +14,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import { getBreadcrumbsList } from "@/utils/breadcrumbs-list";
 import { useTranslations } from "next-intl";
-import { useCurrentRole } from "@/hooks/use-current-role";
 
 const routesWithoutSidebar = ["/appointments/[id]"];
 
