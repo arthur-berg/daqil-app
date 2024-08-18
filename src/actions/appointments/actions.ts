@@ -8,13 +8,12 @@ import mongoose from "mongoose";
 import { UserRole } from "@/generalTypes";
 import User from "@/models/User";
 import { getAppointmentTypeById } from "@/data/appointment-types";
-import { scheduleJobToCheckAppointmentStatus } from "@/lib/schedulerJobs";
 import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { format } from "date-fns";
 import {
-  sendAppointmentBookingConfirmationEmail,
   sendAppointmentCancellationEmail,
+  sendNonPaidBookingConfirmationEmail,
 } from "@/lib/mail";
 import {
   checkTherapistAvailability,
@@ -131,7 +130,8 @@ export const cancelAppointment = async (
 export const confirmBookingPayLater = async (
   appointmentId: string,
   appointmentDate: string,
-  therapistId: string
+  therapistId: string,
+  appointmentTypeId: string
 ) => {
   const [SuccessMessages, ErrorMessages] = await Promise.all([
     getTranslations("SuccessMessages"),
@@ -140,11 +140,7 @@ export const confirmBookingPayLater = async (
 
   const client = await requireAuth([UserRole.CLIENT, UserRole.ADMIN]);
 
-  console.log("therapistId", therapistId);
-
   const therapist = await getUserById(therapistId);
-
-  console.log("therapist", therapist);
 
   if (!therapist) {
     return { error: ErrorMessages("therapistNotExist") };
@@ -203,12 +199,12 @@ export const confirmBookingPayLater = async (
       throw new Error(ErrorMessages("appointmentUpdateFailed"));
     }
 
-    // Update the appointment's payment method to "link" and confirm the booking
+    // Update the appointment's payment method to "payAfterBooking" and confirm the booking
     await Appointment.findByIdAndUpdate(
       appointmentId,
       {
         status: "confirmed",
-        "payment.method": "link",
+        "payment.method": "payAfterBooking",
         "payment.status": "pending", // since the user opted to pay later
       },
       { session }
@@ -216,6 +212,23 @@ export const confirmBookingPayLater = async (
 
     await session.commitTransaction();
     session.endSession();
+
+    const therapistEmail = therapist.email;
+    const clientEmail = client.email;
+
+    const appointmentDetails = {
+      date: appointment.startDate,
+      therapistName: `${therapist.firstName} ${therapist.lastName}`,
+      clientName: `${client.firstName} ${client.lastName}`,
+      appointmentId: appointmentId,
+      appointmentTypeId: appointmentTypeId,
+    };
+
+    await sendNonPaidBookingConfirmationEmail(
+      therapistEmail,
+      clientEmail,
+      appointmentDetails
+    );
 
     return { success: SuccessMessages("bookingConfirmed") };
   } catch (error) {
@@ -282,7 +295,7 @@ export const reserveAppointment = async (
       hostUserId: therapistId,
       durationInMinutes: appointmentType.durationInMinutes,
       payment: {
-        method: "checkout",
+        method: "payBeforeBooking",
         status: "pending",
         paymentExpiryDate: new Date(Date.now() + 15 * 60000),
       },
@@ -366,21 +379,6 @@ export const reserveAppointment = async (
     await session.commitTransaction();
     session.endSession();
 
-    const therapistEmail = therapist.email;
-    const clientEmail = client.email;
-    const appointmentDetails = {
-      date: format(startDate, "yyyy-MM-dd"),
-      time: format(startDate, "HH:mm"),
-      therapistName: `${therapist.firstName} ${therapist.lastName}`,
-      clientName: `${client.firstName} ${client.lastName}`,
-    };
-
-    await sendAppointmentBookingConfirmationEmail(
-      therapistEmail,
-      clientEmail,
-      appointmentDetails
-    );
-
     revalidatePath("/client/appointments");
 
     return {
@@ -455,7 +453,7 @@ export const scheduleAppointment = async (
           startDate,
           endDate,
           payment: {
-            method: "link",
+            method: "payAfterBooking",
             status: "pending",
           },
           status: "confirmed",

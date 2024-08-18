@@ -6,7 +6,8 @@ import {
   verificationEmailTemplate,
   passwordResetEmailTemplate,
   appointmentCancellationTemplate,
-  appointmentBookingConfirmationTemplate,
+  paidAppointmentConfirmationTemplate,
+  nonPaidAppointmentConfirmationTemplate,
 } from "./emailTemplates";
 
 mailchimpMarketing.setConfig({
@@ -198,20 +199,21 @@ export const sendAppointmentCancellationEmail = async (
   }
 };
 
-export const sendAppointmentBookingConfirmationEmail = async (
+export const sendNonPaidBookingConfirmationEmail = async (
   therapistEmail: string,
   clientEmail: string,
   appointmentDetails: {
-    date: string;
-    time: string;
+    date: Date;
     therapistName: string;
     clientName: string;
+    appointmentId: string;
+    appointmentTypeId: string;
   }
 ) => {
   const therapistMessage = {
     from_email: "info@zakina-app.com",
     subject: "New Appointment Booking",
-    html: appointmentBookingConfirmationTemplate(appointmentDetails, true),
+    html: nonPaidAppointmentConfirmationTemplate(appointmentDetails, true),
     to: [
       {
         email: therapistEmail,
@@ -223,7 +225,55 @@ export const sendAppointmentBookingConfirmationEmail = async (
   const clientMessage = {
     from_email: "info@zakina-app.com",
     subject: "Appointment Confirmation",
-    html: appointmentBookingConfirmationTemplate(appointmentDetails, false),
+    html: nonPaidAppointmentConfirmationTemplate(appointmentDetails, false),
+    to: [
+      {
+        email: clientEmail,
+        type: "to",
+      },
+    ],
+  };
+
+  try {
+    await Promise.all([
+      mailchimpTx.messages.send({ message: therapistMessage as any }),
+      mailchimpTx.messages.send({ message: clientMessage as any }),
+    ]);
+  } catch (error) {
+    console.error(
+      "Error sending appointment booking confirmation email:",
+      error
+    );
+  }
+};
+
+export const sendPaidBookingConfirmationEmail = async (
+  therapistEmail: string,
+  clientEmail: string,
+  appointmentDetails: {
+    date: string;
+    time: string;
+    therapistName: string;
+    clientName: string;
+    durationInMinutes: number;
+  }
+) => {
+  const therapistMessage = {
+    from_email: "info@zakina-app.com",
+    subject: "New Appointment Booking",
+    html: paidAppointmentConfirmationTemplate(appointmentDetails, true),
+    to: [
+      {
+        email: therapistEmail,
+        type: "to",
+      },
+    ],
+  };
+
+  const clientMessage = {
+    from_email: "info@zakina-app.com",
+    subject: "Appointment Confirmation",
+    html: paidAppointmentConfirmationTemplate(appointmentDetails, false),
     to: [
       {
         email: clientEmail,

@@ -4,18 +4,28 @@ import { format } from "date-fns"; // Assuming you have date-fns installed for d
 import { getTranslations } from "next-intl/server";
 
 const PaymentSuccessPage = async ({
-  searchParams: { appointmentId, payLater },
+  searchParams: { appointmentId },
 }: {
-  searchParams: { appointmentId: string; payLater: string };
+  searchParams: { appointmentId: string };
 }) => {
   const appointment = await getAppointmentById(appointmentId);
+
+  const t = await getTranslations("PaymentSuccessPage");
+  const tError = await getTranslations("ErrorMessages");
+
+  if (!appointment) {
+    return (
+      <div className="bg-white shadow-lg rounded-lg p-8 max-w-4xl mx-auto text-center mt-12">
+        {tError("appointmentNotExist")}
+      </div>
+    );
+  }
+
   const formattedStartDate = format(
     new Date(appointment.startDate),
     "MMMM dd, yyyy - h:mm a"
   );
   const formattedEndDate = format(new Date(appointment.endDate), "h:mm a");
-
-  const t = await getTranslations("PaymentSuccessPage");
 
   return (
     <div className="bg-white shadow-lg rounded-lg p-8 max-w-4xl mx-auto text-center mt-12">
@@ -36,17 +46,10 @@ const PaymentSuccessPage = async ({
             <span className="font-semibold">{t("duration")}</span>{" "}
             {appointment.durationInMinutes} {t("minutes")}
           </p>
-          {payLater && payLater === "true" ? (
-            <p className="mb-4">
-              <span className="font-semibold">{t("amountToBePaid")}</span>{" "}
-              {appointment.price} {appointment.currency}
-            </p>
-          ) : (
-            <p className="mb-4">
-              <span className="font-semibold">{t("amountPaid")}</span>{" "}
-              {appointment.price} {appointment.currency}
-            </p>
-          )}
+          <p className="mb-4">
+            <span className="font-semibold">{t("amountPaid")}</span>{" "}
+            {appointment.price} {appointment.currency}
+          </p>
         </div>
         <p className="text-gray-500 mt-4">{t("receiveConfirmation")}</p>
       </div>

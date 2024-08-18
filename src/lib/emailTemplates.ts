@@ -1,4 +1,7 @@
-const primaryColor = "#457bff"; // Hex color converted from HSL
+import { format } from "date-fns";
+
+const primaryColor = "#0d1a36"; // Hex color converted from HSL
+const secondaryColor = "#e1eef7";
 
 export const twoFactorTokenTemplate = (token: string) => `
   <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
@@ -125,12 +128,13 @@ export const appointmentCancellationTemplate = (
   `;
 };
 
-export const appointmentBookingConfirmationTemplate = (
+export const paidAppointmentConfirmationTemplate = (
   appointmentDetails: {
     date: string;
     time: string;
     therapistName: string;
     clientName: string;
+    durationInMinutes: number;
   },
   isTherapist: boolean
 ) => {
@@ -162,12 +166,80 @@ export const appointmentBookingConfirmationTemplate = (
           <p><strong>Client:</strong> ${appointmentDetails.clientName}</p>
           <p><strong>Date:</strong> ${appointmentDetails.date}</p>
           <p><strong>Time:</strong> ${appointmentDetails.time}</p>
+          <p><strong>Duration:</strong> ${appointmentDetails.durationInMinutes}</p>
         </div>
         <div style="margin-top: 20px; font-size: 16px; color: #333333;">
           <p>${additionalMessage}</p>
         </div>
         <div style="text-align: center; margin-top: 20px;">
           <a href="${appointmentsLink}" style="display: inline-block; padding: 12px 24px; margin: 20px 0; background-color: ${primaryColor}; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: bold;">
+            ${buttonText}
+          </a>
+        </div>
+        <div style="margin-top: 20px; font-size: 12px; color: #888888; text-align: center;">
+          Thank you for using Zakina.
+        </div>
+      </div>
+    </div>
+  `;
+};
+
+export const nonPaidAppointmentConfirmationTemplate = (
+  appointmentDetails: {
+    date: Date;
+    therapistName: string;
+    clientName: string;
+    appointmentId: string;
+    appointmentTypeId: string;
+  },
+  isTherapist: boolean
+) => {
+  const subject = isTherapist
+    ? "New Appointment Booking"
+    : "Appointment Confirmation";
+
+  const appointmentsLink = isTherapist
+    ? `${process.env.NEXT_PUBLIC_APP_URL}/therapist/appointments`
+    : `${process.env.NEXT_PUBLIC_APP_URL}/client/appointments`;
+
+  // Encode the date to ensure it's safely included in the URL
+  const encodedDate = encodeURIComponent(appointmentDetails.date.toString());
+  const formattedDate = format(new Date(appointmentDetails.date), "yyyy-MM-dd");
+  const formattedTime = format(new Date(appointmentDetails.date), "HH:mm");
+
+  const paymentLink = `${process.env.NEXT_PUBLIC_APP_URL}/invoices/${appointmentDetails.appointmentId}/checkout?appointmentId=${appointmentDetails.appointmentId}&appointmentTypeId=${appointmentDetails.appointmentTypeId}&date=${encodedDate}`;
+
+  const buttonText = isTherapist
+    ? "See all my appointments"
+    : "View my appointments";
+
+  const additionalMessage = isTherapist
+    ? "To join the session and manage all your appointments, please visit your appointments page."
+    : `Please note that this appointment needs to be paid for at least 1 hour before the meeting starts. You can make the payment using the link below. You can also join your upcoming session and see an overview of all your appointments on your appointments page.`;
+
+  return `
+    <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
+      <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+        <div style="text-align: center; margin-bottom: 20px;">
+          <h1 style="color: ${primaryColor}; font-size: 24px; margin: 0;">Zakina</h1>
+        </div>
+        <div style="margin-top: 20px;">
+          <p>${subject}</p>
+          <p><strong>Therapist:</strong> ${appointmentDetails.therapistName}</p>
+          <p><strong>Client:</strong> ${appointmentDetails.clientName}</p>
+          <p><strong>Date:</strong> ${formattedDate}</p>
+          <p><strong>Time:</strong> ${formattedTime}</p>
+        </div>
+        <div style="margin-top: 20px; font-size: 16px; color: #333333;">
+          <p>${additionalMessage}</p>
+        </div>
+        <div style="text-align: center; margin-top: 20px;">
+          <a href="${paymentLink}" style="display: inline-block; padding: 12px 24px; margin: 20px 0; background-color: ${primaryColor}; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: bold;">
+            Pay Now
+          </a>
+        </div>
+        <div style="text-align: center; margin-top: 20px;">
+          <a href="${appointmentsLink}" style="display: inline-block; padding: 12px 24px; margin: 20px 0; background-color: ${secondaryColor}; color: #000000; text-decoration: none; border-radius: 5px; font-weight: bold;">
             ${buttonText}
           </a>
         </div>

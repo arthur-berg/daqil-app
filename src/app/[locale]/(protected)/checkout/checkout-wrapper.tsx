@@ -7,14 +7,13 @@ import { format } from "date-fns";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { convertToSubcurrency, currencyToSymbol } from "@/utils";
-import Checkout from "./checkout";
+import Checkout from "@/components/checkout";
 import Countdown, { CountdownRendererFn } from "react-countdown";
-import { useCurrentUser } from "@/hooks/use-current-user";
 import { Label } from "@/components/ui/label";
 import { Link, useRouter } from "@/navigation";
 import { RadioGroupItem, RadioGroup } from "@/components/ui/radio-group";
 import { confirmBookingPayLater } from "@/actions/appointments/actions";
-import { toast, useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/components/ui/use-toast";
 
 if (process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY === undefined) {
   throw new Error("NEXT_PUBLIC_STRIPE_PUBLIC_KEY is not defined");
@@ -42,14 +41,13 @@ const CheckoutWrapper = ({
   const router = useRouter();
 
   const handlePayLater = () => {
-    // Logic to confirm the appointment without payment
-    // You can add your logic here to handle the "Pay after" option
     const appointmentDate = format(date, "yyyy-MM-dd");
     startTransition(async () => {
       const data = await confirmBookingPayLater(
         appointmentId,
         appointmentDate,
-        therapistId
+        therapistId,
+        appointmentType._id
       );
       if (data.success) {
         router.push(`/booking-confirmed?appointmentId=${appointmentId}`);
@@ -74,28 +72,15 @@ const CheckoutWrapper = ({
           <h2 className="text-2xl font-bold">{t("appointmentDetails")}:</h2>
           <p className="mt-2">
             {t("day")}: {format(date, "eeee, MMMM d, yyyy")}{" "}
-            {/* Use date directly */}
           </p>
           <p>
-            {t("time")}: {format(date, "kk:mm")} {/* Use date directly */}
+            {t("time")}: {format(date, "kk:mm")}
           </p>
           <p>
             {t("duration")}: {appointmentType.durationInMinutes} {t("minutes")}
           </p>
         </div>
 
-        {/*   <div className="mb-10">
-          <h1 className="text-4xl font-extrabold mb-2">{t("zakina")}</h1>
-          <h2 className="text-2xl">
-            {t("hasRequested")}
-            <span className="font-bold">
-              {" "}
-              {currencyToSymbol(appointmentType.currency)}
-              {appointmentType.price}
-            </span>
-          </h2>
-        </div>
- */}
         <div className="mb-6">
           <h3 className="text-xl font-semibold mb-4">
             {t("whenDoYouWantToPay")}

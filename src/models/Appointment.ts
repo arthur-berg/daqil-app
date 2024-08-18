@@ -72,7 +72,7 @@ const appointmentSchema = new Schema(
     payment: {
       method: {
         type: String,
-        enum: ["checkout", "link"],
+        enum: ["payBeforeBooking", "payAfterBooking"],
         required: true,
       },
       status: {
@@ -87,10 +87,10 @@ const appointmentSchema = new Schema(
       paymentExpiryDate: {
         type: Date,
         required: function (this: any) {
-          return this.method === "checkout";
+          return this.method === "payBeforeBooking";
         },
         default: function (this: any) {
-          if (this.method === "checkout") {
+          if (this.method === "payBeforeBooking") {
             const expiryTime = new Date();
             expiryTime.setMinutes(expiryTime.getMinutes() + 15);
             return expiryTime;

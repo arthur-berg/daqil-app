@@ -5,6 +5,7 @@ import Stripe from "stripe";
 import Appointment from "@/models/Appointment";
 import User from "@/models/User";
 import { format } from "date-fns";
+import { sendPaidBookingConfirmationEmail } from "@/lib/mail";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET as string;
@@ -38,7 +39,15 @@ export async function POST(req: Request): Promise<NextResponse> {
 
       if (appointmentId) {
         try {
-          const appointment = await Appointment.findById(appointmentId);
+          const appointment = await Appointment.findById(appointmentId)
+            .populate({
+              path: "participants.userId",
+              select: "firstName lastName email",
+            })
+            .populate({
+              path: "hostUserId",
+              select: "firstName lastName email",
+            });
 
           if (!appointment) {
             console.error(`Appointment ${appointmentId} not found.`);
@@ -49,7 +58,7 @@ export async function POST(req: Request): Promise<NextResponse> {
           }
 
           // Check payment type
-          if (appointment.payment.method === "checkout") {
+          if (appointment.payment.method === "payBeforeBooking") {
             // Move appointment from temporarilyReservedAppointments to bookedAppointments
             const appointmentDate = format(
               new Date(appointment.startDate),
@@ -95,7 +104,30 @@ export async function POST(req: Request): Promise<NextResponse> {
               status: "confirmed",
               "payment.status": "paid",
             });
-          } else if (appointment.payment.method === "link") {
+
+            const client = appointment.participants[0].userId;
+            const therapist = appointment.hostUserId;
+
+            const clientEmail = client.email;
+            const therapistEmail = therapist.email;
+
+            const appointmentDetails = {
+              date: format(new Date(appointment.startDate), "yyyy-MM-dd"),
+              time: format(new Date(appointment.startDate), "HH:mm"),
+              therapistName: `${therapist.firstName} ${therapist.lastName}`,
+              clientName: `${client.firstName} ${client.lastName}`,
+              durationInMinutes: appointment.durationInMinutes,
+            };
+            console.log("therapistEmail", therapistEmail);
+            console.log("clientEmail", clientEmail);
+            console.log("appointmentDetails", appointmentDetails);
+
+            await sendPaidBookingConfirmationEmail(
+              therapistEmail,
+              clientEmail,
+              appointmentDetails
+            );
+          } else if (appointment.payment.method === "payAfterBooking") {
             // Just update the payment status to paid
             await Appointment.findByIdAndUpdate(appointmentId, {
               "payment.status": "paid",

@@ -1,14 +1,13 @@
 import { getAppointmentTypeById } from "@/data/appointment-types";
 import CheckoutWrapper from "./checkout-wrapper";
 
-const CheckoutPage = async ({
-  searchParams: { appointmentTypeId, date, appointmentId, therapistId },
+const InvoiceCheckoutPage = async ({
+  searchParams: { appointmentTypeId, date, appointmentId },
 }: {
   searchParams: {
     appointmentId: string;
     appointmentTypeId: string;
     date: string;
-    therapistId: string;
   };
 }) => {
   const appointmentType = await getAppointmentTypeById(appointmentTypeId);
@@ -20,10 +19,9 @@ const CheckoutPage = async ({
         appointmentType={appointmentType}
         appointmentId={appointmentId}
         date={dateObject}
-        therapistId={therapistId}
       />
     </div>
   );
 };
 
-export default CheckoutPage;
+export default InvoiceCheckoutPage;
