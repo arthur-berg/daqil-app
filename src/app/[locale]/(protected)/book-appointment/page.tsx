@@ -8,7 +8,11 @@ import { Link } from "@/navigation";
 import { getTranslations } from "next-intl/server";
 import { APPOINTMENT_TYPE_ID } from "@/contants/config";
 
-const BookAppointmentPage = async () => {
+const BookAppointmentPage = async ({
+  params,
+}: {
+  params: { locale: string };
+}) => {
   const user = await getCurrentUser();
 
   const selectedTherapist = (
@@ -36,6 +40,7 @@ const BookAppointmentPage = async () => {
               <SelectedTherapist
                 appointmentType={appointmentType}
                 selectedTherapistData={JSON.stringify(selectedTherapist)}
+                locale={params.locale}
               />
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">

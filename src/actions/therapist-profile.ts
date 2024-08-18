@@ -5,6 +5,7 @@ import { getTranslations } from "next-intl/server";
 import { requireAuth } from "@/lib/auth";
 import { UserRole } from "@/generalTypes";
 import User from "@/models/User";
+import { revalidatePath } from "next/cache";
 
 export const updateTherapistProfile = async (
   values: z.infer<typeof TherapistMyProfileSchema>
@@ -40,6 +41,8 @@ export const updateTherapistProfile = async (
         },
       },
     });
+
+    revalidatePath("/therapist/my-profile");
 
     return { success: SuccessMessages("therapistProfileUpdated") };
   } catch (error) {

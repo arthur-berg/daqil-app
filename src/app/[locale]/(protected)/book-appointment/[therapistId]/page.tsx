@@ -10,12 +10,13 @@ import BookingCalendar from "@/app/[locale]/(protected)/book-appointment/[therap
 const TherapistUserProfile = async ({
   params,
 }: {
-  params: { therapistId: string };
+  params: { therapistId: string; locale: string };
 }) => {
   const ErrorMessages = await getTranslations("ErrorMessages");
   const therapistId = params.therapistId;
   const therapist = (await getTherapistById(therapistId)) as any;
   const appointmentType = await getAppointmentTypeById(APPOINTMENT_TYPE_ID);
+  const locale = params.locale;
 
   if (!therapist) {
     return ErrorMessages("therapistNotExist");
@@ -27,34 +28,40 @@ const TherapistUserProfile = async ({
 
   return (
     <div className="p-4 max-w-4xl mx-auto">
-      <div className="flex flex-col md:flex-row items-center bg-white shadow-md rounded-lg p-6">
-        <div className="flex-shrink-0 mb-4 md:mb-0 md:mr-6">
-          <Avatar className="w-32 h-32">
-            <AvatarImage src={therapist?.image || ""} />
-            <AvatarFallback className="bg-background flex items-center justify-center w-full h-full">
-              <FaUser className="text-4xl text-gray-500" />
-            </AvatarFallback>
-          </Avatar>
-        </div>
-        <div className="flex flex-col items-center md:items-start text-center md:text-left">
-          <div className="text-2xl font-bold mb-2">
+      <div className="flex flex-col items-center bg-white shadow-md justify-center rounded-lg p-6">
+        <div className="flex flex-col items-center">
+          {/* Therapist Image or Placeholder */}
+          {therapist.image ? (
+            <Avatar className="w-28 h-28">
+              <AvatarImage src={therapist.image || ""} />
+              <AvatarFallback className="bg-background flex items-center justify-center w-full h-full">
+                <FaUser className="text-4xl text-gray-500" />
+              </AvatarFallback>
+            </Avatar>
+          ) : (
+            <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center mb-4">
+              <span className="text-gray-500">No image</span>
+            </div>
+          )}
+          <h2 className="text-xl font-bold mb-2">
             {therapist.firstName} {therapist.lastName}
-          </div>
-          <div className="text-xl text-gray-600 mb-2">
-            {therapist.therapistWorkProfile?.title}
-          </div>
-          <div className="text-gray-700">
-            {therapist.therapistWorkProfile?.description}
-          </div>
+          </h2>
+          <p className="text-gray-600 mb-2">
+            {therapist.therapistWorkProfile[locale].title}
+          </p>
+          <p className="text-sm text-gray-700">
+            {therapist.therapistWorkProfile[locale].description}
+          </p>
         </div>
-      </div>
-      <div className="mt-6 bg-white shadow-md rounded-lg p-6">
-        <BookingCalendar
-          therapistsAvailableTimes={JSON.stringify(therapist.availableTimes)}
-          appointments={JSON.stringify(therapist.appointments)}
-          appointmentType={appointmentType}
-          therapistId={therapistId}
-        />
+
+        <div className="mt-6 rounded-lg p-6 w-full">
+          <BookingCalendar
+            therapistsAvailableTimes={JSON.stringify(therapist.availableTimes)}
+            appointments={JSON.stringify(therapist.appointments)}
+            appointmentType={appointmentType}
+            therapistId={therapistId}
+          />
+        </div>
       </div>
     </div>
   );

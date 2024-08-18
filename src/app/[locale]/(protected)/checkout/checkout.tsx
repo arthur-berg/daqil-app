@@ -9,22 +9,20 @@ import { convertToSubcurrency } from "@/utils";
 import { Button } from "@/components/ui/button";
 import { BeatLoader } from "react-spinners";
 import { useTranslations } from "next-intl";
-import { set } from "date-fns";
-import { useCurrentUser } from "@/hooks/use-current-user";
 
 const Checkout = ({
   amount,
-  reservedAppointment,
+  appointmentId,
 }: {
   amount: number;
-  reservedAppointment: any;
+  appointmentId: any;
 }) => {
   const stripe = useStripe();
   const elements = useElements();
   const [errorMessage, setErrorMessage] = useState<string>();
   const [clientSecret, setClientSecret] = useState("");
   const [loading, setLoading] = useState(false);
-  const t = useTranslations("BookingCalendar");
+  const t = useTranslations("Checkout");
 
   useEffect(() => {
     fetch(`/api/payment/create-payment-intent`, {
@@ -34,7 +32,7 @@ const Checkout = ({
       },
       body: JSON.stringify({
         amount: convertToSubcurrency(amount),
-        appointmentId: reservedAppointment.appointmentId,
+        appointmentId: appointmentId,
       }),
     })
       .then((res) => res.json())
@@ -61,7 +59,7 @@ const Checkout = ({
       elements,
       clientSecret,
       confirmParams: {
-        return_url: `${process.env.NEXT_PUBLIC_APP_URL}/payment-success?appointmentId=${reservedAppointment.appointmentId}`,
+        return_url: `${process.env.NEXT_PUBLIC_APP_URL}/payment-success?appointmentId=${appointmentId}`,
       },
     });
 

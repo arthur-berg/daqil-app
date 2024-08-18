@@ -65,17 +65,33 @@ export const getTherapistAvailableTimeSlots = (
     (appointment) => appointment.date === appointmentDate
   );
 
+  // Filter booked appointments that are not canceled
   const bookedAppointments = selectedAppointment
     ? selectedAppointment.bookedAppointments.filter(
         (appointment: any) => appointment.status !== "canceled"
       )
     : [];
 
-  const bookedAppointmentsForDate =
-    bookedAppointments?.map((appointment: any) => ({
+  // Include only valid temporarily reserved appointments (not expired)
+  const validTemporarilyReservedAppointments = selectedAppointment
+    ? selectedAppointment.temporarilyReservedAppointments.filter(
+        (appointment: any) =>
+          new Date(appointment.payment.paymentExpiryDate) > new Date()
+      )
+    : [];
+
+  // Combine both booked and valid temporarily reserved appointments
+  const allAppointmentsForDate = [
+    ...bookedAppointments,
+    ...validTemporarilyReservedAppointments,
+  ];
+
+  const appointmentsForDate = allAppointmentsForDate.map(
+    (appointment: any) => ({
       startTime: format(new Date(appointment.startDate), "HH:mm"),
       endTime: format(new Date(appointment.endDate), "HH:mm"),
-    })) || [];
+    })
+  );
 
   const getTimeRangesForDay = (day: string): TimeRange[] => {
     const recurring = recurringAvailableTimes.find((r) => r.day === day);
@@ -151,7 +167,7 @@ export const getTherapistAvailableTimeSlots = (
 
   const blockedTimes = [
     ...getBlockedOutTimesForDate(selectedDate),
-    ...bookedAppointmentsForDate.map((range: any) => ({
+    ...appointmentsForDate.map((range: any) => ({
       startDate: new Date(`${appointmentDate}T${range.startTime}:00`),
       endDate: new Date(`${appointmentDate}T${range.endTime}:00`),
     })),

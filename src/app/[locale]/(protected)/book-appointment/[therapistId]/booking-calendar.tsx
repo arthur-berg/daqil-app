@@ -4,7 +4,7 @@ import { useState, useTransition } from "react";
 import { format, set } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { reserveAppointment } from "@/actions/appointments";
-import { Link } from "@/navigation";
+import { Link, useRouter } from "@/navigation";
 import { currencyToSymbol } from "@/utils";
 import { getTherapistAvailableTimeSlots } from "./helpers";
 import { useTranslations } from "next-intl";
@@ -16,7 +16,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import CheckoutWrapper from "./checkout-wrapper";
 import { useToast } from "@/components/ui/use-toast";
 import { BeatLoader } from "react-spinners";
 
@@ -50,6 +49,7 @@ const BookingCalendar = ({
     justDate: undefined,
     dateTime: undefined,
   });
+  const router = useRouter();
   const [reservedAppointment, setReservedAppointment] = useState<any>(null);
   const { toast } = useToast();
 
@@ -103,10 +103,9 @@ const BookingCalendar = ({
         });
       }
       if (data.success) {
-        setReservedAppointment({
-          appointmentId: data?.appointmentId,
-          paymentExpiryDate: data.paymentExpiryDate,
-        });
+        router.push(
+          `/checkout?appointmentId=${data.appointmentId}&appointmentTypeId=${appointmentType._id}&date=${combinedDateTime}`
+        );
       }
     });
   };
@@ -159,19 +158,7 @@ const BookingCalendar = ({
               <div className="flex">
                 <h2 className="text-xl font-bold mb-4 mr-4">{t("calendar")}</h2>
               </div>
-              {reservedAppointment ? (
-                <>
-                  <CheckoutWrapper
-                    therapistId={therapistId}
-                    setSuccess={setSuccess}
-                    appointmentType={appointmentType}
-                    date={date}
-                    setDate={setDate}
-                    reservedAppointment={reservedAppointment}
-                    setReservedAppointment={setReservedAppointment}
-                  />
-                </>
-              ) : date.justDate ? (
+              {date.justDate ? (
                 <>
                   <Calendar
                     mode="single"

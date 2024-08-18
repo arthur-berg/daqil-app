@@ -116,9 +116,10 @@ export const getClients = async (therapistId: string) => {
 
 export const getTherapistById = async (id: string) => {
   try {
-    const therapist = await User.findById(id).populate(
-      "appointments.bookedAppointments"
-    );
+    const therapist = await User.findById(id).populate([
+      "appointments.bookedAppointments",
+      "appointments.temporarilyReservedAppointments",
+    ]);
 
     return therapist;
   } catch {
