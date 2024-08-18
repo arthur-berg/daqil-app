@@ -51,7 +51,7 @@ const BookingCalendar = ({
     dateTime: undefined,
   });
   const [reservedAppointment, setReservedAppointment] = useState<any>(null);
-  const { responseToast } = useToast();
+  const { toast } = useToast();
 
   const setTimeSlots = (selectedDate: Date) => {
     if (!selectedDate) return [];
@@ -89,16 +89,25 @@ const BookingCalendar = ({
       hours: date?.dateTime?.getHours(),
       minutes: date?.dateTime?.getMinutes(),
     });
+
     startTransition(async () => {
       const data = await reserveAppointment(
         appointmentType,
         therapistId,
         combinedDateTime
       );
-      setReservedAppointment({
-        appointmentId: data?.appointmentId,
-        paymentExpiryDate: data.paymentExpiryDate,
-      });
+      if (data.error) {
+        toast({
+          title: data.error,
+          variant: "destructive",
+        });
+      }
+      if (data.success) {
+        setReservedAppointment({
+          appointmentId: data?.appointmentId,
+          paymentExpiryDate: data.paymentExpiryDate,
+        });
+      }
     });
   };
 

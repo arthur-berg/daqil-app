@@ -3,7 +3,8 @@ import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 import Stripe from "stripe";
 import Appointment from "@/models/Appointment";
-import User from "@/models/User"; // Assuming you have a User model
+import User from "@/models/User";
+import { format } from "date-fns";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET as string;
@@ -37,25 +38,79 @@ export async function POST(req: Request): Promise<NextResponse> {
 
       if (appointmentId) {
         try {
-          const appointment = await Appointment.findByIdAndUpdate(
-            appointmentId,
-            {
+          const appointment = await Appointment.findById(appointmentId);
+
+          if (!appointment) {
+            console.error(`Appointment ${appointmentId} not found.`);
+            return NextResponse.json(
+              { error: "Appointment not found" },
+              { status: 404 }
+            );
+          }
+
+          // Check payment type
+          if (appointment.payment.method === "checkout") {
+            // Move appointment from temporarilyReservedAppointments to bookedAppointments
+            const appointmentDate = format(
+              new Date(appointment.startDate),
+              "yyyy-MM-dd"
+            );
+
+            // Update the user's appointments
+            await User.findOneAndUpdate(
+              {
+                _id: appointment.participants[0].userId,
+                "appointments.date": appointmentDate,
+              },
+              {
+                $pull: {
+                  "appointments.$.temporarilyReservedAppointments":
+                    appointmentId,
+                },
+                $push: {
+                  "appointments.$.bookedAppointments": appointmentId,
+                },
+              }
+            );
+
+            // Update the therapist's appointments
+            await User.findOneAndUpdate(
+              {
+                _id: appointment.hostUserId,
+                "appointments.date": appointmentDate,
+              },
+              {
+                $pull: {
+                  "appointments.$.temporarilyReservedAppointments":
+                    appointmentId,
+                },
+                $push: {
+                  "appointments.$.bookedAppointments": appointmentId,
+                },
+              }
+            );
+
+            // Mark the appointment as confirmed and payment as paid
+            await Appointment.findByIdAndUpdate(appointmentId, {
               status: "confirmed",
               "payment.status": "paid",
-            }
-          );
+            });
+          } else if (appointment.payment.method === "link") {
+            // Just update the payment status to paid
+            await Appointment.findByIdAndUpdate(appointmentId, {
+              "payment.status": "paid",
+            });
+          }
 
-          const clientId = appointment.participants[0].userId;
-
-          // Update the user with the customer ID and payment method ID if not already stored
-          await User.findByIdAndUpdate(clientId, {
+          // Update the user with the payment method ID if not already stored
+          await User.findByIdAndUpdate(appointment.participants[0].userId, {
             $set: {
               stripePaymentMethodId: paymentMethodId,
             },
           });
 
           console.log(
-            `Appointment ${appointmentId} confirmed and payment marked as paid.`
+            `Appointment ${appointmentId} processed successfully and payment marked as paid.`
           );
         } catch (error) {
           console.error(

@@ -231,6 +231,14 @@ const userSchema = new Schema(
           {
             type: Schema.Types.ObjectId,
             ref: "Appointment",
+            default: [],
+          },
+        ],
+        temporarilyReservedAppointments: [
+          {
+            type: Schema.Types.ObjectId,
+            ref: "Appointment",
+            default: [],
           },
         ],
       },

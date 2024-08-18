@@ -25,6 +25,155 @@ export const getClients = async () => {
   return clients;
 };
 
+const checkForOverlappingAppointments = (
+  appointments: any,
+  startDate: any,
+  endDate: any,
+  interval = 15
+) => {
+  const intervalInMilliseconds = interval * 60000;
+  const startWithBuffer = new Date(
+    startDate.getTime() - intervalInMilliseconds
+  );
+  const endWithBuffer = new Date(endDate.getTime() + intervalInMilliseconds);
+
+  for (const appointment of appointments) {
+    const appointmentStart = new Date(appointment.startDate);
+    const appointmentEnd = new Date(appointment.endDate);
+
+    if (
+      (startWithBuffer < appointmentEnd && endWithBuffer > appointmentStart) ||
+      (startWithBuffer <= appointmentStart && endWithBuffer >= appointmentEnd)
+    ) {
+      return true; // Conflict found
+    }
+  }
+  return false; // No conflict
+};
+
+// Function to check therapist availability
+const checkTherapistAvailability = async (
+  therapist: any,
+  startDate: any,
+  endDate: any
+) => {
+  const appointmentDate = format(new Date(startDate), "yyyy-MM-dd");
+
+  // Find the specific date entry in the therapist's appointments array
+  const appointmentEntry = therapist.appointments.find(
+    (appointment: any) => appointment.date === appointmentDate
+  );
+
+  // If there are no appointments for that date, the slot is available
+  if (!appointmentEntry) {
+    return { available: true };
+  }
+
+  // Populate the bookedAppointments and temporarilyReservedAppointments fields
+  const populatedAppointments = await User.populate(appointmentEntry, {
+    path: "bookedAppointments temporarilyReservedAppointments",
+    populate: { path: "hostUserId participants.userId" }, // populate further if necessary
+  });
+
+  const { bookedAppointments, temporarilyReservedAppointments } =
+    populatedAppointments;
+
+  // Check bookedAppointments for overlap
+  if (
+    checkForOverlappingAppointments(
+      bookedAppointments,
+      startDate,
+      endDate,
+      therapist.availableTimes.settings.interval
+    )
+  ) {
+    return { available: false, message: "This time slot is already booked." };
+  }
+
+  // Filter valid temporarilyReservedAppointments (those with valid paymentExpiryDate)
+  const validTempReservedAppointments = temporarilyReservedAppointments.filter(
+    (appointment: any) =>
+      new Date(appointment.payment.paymentExpiryDate) > new Date()
+  );
+
+  // Check temporarilyReservedAppointments for overlap
+  if (
+    checkForOverlappingAppointments(
+      validTempReservedAppointments,
+      startDate,
+      endDate,
+      therapist.availableTimes.settings.interval
+    )
+  ) {
+    return {
+      available: false,
+      message: "This time slot is temporarily reserved.",
+    };
+  }
+
+  return { available: true };
+};
+
+const clearTemporarilyReservedAppointments = async (
+  client: any,
+  therapist: any,
+  appointmentDate: string
+) => {
+  const appointmentEntry = client.appointments.find(
+    (appointment: any) => appointment.date === appointmentDate
+  );
+
+  if (
+    !appointmentEntry ||
+    !appointmentEntry.temporarilyReservedAppointments?.length
+  ) {
+    console.log("No temporarily reserved appointments to clear.");
+    return;
+  }
+
+  const tempReservedAppointmentIds =
+    appointmentEntry.temporarilyReservedAppointments.map(
+      (id: string) => new mongoose.Types.ObjectId(id) // Convert to ObjectId
+    );
+
+  try {
+    await User.updateOne(
+      {
+        _id: client.id,
+        "appointments.date": appointmentDate,
+      },
+      {
+        $pull: {
+          "appointments.$.temporarilyReservedAppointments": {
+            $in: tempReservedAppointmentIds,
+          },
+        },
+      }
+    );
+
+    await User.updateOne(
+      {
+        _id: therapist.id,
+        "appointments.date": appointmentDate,
+      },
+      {
+        $pull: {
+          "appointments.$.temporarilyReservedAppointments": {
+            $in: tempReservedAppointmentIds,
+          },
+        },
+      }
+    );
+
+    await Appointment.deleteMany({
+      _id: { $in: tempReservedAppointmentIds },
+      status: "temporarily-reserved",
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 const createAppointment = async (appointmentData: any, session: any) => {
   const appointment = await Appointment.create([appointmentData], { session });
   const appointmentItem = appointment[0]; // As appointment.create returns an array
@@ -41,7 +190,8 @@ const updateAppointments = async (
   userId: string,
   appointmentDate: string,
   appointmentId: string,
-  session: any
+  session: any,
+  appointmentCategory: "bookedAppointments" | "temporarilyReservedAppointments"
 ) => {
   // First, check if the date entry exists
   const user = await User.findOne(
@@ -54,7 +204,7 @@ const updateAppointments = async (
   );
 
   if (user) {
-    // If the date exists, update the bookedAppointments array
+    // If the date exists, update the specified appointment category array
     await User.findOneAndUpdate(
       {
         _id: userId,
@@ -62,13 +212,13 @@ const updateAppointments = async (
       },
       {
         $push: {
-          "appointments.$.bookedAppointments": appointmentId, // Push to the existing array for that date
+          [`appointments.$.${appointmentCategory}`]: appointmentId, // Dynamically push to the specified array for that date
         },
       },
       { session }
     );
   } else {
-    // If the date doesn't exist, add a new date entry with the appointmentId
+    // If the date doesn't exist, add a new date entry with the appointmentId in the specified category
     await User.findOneAndUpdate(
       {
         _id: userId,
@@ -77,7 +227,7 @@ const updateAppointments = async (
         $push: {
           appointments: {
             date: appointmentDate,
-            bookedAppointments: [appointmentId],
+            [appointmentCategory]: [appointmentId], // Dynamically create the array for the specified category
           },
         },
       },
@@ -208,6 +358,24 @@ export const reserveAppointment = async (
     startDate.getTime() + appointmentType.durationInMinutes * 60000
   );
 
+  // Clear any temporarily reserved appointments before the transaction
+  await clearTemporarilyReservedAppointments(
+    client,
+    therapist,
+    format(new Date(startDate), "yyyy-MM-dd")
+  );
+
+  // Check for overlapping appointments before starting the transaction
+  const availabilityCheck = await checkTherapistAvailability(
+    therapist,
+    startDate,
+    endDate
+  );
+
+  if (!availabilityCheck.available) {
+    return { error: availabilityCheck.message };
+  }
+
   const session = await mongoose.startSession();
   session.startTransaction();
 
@@ -231,10 +399,9 @@ export const reserveAppointment = async (
     };
 
     const appointment = await createAppointment(appointmentData, session);
-    const appointmentId = appointment[0]._id; // As appointment.create returns an array
+    const appointmentId = appointment[0]._id;
     const appointmentDate = format(new Date(startDate), "yyyy-MM-dd");
 
-    // Handle therapist change
     if (
       client.selectedTherapist &&
       client.selectedTherapist.toString() !== therapistId
@@ -289,7 +456,8 @@ export const reserveAppointment = async (
       client.id,
       appointmentDate,
       appointmentId,
-      session
+      session,
+      "temporarilyReservedAppointments"
     );
 
     // Update the therapist's appointments
@@ -297,7 +465,8 @@ export const reserveAppointment = async (
       therapistId,
       appointmentDate,
       appointmentId,
-      session
+      session,
+      "temporarilyReservedAppointments"
     );
 
     await session.commitTransaction();
@@ -332,6 +501,7 @@ export const reserveAppointment = async (
     throw error;
   }
 };
+
 export const scheduleAppointment = async (
   values: z.input<typeof AppointmentSchema>
 ) => {
@@ -460,14 +630,21 @@ export const scheduleAppointment = async (
     }
 
     // Update the clients appointments
-    await updateAppointments(clientId, appointmentDate, appointmentId, session);
+    await updateAppointments(
+      clientId,
+      appointmentDate,
+      appointmentId,
+      session,
+      "bookedAppointments"
+    );
 
     // Update the therapist's appointments
     await updateAppointments(
       therapist.id,
       appointmentDate,
       appointmentId,
-      session
+      session,
+      "bookedAppointments"
     );
 
     await session.commitTransaction();
