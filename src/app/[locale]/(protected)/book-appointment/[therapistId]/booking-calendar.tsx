@@ -3,7 +3,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { useState, useTransition } from "react";
 import { format, set } from "date-fns";
 import { Button } from "@/components/ui/button";
-import { reserveAppointment } from "@/actions/appointments";
+import { reserveAppointment } from "@/actions/appointments/actions";
 import { Link, useRouter } from "@/navigation";
 import { currencyToSymbol } from "@/utils";
 import { getTherapistAvailableTimeSlots } from "./helpers";
@@ -104,7 +104,11 @@ const BookingCalendar = ({
       }
       if (data.success) {
         router.push(
-          `/checkout?appointmentId=${data.appointmentId}&appointmentTypeId=${appointmentType._id}&date=${combinedDateTime}`
+          `/checkout?appointmentId=${data.appointmentId}&appointmentTypeId=${
+            appointmentType._id
+          }&date=${encodeURIComponent(
+            combinedDateTime.toString()
+          )}&therapistId=${therapistId}`
         );
       }
     });
@@ -266,23 +270,30 @@ const BookingCalendar = ({
           <DialogHeader>
             <DialogTitle>{t("appointmentDetails")}</DialogTitle>
             <DialogDescription>
-              <p>
+              <div>
                 <strong>{t("day")}:</strong>{" "}
-                {date?.justDate && format(date?.justDate, "eeee, MMMM d, yyyy")}
-              </p>
-              <p>
+                <span>
+                  {date?.justDate &&
+                    format(date?.justDate, "eeee, MMMM d, yyyy")}
+                </span>
+              </div>
+              <div>
                 <strong>{t("time")}:</strong>{" "}
-                {date.dateTime && format(date.dateTime, "kk:mm")}
-              </p>
-              <p>
+                <span>{date.dateTime && format(date.dateTime, "kk:mm")}</span>
+              </div>
+              <div>
                 <strong>{t("duration")}:</strong>{" "}
-                {appointmentType.durationInMinutes} {t("minutes")}
-              </p>
-              <p>
+                <span>
+                  {appointmentType.durationInMinutes} {t("minutes")}
+                </span>
+              </div>
+              <div>
                 <strong>{t("cost")}:</strong>{" "}
-                {currencyToSymbol(appointmentType.currency)}
-                {appointmentType.price}
-              </p>
+                <span>
+                  {currencyToSymbol(appointmentType.currency)}
+                  {appointmentType.price}
+                </span>
+              </div>
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>

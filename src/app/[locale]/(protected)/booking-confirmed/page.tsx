@@ -3,10 +3,10 @@ import { MdCheckCircle } from "react-icons/md"; // Import a suitable icon
 import { format } from "date-fns"; // Assuming you have date-fns installed for date formatting
 import { getTranslations } from "next-intl/server";
 
-const PaymentSuccessPage = async ({
-  searchParams: { appointmentId, payLater },
+const BookingConfirmedPage = async ({
+  searchParams: { appointmentId },
 }: {
-  searchParams: { appointmentId: string; payLater: string };
+  searchParams: { appointmentId: string };
 }) => {
   const appointment = await getAppointmentById(appointmentId);
   const formattedStartDate = format(
@@ -22,7 +22,7 @@ const PaymentSuccessPage = async ({
       <div className="flex flex-col items-center">
         <MdCheckCircle className="text-green-500 text-6xl mb-4" />
         <h1 className="text-4xl font-extrabold mb-2">{t("thankYou")}</h1>
-        <h2 className="text-2xl mb-6">{t("paymentSuccess")}</h2>
+        <h2 className="text-2xl mb-6">{t("bookingConfirmed")}</h2>
         <div className="text-lg text-gray-700">
           <p className="mb-2">
             <span className="font-semibold">{t("appointment")}</span>{" "}
@@ -36,17 +36,10 @@ const PaymentSuccessPage = async ({
             <span className="font-semibold">{t("duration")}</span>{" "}
             {appointment.durationInMinutes} {t("minutes")}
           </p>
-          {payLater && payLater === "true" ? (
-            <p className="mb-4">
-              <span className="font-semibold">{t("amountToBePaid")}</span>{" "}
-              {appointment.price} {appointment.currency}
-            </p>
-          ) : (
-            <p className="mb-4">
-              <span className="font-semibold">{t("amountPaid")}</span>{" "}
-              {appointment.price} {appointment.currency}
-            </p>
-          )}
+          <p className="mb-4">
+            <span className="font-semibold">{t("amountToBePaid")}</span>{" "}
+            {appointment.price} {appointment.currency}
+          </p>
         </div>
         <p className="text-gray-500 mt-4">{t("receiveConfirmation")}</p>
       </div>
@@ -54,4 +47,4 @@ const PaymentSuccessPage = async ({
   );
 };
 
-export default PaymentSuccessPage;
+export default BookingConfirmedPage;

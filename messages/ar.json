@@ -314,7 +314,8 @@
     "appointmentAlreadyCanceled": "الموعد تم إلغاؤه بالفعل",
     "appointmentAlreadyCompleted": "الموعد قد تم اكتماله بالفعل",
     "failedToUpdateTherapistProfile": "فشل في تحديث ملف المعالج",
-    "failedToUploadProfileImage": "فشل في تحميل صورة الملف الشخصي"
+    "failedToUploadProfileImage": "فشل في تحميل صورة الملف الشخصي",
+    "appointmentUpdateFailed": "فشل تحديث الموعد"
   },
   "SuccessMessages": {
     "activateLinkSent": "تم إرسال رابط لتفعيل حسابك إلى البريد الإلكتروني المقدم",
@@ -334,7 +335,8 @@
     "appointmentCanceled": "تم إلغاء الموعد بنجاح",
     "therapistProfileUpdated": "تم تحديث ملف المعالج",
     "profileImageUploaded": "تم تحميل صورة الملف الشخصي",
-    "appointmentReserved": "تم حجز الموعد مؤقتًا"
+    "appointmentReserved": "تم حجز الموعد مؤقتًا",
+    "bookingConfirmed": "تم تأكيد الحجز"
   },
   "AppointmentAction": {
     "therapySessionWith": "جلسة علاجية مع"

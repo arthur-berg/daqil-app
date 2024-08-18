@@ -20,7 +20,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
-import { scheduleAppointment } from "@/actions/appointments";
+import { scheduleAppointment } from "@/actions/appointments/actions";
 import { useToast } from "@/components/ui/use-toast";
 import { DateTimePicker } from "@/components/ui/datetime-picker";
 import { Link } from "@/navigation";

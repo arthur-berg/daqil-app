@@ -3,7 +3,7 @@ import * as z from "zod";
 import { getCurrentRole, requireAuth } from "@/lib/auth";
 import Appointment from "@/models/Appointment";
 import { AppointmentSchema, CancelAppointmentSchema } from "@/schemas";
-import { getUserById } from "@/data/user";
+import { getTherapistById, getUserById } from "@/data/user";
 import mongoose from "mongoose";
 import { UserRole } from "@/generalTypes";
 import User from "@/models/User";
@@ -16,6 +16,12 @@ import {
   sendAppointmentBookingConfirmationEmail,
   sendAppointmentCancellationEmail,
 } from "@/lib/mail";
+import {
+  checkTherapistAvailability,
+  clearTemporarilyReservedAppointments,
+  createAppointment,
+  updateAppointments,
+} from "./utils";
 
 export const getClients = async () => {
   await requireAuth([UserRole.THERAPIST]);
@@ -23,217 +29,6 @@ export const getClients = async () => {
   const clients = await User.find({ role: UserRole.CLIENT }).lean();
 
   return clients;
-};
-
-const checkForOverlappingAppointments = (
-  appointments: any,
-  startDate: any,
-  endDate: any,
-  interval = 15
-) => {
-  const intervalInMilliseconds = interval * 60000;
-  const startWithBuffer = new Date(
-    startDate.getTime() - intervalInMilliseconds
-  );
-  const endWithBuffer = new Date(endDate.getTime() + intervalInMilliseconds);
-
-  for (const appointment of appointments) {
-    const appointmentStart = new Date(appointment.startDate);
-    const appointmentEnd = new Date(appointment.endDate);
-
-    if (
-      (startWithBuffer < appointmentEnd && endWithBuffer > appointmentStart) ||
-      (startWithBuffer <= appointmentStart && endWithBuffer >= appointmentEnd)
-    ) {
-      return true; // Conflict found
-    }
-  }
-  return false; // No conflict
-};
-
-// Function to check therapist availability
-const checkTherapistAvailability = async (
-  therapist: any,
-  startDate: any,
-  endDate: any
-) => {
-  const appointmentDate = format(new Date(startDate), "yyyy-MM-dd");
-
-  // Find the specific date entry in the therapist's appointments array
-  const appointmentEntry = therapist.appointments.find(
-    (appointment: any) => appointment.date === appointmentDate
-  );
-
-  // If there are no appointments for that date, the slot is available
-  if (!appointmentEntry) {
-    return { available: true };
-  }
-
-  // Populate the bookedAppointments and temporarilyReservedAppointments fields
-  const populatedAppointments = await User.populate(appointmentEntry, {
-    path: "bookedAppointments temporarilyReservedAppointments",
-    populate: { path: "hostUserId participants.userId" }, // populate further if necessary
-  });
-
-  const { bookedAppointments, temporarilyReservedAppointments } =
-    populatedAppointments;
-
-  // Check bookedAppointments for overlap
-  if (
-    checkForOverlappingAppointments(
-      bookedAppointments,
-      startDate,
-      endDate,
-      therapist.availableTimes.settings.interval
-    )
-  ) {
-    return { available: false, message: "This time slot is already booked." };
-  }
-
-  // Filter valid temporarilyReservedAppointments (those with valid paymentExpiryDate)
-  const validTempReservedAppointments = temporarilyReservedAppointments.filter(
-    (appointment: any) =>
-      new Date(appointment.payment.paymentExpiryDate) > new Date()
-  );
-
-  // Check temporarilyReservedAppointments for overlap
-  if (
-    checkForOverlappingAppointments(
-      validTempReservedAppointments,
-      startDate,
-      endDate,
-      therapist.availableTimes.settings.interval
-    )
-  ) {
-    return {
-      available: false,
-      message: "This time slot is temporarily reserved.",
-    };
-  }
-
-  return { available: true };
-};
-
-const clearTemporarilyReservedAppointments = async (
-  client: any,
-  therapist: any,
-  appointmentDate: string
-) => {
-  const appointmentEntry = client.appointments.find(
-    (appointment: any) => appointment.date === appointmentDate
-  );
-
-  if (
-    !appointmentEntry ||
-    !appointmentEntry.temporarilyReservedAppointments?.length
-  ) {
-    console.log("No temporarily reserved appointments to clear.");
-    return;
-  }
-
-  const tempReservedAppointmentIds =
-    appointmentEntry.temporarilyReservedAppointments.map(
-      (id: string) => new mongoose.Types.ObjectId(id) // Convert to ObjectId
-    );
-
-  try {
-    await User.updateOne(
-      {
-        _id: client.id,
-        "appointments.date": appointmentDate,
-      },
-      {
-        $pull: {
-          "appointments.$.temporarilyReservedAppointments": {
-            $in: tempReservedAppointmentIds,
-          },
-        },
-      }
-    );
-
-    await User.updateOne(
-      {
-        _id: therapist.id,
-        "appointments.date": appointmentDate,
-      },
-      {
-        $pull: {
-          "appointments.$.temporarilyReservedAppointments": {
-            $in: tempReservedAppointmentIds,
-          },
-        },
-      }
-    );
-
-    await Appointment.deleteMany({
-      _id: { $in: tempReservedAppointmentIds },
-      status: "temporarily-reserved",
-    });
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-const createAppointment = async (appointmentData: any, session: any) => {
-  const appointment = await Appointment.create([appointmentData], { session });
-  const appointmentItem = appointment[0]; // As appointment.create returns an array
-
-  scheduleJobToCheckAppointmentStatus(
-    appointmentItem._id,
-    appointmentItem.endDate
-  );
-
-  return appointment;
-};
-
-const updateAppointments = async (
-  userId: string,
-  appointmentDate: string,
-  appointmentId: string,
-  session: any,
-  appointmentCategory: "bookedAppointments" | "temporarilyReservedAppointments"
-) => {
-  // First, check if the date entry exists
-  const user = await User.findOne(
-    {
-      _id: userId,
-      "appointments.date": appointmentDate,
-    },
-    null, // Projection, keep it null
-    { session }
-  );
-
-  if (user) {
-    // If the date exists, update the specified appointment category array
-    await User.findOneAndUpdate(
-      {
-        _id: userId,
-        "appointments.date": appointmentDate, // Match the specific date
-      },
-      {
-        $push: {
-          [`appointments.$.${appointmentCategory}`]: appointmentId, // Dynamically push to the specified array for that date
-        },
-      },
-      { session }
-    );
-  } else {
-    // If the date doesn't exist, add a new date entry with the appointmentId in the specified category
-    await User.findOneAndUpdate(
-      {
-        _id: userId,
-      },
-      {
-        $push: {
-          appointments: {
-            date: appointmentDate,
-            [appointmentCategory]: [appointmentId], // Dynamically create the array for the specified category
-          },
-        },
-      },
-      { session }
-    );
-  }
 };
 
 export const cancelAppointment = async (
@@ -329,6 +124,105 @@ export const cancelAppointment = async (
   } catch (error) {
     console.error("Error cancelling appointment:", error);
     throw error;
+  }
+};
+
+// The function that handles the "Pay Later" logic
+export const confirmBookingPayLater = async (
+  appointmentId: string,
+  appointmentDate: string,
+  therapistId: string
+) => {
+  const [SuccessMessages, ErrorMessages] = await Promise.all([
+    getTranslations("SuccessMessages"),
+    getTranslations("ErrorMessages"),
+  ]);
+
+  const client = await requireAuth([UserRole.CLIENT, UserRole.ADMIN]);
+
+  console.log("therapistId", therapistId);
+
+  const therapist = await getUserById(therapistId);
+
+  console.log("therapist", therapist);
+
+  if (!therapist) {
+    return { error: ErrorMessages("therapistNotExist") };
+  }
+
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
+  try {
+    // Fetch the appointment to ensure it exists
+    const appointment = await Appointment.findById(appointmentId);
+
+    if (!appointment) {
+      return { error: ErrorMessages("appointmentNotExist") };
+    }
+
+    // Check if the appointment is in the temporarilyReservedAppointments
+    const clientUpdateResult = await User.updateOne(
+      {
+        _id: client.id,
+        "appointments.date": appointmentDate,
+        "appointments.temporarilyReservedAppointments": appointmentId,
+      },
+      {
+        $pull: {
+          "appointments.$.temporarilyReservedAppointments": appointmentId,
+        },
+        $push: {
+          "appointments.$.bookedAppointments": appointmentId,
+        },
+      },
+      { session }
+    );
+
+    const therapistUpdateResult = await User.updateOne(
+      {
+        _id: therapist.id,
+        "appointments.date": appointmentDate,
+        "appointments.temporarilyReservedAppointments": appointmentId,
+      },
+      {
+        $pull: {
+          "appointments.$.temporarilyReservedAppointments": appointmentId,
+        },
+        $push: {
+          "appointments.$.bookedAppointments": appointmentId,
+        },
+      },
+      { session }
+    );
+
+    if (
+      clientUpdateResult.modifiedCount === 0 ||
+      therapistUpdateResult.modifiedCount === 0
+    ) {
+      throw new Error(ErrorMessages("appointmentUpdateFailed"));
+    }
+
+    // Update the appointment's payment method to "link" and confirm the booking
+    await Appointment.findByIdAndUpdate(
+      appointmentId,
+      {
+        status: "confirmed",
+        "payment.method": "link",
+        "payment.status": "pending", // since the user opted to pay later
+      },
+      { session }
+    );
+
+    await session.commitTransaction();
+    session.endSession();
+
+    return { success: SuccessMessages("bookingConfirmed") };
+  } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+    console.error("Error confirming appointment:", error);
+    return { error: ErrorMessages("somethingWentWrong") };
   }
 };
 

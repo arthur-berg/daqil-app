@@ -1,0 +1,206 @@
+import { scheduleJobToCheckAppointmentStatus } from "@/lib/schedulerJobs";
+import Appointment from "@/models/Appointment";
+import User from "@/models/User";
+import { format } from "date-fns";
+
+export const createAppointment = async (appointmentData: any, session: any) => {
+  const appointment = await Appointment.create([appointmentData], { session });
+  const appointmentItem = appointment[0]; // As appointment.create returns an array
+
+  scheduleJobToCheckAppointmentStatus(
+    appointmentItem._id,
+    appointmentItem.endDate
+  );
+
+  return appointment;
+};
+
+export const updateAppointments = async (
+  userId: string,
+  appointmentDate: string,
+  appointmentId: string,
+  session: any,
+  appointmentCategory: "bookedAppointments" | "temporarilyReservedAppointments"
+) => {
+  // First, check if the date entry exists
+  const user = await User.findOne(
+    {
+      _id: userId,
+      "appointments.date": appointmentDate,
+    },
+    null, // Projection, keep it null
+    { session }
+  );
+
+  if (user) {
+    // If the date exists, update the specified appointment category array
+    await User.findOneAndUpdate(
+      {
+        _id: userId,
+        "appointments.date": appointmentDate, // Match the specific date
+      },
+      {
+        $push: {
+          [`appointments.$.${appointmentCategory}`]: appointmentId, // Dynamically push to the specified array for that date
+        },
+      },
+      { session }
+    );
+  } else {
+    // If the date doesn't exist, add a new date entry with the appointmentId in the specified category
+    await User.findOneAndUpdate(
+      {
+        _id: userId,
+      },
+      {
+        $push: {
+          appointments: {
+            date: appointmentDate,
+            [appointmentCategory]: [appointmentId], // Dynamically create the array for the specified category
+          },
+        },
+      },
+      { session }
+    );
+  }
+};
+
+export const checkForOverlappingAppointments = (
+  appointments: any,
+  startDate: any,
+  endDate: any,
+  interval = 15
+) => {
+  const intervalInMilliseconds = interval * 60000;
+  const startWithBuffer = new Date(
+    startDate.getTime() - intervalInMilliseconds
+  );
+  const endWithBuffer = new Date(endDate.getTime() + intervalInMilliseconds);
+
+  for (const appointment of appointments) {
+    const appointmentStart = new Date(appointment.startDate);
+    const appointmentEnd = new Date(appointment.endDate);
+
+    if (
+      (startWithBuffer < appointmentEnd && endWithBuffer > appointmentStart) ||
+      (startWithBuffer <= appointmentStart && endWithBuffer >= appointmentEnd)
+    ) {
+      return true; // Conflict found
+    }
+  }
+  return false; // No conflict
+};
+
+export const checkTherapistAvailability = async (
+  therapist: any,
+  startDate: any,
+  endDate: any
+) => {
+  const appointmentDate = format(new Date(startDate), "yyyy-MM-dd");
+
+  const appointmentEntry = therapist.appointments.find(
+    (appointment: any) => appointment.date === appointmentDate
+  );
+
+  if (!appointmentEntry) {
+    return { available: true };
+  }
+
+  const populatedAppointments = await User.populate(appointmentEntry, {
+    path: "bookedAppointments temporarilyReservedAppointments",
+    populate: { path: "hostUserId participants.userId" },
+  });
+
+  const { bookedAppointments, temporarilyReservedAppointments } =
+    populatedAppointments;
+
+  if (
+    checkForOverlappingAppointments(
+      bookedAppointments,
+      startDate,
+      endDate,
+      therapist.availableTimes.settings.interval
+    )
+  ) {
+    return { available: false, message: "This time slot is already booked." };
+  }
+
+  const validTempReservedAppointments = temporarilyReservedAppointments.filter(
+    (appointment: any) =>
+      new Date(appointment.payment.paymentExpiryDate) > new Date()
+  );
+
+  if (
+    checkForOverlappingAppointments(
+      validTempReservedAppointments,
+      startDate,
+      endDate,
+      therapist.availableTimes.settings.interval
+    )
+  ) {
+    return {
+      available: false,
+      message: "This time slot is temporarily reserved.",
+    };
+  }
+
+  return { available: true };
+};
+
+export const clearTemporarilyReservedAppointments = async (
+  client: any,
+  therapist: any,
+  appointmentDate: string
+) => {
+  const appointmentEntry = client.appointments.find(
+    (appointment: any) => appointment.date === appointmentDate
+  );
+
+  if (
+    !appointmentEntry ||
+    !appointmentEntry.temporarilyReservedAppointments?.length
+  ) {
+    console.log("No temporarily reserved appointments to clear.");
+    return;
+  }
+
+  const tempReservedAppointmentIds =
+    appointmentEntry.temporarilyReservedAppointments;
+
+  try {
+    await User.updateOne(
+      {
+        _id: client.id,
+        "appointments.date": appointmentDate,
+      },
+      {
+        $pull: {
+          "appointments.$.temporarilyReservedAppointments": {
+            $in: tempReservedAppointmentIds,
+          },
+        },
+      }
+    );
+
+    await User.updateOne(
+      {
+        _id: therapist.id,
+        "appointments.date": appointmentDate,
+      },
+      {
+        $pull: {
+          "appointments.$.temporarilyReservedAppointments": {
+            $in: tempReservedAppointmentIds,
+          },
+        },
+      }
+    );
+
+    await Appointment.deleteMany({
+      _id: { $in: tempReservedAppointmentIds },
+      status: "temporarily-reserved",
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};

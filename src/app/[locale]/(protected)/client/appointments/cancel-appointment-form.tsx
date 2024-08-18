@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
-import { cancelAppointment } from "@/actions/appointments";
+import { cancelAppointment } from "@/actions/appointments/actions";
 import {
   Dialog,
   DialogContent,

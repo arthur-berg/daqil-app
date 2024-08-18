@@ -281,7 +281,9 @@
     "duration": "Duration:",
     "minutes": "minutes",
     "amountPaid": "Amount Paid:",
-    "receiveConfirmation": "You will receive a confirmation email with the appointment details."
+    "receiveConfirmation": "You will receive a confirmation email with the appointment details.",
+    "amountToBePaid": "Amount to be paid:",
+    "bookingConfirmed":"Booking confirmed"
   },
   "ErrorMessages": {
     "invalidFields": "Invalid fields!",
@@ -312,7 +314,8 @@
     "appointmentAlreadyCanceled": "Appointment already canceled",
     "appointmentAlreadyCompleted": "Appointment already completed",
     "failedToUpdateTherapistProfile": "Failed to update therapist profile",
-    "failedToUploadProfileImage": "Failed to upload profile image"
+    "failedToUploadProfileImage": "Failed to upload profile image",
+    "appointmentUpdateFailed": "Appointment update failed"
   },
   "SuccessMessages": {
     "activateLinkSent": "A link to activate your account has been emailed to the address provided",
@@ -332,7 +335,8 @@
     "appointmentCanceled": "Appointment successfully cancelled",
     "therapistProfileUpdated": "Therapist profile updated",
     "profileImageUploaded": "Profile image uploaded",
-    "appointmentReserved": "Appointment temporarily reserved"
+    "appointmentReserved": "Appointment temporarily reserved",
+    "bookingConfirmed": "Booking confirmed"
   },
   "AppointmentAction": {
     "therapySessionWith": "Therapy session with"
