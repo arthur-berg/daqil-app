@@ -118,9 +118,6 @@ export async function POST(req: Request): Promise<NextResponse> {
               clientName: `${client.firstName} ${client.lastName}`,
               durationInMinutes: appointment.durationInMinutes,
             };
-            console.log("therapistEmail", therapistEmail);
-            console.log("clientEmail", clientEmail);
-            console.log("appointmentDetails", appointmentDetails);
 
             await sendPaidBookingConfirmationEmail(
               therapistEmail,

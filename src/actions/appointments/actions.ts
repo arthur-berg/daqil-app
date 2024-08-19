@@ -199,13 +199,16 @@ export const confirmBookingPayLater = async (
       throw new Error(ErrorMessages("appointmentUpdateFailed"));
     }
 
-    // Update the appointment's payment method to "payAfterBooking" and confirm the booking
+    const paymentExpiryDate = new Date(appointment.startDate);
+    paymentExpiryDate.setHours(paymentExpiryDate.getHours() - 1);
+
     await Appointment.findByIdAndUpdate(
       appointmentId,
       {
         status: "confirmed",
         "payment.method": "payAfterBooking",
-        "payment.status": "pending", // since the user opted to pay later
+        "payment.paymentExpiryDate": paymentExpiryDate,
+        "payment.status": "pending",
       },
       { session }
     );
