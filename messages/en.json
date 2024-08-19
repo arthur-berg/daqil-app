@@ -267,6 +267,10 @@
     "email": "Email",
     "sendInvite": "Send invite"
   },
+  "MyClientsPage" : {
+"goBackToClients":"Go back to clients overview",
+"goBackToClient": "Go back to client profile"
+  },
   "Breadcrumbs": {
     "myClients": "My Clients",
     "client": "Client",

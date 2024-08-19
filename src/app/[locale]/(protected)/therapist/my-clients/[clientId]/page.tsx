@@ -1,10 +1,12 @@
 import { getClientById } from "@/data/user";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import { Link } from "@/navigation";
+import { getTranslations } from "next-intl/server";
 
 const ClientPage = async ({ params }: { params: { clientId: string } }) => {
   const clientId = params.clientId;
   const client = await getClientById(clientId);
+  const t = await getTranslations("MyClientsPage");
 
   if (!client) return <div>No client found</div>;
 
@@ -17,6 +19,9 @@ const ClientPage = async ({ params }: { params: { clientId: string } }) => {
 
   return (
     <div>
+      <Link href={`/therapist/my-clients`}>
+        <Button variant="secondary">{t("goBackToClients")}</Button>
+      </Link>
       <h1 className="text-xl sm:text-2xl font-semibold mb-4 text-center">
         {client.firstName} {client.lastName}
       </h1>
