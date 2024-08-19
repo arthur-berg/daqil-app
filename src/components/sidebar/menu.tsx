@@ -37,10 +37,10 @@ export function Menu({ isOpen, setIsOpen }: MenuProps) {
   const t = useTranslations("Sidebar");
 
   useEffect(() => {
-    if (isOpen && window.innerWidth < 1024) {
+    if (window.innerWidth < 1024) {
       setIsOpen(false);
     }
-  }, [pathname, setIsOpen, isOpen]);
+  }, [pathname, setIsOpen]);
 
   const menuList = isTherapist
     ? getTherapistMenuList(pathname, t)

@@ -3,7 +3,6 @@ import { cn } from "@/lib/utils";
 import { Sidebar } from "@/components/sidebar/sidebar";
 import { useState } from "react";
 import { usePathname } from "@/navigation";
-import { useTranslations } from "next-intl";
 
 const routesWithoutSidebar = ["/appointments/[id]"];
 
@@ -26,7 +25,6 @@ export default function AdminPanelLayout({
 }) {
   const [isOpen, setIsOpen] = useState(true);
   const pathname = usePathname();
-  const t = useTranslations("Breadcrumbs");
 
   const shouldRenderWithoutSidebar = routesWithoutSidebar.some((route) =>
     matchesPath(pathname, route)

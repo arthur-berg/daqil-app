@@ -226,7 +226,7 @@ const userSchema = new Schema(
     },
     appointments: [
       {
-        date: String,
+        date: { type: String, required: true },
         bookedAppointments: [
           {
             type: Schema.Types.ObjectId,

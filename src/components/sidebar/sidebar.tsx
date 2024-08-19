@@ -55,7 +55,12 @@ export function Sidebar({
   // Close sidebar when clicking outside on screens smaller than lg
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
+      if (
+        sidebarRef.current &&
+        !sidebarRef.current.contains(event.target) &&
+        !sidebarMenuRef.current.contains(event.target) &&
+        isOpen
+      ) {
         setIsOpen(false);
         clearAllBodyScrollLocks();
       }
