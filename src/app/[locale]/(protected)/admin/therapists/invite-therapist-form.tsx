@@ -25,7 +25,7 @@ const InviteTherapistForm = () => {
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
   const ErrorMessages = useTranslations("ErrorMessages");
-  const t = useTranslations("InviteTherapistForm");
+  const t = useTranslations("AdminPage");
   const { responseToast } = useToast();
   const form = useForm<z.infer<typeof InviteTherapistSchema>>({
     resolver: zodResolver(InviteTherapistSchema),

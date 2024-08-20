@@ -268,10 +268,22 @@
     "description": "Description -",
     "schedule": "Schedule"
   },
-  "InviteTherapistForm": {
+  "AdminPage": {
     "inviteTherapists": "Invite therapists",
     "email": "Email",
-    "sendInvite": "Send invite"
+    "sendInvite": "Send invite",
+    "manageTherapists": "Manage therapists",
+    "manageDiscountCodes": "Manage discount codes",
+    "adminDashboard": "Admin Dashboard",
+    "codeLabel": "Code name",
+    "percentageLabel": "Percentage",
+    "createDiscountCode": "Create discount code",
+    "firstTimeUserOnlyLabel": "First-time users only",
+    "limitPerUserLabel": "Limit the number of times code can be redeemed per user",
+    "setTimePeriodLabel": "Limit the time period that the code can be redeemed",
+    "startDateLabel": "Start date",
+    "endDateLabel": "End date"
+
   },
   "MyClientsPage" : {
 "goBackToClients":"Go back to clients overview",

@@ -268,7 +268,7 @@
     "description": "الوصف -",
     "schedule": "جدولة"
   },
-  "InviteTherapistForm": {
+  "AdminPage": {
     "inviteTherapists": "دعوة المعالجين",
     "email": "البريد الإلكتروني",
     "sendInvite": "إرسال الدعوة"

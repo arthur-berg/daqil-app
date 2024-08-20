@@ -24,8 +24,6 @@ export async function POST(request: NextRequest) {
       type: "card",
     });
 
-    console.log("paymentMethods", paymentMethods);
-
     if (paymentMethods?.data.length > 0 && user?.stripePaymentMethodId) {
       return NextResponse.json({ savedPaymentMethods: paymentMethods.data });
     }

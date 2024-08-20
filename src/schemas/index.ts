@@ -21,6 +21,43 @@ export const TherapistMyProfileSchema = z.object({
   }),
 });
 
+export const DiscountCodeSchema = z
+  .object({
+    code: z.string().min(1, {
+      message: "Code is required",
+    }),
+    percentage: z
+      .number()
+      .min(1, {
+        message: "Percentage must be at least 1",
+      })
+      .max(100, {
+        message: "Percentage cannot exceed 100",
+      }),
+    firstTimeUserOnly: z.boolean().optional(),
+    limitPerUser: z
+      .number()
+      .min(1, {
+        message: "Limit per user must be at least 1",
+      })
+      .optional(),
+    startDate: z.date().nullable().optional(),
+    endDate: z.date().nullable().optional(),
+  })
+  .refine(
+    (data) => {
+      // Ensure startDate is before endDate if both are provided
+      if (data.startDate && data.endDate && data.startDate > data.endDate) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message: "End date must be after start date",
+      path: ["endDate"], // specify the path to the error
+    }
+  );
+
 export const SettingsSchema = z
   .object({
     firstName: z.optional(z.string()),

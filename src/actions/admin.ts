@@ -3,7 +3,7 @@ import * as z from "zod";
 import bcrypt from "bcryptjs";
 import { UserRole } from "@/generalTypes";
 import { getCurrentRole, requireAuth } from "@/lib/auth";
-import { InviteTherapistSchema } from "@/schemas";
+import { DiscountCodeSchema, InviteTherapistSchema } from "@/schemas";
 import { getTranslations } from "next-intl/server";
 import User from "@/models/User";
 import { getUserByEmail } from "@/data/user";
@@ -19,6 +19,30 @@ export const admin = async () => {
   }
 
   return { error: "Forbidden Server Action!" };
+};
+
+export const createDiscountCode = async (
+  values: z.infer<typeof DiscountCodeSchema>
+) => {
+  const [SuccessMessages, ErrorMessages] = await Promise.all([
+    getTranslations("SuccessMessages"),
+    getTranslations("ErrorMessages"),
+  ]);
+
+  try {
+    await requireAuth([UserRole.ADMIN]);
+
+    const validatedFields = InviteTherapistSchema.safeParse(values);
+
+    if (!validatedFields.success) {
+      return { error: ErrorMessages("invalidFields") };
+    }
+
+    const { code, percentage } = validatedFields.data;
+  } catch (error) {
+    console.error("Error inviting therapist", error);
+    return { error: ErrorMessages("somethingWentWrong") };
+  }
 };
 
 export const inviteTherapist = async (
