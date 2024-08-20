@@ -1,6 +1,6 @@
 "use client";
 
-import { startTransition, useState, useTransition } from "react";
+import { startTransition, useEffect, useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
 import { format } from "date-fns";
@@ -14,6 +14,7 @@ import { Link, useRouter } from "@/navigation";
 import { RadioGroupItem, RadioGroup } from "@/components/ui/radio-group";
 import { confirmBookingPayLater } from "@/actions/appointments/actions";
 import { useToast } from "@/components/ui/use-toast";
+import { BeatLoader } from "react-spinners";
 
 if (process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY === undefined) {
   throw new Error("NEXT_PUBLIC_STRIPE_PUBLIC_KEY is not defined");
@@ -37,8 +38,31 @@ const CheckoutWrapper = ({
   const [paymentOption, setPaymentOption] = useState<"payBefore" | "payAfter">(
     "payBefore"
   );
+  const [clientSecret, setClientSecret] = useState("");
+  const [customerSessionClientSecret, setCustomerSessionClientSecret] =
+    useState("");
   const { toast } = useToast();
   const router = useRouter();
+
+  useEffect(() => {
+    fetch(`/api/payment/create-payment-intent`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        amount: convertToSubcurrency(appointmentType.price),
+        appointmentId: appointmentId,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setClientSecret(data.clientSecret);
+        setCustomerSessionClientSecret(data.customerSessionClientSecret);
+      });
+  }, [appointmentType.price]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  console.log("clientSecret", clientSecret);
 
   const handlePayLater = () => {
     const appointmentDate = format(date, "yyyy-MM-dd");
@@ -107,17 +131,25 @@ const CheckoutWrapper = ({
           </div>
         </div>
 
-        {paymentOption === "payBefore" ? (
+        {!clientSecret && (
+          <div>
+            <BeatLoader />
+            <div className="text-lg font-medium ">{t("loading")}</div>
+          </div>
+        )}
+
+        {paymentOption === "payBefore" && clientSecret ? (
           <Elements
             stripe={stripePromise}
             options={{
-              mode: "payment",
-              amount: convertToSubcurrency(appointmentType.price),
-              currency: "usd",
-              setup_future_usage: "off_session",
+              customerSessionClientSecret,
+              clientSecret,
             }}
           >
             <Checkout
+              clientSecret={clientSecret}
+              setClientSecret={setClientSecret}
+              setCustomerSessionClientSecret={setCustomerSessionClientSecret}
               amount={appointmentType.price}
               appointmentId={appointmentId}
             />

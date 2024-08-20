@@ -7,6 +7,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { convertToSubcurrency } from "@/utils";
 import Checkout from "@/components/checkout";
 import Countdown, { CountdownRendererFn } from "react-countdown";
+import { useEffect, useState } from "react";
 
 if (process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY === undefined) {
   throw new Error("NEXT_PUBLIC_STRIPE_PUBLIC_KEY is not defined");
@@ -24,6 +25,29 @@ const CheckoutWrapper = ({
   appointmentId: any;
 }) => {
   const t = useTranslations("Checkout");
+  const [clientSecret, setClientSecret] = useState("");
+  const [customerSessionClientSecret, setCustomerSessionClientSecret] =
+    useState("");
+
+  useEffect(() => {
+    fetch(`/api/payment/create-payment-intent`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        amount: convertToSubcurrency(appointmentType.price),
+        appointmentId: appointmentId,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setClientSecret(data.clientSecret);
+        setCustomerSessionClientSecret(data.customerSessionClientSecret);
+      });
+  }, [appointmentType.price]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  console.log("clientSecret", clientSecret);
 
   return (
     <>
@@ -40,21 +64,23 @@ const CheckoutWrapper = ({
             {t("duration")}: {appointmentType.durationInMinutes} {t("minutes")}
           </p>
         </div>
-
-        <Elements
-          stripe={stripePromise}
-          options={{
-            mode: "payment",
-            amount: convertToSubcurrency(appointmentType.price),
-            currency: "usd",
-            setup_future_usage: "off_session",
-          }}
-        >
-          <Checkout
-            amount={appointmentType.price}
-            appointmentId={appointmentId}
-          />
-        </Elements>
+        {clientSecret.length > 0 && (
+          <Elements
+            stripe={stripePromise}
+            options={{
+              customerSessionClientSecret,
+              clientSecret,
+            }}
+          >
+            <Checkout
+              clientSecret={clientSecret}
+              setClientSecret={setClientSecret}
+              setCustomerSessionClientSecret={setCustomerSessionClientSecret}
+              amount={appointmentType.price}
+              appointmentId={appointmentId}
+            />
+          </Elements>
+        )}
       </div>
     </>
   );

@@ -13,31 +13,22 @@ import { useTranslations } from "next-intl";
 const Checkout = ({
   amount,
   appointmentId,
+  setCustomerSessionClientSecret,
+  setClientSecret,
+  clientSecret,
 }: {
   amount: number;
   appointmentId: any;
+  setCustomerSessionClientSecret: any;
+  setClientSecret: any;
+  clientSecret: any;
 }) => {
   const stripe = useStripe();
   const elements = useElements();
   const [errorMessage, setErrorMessage] = useState<string>();
-  const [clientSecret, setClientSecret] = useState("");
+  useState("");
   const [loading, setLoading] = useState(false);
   const t = useTranslations("Checkout");
-
-  useEffect(() => {
-    fetch(`/api/payment/create-payment-intent`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        amount: convertToSubcurrency(amount),
-        appointmentId: appointmentId,
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => setClientSecret(data.clientSecret));
-  }, [amount]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -75,7 +66,7 @@ const Checkout = ({
     setLoading(false);
   };
 
-  if (!clientSecret || !stripe || !elements) {
+  if (!stripe || !elements) {
     return (
       <div>
         <BeatLoader color="white" />

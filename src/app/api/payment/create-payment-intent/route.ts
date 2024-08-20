@@ -22,14 +22,33 @@ export async function POST(request: NextRequest) {
     const paymentIntent = await stripe.paymentIntents.create({
       amount: amount,
       currency: "usd",
+      customer: customerId,
+      disableLink: true,
       automatic_payment_methods: { enabled: true },
       metadata: {
         appointmentId: appointmentId,
       },
-      setup_future_usage: "off_session",
     });
 
-    return NextResponse.json({ clientSecret: paymentIntent.client_secret });
+    const customerSession = await stripe.customerSessions.create({
+      customer: customerId,
+      components: {
+        payment_element: {
+          enabled: true,
+          features: {
+            payment_method_redisplay: "enabled",
+            payment_method_save: "enabled",
+            payment_method_save_usage: "off_session",
+            payment_method_remove: "enabled",
+          },
+        },
+      },
+    });
+
+    return NextResponse.json({
+      clientSecret: paymentIntent.client_secret,
+      customerSessionClientSecret: customerSession.client_secret,
+    });
   } catch (error) {
     console.error("Internal Error: ", error);
     return NextResponse.json(
@@ -38,3 +57,30 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
+/*
+
+Charge customers card later when user is not in checkut flow
+
+try {
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: 1099,
+    currency: 'sek',
+    // In the latest version of the API, specifying the `automatic_payment_methods` parameter is optional because Stripe enables its functionality by default.
+    automatic_payment_methods: {enabled: true},
+    customer: '{{CUSTOMER_ID}}',
+    payment_method: '{{PAYMENT_METHOD_ID}}',
+    return_url: 'https://example.com/order/123/complete',
+    off_session: true,
+    confirm: true,
+  });
+} catch (err) {
+  // Error code will be authentication_required if authentication is needed
+  console.log('Error code is: ', err.code);
+  const paymentIntentRetrieved = await stripe.paymentIntents.retrieve(err.raw.payment_intent.id);
+  console.log('PI retrieved: ', paymentIntentRetrieved.id);
+}
+
+DOCS: https://docs.stripe.com/payments/save-during-payment?platform=web&ui=elements#save-payment-methods
+
+*/
