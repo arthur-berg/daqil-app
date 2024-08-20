@@ -6,8 +6,8 @@ import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { convertToSubcurrency } from "@/utils";
 import Checkout from "@/components/checkout";
-import Countdown, { CountdownRendererFn } from "react-countdown";
 import { useEffect, useState } from "react";
+import { BeatLoader } from "react-spinners";
 
 if (process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY === undefined) {
   throw new Error("NEXT_PUBLIC_STRIPE_PUBLIC_KEY is not defined");
@@ -19,10 +19,12 @@ const CheckoutWrapper = ({
   date,
   appointmentType,
   appointmentId,
+  paymentExpiryDate,
 }: {
   date: Date; // Specify that date is of type Date
   appointmentType: any;
   appointmentId: any;
+  paymentExpiryDate: Date;
 }) => {
   const t = useTranslations("Checkout");
   const [clientSecret, setClientSecret] = useState("");
@@ -47,8 +49,6 @@ const CheckoutWrapper = ({
       });
   }, [appointmentType.price]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  console.log("clientSecret", clientSecret);
-
   return (
     <>
       <div className={`text-center`}>
@@ -64,7 +64,12 @@ const CheckoutWrapper = ({
             {t("duration")}: {appointmentType.durationInMinutes} {t("minutes")}
           </p>
         </div>
-        {clientSecret.length > 0 && (
+        {!clientSecret ? (
+          <div>
+            <BeatLoader />
+            <div className="text-lg font-medium ">{t("loadingCheckout")}</div>
+          </div>
+        ) : (
           <Elements
             stripe={stripePromise}
             options={{

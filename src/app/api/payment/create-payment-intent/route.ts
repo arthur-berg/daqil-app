@@ -19,11 +19,19 @@ export async function POST(request: NextRequest) {
       });
     }
 
+    const paymentMethods = await stripe.paymentMethods.list({
+      customer: customerId,
+      type: "card",
+    });
+
+    if (paymentMethods.data && user?.stripePaymentMethodId) {
+      return NextResponse.json({ savedPaymentMethods: paymentMethods.data });
+    }
+
     const paymentIntent = await stripe.paymentIntents.create({
       amount: amount,
       currency: "usd",
       customer: customerId,
-      disableLink: true,
       automatic_payment_methods: { enabled: true },
       metadata: {
         appointmentId: appointmentId,

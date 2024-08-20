@@ -68,9 +68,11 @@ const Checkout = ({
 
   if (!stripe || !elements) {
     return (
-      <div>
+      <div className="mb-4">
         <BeatLoader color="white" />
-        <div className="text-lg font-medium text-white">{t("loading")}</div>
+        <div className="text-lg font-medium text-white">
+          {t("loadingCheckout")}
+        </div>
       </div>
     );
   }

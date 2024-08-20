@@ -1,5 +1,7 @@
 import { getAppointmentTypeById } from "@/data/appointment-types";
 import CheckoutWrapper from "./checkout-wrapper";
+import { getAppointmentById } from "@/data/appointment";
+import { getTranslations } from "next-intl/server";
 
 const InvoiceCheckoutPage = async ({
   searchParams: { appointmentTypeId, date, appointmentId },
@@ -12,6 +14,23 @@ const InvoiceCheckoutPage = async ({
 }) => {
   const appointmentType = await getAppointmentTypeById(appointmentTypeId);
   const dateObject = new Date(decodeURIComponent(date));
+  const appointment = await getAppointmentById(appointmentId);
+  const t = await getTranslations("Checkout");
+
+  if (!appointment) return "No appointment found";
+
+  const currentDate = new Date();
+  const paymentExpiryDate = new Date(appointment.payment.paymentExpiryDate);
+
+  if (currentDate > paymentExpiryDate) {
+    return (
+      <div className="max-w-4xl mx-auto bg-white p-10 rounded-md text-black ">
+        <p className="text-center text-red-600 font-semibold">
+          {t("paymentExpired")}
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-4xl mx-auto bg-white p-10 rounded-md text-black ">
@@ -19,6 +38,7 @@ const InvoiceCheckoutPage = async ({
         appointmentType={appointmentType}
         appointmentId={appointmentId}
         date={dateObject}
+        paymentExpiryDate={appointment.payment.paymentExpiryDate}
       />
     </div>
   );

@@ -154,7 +154,7 @@
     "bookAppointment": "احجز موعدًا",
     "changeTherapistButton": "تغيير المعالج",
     "bookingAppointmentLoading": "جارٍ حجز الموعد... يرجى الانتظار",
-    "loading": "جار التحميل...",
+   "loadingCheckout": "جارٍ تحميل عملية الدفع...",
     "zakina": "زكينا"
   },
   "Checkout": {
@@ -177,7 +177,11 @@
     "payAfter": "ادفع بعد",
     "confirmAndPayLater": "تأكيد والدفع لاحقًا",
 "whenDoYouWantToPay": "متى تريد الدفع؟",
-"loading": "جارٍ التحميل..."
+"loadingCheckout": "جارٍ التحميل...",
+"paymentExpired": "تم إلغاء حجز الموعد لعدم إتمام الدفع في الوقت المحدد.",
+"minutesLeft": "دقائق متبقية",
+"confirmingPleaseWait": "جارٍ تأكيد الحجز... يرجى الانتظار",
+"confirmAndPay": "تأكيد والدفع لحجز موعدك"
 },
   "AvailabilityPage": {
     "recurringAvailableTimes": "أوقات متاحة متكررة",

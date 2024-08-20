@@ -153,7 +153,7 @@
     "bookAppointment": "Book appointment",
     "changeTherapistButton": "Change Therapist",
     "bookingAppointmentLoading": "Booking appointment... Please wait",
-    "loading": "Loading..."
+    "loadingCheckout": "Loading checkout..."
   },
   "Checkout": {
       "appointmentDetails": "Appointment Details",
@@ -161,6 +161,7 @@
       "time": "Time",
       "duration": "Duration",
       "cost": "Cost",
+      "price": "Price",
       "confirmBooking": "Confirm Booking",
       "goBack": "Go back",
       "minutes": "minutes",
@@ -175,7 +176,12 @@
       "payAfter": "Pay after",
       "confirmAndPayLater": "Confirm and pay later",
       "whenDoYouWantToPay": "When do you want to pay?",
-          "loading": "Loading..."
+      "loadingCheckout": "Loading checkout...",
+      "paymentExpired": "Appointment reservation was cancelled as no payment was done in time.",
+      "minutesLeft": "minutes left",
+      "confirmingPleaseWait": "Confirming booking... Please wait",
+      "confirmAndPay": "Confirm and pay for your appointment"
+      
   },
   "AvailabilityPage": {
     "recurringAvailableTimes": "Recurring available times",
