@@ -8,6 +8,7 @@ import {
   appointmentCancellationTemplate,
   paidAppointmentConfirmationTemplate,
   nonPaidAppointmentConfirmationTemplate,
+  invoicePaidTemplate,
 } from "./emailTemplates";
 
 mailchimpMarketing.setConfig({
@@ -247,6 +248,57 @@ export const sendNonPaidBookingConfirmationEmail = async (
   }
 };
 
+export const sendInvoicePaidEmail = async (
+  therapistEmail: string,
+  clientEmail: string,
+  appointmentDetails: {
+    date: string;
+    time: string;
+    therapistName: string;
+    clientName: string;
+    durationInMinutes: number;
+    amountPaid: string;
+    paymentMethod: string;
+    transactionId: string;
+  }
+) => {
+  const therapistMessage = {
+    from_email: "info@zakina-app.com",
+    subject: `${appointmentDetails.clientName} has paid for their appointment`,
+    html: invoicePaidTemplate(appointmentDetails, true),
+    to: [
+      {
+        email: therapistEmail,
+        type: "to",
+      },
+    ],
+  };
+
+  const clientMessage = {
+    from_email: "info@zakina-app.com",
+    subject: "Invoice Successfully Paid",
+    html: invoicePaidTemplate(appointmentDetails, false),
+    to: [
+      {
+        email: clientEmail,
+        type: "to",
+      },
+    ],
+  };
+
+  try {
+    await Promise.all([
+      mailchimpTx.messages.send({ message: therapistMessage as any }),
+      mailchimpTx.messages.send({ message: clientMessage as any }),
+    ]);
+  } catch (error) {
+    console.error(
+      "Error sending appointment booking confirmation email:",
+      error
+    );
+  }
+};
+
 export const sendPaidBookingConfirmationEmail = async (
   therapistEmail: string,
   clientEmail: string,
@@ -256,6 +308,9 @@ export const sendPaidBookingConfirmationEmail = async (
     therapistName: string;
     clientName: string;
     durationInMinutes: number;
+    amountPaid: string;
+    paymentMethod: string;
+    transactionId: string;
   }
 ) => {
   const therapistMessage = {

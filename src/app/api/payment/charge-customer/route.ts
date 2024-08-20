@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 export async function POST(request: NextRequest) {
-  const { amount } = await request.json();
+  const { amount, appointmentId } = await request.json();
   const user = await getCurrentUser();
   if (!user) {
     return NextResponse.json(
@@ -25,6 +25,9 @@ export async function POST(request: NextRequest) {
       payment_method: user.stripePaymentMethodId,
       off_session: true,
       confirm: true,
+      metadata: {
+        appointmentId: appointmentId,
+      },
     });
 
     return NextResponse.json({ success: true });

@@ -313,8 +313,8 @@ export const reserveAppointment = async (
     const appointmentDate = format(new Date(startDate), "yyyy-MM-dd");
 
     if (
-      client.selectedTherapist &&
-      client.selectedTherapist.toString() !== therapistId
+      !client.selectedTherapist ||
+      client.selectedTherapist?.toString() !== therapistId
     ) {
       // Update the previous therapist in selectedTherapistHistory
       await User.updateOne(

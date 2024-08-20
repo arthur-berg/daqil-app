@@ -5,7 +5,10 @@ import Stripe from "stripe";
 import Appointment from "@/models/Appointment";
 import User from "@/models/User";
 import { format } from "date-fns";
-import { sendPaidBookingConfirmationEmail } from "@/lib/mail";
+import {
+  sendInvoicePaidEmail,
+  sendPaidBookingConfirmationEmail,
+} from "@/lib/mail";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET as string;
@@ -34,6 +37,7 @@ export async function POST(req: Request): Promise<NextResponse> {
   try {
     if (eventType === "payment_intent.succeeded") {
       const paymentIntent = data;
+      console.log("paymentIntent", paymentIntent);
       const appointmentId = paymentIntent.metadata.appointmentId;
       const paymentMethodId = paymentIntent.payment_method as string;
 
@@ -56,6 +60,36 @@ export async function POST(req: Request): Promise<NextResponse> {
               { status: 404 }
             );
           }
+
+          // Retrieve payment details from the Stripe PaymentIntent
+          const amountPaid = (paymentIntent.amount_received / 100).toFixed(2); // Convert from cents to dollars
+          const charge = paymentIntent.latest_charge
+            ? await stripe.charges.retrieve(
+                paymentIntent.latest_charge as string
+              )
+            : null;
+          const paymentMethod =
+            charge?.payment_method_details?.type || "Unknown";
+          const transactionId = charge?.id || "Unknown";
+
+          const client = appointment.participants[0].userId;
+          const therapist = appointment.hostUserId;
+
+          const clientEmail = client.email;
+          const therapistEmail = therapist.email;
+
+          const appointmentDetails = {
+            date: format(new Date(appointment.startDate), "yyyy-MM-dd"),
+            time: format(new Date(appointment.startDate), "HH:mm"),
+            therapistName: `${therapist.firstName} ${therapist.lastName}`,
+            clientName: `${client.firstName} ${client.lastName}`,
+            durationInMinutes: appointment.durationInMinutes,
+            amountPaid: `$${amountPaid}`,
+            paymentMethod: paymentMethod,
+            transactionId: transactionId,
+          };
+
+          console.log("appointmentDetails", appointmentDetails);
 
           // Check payment type
           if (appointment.payment.method === "payBeforeBooking") {
@@ -105,20 +139,6 @@ export async function POST(req: Request): Promise<NextResponse> {
               "payment.status": "paid",
             });
 
-            const client = appointment.participants[0].userId;
-            const therapist = appointment.hostUserId;
-
-            const clientEmail = client.email;
-            const therapistEmail = therapist.email;
-
-            const appointmentDetails = {
-              date: format(new Date(appointment.startDate), "yyyy-MM-dd"),
-              time: format(new Date(appointment.startDate), "HH:mm"),
-              therapistName: `${therapist.firstName} ${therapist.lastName}`,
-              clientName: `${client.firstName} ${client.lastName}`,
-              durationInMinutes: appointment.durationInMinutes,
-            };
-
             await sendPaidBookingConfirmationEmail(
               therapistEmail,
               clientEmail,
@@ -129,6 +149,11 @@ export async function POST(req: Request): Promise<NextResponse> {
             await Appointment.findByIdAndUpdate(appointmentId, {
               "payment.status": "paid",
             });
+            await sendInvoicePaidEmail(
+              therapistEmail,
+              clientEmail,
+              appointmentDetails
+            );
           }
 
           // Update the user with the payment method ID if not already stored

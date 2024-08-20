@@ -128,31 +128,45 @@ export const appointmentCancellationTemplate = (
   `;
 };
 
-export const paidAppointmentConfirmationTemplate = (
+export const invoicePaidTemplate = (
   appointmentDetails: {
     date: string;
     time: string;
     therapistName: string;
     clientName: string;
     durationInMinutes: number;
+    amountPaid?: string; // Made optional
+    paymentMethod?: string; // Made optional
+    transactionId?: string; // Made optional
   },
   isTherapist: boolean
 ) => {
   const subject = isTherapist
-    ? "New Appointment Booking"
-    : "Appointment Confirmation";
+    ? `${appointmentDetails.clientName} has paid for their appointment`
+    : `Your invoice has been successfully paid`;
+
+  const additionalMessage = isTherapist
+    ? `${appointmentDetails.clientName} has completed the payment for their appointment with you.`
+    : `Thank you for your payment. Your appointment with ${appointmentDetails.therapistName} has been confirmed. Please see the details below.`;
 
   const appointmentsLink = isTherapist
     ? `${process.env.NEXT_PUBLIC_APP_URL}/therapist/appointments`
     : `${process.env.NEXT_PUBLIC_APP_URL}/client/appointments`;
 
   const buttonText = isTherapist
-    ? "See all my appointments"
-    : "View my appointments";
+    ? "View All Appointments"
+    : "View My Appointments";
 
-  const additionalMessage = isTherapist
-    ? "To join the session and manage all your appointments, please visit your appointments page."
-    : "You can join your upcoming session and see an overview of all your appointments on your appointments page.";
+  const paymentDetails = !isTherapist
+    ? `
+      <div style="margin-top: 20px;">
+        <h3 style="color: ${primaryColor};">Payment Details</h3>
+        <p><strong>Amount Paid:</strong> ${appointmentDetails.amountPaid}</p>
+        <p><strong>Payment Method:</strong> ${appointmentDetails.paymentMethod}</p>
+        <p><strong>Transaction ID:</strong> ${appointmentDetails.transactionId}</p>
+      </div>
+    `
+    : "";
 
   return `
     <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
@@ -166,8 +180,80 @@ export const paidAppointmentConfirmationTemplate = (
           <p><strong>Client:</strong> ${appointmentDetails.clientName}</p>
           <p><strong>Date:</strong> ${appointmentDetails.date}</p>
           <p><strong>Time:</strong> ${appointmentDetails.time}</p>
-          <p><strong>Duration:</strong> ${appointmentDetails.durationInMinutes}</p>
+          <p><strong>Duration:</strong> ${appointmentDetails.durationInMinutes} minutes</p>
         </div>
+        ${paymentDetails}
+        <div style="margin-top: 20px; font-size: 16px; color: #333333;">
+          <p>${additionalMessage}</p>
+        </div>
+        <div style="text-align: center; margin-top: 20px;">
+          <a href="${appointmentsLink}" style="display: inline-block; padding: 12px 24px; margin: 20px 0; background-color: ${primaryColor}; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: bold;">
+            ${buttonText}
+          </a>
+        </div>
+        <div style="margin-top: 20px; font-size: 12px; color: #888888; text-align: center;">
+          Thank you for using Zakina.
+        </div>
+      </div>
+    </div>
+  `;
+};
+
+export const paidAppointmentConfirmationTemplate = (
+  appointmentDetails: {
+    date: string;
+    time: string;
+    therapistName: string;
+    clientName: string;
+    durationInMinutes: number;
+    amountPaid?: string; // Made optional
+    paymentMethod?: string; // Made optional
+    transactionId?: string; // Made optional
+  },
+  isTherapist: boolean
+) => {
+  const subject = isTherapist
+    ? "New Appointment Booking"
+    : "Appointment Confirmation and Payment Receipt";
+
+  const appointmentsLink = isTherapist
+    ? `${process.env.NEXT_PUBLIC_APP_URL}/therapist/appointments`
+    : `${process.env.NEXT_PUBLIC_APP_URL}/client/appointments`;
+
+  const buttonText = isTherapist
+    ? "See all my appointments"
+    : "View my appointments";
+
+  const additionalMessage = isTherapist
+    ? "To join the session and manage all your appointments, please visit your appointments page."
+    : "You can join your upcoming session and see an overview of all your appointments on your appointments page.";
+
+  const paymentDetails = !isTherapist
+    ? `
+      <div style="margin-top: 20px;">
+        <h3 style="color: ${primaryColor};">Payment Details</h3>
+        <p><strong>Amount Paid:</strong> ${appointmentDetails.amountPaid}</p>
+        <p><strong>Payment Method:</strong> ${appointmentDetails.paymentMethod}</p>
+        <p><strong>Transaction ID:</strong> ${appointmentDetails.transactionId}</p>
+      </div>
+    `
+    : "";
+
+  return `
+    <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
+      <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+        <div style="text-align: center; margin-bottom: 20px;">
+          <h1 style="color: ${primaryColor}; font-size: 24px; margin: 0;">Zakina</h1>
+        </div>
+        <div style="margin-top: 20px;">
+          <p>${subject}</p>
+          <p><strong>Therapist:</strong> ${appointmentDetails.therapistName}</p>
+          <p><strong>Client:</strong> ${appointmentDetails.clientName}</p>
+          <p><strong>Date:</strong> ${appointmentDetails.date}</p>
+          <p><strong>Time:</strong> ${appointmentDetails.time}</p>
+          <p><strong>Duration:</strong> ${appointmentDetails.durationInMinutes} minutes</p>
+        </div>
+        ${paymentDetails}
         <div style="margin-top: 20px; font-size: 16px; color: #333333;">
           <p>${additionalMessage}</p>
         </div>
@@ -217,6 +303,16 @@ export const nonPaidAppointmentConfirmationTemplate = (
     ? "To join the session and manage all your appointments, please visit your appointments page."
     : `Please note that this appointment needs to be paid for at least 1 hour before the meeting starts. You can make the payment using the link below. You can also join your upcoming session and see an overview of all your appointments on your appointments page.`;
 
+  const payNowButton = !isTherapist
+    ? `
+      <div style="text-align: center; margin-top: 20px;">
+        <a href="${paymentLink}" style="display: inline-block; padding: 12px 24px; margin-right: 10px; background-color: ${primaryColor}; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: bold;">
+          Pay Now
+        </a>
+      </div>
+    `
+    : "";
+
   return `
     <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
@@ -233,13 +329,9 @@ export const nonPaidAppointmentConfirmationTemplate = (
         <div style="margin-top: 20px; font-size: 16px; color: #333333;">
           <p>${additionalMessage}</p>
         </div>
-        <div style="text-align: center; margin-top: 20px;">
-          <a href="${paymentLink}" style="display: inline-block; padding: 12px 24px; margin: 20px 0; background-color: ${primaryColor}; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: bold;">
-            Pay Now
-          </a>
-        </div>
-        <div style="text-align: center; margin-top: 20px;">
-          <a href="${appointmentsLink}" style="display: inline-block; padding: 12px 24px; margin: 20px 0; background-color: ${secondaryColor}; color: #000000; text-decoration: none; border-radius: 5px; font-weight: bold;">
+        ${payNowButton}
+        <div style="text-align: center; margin-top: 10px;">
+          <a href="${appointmentsLink}" style="display: inline-block; padding: 12px 24px; background-color: ${secondaryColor}; color: #000000; text-decoration: none; border-radius: 5px; font-weight: bold;">
             ${buttonText}
           </a>
         </div>
