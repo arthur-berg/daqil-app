@@ -18,6 +18,38 @@ export const scheduleJobToCheckAppointmentStatus = (
   }
 };
 
+export const scheduleJobToCheckPaymentStatus = (
+  appointmentId: string,
+  paymentDeadline: Date
+) => {
+  const now = new Date();
+
+  if (paymentDeadline < now) {
+    // If the deadline has passed, cancel the appointment immediately
+    cancelUnpaidAppointment(appointmentId);
+  } else {
+    // Schedule the job for future deadlines
+    schedule.scheduleJob(paymentDeadline, async () => {
+      await cancelUnpaidAppointment(appointmentId);
+    });
+  }
+};
+
+const cancelUnpaidAppointment = async (appointmentId: string) => {
+  const appointment = await Appointment.findById(appointmentId);
+
+  if (!appointment || appointment.payment.status === "paid") {
+    return; // No need to cancel if the appointment is paid
+  }
+
+  await Appointment.findByIdAndUpdate(appointmentId, {
+    status: "canceled",
+    cancellationReason: "Appointment was not paid in time",
+  });
+
+  console.log(`Appointment ${appointmentId} canceled due to non-payment.`);
+};
+
 const updateAppointmentStatus = async (appointmentId: string) => {
   const appointment = await Appointment.findById(appointmentId);
 

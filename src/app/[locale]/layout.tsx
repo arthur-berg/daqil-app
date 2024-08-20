@@ -2,34 +2,32 @@ import type { Metadata } from "next";
 import { DM_Sans } from "next/font/google";
 import { Toaster } from "@/components/ui/toaster";
 import { getLangDir } from "rtl-detect";
+import cron from "node-cron";
 import "@/app/globals.css";
 
 import connectToMongoDB from "@/lib/mongoose";
-import { scheduleJobToCheckAppointmentStatus } from "@/lib/schedulerJobs";
-import Appointment from "@/models/Appointment";
+import {
+  checkAndCancelUnpaidAppointments,
+  checkAndUpdateAppointmentStatuses,
+} from "@/lib/cros-jobs";
 
 const dmSans = DM_Sans({ subsets: ["latin"], weight: ["400", "600"] });
-
-const initializeScheduledJobs = async () => {
-  const now = new Date();
-  const pastAppointments = await Appointment.find({
-    endDate: { $lt: now },
-    status: { $in: ["confirmed", "pending"] },
-  });
-  const futureAppointments = await Appointment.find({
-    endDate: { $gte: now },
-    status: { $in: ["confirmed", "pending"] },
-  });
-  const pendingAppointments = [...pastAppointments, ...futureAppointments];
-
-  pendingAppointments.forEach((appointment) => {
-    scheduleJobToCheckAppointmentStatus(appointment._id, appointment.endDate);
-  });
-};
 
 export const metadata: Metadata = {
   title: "Zakina app",
   description: "Zakina app",
+};
+
+// Cron job setup as you defined
+const runCronJobs = async () => {
+  cron.schedule("*/5 * * * *", async () => {
+    console.log(
+      "Running scheduled job to check appointment statuses and payment deadlines"
+    );
+
+    await checkAndUpdateAppointmentStatuses();
+    await checkAndCancelUnpaidAppointments();
+  });
 };
 
 export default async function LocaleLayout({
@@ -41,9 +39,8 @@ export default async function LocaleLayout({
 }>) {
   try {
     await connectToMongoDB();
-    await initializeScheduledJobs();
-
-    console.log("Mongo connected and scheduler jobs running for appointments");
+    await runCronJobs();
+    console.log("Mongo connected and cron jobs running for appointments");
   } catch {
     console.log("Mongo connection failed");
   }

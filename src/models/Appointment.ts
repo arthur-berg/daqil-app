@@ -9,10 +9,12 @@ const appointmentSchema = new Schema(
     startDate: {
       type: Date,
       required: true,
+      index: true,
     },
     endDate: {
       type: Date,
       required: true,
+      index: true,
     },
     hostUserId: {
       type: Schema.Types.ObjectId,
@@ -79,6 +81,7 @@ const appointmentSchema = new Schema(
         type: String,
         enum: ["pending", "paid"],
         default: "pending",
+        index: true,
       },
       intentId: {
         type: String,
@@ -97,6 +100,7 @@ const appointmentSchema = new Schema(
           }
           return undefined;
         },
+        index: true,
       },
     },
     status: {
@@ -109,6 +113,7 @@ const appointmentSchema = new Schema(
         "temporarily-reserved",
       ],
       default: "confirmed",
+      index: true,
     },
     cancellationReason: {
       type: String,

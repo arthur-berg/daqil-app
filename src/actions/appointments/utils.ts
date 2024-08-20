@@ -1,16 +1,14 @@
-import { scheduleJobToCheckAppointmentStatus } from "@/lib/schedulerJobs";
 import Appointment from "@/models/Appointment";
 import User from "@/models/User";
 import { format } from "date-fns";
 
 export const createAppointment = async (appointmentData: any, session: any) => {
   const appointment = await Appointment.create([appointmentData], { session });
-  const appointmentItem = appointment[0]; // As appointment.create returns an array
 
-  scheduleJobToCheckAppointmentStatus(
+  /*  scheduleJobToCheckAppointmentStatus(
     appointmentItem._id,
     appointmentItem.endDate
-  );
+  ); */
 
   return appointment;
 };

@@ -149,6 +149,7 @@ export async function POST(req: Request): Promise<NextResponse> {
             await Appointment.findByIdAndUpdate(appointmentId, {
               "payment.status": "paid",
             });
+
             await sendInvoicePaidEmail(
               therapistEmail,
               clientEmail,
