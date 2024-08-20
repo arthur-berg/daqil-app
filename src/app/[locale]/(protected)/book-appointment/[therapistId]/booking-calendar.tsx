@@ -117,9 +117,9 @@ const BookingCalendar = ({
   return (
     <>
       {isPending ? (
-        <div className="flex flex-col items-center justify-center mt-10">
+        <div className="flex flex-col items-center justify-center mt-10 pb-10">
           <BeatLoader />
-          <div className="text-lg font-medium">
+          <div className="text-lg font-medium mt-5">
             {t("bookingAppointmentLoading")}
           </div>
         </div>

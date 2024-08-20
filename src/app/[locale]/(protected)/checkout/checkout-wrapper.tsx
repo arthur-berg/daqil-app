@@ -65,10 +65,9 @@ const CheckoutWrapper = ({
       .then((data) => {
         if (!!data.savedPaymentMethods) {
           setHasSavedPaymentMethod(true);
-        } else {
-          setClientSecret(data.clientSecret);
-          setCustomerSessionClientSecret(data.customerSessionClientSecret);
         }
+        setClientSecret(data.clientSecret);
+        setCustomerSessionClientSecret(data.customerSessionClientSecret);
         setLoading(false);
       })
       .catch(() => {
@@ -106,131 +105,109 @@ const CheckoutWrapper = ({
     }
   };
 
-  const chargeCard = async () => {
-    setChargeCardLoading(true);
-    const response = await fetch("/api/payment/charge-customer", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        appointmentId: appointmentId,
-        amount: convertToSubcurrency(appointmentType.price),
-      }),
-    });
-
-    const data = await response.json();
-    if (data.success) {
-      router.push(`/booking-confirmed?appointmentId=${appointmentId}`);
-    } else if (data.error) {
-      setChargeCardLoading(false);
-      toast({ title: data?.error, variant: "destructive" });
-    }
-  };
-
   return (
     <>
       <Link href="/book-appointment">
         <Button variant="outline">{t("goBack")}</Button>
       </Link>
-
-      {loading ? (
-        <div className="text-center mt-8 pb-8">
-          <BeatLoader />
-          <div className="text-lg font-medium ">{t("loadingCheckout")}</div>
+      <div className={`text-center`}>
+        <div className="text-center mb-6">
+          <p className="text-lg font-semibold">{t("weHaveReserved")}</p>
+          <Countdown date={paymentExpiryDate} renderer={renderer} />
         </div>
-      ) : (
-        <div className={`text-center`}>
-          <div className="text-center mb-6">
-            <p className="text-lg font-semibold">{t("weHaveReserved")}</p>
-            <Countdown date={paymentExpiryDate} renderer={renderer} />
+        <div className={`p-4 rounded-md mb-6`}>
+          <h2 className="text-2xl font-bold">{t("appointmentDetails")}:</h2>
+          <p className="mt-2">
+            {t("day")}: {format(date, "eeee, MMMM d, yyyy")}{" "}
+          </p>
+          <p>
+            {t("time")}: {format(date, "kk:mm")}
+          </p>
+          <p>
+            {t("duration")}: {appointmentType.durationInMinutes} {t("minutes")}
+          </p>
+          <p>
+            {t("price")}: {currencyToSymbol(appointmentType.currency)}
+            {appointmentType.price}
+          </p>
+        </div>
+        {loading ? (
+          <div className="text-center mt-8 pb-8">
+            <BeatLoader />
+            <div className="text-lg font-medium ">{t("loadingCheckout")}</div>
           </div>
-          <div className={`p-4 rounded-md mb-6`}>
-            <h2 className="text-2xl font-bold">{t("appointmentDetails")}:</h2>
-            <p className="mt-2">
-              {t("day")}: {format(date, "eeee, MMMM d, yyyy")}{" "}
-            </p>
-            <p>
-              {t("time")}: {format(date, "kk:mm")}
-            </p>
-            <p>
-              {t("duration")}: {appointmentType.durationInMinutes}{" "}
-              {t("minutes")}
-            </p>
-            <p>
-              {t("price")}: {currencyToSymbol(appointmentType.currency)}
-              {appointmentType.price}
-            </p>
-          </div>
-          {hasSavedPaymentMethod ? (
-            <>
-              {chargeCardLoading ? (
-                <div>
-                  <BeatLoader />
-                  <div className="text-lg font-medium ">
-                    {t("confirmingPleaseWait")}
-                  </div>
-                </div>
-              ) : (
-                <Button onClick={chargeCard} disabled={isPending}>
-                  {t("confirmAndPay")}
-                </Button>
-              )}
-            </>
-          ) : (
-            <>
-              <div className="mb-6">
-                <h3 className="text-xl font-semibold mb-4">
-                  {t("whenDoYouWantToPay")}
-                </h3>
-                <div className="flex justify-center space-x-4">
-                  <RadioGroup
-                    disabled={isPending}
-                    defaultValue="payBefore"
-                    onValueChange={(value: "payAfter" | "payBefore") => {
-                      setPaymentOption(value);
-                    }}
-                  >
-                    <div className="flex space-x-4">
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="payBefore" id="payBefore" />
-                        <Label htmlFor="payBefore">{t("payBefore")}</Label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="payAfter" id="payAfter" />
-                        <Label htmlFor="payAfter">{t("payAfter")}</Label>
-                      </div>
-                    </div>
-                  </RadioGroup>
-                </div>
-              </div>
-              {paymentOption === "payBefore" ? (
-                <Elements
-                  stripe={stripePromise}
-                  options={{
-                    customerSessionClientSecret,
-                    clientSecret,
+        ) : hasSavedPaymentMethod ? (
+          <Elements
+            stripe={stripePromise}
+            options={{
+              customerSessionClientSecret,
+              clientSecret,
+            }}
+          >
+            <Checkout
+              clientSecret={clientSecret}
+              setClientSecret={setClientSecret}
+              setCustomerSessionClientSecret={setCustomerSessionClientSecret}
+              amount={appointmentType.price}
+              appointmentId={appointmentId}
+            />
+          </Elements>
+        ) : (
+          <>
+            <div className="mb-6">
+              <h3 className="text-xl font-semibold mb-4">
+                {t("whenDoYouWantToPay")}
+              </h3>
+              <div className="flex justify-center space-x-4">
+                <RadioGroup
+                  disabled={isPending}
+                  defaultValue="payBefore"
+                  onValueChange={(value: "payAfter" | "payBefore") => {
+                    setPaymentOption(value);
                   }}
                 >
-                  <Checkout
-                    clientSecret={clientSecret}
-                    setClientSecret={setClientSecret}
-                    setCustomerSessionClientSecret={
-                      setCustomerSessionClientSecret
-                    }
-                    amount={appointmentType.price}
-                    appointmentId={appointmentId}
-                  />
-                </Elements>
-              ) : (
+                  <div className="flex space-x-4">
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="payBefore" id="payBefore" />
+                      <Label htmlFor="payBefore">{t("payBefore")}</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="payAfter" id="payAfter" />
+                      <Label htmlFor="payAfter">{t("payLater")}</Label>
+                    </div>
+                  </div>
+                </RadioGroup>
+              </div>
+            </div>
+            {paymentOption === "payBefore" ? (
+              <Elements
+                stripe={stripePromise}
+                options={{
+                  customerSessionClientSecret,
+                  clientSecret,
+                }}
+              >
+                <Checkout
+                  clientSecret={clientSecret}
+                  setClientSecret={setClientSecret}
+                  setCustomerSessionClientSecret={
+                    setCustomerSessionClientSecret
+                  }
+                  amount={appointmentType.price}
+                  appointmentId={appointmentId}
+                />
+              </Elements>
+            ) : (
+              <div>
+                <p className="mb-4">{t("payLatestOneHourBefore")}</p>
                 <Button onClick={handlePayLater} disabled={isPending}>
                   {t("confirmAndPayLater")}
                 </Button>
-              )}
-            </>
-          )}
-        </div>
-      )}
+              </div>
+            )}
+          </>
+        )}
+      </div>
     </>
   );
 };

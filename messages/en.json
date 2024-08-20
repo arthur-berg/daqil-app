@@ -173,14 +173,15 @@
       "hasRequested": "has requested",
       "weHaveReserved": "We have temporarily reserved your appointment for 15 minutes",
       "payBefore": "Pay before",
-      "payAfter": "Pay after",
+      "payLater": "Pay later",
       "confirmAndPayLater": "Confirm and pay later",
       "whenDoYouWantToPay": "When do you want to pay?",
       "loadingCheckout": "Loading checkout...",
       "paymentExpired": "Appointment reservation was cancelled as no payment was done in time.",
       "minutesLeft": "minutes left",
       "confirmingPleaseWait": "Confirming booking... Please wait",
-      "confirmAndPay": "Confirm and pay for your appointment"
+      "confirmAndPay": "Confirm and pay for your appointment",
+     "payLatestOneHourBefore": "Please make your payment at least one hour before your appointment starts."
       
   },
   "AvailabilityPage": {

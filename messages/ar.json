@@ -181,7 +181,8 @@
 "paymentExpired": "تم إلغاء حجز الموعد لعدم إتمام الدفع في الوقت المحدد.",
 "minutesLeft": "دقائق متبقية",
 "confirmingPleaseWait": "جارٍ تأكيد الحجز... يرجى الانتظار",
-"confirmAndPay": "تأكيد والدفع لحجز موعدك"
+"confirmAndPay": "تأكيد والدفع لحجز موعدك",
+"payLatestOneHourBefore": "يرجى إجراء الدفع قبل موعد جلستك بساعة على الأقل."
 },
   "AvailabilityPage": {
     "recurringAvailableTimes": "أوقات متاحة متكررة",
