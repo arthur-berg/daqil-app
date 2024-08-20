@@ -19,7 +19,7 @@ const discountCode = new Schema(
     },
     limitPerUser: {
       type: Number,
-      default: 1,
+      default: null,
     },
     startDate: {
       type: Date,

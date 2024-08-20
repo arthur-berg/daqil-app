@@ -283,7 +283,23 @@
     "limitPerUserLabel": "Limit the number of times code can be redeemed per user",
     "setTimePeriodLabel": "Limit the time period that the code can be redeemed",
     "startDateLabel": "Start date",
-    "endDateLabel": "End date"
+    "endDateLabel": "End date",
+    "createCode": "Create code",
+    "goBackDiscountOverview": "Go back to discount codes overview",
+    "firstTimeUsersOnly": "First-time users only",
+    "allUsers": "Available to all users",
+    "discount": "Discount percentage",
+    "limitPerUser": "Limit per user",
+    "unlimited": "Unlimited",
+    "edit": "Edit",
+   "notSet": "Not set",
+   "existingDiscountCodes": "Existing discount codes",
+   "delete": "Delete",
+   "areYouSureYouWantToDelete": "Are you sure you want to delete?",
+   "close": "Close",
+   "deletingDiscountCode": "Deleting discount code..."
+    
+
 
   },
   "MyClientsPage" : {
@@ -359,7 +375,9 @@
     "therapistProfileUpdated": "Therapist profile updated",
     "profileImageUploaded": "Profile image uploaded",
     "appointmentReserved": "Appointment temporarily reserved",
-    "bookingConfirmed": "Booking confirmed"
+    "bookingConfirmed": "Booking confirmed",
+    "discountCodeCreated": "Discount code created",
+    "discountCodeDeleted": "Discount code deleted"
   },
   "AppointmentAction": {
     "therapySessionWith": "Therapy session with"

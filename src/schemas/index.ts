@@ -33,13 +33,15 @@ export const DiscountCodeSchema = z
       })
       .max(100, {
         message: "Percentage cannot exceed 100",
-      }),
+      })
+      .nullable(),
     firstTimeUserOnly: z.boolean().optional(),
     limitPerUser: z
       .number()
       .min(1, {
         message: "Limit per user must be at least 1",
       })
+      .nullable()
       .optional(),
     startDate: z.date().nullable().optional(),
     endDate: z.date().nullable().optional(),

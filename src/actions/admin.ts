@@ -10,6 +10,8 @@ import { getUserByEmail } from "@/data/user";
 import { generatePassword } from "@/utils";
 import { addUserToSubscriberList, sendVerificationEmail } from "@/lib/mail";
 import { generateVerificationToken } from "@/lib/tokens";
+import DiscountCode from "@/models/DiscountCode";
+import { revalidatePath } from "next/cache";
 
 export const admin = async () => {
   const { role } = await getCurrentRole();
@@ -19,6 +21,24 @@ export const admin = async () => {
   }
 
   return { error: "Forbidden Server Action!" };
+};
+
+export const deleteDiscountCode = async (discountCodeId: string) => {
+  const [SuccessMessages, ErrorMessages] = await Promise.all([
+    getTranslations("SuccessMessages"),
+    getTranslations("ErrorMessages"),
+  ]);
+
+  try {
+    await requireAuth([UserRole.ADMIN]);
+
+    await DiscountCode.findByIdAndDelete(discountCodeId);
+    revalidatePath("/admin/discount-codes");
+    return { success: SuccessMessages("discountCodeDeleted") };
+  } catch (error) {
+    console.error("Error deleting discount code", error);
+    return { error: ErrorMessages("somethingWentWrong") };
+  }
 };
 
 export const createDiscountCode = async (
@@ -32,13 +52,31 @@ export const createDiscountCode = async (
   try {
     await requireAuth([UserRole.ADMIN]);
 
-    const validatedFields = InviteTherapistSchema.safeParse(values);
+    const validatedFields = DiscountCodeSchema.safeParse(values);
 
     if (!validatedFields.success) {
       return { error: ErrorMessages("invalidFields") };
     }
 
-    const { code, percentage } = validatedFields.data;
+    const {
+      code,
+      percentage,
+      firstTimeUserOnly,
+      limitPerUser,
+      startDate,
+      endDate,
+    } = validatedFields.data;
+
+    await DiscountCode.create({
+      code,
+      percentage,
+      firstTimeUserOnly,
+      limitPerUser,
+      startDate,
+      endDate,
+    });
+
+    return { success: SuccessMessages("discountCodeCreated") };
   } catch (error) {
     console.error("Error inviting therapist", error);
     return { error: ErrorMessages("somethingWentWrong") };
