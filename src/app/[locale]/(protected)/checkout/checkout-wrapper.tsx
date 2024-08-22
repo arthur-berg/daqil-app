@@ -147,6 +147,34 @@ const CheckoutWrapper = ({
     });
   };
 
+  const renderDiscountCodeForm = () => {
+    return (
+      <div className="mb-8">
+        <Label htmlFor="discountCode" className="block">
+          {t("discountCodeLabel")}
+        </Label>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleApplyDiscount();
+          }}
+          className="inline-flex justify-center space-x-2 mt-4"
+        >
+          <Input
+            id="discountCode"
+            value={discountCode}
+            onChange={(e) => setDiscountCode(e.target.value)}
+            placeholder={t("enterDiscountCode")}
+            disabled={loading || isPending}
+          />
+          <Button type="submit" disabled={loading || isPending}>
+            {t("apply")}
+          </Button>
+        </form>
+      </div>
+    );
+  };
+
   return (
     <>
       <Link href="/book-appointment">
@@ -190,24 +218,7 @@ const CheckoutWrapper = ({
           </div>
         ) : hasSavedPaymentMethod ? (
           <>
-            <div className="mb-8">
-              <Label htmlFor="discountCode">{t("discountCodeLabel")}</Label>
-              <div className="flex justify-center space-x-2 mt-4">
-                <Input
-                  id="discountCode"
-                  value={discountCode}
-                  onChange={(e) => setDiscountCode(e.target.value)}
-                  placeholder={t("enterDiscountCode")}
-                  disabled={loading || isPending}
-                />
-                <Button
-                  onClick={handleApplyDiscount}
-                  disabled={loading || isPending}
-                >
-                  {t("apply")}
-                </Button>
-              </div>
-            </div>
+            {renderDiscountCodeForm()}
             <Elements
               stripe={stripePromise}
               options={{
@@ -254,26 +265,7 @@ const CheckoutWrapper = ({
 
             {paymentOption === "payBefore" ? (
               <>
-                <div className="mb-6">
-                  <Label className="block" htmlFor="discountCode">
-                    {t("discountCodeLabel")}
-                  </Label>
-                  <div className="inline-flex justify-center space-x-2 mt-4">
-                    <Input
-                      id="discountCode"
-                      value={discountCode}
-                      onChange={(e) => setDiscountCode(e.target.value)}
-                      placeholder={t("enterDiscountCode")}
-                      disabled={loading || isPending}
-                    />
-                    <Button
-                      onClick={handleApplyDiscount}
-                      disabled={loading || isPending}
-                    >
-                      {t("apply")}
-                    </Button>
-                  </div>
-                </div>
+                {renderDiscountCodeForm()}
                 <Elements
                   stripe={stripePromise}
                   options={{
