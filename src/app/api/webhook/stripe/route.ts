@@ -9,6 +9,7 @@ import {
   sendInvoicePaidEmail,
   sendPaidBookingConfirmationEmail,
 } from "@/lib/mail";
+import CodeRedemption from "@/models/CodeRedemption";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET as string;
@@ -37,8 +38,11 @@ export async function POST(req: Request): Promise<NextResponse> {
   try {
     if (eventType === "payment_intent.succeeded") {
       const paymentIntent = data;
-      console.log("paymentIntent", paymentIntent);
       const appointmentId = paymentIntent.metadata.appointmentId;
+      const trackDiscountCodeRedeemed =
+        paymentIntent.metadata.trackDiscountCodeRedeemed;
+      const discountCodeId = paymentIntent.metadata.discountCodeId;
+
       const paymentMethodId = paymentIntent.payment_method as string;
 
       if (appointmentId) {
@@ -59,6 +63,14 @@ export async function POST(req: Request): Promise<NextResponse> {
               { error: "Appointment not found" },
               { status: 404 }
             );
+          }
+
+          if (trackDiscountCodeRedeemed && discountCodeId) {
+            await CodeRedemption.create({
+              userId: appointment.participants[0].userId,
+              discountCodeId: discountCodeId,
+              appointmentId: appointmentId,
+            });
           }
 
           // Retrieve payment details from the Stripe PaymentIntent
@@ -88,8 +100,6 @@ export async function POST(req: Request): Promise<NextResponse> {
             paymentMethod: paymentMethod,
             transactionId: transactionId,
           };
-
-          console.log("appointmentDetails", appointmentDetails);
 
           // Check payment type
           if (appointment.payment.method === "payBeforeBooking") {

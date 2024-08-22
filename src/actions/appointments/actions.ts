@@ -382,7 +382,7 @@ export const reserveAppointment = async (
     await session.commitTransaction();
     session.endSession();
 
-    revalidatePath("/client/appointments");
+    revalidatePath("/appointments");
 
     return {
       success: SuccessMessages("appointmentReserved"),

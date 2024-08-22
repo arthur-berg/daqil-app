@@ -45,7 +45,7 @@ const TherapistMenu = ({ t }: { t: any }) => {
 const ClientMenu = ({ t }: { t: any }) => {
   return (
     <>
-      <Link href="/client/appointments">
+      <Link href="/appointments">
         <DropdownMenuItem>
           <CardStackIcon className="h-4 w-4 mr-2" />
           {t("appointments")}

@@ -1,38 +1,53 @@
-import { checkDiscountCodeValidity } from "@/actions/discount-code";
+"use server";
+
 import { getAppointmentTypeById } from "@/data/appointment-types";
-import { getCurrentUser } from "@/lib/auth";
-import DiscountCode from "@/models/DiscountCode";
-import User from "@/models/User";
+import { UserRole } from "@/generalTypes";
+import { getCurrentUser, requireAuth } from "@/lib/auth";
 import { convertToSubcurrency } from "@/utils";
 import { getTranslations } from "next-intl/server";
-import { NextRequest, NextResponse } from "next/server";
+import { checkDiscountCodeValidity } from "./discount-code";
+import User from "@/models/User";
+import CodeRedemption from "@/models/CodeRedemption";
+
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
-export async function POST(request: NextRequest) {
+export const createPaymentIntent = async (
+  appointmentTypeId: string,
+  appointmentId: string,
+  discountCode?: string
+) => {
   const [SuccessMessages, ErrorMessages] = await Promise.all([
     getTranslations("SuccessMessages"),
     getTranslations("ErrorMessages"),
   ]);
   try {
-    const { appointmentTypeId, appointmentId, discountCode } =
-      await request.json();
-
+    requireAuth([UserRole.CLIENT]);
     const appointmentType = await getAppointmentTypeById(appointmentTypeId);
 
     // Validate and apply the discount code server-side
     let discountCodeError = null;
     let discountCodeSuccess = null;
-    let finalAmount = convertToSubcurrency(appointmentType.price);
+    let finalAmount = appointmentType.price;
+    let trackDiscountCodeRedeemed = false;
+    let discountCodeId = null;
     if (discountCode) {
-      const { error, success, discount } = await checkDiscountCodeValidity(
-        discountCode
-      );
+      const {
+        error,
+        success,
+        discount,
+        requiresTracking: track,
+        discountCodeId: id,
+      } = await checkDiscountCodeValidity(discountCode);
       if (error) {
         discountCodeError = error;
       }
       if (success) {
-        discountCodeSuccess = success;
+        console.log("discount", discount);
+        discountCodeSuccess = SuccessMessages("discountCodeApplied");
         finalAmount = finalAmount - (finalAmount * discount) / 100;
+        console.log("finalAmount", finalAmount);
+        trackDiscountCodeRedeemed = track;
+        discountCodeId = id;
       }
     }
 
@@ -49,14 +64,19 @@ export async function POST(request: NextRequest) {
       });
     }
 
+    const metadata: Record<string, unknown> = { appointmentId: appointmentId };
+
+    if (trackDiscountCodeRedeemed && discountCodeId) {
+      metadata["trackDiscountCodeRedeemed"] = trackDiscountCodeRedeemed;
+      metadata["discountCodeId"] = discountCode;
+    }
+
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: finalAmount,
+      amount: convertToSubcurrency(finalAmount),
       currency: "usd",
       customer: customerId,
       automatic_payment_methods: { enabled: true },
-      metadata: {
-        appointmentId: appointmentId,
-      },
+      metadata: metadata,
     });
 
     const customerSession = await stripe.customerSessions.create({
@@ -84,26 +104,27 @@ export async function POST(request: NextRequest) {
       user?.stripePaymentMethodId &&
       user?.stripeCustomerId
     ) {
-      return NextResponse.json({
+      return {
+        finalAmount: finalAmount,
         discountCodeError: discountCodeError,
         discountCodeSuccess: discountCodeSuccess,
         savedPaymentMethods: paymentMethods.data,
         clientSecret: paymentIntent.client_secret,
         customerSessionClientSecret: customerSession.client_secret,
-      });
+      };
     }
 
-    return NextResponse.json({
+    return {
+      finalAmount: finalAmount,
       discountCodeError: discountCodeError,
       discountCodeSuccess: discountCodeSuccess,
       clientSecret: paymentIntent.client_secret,
       customerSessionClientSecret: customerSession.client_secret,
-    });
+    };
   } catch (error) {
     console.error("Internal Error: ", error);
-    return NextResponse.json(
-      { error: ErrorMessages("somethingWentWrong") },
-      { status: 500 }
-    );
+    return {
+      error: ErrorMessages("somethingWentWrong"),
+    };
   }
-}
+};

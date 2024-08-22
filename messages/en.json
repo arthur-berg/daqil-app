@@ -354,7 +354,13 @@
     "appointmentAlreadyCompleted": "Appointment already completed",
     "failedToUpdateTherapistProfile": "Failed to update therapist profile",
     "failedToUploadProfileImage": "Failed to upload profile image",
-    "appointmentUpdateFailed": "Appointment update failed"
+    "appointmentUpdateFailed": "Appointment update failed",
+    "invalidDiscountCode": "Invalid discount code",
+    "discountCodeNotStarted": "Discount code not started",
+    "missingDiscountCode": "Missing discount code",
+    "discountCodeExpired": "Discount code expired",
+    "firstTimeUserOnly": "First-time users only",
+    "redeemedCodeLimitReached": "Redeemed code limit reached"
   },
   "SuccessMessages": {
     "activateLinkSent": "A link to activate your account has been emailed to the address provided",
@@ -377,7 +383,10 @@
     "appointmentReserved": "Appointment temporarily reserved",
     "bookingConfirmed": "Booking confirmed",
     "discountCodeCreated": "Discount code created",
-    "discountCodeDeleted": "Discount code deleted"
+    "discountCodeDeleted": "Discount code deleted",
+    "discountCodeValid": "Discount code is valid",
+    "discountCodeApplied": "Discount code applied",
+    "discountLoading": "Applying discount code..."
   },
   "AppointmentAction": {
     "therapySessionWith": "Therapy session with"

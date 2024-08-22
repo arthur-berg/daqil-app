@@ -38,7 +38,7 @@ const CheckoutWrapper = ({
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        amount: convertToSubcurrency(appointmentType.price),
+        appointmentTypeId: appointmentType._id,
         appointmentId: appointmentId,
       }),
     })

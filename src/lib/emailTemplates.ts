@@ -95,7 +95,7 @@ export const appointmentCancellationTemplate = (
 
   const appointmentsLink = isTherapist
     ? `${process.env.NEXT_PUBLIC_APP_URL}/therapist/appointments`
-    : `${process.env.NEXT_PUBLIC_APP_URL}/client/appointments`;
+    : `${process.env.NEXT_PUBLIC_APP_URL}/appointments`;
 
   const buttonText = isTherapist
     ? "See all my appointments"
@@ -151,7 +151,7 @@ export const invoicePaidTemplate = (
 
   const appointmentsLink = isTherapist
     ? `${process.env.NEXT_PUBLIC_APP_URL}/therapist/appointments`
-    : `${process.env.NEXT_PUBLIC_APP_URL}/client/appointments`;
+    : `${process.env.NEXT_PUBLIC_APP_URL}/appointments`;
 
   const buttonText = isTherapist
     ? "View All Appointments"
@@ -218,7 +218,7 @@ export const paidAppointmentConfirmationTemplate = (
 
   const appointmentsLink = isTherapist
     ? `${process.env.NEXT_PUBLIC_APP_URL}/therapist/appointments`
-    : `${process.env.NEXT_PUBLIC_APP_URL}/client/appointments`;
+    : `${process.env.NEXT_PUBLIC_APP_URL}/appointments`;
 
   const buttonText = isTherapist
     ? "See all my appointments"
@@ -286,7 +286,7 @@ export const nonPaidAppointmentConfirmationTemplate = (
 
   const appointmentsLink = isTherapist
     ? `${process.env.NEXT_PUBLIC_APP_URL}/therapist/appointments`
-    : `${process.env.NEXT_PUBLIC_APP_URL}/client/appointments`;
+    : `${process.env.NEXT_PUBLIC_APP_URL}/appointments`;
 
   // Encode the date to ensure it's safely included in the URL
   const encodedDate = encodeURIComponent(appointmentDetails.date.toString());

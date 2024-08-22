@@ -22,12 +22,12 @@ export const getCurrentRole = async () => {
 const verifyUserSession = async () => {
   const user = await getCurrentUser();
   if (!user) {
-    throw new Error("Unauthorized");
+    throw new Error("userNotFound");
   }
 
   const dbUser = await getUserById(user.id);
   if (!dbUser) {
-    throw new Error("Unauthorized");
+    throw new Error("userNotFound");
   }
 
   return user;

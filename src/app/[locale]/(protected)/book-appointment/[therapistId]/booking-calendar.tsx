@@ -130,7 +130,7 @@ const BookingCalendar = ({
               {success && (
                 <div className="bg-green-100 border border-green-300 p-2 rounded">
                   <p>{success}</p>
-                  <Link href="/client/appointments">
+                  <Link href="/appointments">
                     <Button className="mt-2">
                       {t("goToAppointmentsOverview")}
                     </Button>
