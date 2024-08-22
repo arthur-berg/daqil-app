@@ -64,10 +64,12 @@ export const checkDiscountCodeValidity = async (discountCode: string) => {
       };
     }
 
+    console.log("code", code);
+
     return {
       success: SuccessMessages("discountCodeValid"),
       discount: code.percentage,
-      requiresTracking: code.limitPerUser || code.firstTimeUserOnly,
+      requiresTracking: !!code.limitPerUser || !!code.firstTimeUserOnly,
       discountCodeId: code._id,
     };
   } catch (error) {

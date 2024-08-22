@@ -163,26 +163,33 @@
     "time": "الوقت",
     "duration": "المدة",
     "cost": "التكلفة",
+    "price": "السعر",
     "confirmBooking": "تأكيد الحجز",
     "goBack": "العودة",
     "minutes": "دقائق",
     "timeLeftToPay": "الوقت المتبقي على الحجز المؤقت",
     "close": "إغلاق",
-    "bookAppointment": "احجز الموعد",
-    "processing": "جاري المعالجة...",
+    "bookAppointment": "احجز موعداً",
+    "processing": "جارٍ المعالجة...",
     "zakina": "زاكينا",
-    "hasRequested": "قد طلبت",
+    "hasRequested": "قد طلب",
     "weHaveReserved": "لقد قمنا بحجز موعدك مؤقتاً لمدة 15 دقيقة",
-    "payBefore": "ادفع قبل",
-    "payAfter": "ادفع بعد",
-    "confirmAndPayLater": "تأكيد والدفع لاحقًا",
-"whenDoYouWantToPay": "متى تريد الدفع؟",
-"loadingCheckout": "جارٍ التحميل...",
-"paymentExpired": "تم إلغاء حجز الموعد لعدم إتمام الدفع في الوقت المحدد.",
-"minutesLeft": "دقائق متبقية",
-"confirmingPleaseWait": "جارٍ تأكيد الحجز... يرجى الانتظار",
-"confirmAndPay": "تأكيد والدفع لحجز موعدك",
-"payLatestOneHourBefore": "يرجى إجراء الدفع قبل موعد جلستك بساعة على الأقل."
+    "payBefore": "ادفع الآن",
+    "payLater": "ادفع لاحقاً",
+    "confirmAndPayLater": "تأكيد والدفع لاحقاً",
+    "whenDoYouWantToPay": "متى تريد الدفع؟",
+    "loadingCheckout": "جارٍ تحميل صفحة الدفع...",
+    "paymentExpired": "تم إلغاء حجز الموعد لأنه لم يتم الدفع في الوقت المحدد.",
+    "minutesLeft": "دقائق متبقية",
+    "confirmingPleaseWait": "جارٍ تأكيد الحجز... الرجاء الانتظار",
+    "confirmAndPay": "تأكيد والدفع لموعدك",
+    "payLatestOneHourBefore": "يرجى دفع المبلغ على الأقل قبل ساعة واحدة من موعدك.",
+    "enterDiscountCode": "أدخل رمز الخصم",
+    "apply": "تطبيق",
+    "discountCodeLabel": "هل لديك رمز خصم؟",
+    "addDiscountLater": "ستتمكن من تطبيق رمز الخصم عندما تختار الدفع لاحقًا.",
+    "discountLoading": "جارٍ تطبيق رمز الخصم...",
+    "calculatingPrice": "جارٍ حساب السعر..."
 },
   "AvailabilityPage": {
     "recurringAvailableTimes": "أوقات متاحة متكررة",
@@ -288,7 +295,8 @@
     "duration": "المدة:",
     "minutes": "دقائق",
     "amountPaid": "المبلغ المدفوع:",
-    "receiveConfirmation": "ستتلقى رسالة تأكيد بالبريد الإلكتروني تحتوي على تفاصيل الموعد."
+    "receiveConfirmation": "ستتلقى رسالة تأكيد بالبريد الإلكتروني تحتوي على تفاصيل الموعد.",
+    "loadingAmountPaid": "جاري تحميل المبلغ المدفوع..."
   },
   "ErrorMessages": {
     "invalidFields": "حقول غير صالحة!",
@@ -320,7 +328,13 @@
     "appointmentAlreadyCompleted": "الموعد قد تم اكتماله بالفعل",
     "failedToUpdateTherapistProfile": "فشل في تحديث ملف المعالج",
     "failedToUploadProfileImage": "فشل في تحميل صورة الملف الشخصي",
-    "appointmentUpdateFailed": "فشل تحديث الموعد"
+    "appointmentUpdateFailed": "فشل تحديث الموعد",
+    "invalidDiscountCode": "رمز الخصم غير صالح",
+"discountCodeNotStarted": "رمز الخصم لم يبدأ بعد",
+"missingDiscountCode": "رمز الخصم مفقود",
+"discountCodeExpired": "رمز الخصم منتهي الصلاحية",
+"firstTimeUserOnly": "للمستخدمين لأول مرة فقط",
+"redeemedCodeLimitReached": "تم الوصول إلى الحد الأقصى لاستخدام رمز الخصم"
   },
   "SuccessMessages": {
     "activateLinkSent": "تم إرسال رابط لتفعيل حسابك إلى البريد الإلكتروني المقدم",
@@ -341,7 +355,12 @@
     "therapistProfileUpdated": "تم تحديث ملف المعالج",
     "profileImageUploaded": "تم تحميل صورة الملف الشخصي",
     "appointmentReserved": "تم حجز الموعد مؤقتًا",
-    "bookingConfirmed": "تم تأكيد الحجز"
+    "bookingConfirmed": "تم تأكيد الحجز",
+    "discountCodeCreated": "تم إنشاء رمز الخصم",
+"discountCodeDeleted": "تم حذف رمز الخصم",
+"discountCodeValid": "رمز الخصم صالح",
+"discountCodeApplied": "تم تطبيق رمز الخصم",
+"discountLoading": "جارٍ تطبيق رمز الخصم..."
   },
   "AppointmentAction": {
     "therapySessionWith": "جلسة علاجية مع"

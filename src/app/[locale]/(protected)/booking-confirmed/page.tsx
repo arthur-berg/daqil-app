@@ -36,10 +36,6 @@ const BookingConfirmedPage = async ({
             <span className="font-semibold">{t("duration")}</span>{" "}
             {appointment.durationInMinutes} {t("minutes")}
           </p>
-          <p className="mb-4">
-            <span className="font-semibold">{t("amountToBePaid")}</span>{" "}
-            {appointment.price} {appointment.currency}
-          </p>
         </div>
         <p className="text-gray-500 mt-4">{t("receiveConfirmation")}</p>
       </div>

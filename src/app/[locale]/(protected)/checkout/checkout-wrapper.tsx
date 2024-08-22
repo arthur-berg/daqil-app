@@ -168,9 +168,16 @@ const CheckoutWrapper = ({
           <p>
             {t("duration")}: {appointmentType.durationInMinutes} {t("minutes")}
           </p>
+
           <p>
-            {t("price")}: {currencyToSymbol(appointmentType.currency)}
-            {finalAmount}
+            {discountLoading ? (
+              t("calculatingPrice")
+            ) : (
+              <>
+                {t("price")}: {currencyToSymbol(appointmentType.currency)}
+                {finalAmount}
+              </>
+            )}
           </p>
         </div>
 
@@ -183,9 +190,9 @@ const CheckoutWrapper = ({
           </div>
         ) : hasSavedPaymentMethod ? (
           <>
-            <div className="mb-6">
+            <div className="mb-8">
               <Label htmlFor="discountCode">{t("discountCodeLabel")}</Label>
-              <div className="flex justify-center space-x-2 mt-2">
+              <div className="flex justify-center space-x-2 mt-4">
                 <Input
                   id="discountCode"
                   value={discountCode}
@@ -219,7 +226,7 @@ const CheckoutWrapper = ({
           </>
         ) : (
           <>
-            <div className="mb-6">
+            <div className="mb-8">
               <h3 className="text-xl font-semibold mb-4">
                 {t("whenDoYouWantToPay")}
               </h3>
@@ -244,28 +251,29 @@ const CheckoutWrapper = ({
                 </RadioGroup>
               </div>
             </div>
-            <div className="mb-6">
-              <Label className="block" htmlFor="discountCode">
-                {t("discountCodeLabel")}
-              </Label>
-              <div className="inline-flex justify-center space-x-2 mt-2">
-                <Input
-                  id="discountCode"
-                  value={discountCode}
-                  onChange={(e) => setDiscountCode(e.target.value)}
-                  placeholder={t("enterDiscountCode")}
-                  disabled={loading || isPending}
-                />
-                <Button
-                  onClick={handleApplyDiscount}
-                  disabled={loading || isPending}
-                >
-                  {t("apply")}
-                </Button>
-              </div>
-            </div>
+
             {paymentOption === "payBefore" ? (
               <>
+                <div className="mb-6">
+                  <Label className="block" htmlFor="discountCode">
+                    {t("discountCodeLabel")}
+                  </Label>
+                  <div className="inline-flex justify-center space-x-2 mt-4">
+                    <Input
+                      id="discountCode"
+                      value={discountCode}
+                      onChange={(e) => setDiscountCode(e.target.value)}
+                      placeholder={t("enterDiscountCode")}
+                      disabled={loading || isPending}
+                    />
+                    <Button
+                      onClick={handleApplyDiscount}
+                      disabled={loading || isPending}
+                    >
+                      {t("apply")}
+                    </Button>
+                  </div>
+                </div>
                 <Elements
                   stripe={stripePromise}
                   options={{
@@ -279,7 +287,7 @@ const CheckoutWrapper = ({
                     setCustomerSessionClientSecret={
                       setCustomerSessionClientSecret
                     }
-                    amount={appointmentType.price}
+                    amount={finalAmount}
                     appointmentId={appointmentId}
                   />
                 </Elements>
@@ -287,6 +295,7 @@ const CheckoutWrapper = ({
             ) : (
               <div>
                 <p className="mb-4">{t("payLatestOneHourBefore")}</p>
+                <p className="mb-4">{t("addDiscountLater")}</p>
                 <Button onClick={handlePayLater} disabled={isPending}>
                   {t("confirmAndPayLater")}
                 </Button>

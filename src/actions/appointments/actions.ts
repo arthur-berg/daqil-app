@@ -438,6 +438,7 @@ export const scheduleAppointment = async (
   }
   if ("credits" in appointmentType) {
     appointmentCost.credits = appointmentType.credits;
+    appointmentCost.price = appointmentType.price;
   }
 
   const endDate = new Date(

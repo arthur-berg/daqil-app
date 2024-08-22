@@ -50,7 +50,7 @@ const Checkout = ({
       elements,
       clientSecret,
       confirmParams: {
-        return_url: `${process.env.NEXT_PUBLIC_APP_URL}/payment-success?appointmentId=${appointmentId}`,
+        return_url: `${process.env.NEXT_PUBLIC_APP_URL}/payment-success?appointmentId=${appointmentId}&amountPaid=${amount}`,
       },
     });
 

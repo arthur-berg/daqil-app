@@ -4,10 +4,16 @@ import { useTranslations } from "next-intl";
 import { format } from "date-fns";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import { convertToSubcurrency } from "@/utils";
+import { convertToSubcurrency, currencyToSymbol } from "@/utils";
 import Checkout from "@/components/checkout";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { BeatLoader } from "react-spinners";
+import { createPaymentIntent } from "@/actions/stripe";
+import { useToast } from "@/components/ui/use-toast";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { checkDiscountCodeValidity } from "@/actions/discount-code";
 
 if (process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY === undefined) {
   throw new Error("NEXT_PUBLIC_STRIPE_PUBLIC_KEY is not defined");
@@ -28,26 +34,70 @@ const CheckoutWrapper = ({
 }) => {
   const t = useTranslations("Checkout");
   const [clientSecret, setClientSecret] = useState("");
+  const [isPending, startTransition] = useTransition();
+  const { toast } = useToast();
   const [customerSessionClientSecret, setCustomerSessionClientSecret] =
     useState("");
+  const [loading, setLoading] = useState(true);
+  const [discountLoading, setDiscountLoading] = useState(false);
+  const [discountCodeApplied, setDiscountCodeApplied] = useState(false);
+  const [discountCode, setDiscountCode] = useState("");
+  const [finalAmount, setFinalAmount] = useState(appointmentType.price);
 
   useEffect(() => {
-    fetch(`/api/payment/create-payment-intent`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        appointmentTypeId: appointmentType._id,
-        appointmentId: appointmentId,
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setClientSecret(data.clientSecret);
-        setCustomerSessionClientSecret(data.customerSessionClientSecret);
-      });
+    setLoading(true);
+
+    startTransition(async () => {
+      const data = await createPaymentIntent(
+        appointmentType._id,
+        appointmentId
+      );
+
+      setClientSecret(data.clientSecret);
+      setCustomerSessionClientSecret(data.customerSessionClientSecret);
+      if (data.error) {
+        toast({ title: data.error, variant: "destructive" });
+      }
+      setLoading(false);
+    });
   }, [appointmentType.price]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (!discountCodeApplied) return;
+    setDiscountLoading(true);
+    startTransition(async () => {
+      const data = await createPaymentIntent(
+        appointmentType._id,
+        appointmentId,
+        discountCode
+      );
+
+      if (data.discountCodeError || data.error) {
+        toast({ title: data.error, variant: "destructive" });
+      }
+      if (data.discountCodeSuccess) {
+        toast({ title: data.discountCodeSuccess, variant: "success" });
+        setFinalAmount(data.finalAmount);
+      }
+      setClientSecret(data.clientSecret);
+      setCustomerSessionClientSecret(data.customerSessionClientSecret);
+
+      setDiscountLoading(false);
+    });
+  }, [discountCodeApplied]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleApplyDiscount = () => {
+    startTransition(async () => {
+      const data = await checkDiscountCodeValidity(discountCode);
+      if (data.success) {
+        setDiscountCodeApplied(true);
+      }
+      if (data.error) {
+        setDiscountCodeApplied(false);
+        toast({ title: data.error, variant: "destructive" });
+      }
+    });
+  };
 
   return (
     <>
@@ -63,28 +113,62 @@ const CheckoutWrapper = ({
           <p>
             {t("duration")}: {appointmentType.durationInMinutes} {t("minutes")}
           </p>
+          <p>
+            {discountLoading ? (
+              t("calculatingPrice")
+            ) : (
+              <>
+                {t("price")}: {currencyToSymbol(appointmentType.currency)}
+                {finalAmount}
+              </>
+            )}
+          </p>
         </div>
-        {!clientSecret ? (
+        {loading || discountLoading ? (
           <div>
             <BeatLoader />
-            <div className="text-lg font-medium ">{t("loadingCheckout")}</div>
+            <div className="text-lg font-medium ">
+              {discountLoading ? t("discountLoading") : t("loadingCheckout")}
+            </div>
           </div>
         ) : (
-          <Elements
-            stripe={stripePromise}
-            options={{
-              customerSessionClientSecret,
-              clientSecret,
-            }}
-          >
-            <Checkout
-              clientSecret={clientSecret}
-              setClientSecret={setClientSecret}
-              setCustomerSessionClientSecret={setCustomerSessionClientSecret}
-              amount={appointmentType.price}
-              appointmentId={appointmentId}
-            />
-          </Elements>
+          <>
+            <div className="mb-8">
+              <Label htmlFor="discountCode" className="block">
+                {t("discountCodeLabel")}
+              </Label>
+              <div className="inline-flex justify-center space-x-2 mt-4">
+                <Input
+                  id="discountCode"
+                  value={discountCode}
+                  onChange={(e) => setDiscountCode(e.target.value)}
+                  placeholder={t("enterDiscountCode")}
+                  disabled={loading || isPending}
+                />
+                <Button
+                  onClick={handleApplyDiscount}
+                  disabled={loading || isPending}
+                >
+                  {t("apply")}
+                </Button>
+              </div>
+            </div>
+            <Elements
+              stripe={stripePromise}
+              options={{
+                customerSessionClientSecret,
+                clientSecret,
+              }}
+            >
+              <Checkout
+                clientSecret={clientSecret}
+                setClientSecret={setClientSecret}
+                setCustomerSessionClientSecret={setCustomerSessionClientSecret}
+                amount={finalAmount}
+                appointmentId={appointmentId}
+              />
+            </Elements>
+          </>
         )}
       </div>
     </>

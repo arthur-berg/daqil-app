@@ -48,6 +48,7 @@ export const createPaymentIntent = async (
         console.log("finalAmount", finalAmount);
         trackDiscountCodeRedeemed = track;
         discountCodeId = id;
+        console.log("id", id);
       }
     }
 
@@ -68,8 +69,10 @@ export const createPaymentIntent = async (
 
     if (trackDiscountCodeRedeemed && discountCodeId) {
       metadata["trackDiscountCodeRedeemed"] = trackDiscountCodeRedeemed;
-      metadata["discountCodeId"] = discountCode;
+      metadata["discountCodeId"] = discountCodeId.toString();
     }
+
+    console.log("metadata", metadata);
 
     const paymentIntent = await stripe.paymentIntents.create({
       amount: convertToSubcurrency(finalAmount),

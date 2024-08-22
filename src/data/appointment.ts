@@ -17,6 +17,24 @@ const getStructuredParticipantData = (appointment: any) => {
   return transformedParticipants;
 };
 
+export const getAppointmentByIdWithPolling = async (id: string) => {
+  const maxAttempts = 5;
+  const delay = (ms: number) =>
+    new Promise((resolve) => setTimeout(resolve, ms));
+
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    const appointment = (await Appointment.findById(id).lean().exec()) as any;
+
+    if (appointment && appointment.amountPaid) {
+      return appointment;
+    }
+
+    await delay(2000); // Wait 2 seconds before trying again
+  }
+
+  // If it still doesn't have amountPaid, return whatever was last fetched
+  return Appointment.findById(id).lean().exec();
+};
 export const getAppointmentById = async (id: string) => {
   try {
     const appointment = await Appointment.findById(id);

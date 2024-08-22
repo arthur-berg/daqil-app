@@ -2,11 +2,12 @@ import { getAppointmentById } from "@/data/appointment";
 import { MdCheckCircle } from "react-icons/md"; // Import a suitable icon
 import { format } from "date-fns"; // Assuming you have date-fns installed for date formatting
 import { getTranslations } from "next-intl/server";
+import { currencyToSymbol } from "@/utils";
 
 const PaymentSuccessPage = async ({
-  searchParams: { appointmentId },
+  searchParams: { appointmentId, amountPaid },
 }: {
-  searchParams: { appointmentId: string };
+  searchParams: { appointmentId: string; amountPaid: string };
 }) => {
   const appointment = await getAppointmentById(appointmentId);
 
@@ -48,7 +49,8 @@ const PaymentSuccessPage = async ({
           </p>
           <p className="mb-4">
             <span className="font-semibold">{t("amountPaid")}</span>{" "}
-            {appointment.price} {appointment.currency}
+            {currencyToSymbol(appointment.currency)}
+            {amountPaid}
           </p>
         </div>
         <p className="text-gray-500 mt-4">{t("receiveConfirmation")}</p>

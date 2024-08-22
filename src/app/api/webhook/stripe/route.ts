@@ -147,6 +147,7 @@ export async function POST(req: Request): Promise<NextResponse> {
             await Appointment.findByIdAndUpdate(appointmentId, {
               status: "confirmed",
               "payment.status": "paid",
+              amountPaid: amountPaid,
             });
 
             await sendPaidBookingConfirmationEmail(

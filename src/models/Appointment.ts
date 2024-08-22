@@ -46,6 +46,10 @@ const appointmentSchema = new Schema(
       type: String,
       default: "",
     },
+    amountPaid: {
+      type: Number,
+      required: false,
+    },
     price: {
       type: Number,
       required: false,
