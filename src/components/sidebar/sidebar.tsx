@@ -18,8 +18,8 @@ function SidebarToggle({ isOpen, setIsOpen }: SidebarToggleProps) {
       className={cn(
         "absolute top-[12px] z-20 transition-transform duration-300 ease-in-out",
         isOpen
-          ? "translate-x-0 right-[-16px]"
-          : "translate-x-[100%] sm:-right-[-32px] lg:-right-[-16px]"
+          ? "translate-x-0 right-[-16px] rtl:right-[190px] rtl:lg:right-[240px]"
+          : "translate-x-[100%] sm:right-[40px] lg:right-[16px] rtl:lg:right-[105px]"
       )}
     >
       <Button
@@ -35,6 +35,7 @@ function SidebarToggle({ isOpen, setIsOpen }: SidebarToggleProps) {
           className={cn(
             "h-4 w-4 transition-transform ease-in-out duration-700",
             isOpen === false ? "rotate-180" : "rotate-0"
+            // Ensures the icon points correctly in RTL mode
           )}
         />
       </Button>
@@ -91,17 +92,17 @@ export function Sidebar({
             }
           }}
         />
-        <div className="flex gap-x-2 container justify-end">
+        <div className="inline-flex gap-x-2 container justify-end">
           <LanguageSwitcher />
         </div>
       </nav>
       <aside
         ref={sidebarRef}
         className={cn(
-          "fixed bg-secondary top-0 left-0 rtl:left-auto rtl:right-0 z-20 h-screen lg:transition-transform lg:ease-in-out lg:duration-300",
+          "fixed bg-secondary top-0 left-0 rtl:right-0 rtl:left-auto z-20 h-screen lg:transition-transform lg:ease-in-out lg:duration-300",
           isOpen
-            ? "translate-x-0 w-52 lg:w-64"
-            : "-translate-x-full lg:w-[90px] lg:translate-x-0"
+            ? "translate-x-0 w-52 lg:w-64 rtl:translate-x-0"
+            : "-translate-x-full lg:w-[90px] lg:translate-x-0 rtl:translate-x-full rtl:lg:translate-x-0"
         )}
       >
         <SidebarToggle isOpen={isOpen} setIsOpen={setIsOpen} />
@@ -112,7 +113,9 @@ export function Sidebar({
           <div
             className={cn(
               "w-full transition-opacity ease-in-out duration-300",
-              isOpen ? "translate-x-0 opacity-100" : "-translate-x-96 opacity-0"
+              isOpen
+                ? "translate-x-0 opacity-100 rtl:translate-x-0"
+                : "-translate-x-96 opacity-0 rtl:translate-x-96"
             )}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}

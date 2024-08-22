@@ -21,7 +21,7 @@ const LanguageSwitcher = ({ isOpen }: { isOpen?: boolean }) => {
   return (
     <Button
       variant="ghost"
-      className="w-full justify-end lg:justify-start h-10  mb-1"
+      className="justify-end lg:justify-start h-10  mb-1"
       onClick={() => handleLocaleChange(selectedLocale === "en" ? "ar" : "en")}
     >
       <span className={cn(isOpen === false ? "" : "mr-4 rtl:mr-0 rtl:ml-4")}>
