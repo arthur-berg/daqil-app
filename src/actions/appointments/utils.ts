@@ -104,13 +104,8 @@ export const checkTherapistAvailability = async (
     return { available: true };
   }
 
-  const populatedAppointments = await User.populate(appointmentEntry, {
-    path: "bookedAppointments temporarilyReservedAppointments",
-    populate: { path: "hostUserId participants.userId" },
-  });
-
   const { bookedAppointments, temporarilyReservedAppointments } =
-    populatedAppointments;
+    appointmentEntry;
 
   if (
     checkForOverlappingAppointments(

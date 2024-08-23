@@ -254,7 +254,7 @@ export const reserveAppointment = async (
   ]);
   const client = await requireAuth([UserRole.CLIENT, UserRole.ADMIN]);
 
-  const therapist = (await getUserById(therapistId)) as any;
+  const therapist = (await getTherapistById(therapistId)) as any;
 
   if (!therapist) {
     return { error: ErrorMessages("therapistNotExist") };
