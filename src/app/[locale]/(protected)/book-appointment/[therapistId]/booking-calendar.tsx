@@ -1,7 +1,7 @@
 "use client";
 import { Calendar } from "@/components/ui/calendar";
 import { useState, useTransition } from "react";
-import { format, set } from "date-fns";
+import { addDays, format, isAfter, isBefore, set } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { reserveAppointment } from "@/actions/appointments/actions";
 import { Link, useRouter } from "@/navigation";
@@ -72,6 +72,8 @@ const BookingCalendar = ({
     seconds: 0,
     milliseconds: 0,
   });
+
+  const maxDate = addDays(today, 30);
 
   const groupTimeSlots = (slots: { start: Date; end: Date }[]) => {
     const morning = slots.filter((slot) => slot.start.getHours() < 12);
@@ -176,6 +178,9 @@ const BookingCalendar = ({
                         setTimeSlots(date);
                       }
                     }}
+                    disabled={(date) =>
+                      isBefore(date, today) || isAfter(date, maxDate)
+                    }
                     className="rounded-md border h-full w-full flex"
                     classNames={{
                       months:
@@ -239,6 +244,9 @@ const BookingCalendar = ({
                       setTimeSlots(date);
                     }
                   }}
+                  disabled={(date) =>
+                    isBefore(date, today) || isAfter(date, maxDate)
+                  }
                   className="rounded-md border h-full w-full flex"
                   classNames={{
                     months:
