@@ -12,16 +12,22 @@ const AdminPage = async () => {
           <p>🔑 {t("adminDashboard")}</p>
         </CardHeader>
         <CardContent className="space-y-4">
-          <Link href="/admin/therapists">
-            <div className="p-4 border rounded-md shadow-md hover:bg-gray-100 transition">
-              <p className="text-lg font-medium">{t("manageTherapists")}</p>
-            </div>
-          </Link>
-          <Link href="/admin/discount-codes">
-            <div className="p-4 border rounded-md shadow-md hover:bg-gray-100 transition">
-              <p className="text-lg font-medium">{t("manageDiscountCodes")}</p>
-            </div>
-          </Link>
+          <div>
+            <Link href="/admin/therapists">
+              <div className="p-4 border rounded-md shadow-md hover:bg-gray-100 transition">
+                <p className="text-lg font-medium">{t("manageTherapists")}</p>
+              </div>
+            </Link>
+          </div>
+          <div>
+            <Link href="/admin/discount-codes">
+              <div className="p-4 border rounded-md shadow-md hover:bg-gray-100 transition">
+                <p className="text-lg font-medium">
+                  {t("manageDiscountCodes")}
+                </p>
+              </div>
+            </Link>
+          </div>
         </CardContent>
       </Card>
     </div>

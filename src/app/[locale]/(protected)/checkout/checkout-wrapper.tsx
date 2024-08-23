@@ -124,6 +124,7 @@ const CheckoutWrapper = ({
 
   const renderer = ({ minutes, seconds, completed }: any) => {
     if (completed) {
+      router.push("/book-appointment");
       return <span>{t("paymentExpired")}</span>;
     } else {
       return (
