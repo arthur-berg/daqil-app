@@ -1,12 +1,11 @@
 "use client";
 
 import * as z from "zod";
-import { useEffect, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SetupAccountSchema } from "@/schemas";
 import { Input } from "@/components/ui/input";
-import { Calendar } from "@/components/ui/calendar";
 import {
   Form,
   FormControl,
@@ -24,18 +23,10 @@ import { useSearchParams } from "next/navigation";
 import { setupAccount } from "@/actions/setup-account";
 import { login } from "@/actions/login";
 import { useLocale, useTranslations } from "next-intl";
-import {
-  Select,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"; // Import Select component
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { format } from "date-fns";
 import { cn } from "@/lib/utils";
-import { CalendarIcon } from "@radix-ui/react-icons";
-import { SelectContent } from "@radix-ui/react-select";
 import { PhoneInput } from "../ui/phone-input";
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
+import { Label } from "../ui/label";
 
 export const SetupForm = () => {
   const [error, setError] = useState<string | undefined>("");
@@ -161,28 +152,29 @@ export const SetupForm = () => {
               control={form.control}
               name="personalInfo.sex"
               render={({ field }) => (
-                <FormItem className="relative">
+                <FormItem className="flex flex-col">
                   <FormLabel>{t("sex")}</FormLabel>
 
-                  <Select
-                    disabled={isPending}
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                    defaultOpen
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder={t("selectGender")} />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent className="bg-secondary shadow-md w-full">
-                      <SelectItem value="MALE" className="w-full">
-                        {t("male")}
-                      </SelectItem>
-                      <SelectItem value="FEMALE">{t("female")}</SelectItem>
-                      <SelectItem value="OTHER">{t("other")}</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <FormControl>
+                    <RadioGroup
+                      value={field.value} // Use the current value from the form
+                      onValueChange={field.onChange} // Update the form state on change
+                      className="flex flex-col space-y-2" // Add some spacing between radio items
+                    >
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="MALE" id="male" />
+                        <Label htmlFor="male">{t("male")}</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="FEMALE" id="female" />
+                        <Label htmlFor="female">{t("female")}</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="OTHER" id="other" />
+                        <Label htmlFor="other">{t("other")}</Label>
+                      </div>
+                    </RadioGroup>
+                  </FormControl>
 
                   <FormMessage />
                 </FormItem>
