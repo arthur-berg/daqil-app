@@ -111,6 +111,11 @@ const userSchema = new Schema(
       type: String,
       required: false,
     },
+    personalInfo: {
+      phoneNumber: { type: String, required: false },
+      sex: { type: String, enum: ["MALE", "FEMALE", "OTHER"] },
+      dateOfBirth: { type: Date, required: false },
+    },
     therapistWorkProfile: {
       type: {
         en: {

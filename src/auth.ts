@@ -69,6 +69,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         session.user.stripePaymentMethodId =
           token.stripePaymentMethodId as string;
         session.user.appointments = token.appointments as any;
+        session.user.personalInfo = token.personalInfo as any;
         if (
           session.user.role === "THERAPIST" ||
           session.user.role === "ADMIN"
@@ -102,6 +103,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       token.stripeCustomerId = existingUser.stripeCustomerId;
       token.stripePaymentMethodId = existingUser.stripePaymentMethodId;
       token.appointments = existingUser.appointments;
+      token.personalInfo = existingUser.personalInfo;
       if (existingUser.role === "THERAPIST" || existingUser.role === "ADMIN") {
         token.availableTimes = existingUser.availableTimes;
       }

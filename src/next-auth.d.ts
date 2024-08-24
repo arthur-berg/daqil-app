@@ -13,13 +13,18 @@ export type ExtendedUser = DefaultSession["user"] & {
   appointments: string[];
   stripePaymentMethodId?: string;
   stripeCustomerId?: string;
+  personalInfo: {
+    phoneNumber: string;
+    sex: "MALE" | "FEMALE" | "OTHER";
+    dateOfBirth: Date;
+  };
   selectedTherapistHistory?: {
     therapist: string;
     startDate: Date;
     endDate?: Date;
     appointmentCount: number;
     current: boolean;
-  };
+  }[];
   selectedTherapist?: string;
   assignedClients?: string[];
 

@@ -60,8 +60,6 @@ const SettingsForm = () => {
     defaultValues: {
       password: undefined,
       newPassword: undefined,
-      firstName: user?.firstName || undefined,
-      lastName: user?.lastName || undefined,
       email: user?.email || undefined,
       role: user?.role || undefined,
       isTwoFactorEnabled: user?.isTwoFactorEnabled || undefined,
@@ -95,32 +93,6 @@ const SettingsForm = () => {
         <Form {...form}>
           <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
             <div className="space-y-4">
-              <FormField
-                control={form.control}
-                name="firstName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("firstNameLabel")}</FormLabel>
-                    <FormControl>
-                      <Input {...field} disabled={isPending} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="lastName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("lastNameLabel")}</FormLabel>
-                    <FormControl>
-                      <Input {...field} disabled={isPending} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
               {user?.isOAuth === false && (
                 <>
                   <FormField
@@ -172,69 +144,6 @@ const SettingsForm = () => {
                   />
                 </>
               )}
-              {/*  <FormField
-                control={form.control}
-                name="role"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("roleLabel")}</FormLabel>
-                    <Select
-                      disabled={isPending}
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a role" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value={UserRole.ADMIN}>Admin</SelectItem>
-                        <SelectItem value={UserRole.CLIENT}>Client</SelectItem>
-                        <SelectItem value={UserRole.THERAPIST}>
-                          Therapist
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              /> */}
-
-              {/*   {user?.role === "ADMIN" ? (
-                <FormField
-                  control={form.control}
-                  name="role"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t("roleLabel")}</FormLabel>
-                      <Select
-                        disabled={isPending}
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select a role" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value={UserRole.ADMIN}>Admin</SelectItem>
-                          <SelectItem value={UserRole.USER}>User</SelectItem>
-                          <SelectItem value={UserRole.THERAPIST}>
-                            Therapist
-                          </SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              ) : (
-                <div className="text-lg">
-                  Role: <span className="font-bold">{getRole(user?.role)}</span>
-                </div>
-              )} */}
 
               {user?.isOAuth === false && (
                 <FormField

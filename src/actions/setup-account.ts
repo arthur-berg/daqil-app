@@ -46,6 +46,7 @@ const verifyPasswordAndLogin = async ({
     currentPassword,
     existingUser.password
   );
+
   if (!passwordsMatch) {
     return { error: ErrorMessages("incorrectPassword") };
   }
@@ -72,11 +73,20 @@ export const setupAccount = async (
   ]);
   const validatedFields = SetupAccountSchema.safeParse(values);
 
+  console.log("validatedFields", validatedFields);
+
   if (!validatedFields.success) {
     return { error: ErrorMessages("invalidFields") };
   }
-  const { email, password, firstName, lastName, currentPassword } =
-    validatedFields.data;
+
+  const {
+    email,
+    password,
+    firstName,
+    lastName,
+    currentPassword,
+    personalInfo,
+  } = validatedFields.data;
 
   const existingUser = await getUserByEmail(email);
 
@@ -123,6 +133,7 @@ export const setupAccount = async (
     isAccountSetupDone: true,
     firstName,
     lastName,
+    personalInfo, // Update personalInfo as an object
   });
 
   await VerificationToken.findByIdAndDelete(existingToken._id);

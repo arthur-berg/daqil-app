@@ -62,8 +62,6 @@ export const DiscountCodeSchema = z
 
 export const SettingsSchema = z
   .object({
-    firstName: z.optional(z.string()),
-    lastName: z.optional(z.string()),
     isTwoFactorEnabled: z.optional(z.boolean()),
     role: z.enum([UserRole.ADMIN, UserRole.CLIENT, UserRole.THERAPIST]),
     email: z.optional(z.string().email()),
@@ -282,6 +280,38 @@ export const LoginSchema = z.object({
   code: z.optional(z.string()),
 });
 
+import { PhoneNumberUtil } from "google-libphonenumber";
+
+const phoneUtil = PhoneNumberUtil.getInstance();
+
+// Custom function to validate date in YYYY/MM/DD format
+const isValidDate = (dateString: string) => {
+  const regex = /^\d{4}\/\d{2}\/\d{2}$/; // Regex to match YYYY/MM/DD format
+  if (!regex.test(dateString)) {
+    return false;
+  }
+
+  const [year, month, day] = dateString.split("/").map(Number);
+  const date = new Date(year, month - 1, day); // JavaScript months are 0-based
+  return (
+    date.getFullYear() === year &&
+    date.getMonth() === month - 1 &&
+    date.getDate() === day
+  );
+};
+
+const isValidPhoneNumber = (phoneNumber: string) => {
+  try {
+    // Parsing the phone number
+    const parsedNumber = phoneUtil.parse(phoneNumber);
+    // Validating the parsed phone number
+    return phoneUtil.isValidNumber(parsedNumber);
+  } catch (error) {
+    // Return false if parsing or validation fails
+    return false;
+  }
+};
+
 export const SetupAccountSchema = z.object({
   email: z.string().email({ message: "Email is required" }),
   password: z.string().min(6, {
@@ -293,6 +323,15 @@ export const SetupAccountSchema = z.object({
   }),
   lastName: z.string().min(1, {
     message: "Last name is required",
+  }),
+  personalInfo: z.object({
+    phoneNumber: z
+      .string()
+      .refine(isValidPhoneNumber, { message: "Invalid phone number" }),
+    sex: z.enum(["MALE", "FEMALE", "OTHER"]), // Optional sex field with specific enum values
+    dateOfBirth: z.string().regex(/^\d{4}\/\d{2}\/\d{2}$/, {
+      message: "Invalid date format. Use YYYY/MM/DD.",
+    }),
   }),
 });
 

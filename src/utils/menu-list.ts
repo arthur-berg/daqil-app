@@ -85,6 +85,13 @@ export const getClientMenuList = (pathname: string, t: any): Group[] => {
           submenus: [],
         }, */
         {
+          href: "/my-profile",
+          label: t("myProfile"),
+          active: pathname.includes("/my-profile"),
+          icon: PersonIcon,
+          submenus: [],
+        },
+        {
           href: "/settings",
           label: t("settings"),
           active: pathname.includes("/settings"),
