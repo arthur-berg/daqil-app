@@ -5,16 +5,21 @@ import useRoom from "@/hooks/use-room";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import useScreenSharing from "@/hooks/use-screen-sharing";
 import ToolBar from "@/app/[locale]/(protected)/appointments/[appointmentId]/toolbar";
+import { useToast } from "@/components/ui/use-toast";
+import { useCurrentRole } from "@/hooks/use-current-role";
+import { useRouter } from "@/navigation";
 
 const VideoRoom = ({
   sessionData,
 }: {
-  sessionData: {
-    sessionId?: string;
-    token?: string;
-    appId?: string;
-    roomName: string;
-  };
+  sessionData:
+    | {
+        sessionId?: string;
+        token?: string;
+        appId?: string;
+        roomName: string;
+      }
+    | { error: string };
 }) => {
   const {
     createCall,
@@ -30,10 +35,21 @@ const VideoRoom = ({
   const roomContainer = useRef<any>(null);
   const effectRun = useRef(false);
   const user = useCurrentUser();
+  const { isClient } = useCurrentRole();
+  const { toast } = useToast();
+  const router = useRouter();
 
   const userName = `${user?.firstName} ${user?.lastName}`;
 
   useEffect(() => {
+    if ("error" in sessionData) {
+      toast({ variant: "destructive", title: sessionData.error });
+      const redirectUrl = isClient
+        ? "/appointments"
+        : "/therapist/appointments";
+      router.push(redirectUrl);
+      return;
+    }
     if (!effectRun.current && sessionData) {
       effectRun.current = true;
       const credentials = {
@@ -49,7 +65,9 @@ const VideoRoom = ({
         room.leave();
       }
     };
-  }, [createCall, sessionData, user, userName, room]);
+  }, [createCall, sessionData, user, userName, room, isClient, router, toast]);
+
+  if ("error" in sessionData) return;
 
   return (
     <div className="h-screen w-full flex flex-col p-4 box-border">

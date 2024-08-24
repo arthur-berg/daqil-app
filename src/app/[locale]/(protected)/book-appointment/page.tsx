@@ -2,9 +2,9 @@ import { getAppointmentTypeById } from "@/data/appointment-types";
 import SelectedTherapist from "./selected-therapist";
 import { Button } from "@/components/ui/button";
 
-import { getTherapistById } from "@/data/user";
+import { getClientByIdAppointments, getTherapistById } from "@/data/user";
 import { getCurrentUser } from "@/lib/auth";
-import { Link } from "@/navigation";
+import { Link, redirect } from "@/navigation";
 import { getTranslations } from "next-intl/server";
 import { APPOINTMENT_TYPE_ID } from "@/contants/config";
 
@@ -13,7 +13,16 @@ const BookAppointmentPage = async ({
 }: {
   params: { locale: string };
 }) => {
+  const ErrorMessages = await getTranslations("ErrorMessages");
+
   const user = await getCurrentUser();
+
+  if (!user) {
+    return ErrorMessages("userNotFound");
+  }
+  const appointmentType = await getAppointmentTypeById(APPOINTMENT_TYPE_ID);
+
+  const client = await getClientByIdAppointments(user?.id);
 
   const selectedTherapist = (
     user?.selectedTherapist
@@ -21,9 +30,40 @@ const BookAppointmentPage = async ({
       : null
   ) as any;
 
-  const t = await getTranslations("BookAppointmentPage");
+  // Function to find a valid temporarily reserved appointment
+  const findValidTemporarilyReservedAppointment = (client: any) => {
+    for (const appointment of client.appointments) {
+      const validAppointment = appointment.temporarilyReservedAppointments.find(
+        (reservedAppointment: any) =>
+          reservedAppointment.payment.paymentExpiryDate > new Date()
+      );
 
-  const appointmentType = await getAppointmentTypeById(APPOINTMENT_TYPE_ID);
+      if (validAppointment) {
+        return {
+          appointment: validAppointment,
+          date: appointment.date,
+        };
+      }
+    }
+    return null; // Return null if no valid appointment is found
+  };
+
+  // Retrieve the valid appointment
+  const validAppointmentData = findValidTemporarilyReservedAppointment(client);
+  if (validAppointmentData) {
+    const { appointment, date } = validAppointmentData;
+    // Extract necessary details from the found appointment
+    const appointmentTypeId = appointmentType._id; // Assume this field exists
+    const appointmentId = appointment._id; // MongoDB document ID
+    const therapistId = appointment.hostUserId; // Assume this field exists
+
+    // Construct the redirect URL with query params
+    const redirectUrl = `/checkout?appointmentTypeId=${appointmentTypeId}&date=${date}&appointmentId=${appointmentId}&therapistId=${therapistId}`;
+
+    redirect(redirectUrl);
+  }
+
+  const t = await getTranslations("BookAppointmentPage");
 
   return (
     <>

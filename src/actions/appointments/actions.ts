@@ -126,6 +126,75 @@ export const cancelAppointment = async (
   }
 };
 
+export const cancelTempReservation = async (appointmentId: string) => {
+  const [SuccessMessages, ErrorMessages] = await Promise.all([
+    getTranslations("SuccessMessages"),
+    getTranslations("ErrorMessages"),
+  ]);
+
+  // Start a session for the transaction
+  const session = await mongoose.startSession();
+
+  try {
+    session.startTransaction();
+
+    const user = await requireAuth([UserRole.CLIENT]);
+
+    const appointment = await Appointment.findById(appointmentId).session(
+      session
+    );
+    if (!appointment) {
+      return { error: ErrorMessages("appointmentNotFound") };
+    }
+
+    // Remove the appointmentId from the client's temporarilyReservedAppointments
+    await User.updateOne(
+      {
+        _id: user.id,
+        "appointments.temporarilyReservedAppointments": appointmentId,
+      },
+      {
+        $pull: {
+          "appointments.$.temporarilyReservedAppointments": appointmentId,
+        },
+      },
+      { session } // Include session in the update operation
+    );
+
+    // Remove the appointmentId from the therapist's temporarilyReservedAppointments
+    await User.updateOne(
+      {
+        _id: appointment.hostUserId,
+        "appointments.temporarilyReservedAppointments": appointmentId,
+      },
+      {
+        $pull: {
+          "appointments.$.temporarilyReservedAppointments": appointmentId,
+        },
+      },
+      { session } // Include session in the update operation
+    );
+
+    // Delete the appointment from the Appointment collection
+    await Appointment.findByIdAndDelete(appointmentId, { session });
+
+    // Commit the transaction
+    await session.commitTransaction();
+    session.endSession();
+
+    revalidatePath("/book-appointment");
+
+    return { success: SuccessMessages("reservationCancelled") };
+  } catch (error) {
+    // Abort the transaction if an error occurs
+    await session.abortTransaction();
+    session.endSession();
+
+    console.error("Error in cancelTempReservation:", error);
+    return { error: ErrorMessages("somethingWentWrong") };
+  }
+};
+
 // The function that handles the "Pay Later" logic
 export const confirmBookingPayLater = async (
   appointmentId: string,

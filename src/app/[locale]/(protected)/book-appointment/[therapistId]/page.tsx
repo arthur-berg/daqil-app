@@ -1,11 +1,13 @@
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { APPOINTMENT_TYPE_ID } from "@/contants/config";
 import { getAppointmentTypeById } from "@/data/appointment-types";
-import { getTherapistById } from "@/data/user";
+import { getClientByIdAppointments, getTherapistById } from "@/data/user";
 import { getTranslations } from "next-intl/server";
 import { FaUser } from "react-icons/fa";
 
 import BookingCalendar from "@/app/[locale]/(protected)/book-appointment/[therapistId]/booking-calendar";
+import { getCurrentUser } from "@/lib/auth";
+import { redirect } from "@/navigation";
 
 const TherapistUserProfile = async ({
   params,

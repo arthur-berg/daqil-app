@@ -2,6 +2,7 @@ import { getAppointmentTypeById } from "@/data/appointment-types";
 import CheckoutWrapper from "./checkout-wrapper";
 import { getAppointmentById } from "@/data/appointment";
 import { getTranslations } from "next-intl/server";
+import { redirect } from "@/navigation";
 
 const CheckoutPage = async ({
   searchParams: { appointmentTypeId, date, appointmentId, therapistId },
@@ -16,7 +17,9 @@ const CheckoutPage = async ({
   const appointment = await getAppointmentById(appointmentId);
   const t = await getTranslations("Checkout");
 
-  if (!appointment) return "No appointment found";
+  if (!appointment) {
+    return "No appointment found";
+  }
 
   const currentDate = new Date();
   const paymentExpiryDate = new Date(appointment.payment.paymentExpiryDate);

@@ -1,22 +1,23 @@
 "use client";
-
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useState, useTransition, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
 import { format } from "date-fns";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import { convertToSubcurrency, currencyToSymbol } from "@/utils";
+import { currencyToSymbol } from "@/utils";
 import Checkout from "@/components/checkout";
 import Countdown from "react-countdown";
 import { Label } from "@/components/ui/label";
-import { Link, useRouter } from "@/navigation";
+import { useRouter } from "@/navigation";
 import { RadioGroupItem, RadioGroup } from "@/components/ui/radio-group";
-import { confirmBookingPayLater } from "@/actions/appointments/actions";
+import {
+  cancelTempReservation,
+  confirmBookingPayLater,
+} from "@/actions/appointments/actions";
 import { useToast } from "@/components/ui/use-toast";
 import { BeatLoader } from "react-spinners";
-import { Input } from "@/components/ui/input"; // Import the Input component
-import { set } from "lodash";
+import { Input } from "@/components/ui/input";
 import { checkDiscountCodeValidity } from "@/actions/discount-code";
 import { createPaymentIntent } from "@/actions/stripe";
 
@@ -41,7 +42,6 @@ const CheckoutWrapper = ({
 }) => {
   const [hasSavedPaymentMethod, setHasSavedPaymentMethod] = useState(false);
   const [isPending, startTransition] = useTransition();
-  /*   const [isApplyDiscountPending, startApplyDiscountTransition] = useTransition(); */
   const [finalAmount, setFinalAmount] = useState(appointmentType.price);
   const t = useTranslations("Checkout");
   const [paymentOption, setPaymentOption] = useState<"payBefore" | "payAfter">(
@@ -52,11 +52,13 @@ const CheckoutWrapper = ({
     useState("");
   const [loading, setLoading] = useState(true);
   const [discountLoading, setDiscountLoading] = useState(false);
-  const { toast } = useToast();
+  const { toast, responseToast } = useToast();
   const router = useRouter();
 
   const [discountCode, setDiscountCode] = useState("");
   const [discountCodeApplied, setDiscountCodeApplied] = useState(false);
+  const [reservationExpired, setReservationExpired] = useState(false);
+  const [countdownCompleted, setCountdownCompleted] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -104,6 +106,29 @@ const CheckoutWrapper = ({
     });
   }, [discountCodeApplied]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  useEffect(() => {
+    if (countdownCompleted) {
+      setReservationExpired(true);
+    }
+  }, [countdownCompleted]);
+
+  useEffect(() => {
+    if (reservationExpired) {
+      const handleReservationExpiry = async () => {
+        startTransition(async () => {
+          const data = await cancelTempReservation(appointmentId);
+          if (data.success) {
+            router.push("/book-appointment");
+          } else if (data.error) {
+            toast({ title: data.error, variant: "destructive" });
+          }
+        });
+      };
+
+      handleReservationExpiry();
+    }
+  }, [reservationExpired]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const handlePayLater = () => {
     const appointmentDate = format(date, "yyyy-MM-dd");
     startTransition(async () => {
@@ -122,10 +147,10 @@ const CheckoutWrapper = ({
     });
   };
 
-  const renderer = ({ minutes, seconds, completed }: any) => {
+  const renderer = useCallback(({ minutes, seconds, completed }: any) => {
     if (completed) {
-      router.push("/book-appointment");
-      return <span>{t("paymentExpired")}</span>;
+      setCountdownCompleted(true);
+      return null;
     } else {
       return (
         <span>
@@ -133,7 +158,7 @@ const CheckoutWrapper = ({
         </span>
       );
     }
-  };
+  }, []);
 
   const handleApplyDiscount = () => {
     startTransition(async () => {
@@ -143,6 +168,18 @@ const CheckoutWrapper = ({
       }
       if (data.error) {
         setDiscountCodeApplied(false);
+        toast({ title: data.error, variant: "destructive" });
+      }
+    });
+  };
+
+  const handleCancelTempReservation = () => {
+    startTransition(async () => {
+      const data = await cancelTempReservation(appointmentId);
+      if (data.success) {
+        router.push("/book-appointment");
+      }
+      if (data.error) {
         toast({ title: data.error, variant: "destructive" });
       }
     });
@@ -178,13 +215,26 @@ const CheckoutWrapper = ({
 
   return (
     <>
-      <Link href="/book-appointment">
-        <Button variant="outline">{t("goBack")}</Button>
-      </Link>
+      <div className="flex justify-center">
+        <Button
+          disabled={isPending}
+          className="mb-4"
+          size="lg"
+          variant="destructive"
+          onClick={() => handleCancelTempReservation()}
+        >
+          {t("cancelReservation")}
+        </Button>
+      </div>
       <div className={`text-center`}>
         <div className="text-center mb-6">
           <p className="text-lg font-semibold">{t("weHaveReserved")}</p>
-          <Countdown date={paymentExpiryDate} renderer={renderer} />
+          {/* Use one minute in the future as expire date */}
+          {isPending ? (
+            ""
+          ) : (
+            <Countdown date={paymentExpiryDate} renderer={renderer} />
+          )}
         </div>
         <div className={`p-4 rounded-md mb-6`}>
           <h2 className="text-2xl font-bold">{t("appointmentDetails")}:</h2>

@@ -114,12 +114,32 @@ export const getClients = async (therapistId: string) => {
   }
 };
 
-export const getTherapistById = async (id: string) => {
+const getUserWithAppointments = async (id: string) => {
   try {
-    const therapist = await User.findById(id).populate([
+    const user = await User.findById(id).populate([
       "appointments.bookedAppointments",
       "appointments.temporarilyReservedAppointments",
     ]);
+
+    return user;
+  } catch {
+    return null;
+  }
+};
+
+export const getClientByIdAppointments = async (id: string) => {
+  try {
+    const client = await getUserWithAppointments(id);
+
+    return client;
+  } catch {
+    return null;
+  }
+};
+
+export const getTherapistById = async (id: string) => {
+  try {
+    const therapist = await getUserWithAppointments(id);
 
     return therapist;
   } catch {

@@ -187,7 +187,8 @@
      "discountCodeLabel": "Do you have a discount code?",
      "addDiscountLater": "You will be able to apply a discount code at the time of payment.",
      "discountLoading":"Applying discount code...",
-     "calculatingPrice": "Calculating price..."
+     "calculatingPrice": "Calculating price...",
+     "cancelReservation": "Cancel reservation"
   },
   "AvailabilityPage": {
     "recurringAvailableTimes": "Recurring available times",
@@ -363,7 +364,9 @@
     "missingDiscountCode": "Missing discount code",
     "discountCodeExpired": "Discount code expired",
     "firstTimeUserOnly": "First-time users only",
-    "redeemedCodeLimitReached": "Redeemed code limit reached"
+    "redeemedCodeLimitReached": "Redeemed code limit reached",
+    "videoMeetingOnlyAvailable": "Video meeting is only available between 20 minutes before the appointment starts and 15 minutes after it ends.",
+    "appointmentNotConfirmed": "The appointment is not confirmed."
   },
   "SuccessMessages": {
     "activateLinkSent": "A link to activate your account has been emailed to the address provided",

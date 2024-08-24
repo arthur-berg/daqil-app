@@ -5,68 +5,88 @@ import { getCurrentRole, requireAuth } from "@/lib/auth";
 import { createSessionAndToken, generateToken } from "@/lib/vonage";
 import Appointment from "@/models/Appointment";
 import VideoSession from "@/models/VideoSession";
+import { getTranslations } from "next-intl/server";
 
 if (!process.env.VONAGE_APP_ID) {
   throw new Error("Missing config values for env params VONAGE_APP_ID ");
 }
 
 export const getSessionData = async (appointmentId: string) => {
-  const user = await requireAuth(["THERAPIST", "CLIENT"]);
-  const { isTherapist, isClient } = await getCurrentRole();
+  const [SuccessMessages, ErrorMessages] = await Promise.all([
+    getTranslations("SuccessMessages"),
+    getTranslations("ErrorMessages"),
+  ]);
 
   try {
+    const user = await requireAuth(["THERAPIST", "CLIENT"]);
+    const { isTherapist, isClient } = await getCurrentRole();
+
+    const appointment = await Appointment.findById(appointmentId);
+    if (!appointment) {
+      return { error: ErrorMessages("appointmentNotFound") };
+    }
+
+    if (appointment.status !== "confirmed") {
+      // Return error if the appointment is not confirmed
+      return { error: ErrorMessages("appointmentNotConfirmed") };
+    }
+
+    const currentTime = new Date();
+    const startDate = new Date(appointment.startDate);
+    const endDate = new Date(appointment.endDate);
+
+    // Calculate the time windows
+    const timeBeforeStart = new Date(startDate.getTime() - 20 * 60 * 1000); // 20 minutes before startDate
+    const timeAfterEnd = new Date(endDate.getTime() + 15 * 60 * 1000); // 15 minutes after endDate
+
+    // Check if the current time is within the allowed window
+    if (currentTime < timeBeforeStart || currentTime > timeAfterEnd) {
+      // Return error if the appointment is outside the allowed time window
+      return {
+        error: ErrorMessages("videoMeetingOnlyAvailable"),
+      };
+    }
+
     let updatePayload: Record<string, unknown> = {};
     const updateOptions: Record<string, unknown> = { new: true };
 
     if (isTherapist) {
-      updatePayload.hostShowUp = true;
+      if (!appointment.hostShowUp) {
+        updatePayload.hostShowUp = true;
+        await Appointment.findByIdAndUpdate(
+          appointmentId,
+          { $set: updatePayload },
+          updateOptions
+        );
+      }
     }
 
-    /*  const appointment = await Appointment.findById(appointmentId);
-    if (!appointment) {
-      throw new Error("Appointment not found");
-    } */
-
     if (isClient) {
-      updateOptions.arrayFilters = [{ "elem.userId": user.id }];
-      updatePayload["participants.$[elem].showUp"] = true;
-      /* const participant = appointment.participants.find(
+      const participant = appointment.participants.find(
         (participant: any) =>
           participant.userId.toString() === user.id.toString()
       );
 
+      if (!participant) {
+        return { error: ErrorMessages("userNotFound") };
+      }
+
       updateOptions.arrayFilters = [{ "elem.userId": user.id }];
 
-      if (participant && participant.showUp) {
-        console.log("Participant already marked as showed up");
-      } else {
+      if (!participant.showUp) {
         updatePayload["participants.$[elem].showUp"] = true;
-      } */
+        await Appointment.findByIdAndUpdate(
+          appointmentId,
+          { $set: updatePayload },
+          updateOptions
+        );
+      }
     }
-
-    const appointment = await Appointment.findByIdAndUpdate(
-      appointmentId,
-      { $set: updatePayload },
-      updateOptions
-    );
-
-    if (!appointment) {
-      throw new Error("Appointment not found");
-    }
-
-    /*  if (Object.keys(updatePayload).length > 0) {
-      await Appointment.findByIdAndUpdate(
-        appointmentId,
-        { $set: updatePayload },
-        updateOptions
-      );
-    } */
 
     let session = await VideoSession.findOne({ appointmentId });
 
     if (session) {
       console.log("Session found. Generating new token...");
-      console.log("HERE");
       const userAuthorized = await isUserAuthorized(
         session,
         isTherapist,

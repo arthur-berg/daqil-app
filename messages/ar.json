@@ -189,7 +189,8 @@
     "discountCodeLabel": "هل لديك رمز خصم؟",
     "addDiscountLater": "ستتمكن من تطبيق رمز الخصم عندما تختار الدفع لاحقًا.",
     "discountLoading": "جارٍ تطبيق رمز الخصم...",
-    "calculatingPrice": "جارٍ حساب السعر..."
+    "calculatingPrice": "جارٍ حساب السعر...",
+      "cancelReservation": "إلغاء الحجز"
 },
   "AvailabilityPage": {
     "recurringAvailableTimes": "أوقات متاحة متكررة",
@@ -359,7 +360,9 @@
 "missingDiscountCode": "رمز الخصم مفقود",
 "discountCodeExpired": "رمز الخصم منتهي الصلاحية",
 "firstTimeUserOnly": "للمستخدمين لأول مرة فقط",
-"redeemedCodeLimitReached": "تم الوصول إلى الحد الأقصى لاستخدام رمز الخصم"
+"redeemedCodeLimitReached": "تم الوصول إلى الحد الأقصى لاستخدام رمز الخصم",
+ "videoMeetingOnlyAvailable": "يتوفر الاجتماع عبر الفيديو فقط بين 20 دقيقة قبل بدء الموعد و15 دقيقة بعد انتهائه.",
+  "appointmentNotConfirmed": "لم يتم تأكيد الموعد."
   },
   "SuccessMessages": {
     "activateLinkSent": "تم إرسال رابط لتفعيل حسابك إلى البريد الإلكتروني المقدم",
