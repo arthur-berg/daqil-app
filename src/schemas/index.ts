@@ -280,10 +280,6 @@ export const LoginSchema = z.object({
   code: z.optional(z.string()),
 });
 
-import { PhoneNumberUtil } from "google-libphonenumber";
-
-const phoneUtil = PhoneNumberUtil.getInstance();
-
 // Custom function to validate date in YYYY/MM/DD format
 const isValidDate = (dateString: string) => {
   const regex = /^\d{4}\/\d{2}\/\d{2}$/; // Regex to match YYYY/MM/DD format
@@ -300,18 +296,6 @@ const isValidDate = (dateString: string) => {
   );
 };
 
-const isValidPhoneNumber = (phoneNumber: string) => {
-  try {
-    // Parsing the phone number
-    const parsedNumber = phoneUtil.parse(phoneNumber);
-    // Validating the parsed phone number
-    return phoneUtil.isValidNumber(parsedNumber);
-  } catch (error) {
-    // Return false if parsing or validation fails
-    return false;
-  }
-};
-
 export const SetupAccountSchema = z.object({
   email: z.string().email({ message: "Email is required" }),
   password: z.string().min(6, {
@@ -325,9 +309,7 @@ export const SetupAccountSchema = z.object({
     message: "Last name is required",
   }),
   personalInfo: z.object({
-    phoneNumber: z
-      .string()
-      .refine(isValidPhoneNumber, { message: "Invalid phone number" }),
+    phoneNumber: z.string(),
     sex: z.enum(["MALE", "FEMALE", "OTHER"]), // Optional sex field with specific enum values
     dateOfBirth: z.string().regex(/^\d{4}\/\d{2}\/\d{2}$/, {
       message: "Invalid date format. Use YYYY/MM/DD.",

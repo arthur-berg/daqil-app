@@ -246,6 +246,7 @@ const userSchema = new Schema(
             default: [],
           },
         ],
+        default: [],
       },
     ],
     availableTimes: {

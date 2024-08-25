@@ -342,3 +342,63 @@ export const nonPaidAppointmentConfirmationTemplate = (
     </div>
   `;
 };
+
+export const paymentReminderTemplate = (appointmentId: string) => {
+  const paymentLink = `${process.env.NEXT_PUBLIC_APP_URL}/invoices/${appointmentId}/checkout?appointmentId=${appointmentId}`;
+
+  return `
+    <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
+      <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+        <div style="text-align: center; margin-bottom: 20px;">
+          <h1 style="color: ${primaryColor}; font-size: 24px; margin: 0;">Zakina</h1>
+        </div>
+        <div style="margin-top: 20px;">
+          <p>Dear Client,</p>
+          <p>This is a friendly reminder that payment for your upcoming appointment is due.</p>
+          <p>Please ensure that your payment is completed at least 1 hour before the scheduled time.</p>
+          <div style="text-align: center; margin-top: 20px;">
+            <a href="${paymentLink}" style="display: inline-block; padding: 12px 24px; margin-right: 10px; background-color: ${primaryColor}; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: bold;">
+              Pay Now
+            </a>
+          </div>
+        </div>
+        <div style="margin-top: 20px; font-size: 12px; color: #888888; text-align: center;">
+          Thank you for using Zakina.
+        </div>
+      </div>
+    </div>
+  `;
+};
+
+export const reminderEmailTemplate = (appointmentDetails: {
+  date: string;
+  time: string;
+  therapistName: string;
+  clientName: string;
+}) => {
+  const subject = "Upcoming Appointment Reminder";
+  const appointmentsLink = `${process.env.NEXT_PUBLIC_APP_URL}/appointments`;
+
+  return `
+    <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
+      <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+        <div style="text-align: center; margin-bottom: 20px;">
+          <h1 style="color: ${primaryColor}; font-size: 24px; margin: 0;">Zakina</h1>
+        </div>
+        <div style="margin-top: 20px;">
+          <p>Dear ${appointmentDetails.clientName},</p>
+          <p>This is a friendly reminder for your upcoming appointment with ${appointmentDetails.therapistName} on ${appointmentDetails.date} at ${appointmentDetails.time}.</p>
+          <p>Please make sure to be on time for your appointment.</p>
+        </div>
+        <div style="text-align: center; margin-top: 20px;">
+          <a href="${appointmentsLink}" style="display: inline-block; padding: 12px 24px; margin: 20px 0; background-color: ${primaryColor}; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: bold;">
+            View My Appointments
+          </a>
+        </div>
+        <div style="margin-top: 20px; font-size: 12px; color: #888888; text-align: center;">
+          Thank you for choosing Zakina.
+        </div>
+      </div>
+    </div>
+  `;
+};

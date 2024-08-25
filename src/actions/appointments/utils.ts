@@ -1,14 +1,30 @@
+import {
+  scheduleAppointmentJobs,
+  cancelAllScheduledJobsForAppointment,
+  scheduleCancelUnpaidJobs,
+} from "@/lib/schedule-appointment-jobs-test";
 import Appointment from "@/models/Appointment";
 import User from "@/models/User";
 import { format } from "date-fns";
+import { startSession } from "mongoose";
+
+const removeRelatedJobs = async (appointmentIds: any) => {
+  for (const appointmentId of appointmentIds) {
+    await cancelAllScheduledJobsForAppointment(appointmentId);
+  }
+};
 
 export const createAppointment = async (appointmentData: any, session: any) => {
   const appointment = await Appointment.create([appointmentData], { session });
 
-  /*  scheduleJobToCheckAppointmentStatus(
-    appointmentItem._id,
-    appointmentItem.endDate
-  ); */
+  if (!appointment) {
+    throw new Error("Failed to create appointment.");
+  }
+
+  await scheduleCancelUnpaidJobs(
+    appointment[0]._id.toString(),
+    appointment[0].payment.paymentExpiryDate
+  );
 
   return appointment;
 };
@@ -160,7 +176,12 @@ export const clearTemporarilyReservedAppointments = async (
   const tempReservedAppointmentIds =
     appointmentEntry.temporarilyReservedAppointments;
 
+  const session = await startSession();
+  session.startTransaction();
+
   try {
+    await removeRelatedJobs(tempReservedAppointmentIds);
+
     await User.updateOne(
       {
         _id: client.id,
@@ -172,7 +193,8 @@ export const clearTemporarilyReservedAppointments = async (
             $in: tempReservedAppointmentIds,
           },
         },
-      }
+      },
+      { session }
     );
 
     await User.updateOne(
@@ -186,13 +208,19 @@ export const clearTemporarilyReservedAppointments = async (
             $in: tempReservedAppointmentIds,
           },
         },
-      }
+      },
+      { session }
     );
 
-    await Appointment.deleteMany({
-      _id: { $in: tempReservedAppointmentIds },
-      status: "temporarily-reserved",
-    });
+    await Appointment.deleteMany(
+      {
+        _id: { $in: tempReservedAppointmentIds },
+        status: "temporarily-reserved",
+      },
+      { session }
+    );
+
+    await session.commitTransaction();
   } catch (error) {
     console.error(error);
   }

@@ -413,7 +413,8 @@
     "discountCodeDeleted": "Discount code deleted",
     "discountCodeValid": "Discount code is valid",
     "discountCodeApplied": "Discount code applied",
-    "discountLoading": "Applying discount code..."
+    "discountLoading": "Applying discount code...",
+    "reservationCancelled": "Reservation cancelled"
   },
   "AppointmentAction": {
     "therapySessionWith": "Therapy session with"

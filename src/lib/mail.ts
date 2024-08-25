@@ -9,7 +9,10 @@ import {
   paidAppointmentConfirmationTemplate,
   nonPaidAppointmentConfirmationTemplate,
   invoicePaidTemplate,
+  paymentReminderTemplate,
+  reminderEmailTemplate,
 } from "./emailTemplates";
+import Appointment from "@/models/Appointment";
 
 mailchimpMarketing.setConfig({
   apiKey: process.env.MAILCHIMP_MARKETING_KEY,
@@ -345,6 +348,82 @@ export const sendPaidBookingConfirmationEmail = async (
   } catch (error) {
     console.error(
       "Error sending appointment booking confirmation email:",
+      error
+    );
+  }
+};
+
+export const sendPaymentReminderEmail = async (
+  email: string,
+  appointmentId: string
+) => {
+  const message = {
+    from_email: "info@zakina-app.com",
+    subject: "Reminder: Payment Required for Your Upcoming Appointment",
+    html: paymentReminderTemplate(appointmentId), // Use the new template function
+    to: [
+      {
+        email,
+        type: "to",
+      },
+    ],
+  };
+
+  try {
+    await mailchimpTx.messages.send({
+      message: message as any,
+    });
+  } catch (error) {
+    console.error("Error sending payment reminder email:", error);
+  }
+};
+
+export const sendReminderEmail = async (
+  clientEmail: string,
+  appointmentId: string
+) => {
+  try {
+    // Fetch appointment details
+    const appointment = await Appointment.findById(appointmentId);
+    if (!appointment) {
+      console.log(`Appointment ${appointmentId} not found.`);
+      return;
+    }
+
+    const appointmentDetails = {
+      date: appointment.startDate.toDateString(),
+      time: appointment.startDate.toLocaleTimeString(),
+      therapistName: `${appointment.hostUserId.firstName} ${appointment.hostUserId.lastName}`,
+      clientName: `${appointment.participants[0].userId.firstName} ${appointment.participants[0].userId.lastName}`,
+    };
+
+    // Prepare email content
+    const subject = "Upcoming Appointment Reminder";
+    const html = reminderEmailTemplate(appointmentDetails);
+
+    const message = {
+      from_email: "info@zakina-app.com",
+      subject: subject,
+      html: html,
+      to: [
+        {
+          email: clientEmail,
+          type: "to",
+        },
+      ],
+    };
+
+    // Send the email
+    await mailchimpTx.messages.send({
+      message: message as any,
+    });
+
+    console.log(
+      `Email reminder sent to ${clientEmail} for appointment ${appointmentId}.`
+    );
+  } catch (error) {
+    console.error(
+      `Error sending email reminder for appointment ${appointmentId}:`,
       error
     );
   }

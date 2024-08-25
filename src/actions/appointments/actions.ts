@@ -21,6 +21,12 @@ import {
   createAppointment,
   updateAppointments,
 } from "./utils";
+import {
+  scheduleAppointmentJobs,
+  schedulePaymentReminders,
+  cancelAllScheduledJobsForAppointment,
+  scheduleCancelUnpaidJobs,
+} from "@/lib/schedule-appointment-jobs-test";
 
 export const getClients = async () => {
   await requireAuth([UserRole.THERAPIST]);
@@ -94,6 +100,10 @@ export const cancelAppointment = async (
       }
     }
 
+    // **Remove any scheduled jobs for this appointment**
+
+    await cancelAllScheduledJobsForAppointment(appointmentId);
+
     await Appointment.findByIdAndUpdate(appointmentId, {
       status: "canceled",
       cancellationReason: "custom",
@@ -132,7 +142,8 @@ export const cancelTempReservation = async (appointmentId: string) => {
     getTranslations("ErrorMessages"),
   ]);
 
-  // Start a session for the transaction
+  let transactionCommitted = false;
+
   const session = await mongoose.startSession();
 
   try {
@@ -146,6 +157,8 @@ export const cancelTempReservation = async (appointmentId: string) => {
     if (!appointment) {
       return { error: ErrorMessages("appointmentNotFound") };
     }
+
+    await cancelAllScheduledJobsForAppointment(appointmentId);
 
     // Remove the appointmentId from the client's temporarilyReservedAppointments
     await User.updateOne(
@@ -180,6 +193,7 @@ export const cancelTempReservation = async (appointmentId: string) => {
 
     // Commit the transaction
     await session.commitTransaction();
+    transactionCommitted = true;
     session.endSession();
 
     revalidatePath("/book-appointment");
@@ -187,7 +201,9 @@ export const cancelTempReservation = async (appointmentId: string) => {
     return { success: SuccessMessages("reservationCancelled") };
   } catch (error) {
     // Abort the transaction if an error occurs
-    await session.abortTransaction();
+    if (!transactionCommitted) {
+      await session.abortTransaction(); // Abort transaction only if it hasn't been committed
+    }
     session.endSession();
 
     console.error("Error in cancelTempReservation:", error);
@@ -215,6 +231,8 @@ export const confirmBookingPayLater = async (
     return { error: ErrorMessages("therapistNotExist") };
   }
 
+  let transactionCommitted = false;
+
   const session = await mongoose.startSession();
   session.startTransaction();
 
@@ -231,7 +249,6 @@ export const confirmBookingPayLater = async (
       {
         _id: client.id,
         "appointments.date": appointmentDate,
-        "appointments.temporarilyReservedAppointments": appointmentId,
       },
       {
         $pull: {
@@ -248,7 +265,6 @@ export const confirmBookingPayLater = async (
       {
         _id: therapist.id,
         "appointments.date": appointmentDate,
-        "appointments.temporarilyReservedAppointments": appointmentId,
       },
       {
         $pull: {
@@ -283,6 +299,7 @@ export const confirmBookingPayLater = async (
     );
 
     await session.commitTransaction();
+    transactionCommitted = true;
     session.endSession();
 
     const therapistEmail = therapist.email;
@@ -302,11 +319,18 @@ export const confirmBookingPayLater = async (
       appointmentDetails
     );
 
+    await schedulePaymentReminders(appointmentId, clientEmail);
+    await scheduleCancelUnpaidJobs(appointmentId, paymentExpiryDate);
+
     return { success: SuccessMessages("bookingConfirmed") };
   } catch (error) {
-    await session.abortTransaction();
+    if (!transactionCommitted) {
+      await session.abortTransaction(); // Abort transaction only if it hasn't been committed
+    }
     session.endSession();
+
     console.error("Error confirming appointment:", error);
+
     return { error: ErrorMessages("somethingWentWrong") };
   }
 };
@@ -354,6 +378,8 @@ export const reserveAppointment = async (
   if (!availabilityCheck.available) {
     return { error: availabilityCheck.message };
   }
+
+  let transactionCommitted = false;
 
   const session = await mongoose.startSession();
   session.startTransaction();
@@ -449,6 +475,7 @@ export const reserveAppointment = async (
     );
 
     await session.commitTransaction();
+    transactionCommitted = true;
     session.endSession();
 
     revalidatePath("/appointments");
@@ -459,10 +486,14 @@ export const reserveAppointment = async (
       paymentExpiryDate: appointment[0].payment.paymentExpiryDate,
     };
   } catch (error) {
-    await session.abortTransaction();
+    if (!transactionCommitted) {
+      await session.abortTransaction();
+    }
     session.endSession();
+
     console.error("Error booking appointment:", error);
-    throw error;
+
+    return { error: ErrorMessages("somethingWentWrong") };
   }
 };
 
@@ -514,6 +545,8 @@ export const scheduleAppointment = async (
     startDate.getTime() + appointmentType.durationInMinutes * 60000
   );
 
+  let transactionCommitted = false;
+
   const session = await mongoose.startSession();
   session.startTransaction();
 
@@ -542,6 +575,8 @@ export const scheduleAppointment = async (
     const appointmentId = appointment[0]._id;
 
     const appointmentDate = format(new Date(startDate), "yyyy-MM-dd");
+
+    await scheduleAppointmentJobs(appointment[0]._id.toString());
 
     // Check and update client's selected therapist
 
@@ -613,13 +648,18 @@ export const scheduleAppointment = async (
     );
 
     await session.commitTransaction();
+    transactionCommitted = true;
     session.endSession();
 
     return { success: SuccessMessages("appointmentCreated") };
   } catch (error) {
-    await session.abortTransaction();
+    if (!transactionCommitted) {
+      await session.abortTransaction();
+    }
     session.endSession();
+
     console.error("Error booking appointment:", error);
-    throw error;
+
+    return { error: ErrorMessages("somethingWentWrong") };
   }
 };

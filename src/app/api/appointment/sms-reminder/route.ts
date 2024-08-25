@@ -1,0 +1,57 @@
+import { NextRequest, NextResponse } from "next/server";
+import { verifySignatureAppRouter } from "@upstash/qstash/nextjs";
+import Appointment from "@/models/Appointment";
+import { sendSmsReminder } from "@/lib/twilio-sms";
+import { format, subMinutes } from "date-fns"; // Import format from date-fns
+
+export const POST = async (req: NextRequest) => {
+  try {
+    const body = await req.json();
+    const { appointmentId } = body;
+
+    const appointment = await Appointment.findById(appointmentId)
+      .populate("participants.userId")
+      .populate("hostUserId"); // Populate the host user details
+
+    if (!appointment) {
+      return NextResponse.json(
+        { error: "Appointment not found" },
+        { status: 404 }
+      );
+    }
+
+    const clientPhone =
+      appointment.participants[0].userId.personalInfo.phoneNumber;
+    const hostFirstName = appointment.hostUserId.firstName;
+    const hostLastName = appointment.hostUserId.lastName;
+    const appointmentStartTime = new Date(appointment.startDate);
+
+    if (!clientPhone) {
+      return NextResponse.json(
+        { error: "Client phone number not found" },
+        { status: 400 }
+      );
+    }
+
+    // Format the appointment start time (e.g., "3:30 PM")
+    const formattedTime = format(appointmentStartTime, "h:mm a");
+
+    // Send SMS reminder
+    await sendSmsReminder(
+      clientPhone,
+      hostFirstName,
+      hostLastName,
+      formattedTime
+    );
+
+    return NextResponse.json({
+      message: `SMS reminder sent to ${clientPhone} for appointment ${appointmentId}.`,
+    });
+  } catch (error) {
+    console.error("Error sending SMS reminder:", error);
+    return NextResponse.json(
+      { error: "Failed to send SMS reminder" },
+      { status: 500 }
+    );
+  }
+};

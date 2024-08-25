@@ -1,77 +1,94 @@
+import { sendReminderEmail } from "@/lib/mail";
 import Appointment from "@/models/Appointment";
 
-const BATCH_SIZE = 1000; // Adjust batch size based on your system's capacity
-
-export const checkAndUpdateAppointmentStatuses = async () => {
-  const now = new Date();
-  let processedCount = 0;
-
-  while (true) {
-    // Find a batch of appointments that need their status checked
-    const appointments = await Appointment.find({
-      endDate: { $lt: now },
-      status: { $nin: ["completed", "canceled"] }, // Exclude already processed appointments
-    })
-      .limit(BATCH_SIZE)
-      .skip(processedCount);
-
-    if (appointments.length === 0) break;
-
-    for (const appointment of appointments) {
-      const { _id: appointmentId, hostShowUp, participants } = appointment;
-
-      const allParticipantsShowedUp = participants.every(
-        (participant: any) => participant.showUp
-      );
-
-      let updatePayload: Record<string, unknown> = { status: "completed" };
-
-      if (!hostShowUp && !allParticipantsShowedUp) {
-        updatePayload = {
-          status: "canceled",
-          cancellationReason: "no-show-both",
-        };
-      } else if (!hostShowUp) {
-        updatePayload = {
-          status: "canceled",
-          cancellationReason: "no-show-host",
-        };
-      } else if (!allParticipantsShowedUp) {
-        updatePayload = {
-          status: "canceled",
-          cancellationReason: "no-show-participant",
-        };
-      }
-
-      await Appointment.findByIdAndUpdate(appointmentId, updatePayload);
-      console.log(
-        `Appointment ${appointmentId} status updated to ${updatePayload.status}`
-      );
+export const checkAndUpdateAppointmentStatus = async (
+  appointmentId: string
+) => {
+  try {
+    const appointment = await Appointment.findById(appointmentId);
+    if (!appointment) {
+      console.log(`Appointment ${appointmentId} not found.`);
+      return;
     }
 
-    processedCount += appointments.length;
+    const { hostShowUp, participants, endDate, status } = appointment;
+
+    // Only process if the appointment is not already completed or canceled
+    if (status === "completed" || status === "canceled") {
+      console.log(`Appointment ${appointmentId} is already processed.`);
+      return;
+    }
+
+    // Check if the endDate is in the past
+    const now = new Date();
+    if (endDate > now) {
+      console.log(`Appointment ${appointmentId} has not ended yet.`);
+      return;
+    }
+
+    const allParticipantsShowedUp = participants.every(
+      (participant: any) => participant.showUp
+    );
+
+    let updatePayload: Record<string, unknown> = { status: "completed" };
+
+    if (!hostShowUp && !allParticipantsShowedUp) {
+      updatePayload = {
+        status: "canceled",
+        cancellationReason: "no-show-both",
+      };
+    } else if (!hostShowUp) {
+      updatePayload = {
+        status: "canceled",
+        cancellationReason: "no-show-host",
+      };
+    } else if (!allParticipantsShowedUp) {
+      updatePayload = {
+        status: "canceled",
+        cancellationReason: "no-show-participant",
+      };
+    }
+
+    await Appointment.findByIdAndUpdate(appointmentId, updatePayload);
+    console.log(
+      `Appointment ${appointmentId} status updated to ${updatePayload.status}`
+    );
+  } catch (error) {
+    console.error(
+      `Error updating appointment status for ${appointmentId}:`,
+      error
+    );
   }
 };
 
-export const checkAndCancelUnpaidAppointments = async () => {
-  const now = new Date();
-  let processedCount = 0;
+export const checkAndCancelUnpaidAppointment = async (
+  appointmentId: string
+) => {
+  try {
+    const appointment = await Appointment.findById(appointmentId);
+    if (!appointment) {
+      console.log(`Appointment ${appointmentId} not found.`);
+      return;
+    }
 
-  while (true) {
-    // Find a batch of appointments that are unpaid and should have been paid by now
-    const unpaidAppointments = await Appointment.find({
-      "payment.paymentExpiryDate": { $lt: now },
-      "payment.status": "pending",
-      status: { $nin: ["canceled", "completed"] },
-    })
-      .limit(BATCH_SIZE)
-      .skip(processedCount);
+    const { payment, status } = appointment;
 
-    if (unpaidAppointments.length === 0) break;
+    // Only process if the appointment is not already canceled or completed
+    if (status === "canceled" || status === "completed") {
+      console.log(`Appointment ${appointmentId} is already processed.`);
+      return;
+    }
 
-    for (const appointment of unpaidAppointments) {
-      const { _id: appointmentId, status } = appointment;
+    // Check if the payment deadline has passed
+    const now = new Date();
+    if (payment.paymentExpiryDate > now) {
+      console.log(
+        `Payment deadline for appointment ${appointmentId} has not passed yet.`
+      );
+      return;
+    }
 
+    if (payment.status === "pending") {
       // Update the status to canceled
       const updatedAppointment = await Appointment.findByIdAndUpdate(
         appointmentId,
@@ -85,8 +102,93 @@ export const checkAndCancelUnpaidAppointments = async () => {
       console.log(
         `Appointment ${updatedAppointment._id} changed status to ${updatedAppointment.status} due to 'Appointment was not paid in time'`
       );
+    } else {
+      console.log(`Appointment ${appointmentId} has already been paid.`);
+    }
+  } catch (error) {
+    console.error(
+      `Error cancelling unpaid appointment ${appointmentId}:`,
+      error
+    );
+  }
+};
+
+export const sendEmailReminder = async (
+  clientEmail: string,
+  appointmentId: string
+) => {
+  try {
+    // Fetch appointment details
+    const appointment = await Appointment.findById(appointmentId);
+    if (!appointment) {
+      console.log(`Appointment ${appointmentId} not found.`);
+      return;
     }
 
-    processedCount += unpaidAppointments.length;
+    await sendReminderEmail(clientEmail, appointmentId);
+
+    console.log(
+      `Email reminder sent to ${clientEmail} for appointment ${appointmentId}.`
+    );
+  } catch (error) {
+    console.error(
+      `Error sending email reminder for appointment ${appointmentId}:`,
+      error
+    );
+  }
+};
+
+export const sendSmsReminder = async (
+  clientPhone: string,
+  appointmentId: string
+) => {
+  try {
+    // Fetch appointment details
+    const appointment = await Appointment.findById(appointmentId);
+    if (!appointment) {
+      console.log(`Appointment ${appointmentId} not found.`);
+      return;
+    }
+
+    // SMS content
+    const message = `Reminder: You have an appointment on ${appointment.startDate.toDateString()} at ${appointment.startDate.toLocaleTimeString()}. Please be available.`;
+
+    // Send the SMS
+    await sendSms(clientPhone, message);
+    console.log(
+      `SMS reminder sent to ${clientPhone} for appointment ${appointmentId}.`
+    );
+  } catch (error) {
+    console.error(
+      `Error sending SMS reminder for appointment ${appointmentId}:`,
+      error
+    );
+  }
+};
+
+export const sendPaymentReminder = async (
+  clientEmail: string,
+  appointmentId: string
+) => {
+  try {
+    // Fetch appointment details
+    const appointment = await Appointment.findById(appointmentId);
+    if (!appointment) {
+      console.log(`Appointment ${appointmentId} not found.`);
+      return;
+    }
+
+    const { payment } = appointment;
+
+    await sendReminderEmail(clientEmail, appointmentId);
+
+    console.log(
+      `Payment reminder sent to ${clientEmail} for appointment ${appointmentId}.`
+    );
+  } catch (error) {
+    console.error(
+      `Error sending payment reminder for appointment ${appointmentId}:`,
+      error
+    );
   }
 };

@@ -10,6 +10,11 @@ import {
   sendPaidBookingConfirmationEmail,
 } from "@/lib/mail";
 import CodeRedemption from "@/models/CodeRedemption";
+import {
+  cancelPaymentRelatedJobsForAppointment,
+  scheduleAppointmentJobs,
+  scheduleCancelUnpaidJobs,
+} from "@/lib/schedule-appointment-jobs-test";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET as string;
@@ -101,6 +106,8 @@ export async function POST(req: Request): Promise<NextResponse> {
             transactionId: transactionId,
           };
 
+          await cancelPaymentRelatedJobsForAppointment(appointmentId);
+
           // Check payment type
           if (appointment.payment.method === "payBeforeBooking") {
             // Move appointment from temporarilyReservedAppointments to bookedAppointments
@@ -155,8 +162,9 @@ export async function POST(req: Request): Promise<NextResponse> {
               clientEmail,
               appointmentDetails
             );
+
+            await scheduleAppointmentJobs(appointmentId);
           } else if (appointment.payment.method === "payAfterBooking") {
-            // Just update the payment status to paid
             await Appointment.findByIdAndUpdate(appointmentId, {
               "payment.status": "paid",
             });
