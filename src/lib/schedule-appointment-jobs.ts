@@ -1,10 +1,9 @@
-import { qstashClient, scheduleTask } from "@/lib/qstash"; // Removed unused imports
+import { qstashClient, scheduleTask } from "@/lib/qstash"; // Import necessary functions
 import ScheduledTask from "@/models/ScheduledTask";
 
 export const schedulePaymentReminders = async (
   appointmentId: string,
-  paymentExpiryDate: Date,
-  clientEmail: string
+  paymentExpiryDate: Date
 ) => {
   const now = new Date();
 
@@ -20,7 +19,7 @@ export const schedulePaymentReminders = async (
       const unixTimestampInSeconds = Math.floor(reminderTime.getTime() / 1000);
       const taskId = await scheduleTask(
         `${process.env.QSTASH_API_URL}/send-payment-reminder`,
-        { appointmentId, clientEmail },
+        { appointmentId },
         unixTimestampInSeconds
       );
 
@@ -33,38 +32,53 @@ export const schedulePaymentReminders = async (
   }
 };
 
-// Function to schedule jobs related to an appointment
+export const scheduleCancelUnpaidJobs = async (
+  appointmentId: string,
+  paymentExpiryDate: Date
+) => {
+  const cancelUnpaidTaskId = await scheduleTask(
+    `${process.env.QSTASH_API_URL}/cancel-unpaid`,
+    { appointmentId: appointmentId },
+    Math.floor(paymentExpiryDate.getTime() / 1000)
+  );
+  await ScheduledTask.create({
+    appointmentId: appointmentId,
+    type: "cancelUnpaid",
+    taskId: cancelUnpaidTaskId,
+  });
+};
+
+// Function to schedule jobs related to an appointment for testing purposes
 export const scheduleAppointmentJobs = async (appointment: any) => {
+  // Populate participants field to get the user details
   const appointmentEndTime = new Date(appointment.endDate);
   const paymentExpiryDate = new Date(appointment.payment.paymentExpiryDate);
+  const appointmentId = appointment._id.toString();
 
-  // Schedule status update job at the exact end time of the appointment
+  const now = new Date();
+  const tenSecondsLater = new Date(now.getTime() + 10 * 1000); // 10 seconds from now
+
+  console.log("appointmentId", appointmentId);
+
+  // Schedule status update job 10 seconds from now
+  /*  const statusUpdateTaskId = await scheduleTask(
+    `${process.env.QSTASH_API_URL}/status-update`,
+    { appointmentId: appointmentId },
+    Math.floor(appointmentEndTime.getTime() / 1000)
+  );
+ */
   const statusUpdateTaskId = await scheduleTask(
     `${process.env.QSTASH_API_URL}/status-update`,
-    { appointmentId: appointment._id },
-    Math.floor(appointmentEndTime.getTime() / 1000)
+    { appointmentId: appointmentId },
+    Math.floor(tenSecondsLater.getTime() / 1000)
   );
 
   await ScheduledTask.create({
-    appointmentId: appointment._id,
+    appointmentId: appointmentId,
     type: "statusUpdate",
     taskId: statusUpdateTaskId,
   });
 
-  // Schedule cancel unpaid appointments job at the payment expiry date
-  const cancelUnpaidTaskId = await scheduleTask(
-    `${process.env.QSTASH_API_URL}/cancel-unpaid`,
-    { appointmentId: appointment._id },
-    Math.floor(paymentExpiryDate.getTime() / 1000)
-  );
-
-  await ScheduledTask.create({
-    appointmentId: appointment._id,
-    type: "cancelUnpaid",
-    taskId: cancelUnpaidTaskId,
-  });
-
-  // Schedule email reminder jobs
   const oneDayBefore = new Date(
     appointment.startDate.getTime() - 24 * 60 * 60 * 1000
   );
@@ -72,41 +86,62 @@ export const scheduleAppointmentJobs = async (appointment: any) => {
     appointment.startDate.getTime() - 60 * 60 * 1000
   );
 
-  // Email reminder 1 day before
-  const emailReminderTaskIdOneDay = await scheduleTask(
-    `${process.env.QSTASH_API_URL}/send-email-reminder`,
-    { clientEmail: appointment.clientEmail, appointmentId: appointment._id },
-    Math.floor(oneDayBefore.getTime() / 1000)
+  const thirtyMinutesBefore = new Date(
+    appointment.startDate.getTime() - 30 * 60 * 1000
   );
 
+  // Email reminder 1 day before
+  /*  const emailReminderTaskIdOneDay = await scheduleTask(
+    `${process.env.QSTASH_API_URL}/send-email-reminder`,
+    { appointmentId: appointmentId },
+    Math.floor(oneDayBefore.getTime() / 1000)
+  );
+ */
+  const emailReminderTaskIdOneDay = await scheduleTask(
+    `${process.env.QSTASH_API_URL}/send-email-reminder`,
+    { appointmentId: appointmentId },
+    Math.floor(tenSecondsLater.getTime() / 1000)
+  );
   await ScheduledTask.create({
-    appointmentId: appointment._id,
+    appointmentId: appointmentId,
     type: "emailReminder",
     taskId: emailReminderTaskIdOneDay,
   });
 
   // Email reminder 1 hour before
+  /* const emailReminderTaskIdOneHour = await scheduleTask(
+    `${process.env.QSTASH_API_URL}/send-email-reminder`,
+    { clientEmail: appointment.clientEmail, appointmentId: appointmentId },
+    Math.floor(oneHourBefore.getTime() / 1000)
+  ); */
+
   const emailReminderTaskIdOneHour = await scheduleTask(
     `${process.env.QSTASH_API_URL}/send-email-reminder`,
-    { clientEmail: appointment.clientEmail, appointmentId: appointment._id },
-    Math.floor(oneHourBefore.getTime() / 1000)
+    { clientEmail: appointment.clientEmail, appointmentId: appointmentId },
+    Math.floor(tenSecondsLater.getTime() / 1000)
   );
 
   await ScheduledTask.create({
-    appointmentId: appointment._id,
+    appointmentId: appointmentId,
     type: "emailReminder",
     taskId: emailReminderTaskIdOneHour,
   });
 
-  // Schedule SMS reminder job 1 hour before the appointment starts
+  // Schedule SMS reminder job 30 min before the appointment starts
+  /*  const smsReminderTaskId = await scheduleTask(
+    `${process.env.QSTASH_API_URL}/send-sms-reminder`,
+    { clientPhone: appointment.clientPhone, appointmentId: appointmentId },
+    Math.floor(thirtyMinutesBefore.getTime() / 1000)
+  ); */
+
   const smsReminderTaskId = await scheduleTask(
     `${process.env.QSTASH_API_URL}/send-sms-reminder`,
-    { clientPhone: appointment.clientPhone, appointmentId: appointment._id },
-    Math.floor(oneHourBefore.getTime() / 1000)
+    { clientPhone: appointment.clientPhone, appointmentId: appointmentId },
+    Math.floor(tenSecondsLater.getTime() / 1000)
   );
 
   await ScheduledTask.create({
-    appointmentId: appointment._id,
+    appointmentId: appointmentId,
     type: "smsReminder",
     taskId: smsReminderTaskId,
   });
@@ -126,7 +161,7 @@ export const cancelAllScheduledJobsForAppointment = async (
 
     await qstashClient.messages.deleteMany(taskIds);
     await ScheduledTask.deleteMany({
-      _id: { $in: taskIds },
+      taskId: { $in: taskIds },
     });
   } catch (error) {
     console.error(
@@ -158,7 +193,7 @@ export const cancelPaymentRelatedJobsForAppointment = async (
 
     await qstashClient.messages.deleteMany(taskIds);
     await ScheduledTask.deleteMany({
-      _id: { $in: taskIds },
+      taskId: { $in: taskIds },
     });
   } catch (error) {
     console.error(

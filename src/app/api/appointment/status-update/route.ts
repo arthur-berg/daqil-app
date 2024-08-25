@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { verifySignatureAppRouter } from "@upstash/qstash/nextjs";
 import Appointment from "@/models/Appointment";
 
-export const POST = async (req: NextRequest) => {
+export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
   try {
     const body = await req.json();
     const { appointmentId } = body;
@@ -51,4 +51,4 @@ export const POST = async (req: NextRequest) => {
       { status: 500 }
     );
   }
-};
+});

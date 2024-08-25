@@ -26,7 +26,7 @@ import {
   schedulePaymentReminders,
   cancelAllScheduledJobsForAppointment,
   scheduleCancelUnpaidJobs,
-} from "@/lib/schedule-appointment-jobs-test";
+} from "@/lib/schedule-appointment-jobs";
 
 export const getClients = async () => {
   await requireAuth([UserRole.THERAPIST]);
@@ -319,7 +319,7 @@ export const confirmBookingPayLater = async (
       appointmentDetails
     );
 
-    await schedulePaymentReminders(appointmentId, clientEmail);
+    await schedulePaymentReminders(appointmentId, paymentExpiryDate);
     await scheduleCancelUnpaidJobs(appointmentId, paymentExpiryDate);
 
     return { success: SuccessMessages("bookingConfirmed") };
@@ -374,6 +374,8 @@ export const reserveAppointment = async (
     startDate,
     endDate
   );
+
+  console.log("availabilityCheck", availabilityCheck);
 
   if (!availabilityCheck.available) {
     return { error: availabilityCheck.message };
@@ -576,7 +578,7 @@ export const scheduleAppointment = async (
 
     const appointmentDate = format(new Date(startDate), "yyyy-MM-dd");
 
-    await scheduleAppointmentJobs(appointment[0]._id.toString());
+    await scheduleAppointmentJobs(appointment[0]);
 
     // Check and update client's selected therapist
 

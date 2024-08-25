@@ -4,7 +4,7 @@ import Appointment from "@/models/Appointment";
 import { sendSmsReminder } from "@/lib/twilio-sms";
 import { format, subMinutes } from "date-fns"; // Import format from date-fns
 
-export const POST = async (req: NextRequest) => {
+export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
   try {
     const body = await req.json();
     const { appointmentId } = body;
@@ -54,4 +54,4 @@ export const POST = async (req: NextRequest) => {
       { status: 500 }
     );
   }
-};
+});

@@ -20,9 +20,14 @@ const BookAppointmentPage = async ({
   if (!user) {
     return ErrorMessages("userNotFound");
   }
+
   const appointmentType = await getAppointmentTypeById(APPOINTMENT_TYPE_ID);
 
   const client = await getClientByIdAppointments(user?.id);
+
+  if (!client) {
+    return ErrorMessages("userNotFound");
+  }
 
   const selectedTherapist = (
     user?.selectedTherapist
@@ -32,7 +37,7 @@ const BookAppointmentPage = async ({
 
   // Function to find a valid temporarily reserved appointment
   const findValidTemporarilyReservedAppointment = (client: any) => {
-    for (const appointment of client.appointments) {
+    for (const appointment of client?.appointments) {
       const validAppointment = appointment.temporarilyReservedAppointments.find(
         (reservedAppointment: any) =>
           reservedAppointment.payment.paymentExpiryDate > new Date()

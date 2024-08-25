@@ -2,7 +2,7 @@ import {
   scheduleAppointmentJobs,
   cancelAllScheduledJobsForAppointment,
   scheduleCancelUnpaidJobs,
-} from "@/lib/schedule-appointment-jobs-test";
+} from "@/lib/schedule-appointment-jobs";
 import Appointment from "@/models/Appointment";
 import User from "@/models/User";
 import { format } from "date-fns";
@@ -123,9 +123,13 @@ export const checkTherapistAvailability = async (
   const { bookedAppointments, temporarilyReservedAppointments } =
     appointmentEntry;
 
+  const validBookedAppointments = bookedAppointments.filter(
+    (appointment: any) => appointment.status !== "canceled"
+  );
+
   if (
     checkForOverlappingAppointments(
-      bookedAppointments,
+      validBookedAppointments,
       startDate,
       endDate,
       therapist.availableTimes.settings.interval

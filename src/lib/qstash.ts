@@ -12,9 +12,10 @@ export const scheduleTask = async (
   try {
     const response = await qstashClient.publishJSON({
       url,
-      body: JSON.stringify(body),
+      body,
       retries: 3,
       method: "POST",
+      unixTimestampInSeconds,
     });
     console.log(
       `Scheduled task to ${url} with absolute time ${unixTimestampInSeconds}.`

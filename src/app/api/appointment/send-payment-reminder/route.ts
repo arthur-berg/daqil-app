@@ -1,13 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifySignatureAppRouter } from "@upstash/qstash/nextjs";
-import { sendPaymentReminderEmail } from "@/lib/mail"; // Import your email utility function
+import { sendPaymentReminderEmail } from "@/lib/mail";
 import Appointment from "@/models/Appointment";
 
-export const POST = async (req: NextRequest) => {
+export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
   try {
     const body = await req.json();
     const { appointmentId } = body;
-
 
     const appointment = await Appointment.findById(appointmentId).populate(
       "participants.userId"
@@ -21,7 +20,6 @@ export const POST = async (req: NextRequest) => {
     }
 
     const clientEmail = appointment.participants[0].userId.email;
-   
 
     await sendPaymentReminderEmail(clientEmail, appointmentId);
 
@@ -35,4 +33,4 @@ export const POST = async (req: NextRequest) => {
       { status: 500 }
     );
   }
-};
+});
