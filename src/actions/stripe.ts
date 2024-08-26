@@ -4,7 +4,7 @@ import { getAppointmentTypeById } from "@/data/appointment-types";
 import { UserRole } from "@/generalTypes";
 import { getCurrentUser, requireAuth } from "@/lib/auth";
 import { convertToSubcurrency } from "@/utils";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { checkDiscountCodeValidity } from "./discount-code";
 import User from "@/models/User";
 import CodeRedemption from "@/models/CodeRedemption";
@@ -20,6 +20,7 @@ export const createPaymentIntent = async (
     getTranslations("SuccessMessages"),
     getTranslations("ErrorMessages"),
   ]);
+  const locale = await getLocale();
   try {
     requireAuth([UserRole.CLIENT]);
     const appointmentType = await getAppointmentTypeById(appointmentTypeId);
@@ -65,14 +66,15 @@ export const createPaymentIntent = async (
       });
     }
 
-    const metadata: Record<string, unknown> = { appointmentId: appointmentId };
+    const metadata: Record<string, unknown> = {
+      appointmentId: appointmentId,
+      locale: locale,
+    };
 
     if (trackDiscountCodeRedeemed && discountCodeId) {
       metadata["trackDiscountCodeRedeemed"] = trackDiscountCodeRedeemed;
       metadata["discountCodeId"] = discountCodeId.toString();
     }
-
-    console.log("metadata", metadata);
 
     const paymentIntent = await stripe.paymentIntents.create({
       amount: convertToSubcurrency(finalAmount),

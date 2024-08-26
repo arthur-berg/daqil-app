@@ -175,7 +175,7 @@
     "bookAppointment": "احجز موعدًا",
     "changeTherapistButton": "تغيير المعالج",
     "bookingAppointmentLoading": "جارٍ حجز الموعد... يرجى الانتظار",
-   "loadingCheckout": "جارٍ تحميل عملية الدفع...",
+    "loadingCheckout": "جارٍ تحميل عملية الدفع...",
     "zakina": "زكينا"
   },
   "Checkout": {
@@ -211,8 +211,8 @@
     "addDiscountLater": "ستتمكن من تطبيق رمز الخصم عندما تختار الدفع لاحقًا.",
     "discountLoading": "جارٍ تطبيق رمز الخصم...",
     "calculatingPrice": "جارٍ حساب السعر...",
-      "cancelReservation": "إلغاء الحجز"
-},
+    "cancelReservation": "إلغاء الحجز"
+  },
   "AvailabilityPage": {
     "recurringAvailableTimes": "أوقات متاحة متكررة",
     "nonRecurringAvailableTimes": "أوقات متاحة غير متكررة",
@@ -327,7 +327,7 @@
     "areYouSureYouWantToDelete": "هل أنت متأكد أنك تريد الحذف؟",
     "close": "إغلاق",
     "deletingDiscountCode": "جارٍ حذف رمز الخصم..."
-},
+  },
   "Breadcrumbs": {
     "myClients": "عملائي",
     "client": "عميل",
@@ -377,13 +377,13 @@
     "failedToUploadProfileImage": "فشل في تحميل صورة الملف الشخصي",
     "appointmentUpdateFailed": "فشل تحديث الموعد",
     "invalidDiscountCode": "رمز الخصم غير صالح",
-"discountCodeNotStarted": "رمز الخصم لم يبدأ بعد",
-"missingDiscountCode": "رمز الخصم مفقود",
-"discountCodeExpired": "رمز الخصم منتهي الصلاحية",
-"firstTimeUserOnly": "للمستخدمين لأول مرة فقط",
-"redeemedCodeLimitReached": "تم الوصول إلى الحد الأقصى لاستخدام رمز الخصم",
- "videoMeetingOnlyAvailable": "يتوفر الاجتماع عبر الفيديو فقط بين 20 دقيقة قبل بدء الموعد و15 دقيقة بعد انتهائه.",
-  "appointmentNotConfirmed": "لم يتم تأكيد الموعد."
+    "discountCodeNotStarted": "رمز الخصم لم يبدأ بعد",
+    "missingDiscountCode": "رمز الخصم مفقود",
+    "discountCodeExpired": "رمز الخصم منتهي الصلاحية",
+    "firstTimeUserOnly": "للمستخدمين لأول مرة فقط",
+    "redeemedCodeLimitReached": "تم الوصول إلى الحد الأقصى لاستخدام رمز الخصم",
+    "videoMeetingOnlyAvailable": "يتوفر الاجتماع عبر الفيديو فقط بين 20 دقيقة قبل بدء الموعد و15 دقيقة بعد انتهائه.",
+    "appointmentNotConfirmed": "لم يتم تأكيد الموعد."
   },
   "SuccessMessages": {
     "activateLinkSent": "تم إرسال رابط لتفعيل حسابك إلى البريد الإلكتروني المقدم",
@@ -406,12 +406,124 @@
     "appointmentReserved": "تم حجز الموعد مؤقتًا",
     "bookingConfirmed": "تم تأكيد الحجز",
     "discountCodeCreated": "تم إنشاء رمز الخصم",
-"discountCodeDeleted": "تم حذف رمز الخصم",
-"discountCodeValid": "رمز الخصم صالح",
-"discountCodeApplied": "تم تطبيق رمز الخصم",
-"discountLoading": "جارٍ تطبيق رمز الخصم..."
+    "discountCodeDeleted": "تم حذف رمز الخصم",
+    "discountCodeValid": "رمز الخصم صالح",
+    "discountCodeApplied": "تم تطبيق رمز الخصم",
+    "discountLoading": "جارٍ تطبيق رمز الخصم..."
   },
   "AppointmentAction": {
     "therapySessionWith": "جلسة علاجية مع"
+  },
+  "ReminderEmail": {
+    "zakina": "زاكينا",
+
+    "subject": "تذكير بالموعد القادم",
+    "greeting": "عزيزي {name}،",
+    "message": "هذا تذكير ودي بأن لديك موعدًا قادمًا مع {therapistName} في {date} الساعة {time}. يرجى التأكد من أنك مستعد وأن الميكروفون والكاميرا يعملان بشكل صحيح.",
+    "footer": "شكرًا لاختيارك زاكينا."
+  },
+  "PaymentReminderEmail": {
+    "zakina": "زاكينا",
+    "subject": "تذكير: الدفع مطلوب لموعدك القادم",
+    "companyName": "زاكينا",
+    "greeting": "عزيزي {clientFirstName}،",
+    "reminderText": "هذا تذكير ودي بأن الدفع لموعدك القادم في {appointmentStartTime} مستحق.",
+    "paymentInstructions": "يرجى التأكد من إتمام الدفع قبل ساعة واحدة على الأقل من الموعد المحدد.",
+    "payNowButton": "ادفع الآن",
+    "footerText": "شكرًا لاستخدامك زاكينا."
+  },
+  "SmsReminder": {
+    "reminderMessage": "تذكير: موعدك مع {hostFirstName} {hostLastName} سيبدأ بعد 30 دقيقة في {appointmentTime}. يرجى التأكد من جاهزيتك وأن الميكروفون والفيديو يعملان بشكل صحيح."
+  },
+  "TwoFactorEmail": {
+    "zakina": "زاكينا",
+    "subject": "رمز التحقق بخطوتين الخاص بك",
+    "message": "رمز التحقق بخطوتين (2FA) الخاص بك هو:",
+    "footer": "إذا لم تطلب هذا، يرجى تجاهل هذه الرسالة."
+  },
+  "VerificationEmail": {
+    "zakina": "زاكينا",
+    "subject": "تأكيد عنوان بريدك الإلكتروني",
+    "welcomeMessage": "مرحبًا بك في زاكينا!",
+    "therapistMessage": "لقد تمت دعوتك إلى زاكينا كمعالج.",
+    "temporaryPasswordMessage": "هنا كلمة المرور المؤقتة الخاصة بك: <strong>{password}</strong>",
+    "confirmEmailMessage": "يرجى تأكيد عنوان بريدك الإلكتروني لإكمال عملية التسجيل.",
+    "confirmEmailButton": "تأكيد البريد الإلكتروني",
+    "ignoreMessage": "إذا لم تقم بالتسجيل لهذا الحساب، يرجى تجاهل هذا البريد الإلكتروني."
+  },
+  "PasswordResetEmail": {
+    "zakina": "زاكينا",
+    "subject": "إعادة تعيين كلمة المرور الخاصة بك",
+    "resetMessage": "لقد تلقينا طلبًا لإعادة تعيين كلمة المرور الخاصة بك. يمكنك القيام بذلك عن طريق النقر على الزر أدناه:",
+    "resetButton": "إعادة تعيين كلمة المرور",
+    "ignoreMessage": "إذا لم تطلب إعادة تعيين كلمة المرور، يرجى تجاهل هذا البريد الإلكتروني."
+  },
+  "AppointmentCancellationEmail": {
+    "zakina": "زاكينا",
+    "therapistSubject": "تم إلغاء الموعد من قبل العميل",
+    "clientSubject": "تم إلغاء موعدك",
+    "therapistButtonText": "عرض جميع مواعيدي",
+    "clientButtonText": "عرض مواعيدي",
+    "therapistLabel": "المعالج:",
+    "clientLabel": "العميل:",
+    "dateLabel": "التاريخ:",
+    "timeLabel": "الوقت:",
+    "reasonLabel": "السبب:",
+    "thankYouMessage": "شكرًا لاستخدامك زاكينا."
+  },
+  "NonPaidAppointmentConfirmationEmail": {
+    "zakina": "زاكينا",
+    "therapistSubject": "حجز موعد جديد",
+    "clientSubject": "تأكيد الموعد",
+    "therapistButtonText": "عرض جميع مواعيدي",
+    "clientButtonText": "عرض مواعيدي",
+    "therapistAdditionalMessage": "للإنضمام إلى الجلسة وإدارة جميع مواعيدك، يرجى زيارة صفحة المواعيد الخاصة بك.",
+    "clientAdditionalMessage": "يرجى ملاحظة أنه يجب دفع ثمن هذا الموعد قبل ساعة واحدة على الأقل من بدء الاجتماع. يمكنك إجراء الدفع باستخدام الرابط أدناه. يمكنك أيضًا الانضمام إلى جلستك القادمة ومشاهدة نظرة عامة على جميع مواعيدك في صفحة المواعيد الخاصة بك.",
+    "payNowButtonText": "ادفع الآن",
+    "thankYouMessage": "شكرًا لاستخدامك زاكينا.",
+    "therapistLabel": "المعالج:",
+    "clientLabel": "العميل:",
+    "dateLabel": "التاريخ:",
+    "timeLabel": "الوقت:"
+  },
+  "InvoicePaidEmail": {
+    "zakina": "زاكينا",
+    "therapistSubject": "قام {clientName} بدفع ثمن موعده",
+    "clientSubject": "تم دفع الفاتورة بنجاح",
+    "therapistAdditionalMessage": "أكمل {clientName} الدفع لموعده معك.",
+    "clientAdditionalMessage": "شكرًا لدفعك. تم تأكيد موعدك مع {therapistName}. يرجى الاطلاع على التفاصيل أدناه.",
+    "therapistButtonText": "عرض جميع المواعيد",
+    "clientButtonText": "عرض مواعيدي",
+    "paymentDetailsTitle": "تفاصيل الدفع",
+    "amountPaidLabel": "المبلغ المدفوع:",
+    "paymentMethodLabel": "طريقة الدفع:",
+    "transactionIdLabel": "معرف المعاملة:",
+    "therapistLabel": "المعالج:",
+    "clientLabel": "العميل:",
+    "dateLabel": "التاريخ:",
+    "timeLabel": "الوقت:",
+    "durationLabel": "المدة:",
+    "minutesLabel": "دقائق",
+    "thankYouMessage": "شكرًا لاستخدامك زاكينا."
+  },
+  "PaidBookingConfirmationEmail": {
+    "zakina": "زاكينا",
+    "therapistSubject": "حجز موعد جديد",
+    "clientSubject": "تأكيد الموعد وإيصال الدفع",
+    "therapistButtonText": "عرض جميع مواعيدي",
+    "clientButtonText": "عرض مواعيدي",
+    "therapistAdditionalMessage": "للإنضمام إلى الجلسة وإدارة جميع مواعيدك، يرجى زيارة صفحة المواعيد الخاصة بك.",
+    "clientAdditionalMessage": "يمكنك الانضمام إلى جلستك القادمة ومشاهدة نظرة عامة على جميع مواعيدك في صفحة المواعيد الخاصة بك.",
+    "paymentDetailsTitle": "تفاصيل الدفع",
+    "amountPaidLabel": "المبلغ المدفوع:",
+    "paymentMethodLabel": "طريقة الدفع:",
+    "transactionIdLabel": "معرف المعاملة:",
+    "therapistLabel": "المعالج:",
+    "clientLabel": "العميل:",
+    "dateLabel": "التاريخ:",
+    "timeLabel": "الوقت:",
+    "durationLabel": "المدة:",
+    "minutesLabel": "دقائق",
+    "thankYouMessage": "شكرًا لاستخدامك زاكينا."
   }
 }

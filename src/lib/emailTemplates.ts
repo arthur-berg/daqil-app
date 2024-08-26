@@ -3,24 +3,27 @@ import { format } from "date-fns";
 const primaryColor = "#0d1a36"; // Hex color converted from HSL
 const secondaryColor = "#e1eef7";
 
-export const twoFactorTokenTemplate = (token: string) => `
+export const twoFactorTokenTemplate = (token: string, t: any) => `
   <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
     <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
       <div style="text-align: center; margin-bottom: 20px;">
-        <h1 style="color: ${primaryColor}; font-size: 24px; margin: 0;">Zakina</h1>
+        <h1 style="color: ${primaryColor}; font-size: 24px; margin: 0;">${t(
+  "zakina"
+)}</h1>
       </div>
       <div style="margin-top: 20px;">
-        <p>Your Two-Factor Authentication (2FA) code is:</p>
+        <p>${t("message")}</p>
         <h2 style="text-align: center; font-size: 28px; color: #333333;">${token}</h2>
       </div>
       <div style="margin-top: 20px; font-size: 12px; color: #888888; text-align: center;">
-        If you did not request this, please ignore this email.
+        ${t("footer")}
       </div>
     </div>
   </div>
 `;
 
 export const verificationEmailTemplate = (
+  t: any,
   token: string,
   password?: string,
   isTherapist?: boolean
@@ -28,36 +31,38 @@ export const verificationEmailTemplate = (
   const encodedToken = encodeURIComponent(token);
   const confirmLink = `${process.env.NEXT_PUBLIC_APP_URL}/auth/new-verification?token=${encodedToken}`;
   const temporaryPasswordMessage = password
-    ? `<p>Here is your temporary password: <strong>${password}</strong></p>`
+    ? `<p>${t("temporaryPasswordMessage", { password })}</p>`
     : "";
 
-  const therapistMessage = isTherapist
-    ? `<p>You have been invited to Zakina as a therapist</p>`
-    : "";
+  const therapistMessage = isTherapist ? `<p>${t("therapistMessage")}</p>` : "";
 
   return `
     <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
         <div style="text-align: center; margin-bottom: 20px;">
-          <h1 style="color: ${primaryColor}; font-size: 24px; margin: 0;">Zakina</h1>
+          <h1 style="color: ${primaryColor}; font-size: 24px; margin: 0;">${t(
+    "zakina"
+  )}</h1>
         </div>
         <div style="margin-top: 20px;">
-          <p>Welcome to Zakina!</p>
+          <p>${t("welcomeMessage")}</p>
           ${therapistMessage}
           ${temporaryPasswordMessage}
           
-          <p>Please confirm your email address to complete the registration process.</p>
-          <a href="${confirmLink}" style="display: inline-block; padding: 12px 24px; margin: 20px 0; background-color: #007bff; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: bold; text-align: center;">Confirm Email</a>
+          <p>${t("confirmEmailMessage")}</p> 
+          <a href="${confirmLink}" style="display: inline-block; padding: 12px 24px; margin: 20px 0; background-color: #007bff; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: bold; text-align: center;">${t(
+    "confirmEmailButton"
+  )}</a> 
         </div>
         <div style="margin-top: 20px; font-size: 12px; color: #888888; text-align: center;">
-          If you did not sign up for this account, please ignore this email.
+          ${t("ignoreMessage")} 
         </div>
       </div>
     </div>
   `;
 };
 
-export const passwordResetEmailTemplate = (token: string) => {
+export const passwordResetEmailTemplate = (token: string, t: any) => {
   const encodedToken = encodeURIComponent(token);
   const resetLink = `${process.env.NEXT_PUBLIC_APP_URL}/auth/new-password?token=${encodedToken}`;
 
@@ -65,14 +70,18 @@ export const passwordResetEmailTemplate = (token: string) => {
     <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
         <div style="text-align: center; margin-bottom: 20px;">
-          <h1 style="color: ${primaryColor}; font-size: 24px; margin: 0;">Zakina</h1>
+          <h1 style="color: ${primaryColor}; font-size: 24px; margin: 0;">${t(
+    "zakina"
+  )}</h1>
         </div>
         <div style="margin-top: 20px;">
-          <p>We received a request to reset your password. You can do so by clicking the button below:</p>
-          <a href="${resetLink}" style="display: inline-block; padding: 12px 24px; margin: 20px 0; background-color: #007bff; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: bold; text-align: center;">Reset Password</a>
+          <p>${t("resetMessage")}</p>
+          <a href="${resetLink}" style="display: inline-block; padding: 12px 24px; margin: 20px 0; background-color: #007bff; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: bold; text-align: center;">${t(
+    "resetButton"
+  )}</a>
         </div>
         <div style="margin-top: 20px; font-size: 12px; color: #888888; text-align: center;">
-          If you did not request a password reset, please ignore this email.
+          ${t("ignoreMessage")} 
         </div>
       </div>
     </div>
@@ -87,33 +96,40 @@ export const appointmentCancellationTemplate = (
     therapistName: string;
     clientName: string;
   },
-  isTherapist: boolean
+  isTherapist: boolean,
+  t: any
 ) => {
-  const subject = isTherapist
-    ? "Appointment Canceled by Client"
-    : "Your Appointment has been Canceled";
+  const subject = isTherapist ? t("therapistSubject") : t("clientSubject");
 
   const appointmentsLink = isTherapist
     ? `${process.env.NEXT_PUBLIC_APP_URL}/therapist/appointments`
     : `${process.env.NEXT_PUBLIC_APP_URL}/appointments`;
 
   const buttonText = isTherapist
-    ? "See all my appointments"
-    : "View my appointments";
+    ? t("therapistButtonText")
+    : t("clientButtonText");
 
   return `
     <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
         <div style="text-align: center; margin-bottom: 20px;">
-          <h1 style="color: ${primaryColor}; font-size: 24px; margin: 0;">Zakina</h1>
+          <h1 style="color: ${primaryColor}; font-size: 24px; margin: 0;">${t(
+    "zakina"
+  )}</h1>
         </div>
         <div style="margin-top: 20px;">
           <p>${subject}</p>
-          <p><strong>Therapist:</strong> ${appointmentDetails.therapistName}</p>
-          <p><strong>Client:</strong> ${appointmentDetails.clientName}</p>
-          <p><strong>Date:</strong> ${appointmentDetails.date}</p>
-          <p><strong>Time:</strong> ${appointmentDetails.time}</p>
-          <p><strong>Reason:</strong> ${appointmentDetails.reason}</p>
+          <p><strong>${t("therapistLabel")}</strong> ${
+    appointmentDetails.therapistName
+  }</p>
+          <p><strong>${t("clientLabel")}</strong> ${
+    appointmentDetails.clientName
+  }</p>
+          <p><strong>${t("dateLabel")}</strong> ${appointmentDetails.date}</p>
+          <p><strong>${t("timeLabel")}</strong> ${appointmentDetails.time}</p>
+          <p><strong>${t("reasonLabel")}</strong> ${
+    appointmentDetails.reason
+  }</p>
         </div>
         <div style="text-align: center; margin-top: 20px;">
           <a href="${appointmentsLink}" style="display: inline-block; padding: 12px 24px; margin: 20px 0; background-color: ${primaryColor}; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: bold;">
@@ -121,7 +137,7 @@ export const appointmentCancellationTemplate = (
           </a>
         </div>
         <div style="margin-top: 20px; font-size: 12px; color: #888888; text-align: center;">
-          Thank you for using Zakina.
+          ${t("thankYouMessage")}
         </div>
       </div>
     </div>
@@ -135,35 +151,46 @@ export const invoicePaidTemplate = (
     therapistName: string;
     clientName: string;
     durationInMinutes: number;
-    amountPaid?: string; // Made optional
-    paymentMethod?: string; // Made optional
-    transactionId?: string; // Made optional
+    amountPaid?: string;
+    paymentMethod?: string;
+    transactionId?: string;
   },
-  isTherapist: boolean
+  isTherapist: boolean,
+  t: any
 ) => {
   const subject = isTherapist
-    ? `${appointmentDetails.clientName} has paid for their appointment`
-    : `Your invoice has been successfully paid`;
+    ? t("therapistSubject", { clientName: appointmentDetails.clientName })
+    : t("clientSubject");
 
   const additionalMessage = isTherapist
-    ? `${appointmentDetails.clientName} has completed the payment for their appointment with you.`
-    : `Thank you for your payment. Your appointment with ${appointmentDetails.therapistName} has been confirmed. Please see the details below.`;
+    ? t("therapistAdditionalMessage", {
+        clientName: appointmentDetails.clientName,
+      })
+    : t("clientAdditionalMessage", {
+        therapistName: appointmentDetails.therapistName,
+      });
 
   const appointmentsLink = isTherapist
     ? `${process.env.NEXT_PUBLIC_APP_URL}/therapist/appointments`
     : `${process.env.NEXT_PUBLIC_APP_URL}/appointments`;
 
   const buttonText = isTherapist
-    ? "View All Appointments"
-    : "View My Appointments";
+    ? t("therapistButtonText")
+    : t("clientButtonText");
 
   const paymentDetails = !isTherapist
     ? `
       <div style="margin-top: 20px;">
-        <h3 style="color: ${primaryColor};">Payment Details</h3>
-        <p><strong>Amount Paid:</strong> ${appointmentDetails.amountPaid}</p>
-        <p><strong>Payment Method:</strong> ${appointmentDetails.paymentMethod}</p>
-        <p><strong>Transaction ID:</strong> ${appointmentDetails.transactionId}</p>
+        <h3 style="color: ${primaryColor};">${t("paymentDetailsTitle")}</h3>
+        <p><strong>${t("amountPaidLabel")}</strong> ${
+        appointmentDetails.amountPaid
+      }</p>
+        <p><strong>${t("paymentMethodLabel")}</strong> ${
+        appointmentDetails.paymentMethod
+      }</p>
+        <p><strong>${t("transactionIdLabel")}</strong> ${
+        appointmentDetails.transactionId
+      }</p>
       </div>
     `
     : "";
@@ -172,15 +199,23 @@ export const invoicePaidTemplate = (
     <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
         <div style="text-align: center; margin-bottom: 20px;">
-          <h1 style="color: ${primaryColor}; font-size: 24px; margin: 0;">Zakina</h1>
+          <h1 style="color: ${primaryColor}; font-size: 24px; margin: 0;">${t(
+    "zakina"
+  )}</h1>
         </div>
         <div style="margin-top: 20px;">
           <p>${subject}</p>
-          <p><strong>Therapist:</strong> ${appointmentDetails.therapistName}</p>
-          <p><strong>Client:</strong> ${appointmentDetails.clientName}</p>
-          <p><strong>Date:</strong> ${appointmentDetails.date}</p>
-          <p><strong>Time:</strong> ${appointmentDetails.time}</p>
-          <p><strong>Duration:</strong> ${appointmentDetails.durationInMinutes} minutes</p>
+          <p><strong>${t("therapistLabel")}</strong> ${
+    appointmentDetails.therapistName
+  }</p>
+          <p><strong>${t("clientLabel")}</strong> ${
+    appointmentDetails.clientName
+  }</p>
+          <p><strong>${t("dateLabel")}</strong> ${appointmentDetails.date}</p>
+          <p><strong>${t("timeLabel")}</strong> ${appointmentDetails.time}</p>
+          <p><strong>${t("durationLabel")}</strong> ${
+    appointmentDetails.durationInMinutes
+  } ${t("minutesLabel")}</p>
         </div>
         ${paymentDetails}
         <div style="margin-top: 20px; font-size: 16px; color: #333333;">
@@ -192,7 +227,7 @@ export const invoicePaidTemplate = (
           </a>
         </div>
         <div style="margin-top: 20px; font-size: 12px; color: #888888; text-align: center;">
-          Thank you for using Zakina.
+          ${t("thankYouMessage")}
         </div>
       </div>
     </div>
@@ -206,35 +241,40 @@ export const paidAppointmentConfirmationTemplate = (
     therapistName: string;
     clientName: string;
     durationInMinutes: number;
-    amountPaid?: string; // Made optional
-    paymentMethod?: string; // Made optional
-    transactionId?: string; // Made optional
+    amountPaid?: string;
+    paymentMethod?: string;
+    transactionId?: string;
   },
-  isTherapist: boolean
+  isTherapist: boolean,
+  t: any
 ) => {
-  const subject = isTherapist
-    ? "New Appointment Booking"
-    : "Appointment Confirmation and Payment Receipt";
+  const subject = isTherapist ? t("therapistSubject") : t("clientSubject");
 
   const appointmentsLink = isTherapist
     ? `${process.env.NEXT_PUBLIC_APP_URL}/therapist/appointments`
     : `${process.env.NEXT_PUBLIC_APP_URL}/appointments`;
 
   const buttonText = isTherapist
-    ? "See all my appointments"
-    : "View my appointments";
+    ? t("therapistButtonText")
+    : t("clientButtonText");
 
   const additionalMessage = isTherapist
-    ? "To join the session and manage all your appointments, please visit your appointments page."
-    : "You can join your upcoming session and see an overview of all your appointments on your appointments page.";
+    ? t("therapistAdditionalMessage")
+    : t("clientAdditionalMessage");
 
   const paymentDetails = !isTherapist
     ? `
       <div style="margin-top: 20px;">
-        <h3 style="color: ${primaryColor};">Payment Details</h3>
-        <p><strong>Amount Paid:</strong> ${appointmentDetails.amountPaid}</p>
-        <p><strong>Payment Method:</strong> ${appointmentDetails.paymentMethod}</p>
-        <p><strong>Transaction ID:</strong> ${appointmentDetails.transactionId}</p>
+        <h3 style="color: ${primaryColor};">${t("paymentDetailsTitle")}</h3>
+        <p><strong>${t("amountPaidLabel")}</strong> ${
+        appointmentDetails.amountPaid
+      }</p>
+        <p><strong>${t("paymentMethodLabel")}</strong> ${
+        appointmentDetails.paymentMethod
+      }</p>
+        <p><strong>${t("transactionIdLabel")}</strong> ${
+        appointmentDetails.transactionId
+      }</p>
       </div>
     `
     : "";
@@ -243,15 +283,23 @@ export const paidAppointmentConfirmationTemplate = (
     <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
         <div style="text-align: center; margin-bottom: 20px;">
-          <h1 style="color: ${primaryColor}; font-size: 24px; margin: 0;">Zakina</h1>
+          <h1 style="color: ${primaryColor}; font-size: 24px; margin: 0;">${t(
+    "zakina"
+  )}</h1>
         </div>
         <div style="margin-top: 20px;">
           <p>${subject}</p>
-          <p><strong>Therapist:</strong> ${appointmentDetails.therapistName}</p>
-          <p><strong>Client:</strong> ${appointmentDetails.clientName}</p>
-          <p><strong>Date:</strong> ${appointmentDetails.date}</p>
-          <p><strong>Time:</strong> ${appointmentDetails.time}</p>
-          <p><strong>Duration:</strong> ${appointmentDetails.durationInMinutes} minutes</p>
+          <p><strong>${t("therapistLabel")}</strong> ${
+    appointmentDetails.therapistName
+  }</p>
+          <p><strong>${t("clientLabel")}</strong> ${
+    appointmentDetails.clientName
+  }</p>
+          <p><strong>${t("dateLabel")}</strong> ${appointmentDetails.date}</p>
+          <p><strong>${t("timeLabel")}</strong> ${appointmentDetails.time}</p>
+          <p><strong>${t("durationLabel")}</strong> ${
+    appointmentDetails.durationInMinutes
+  } ${t("minutesLabel")}</p>
         </div>
         ${paymentDetails}
         <div style="margin-top: 20px; font-size: 16px; color: #333333;">
@@ -263,7 +311,7 @@ export const paidAppointmentConfirmationTemplate = (
           </a>
         </div>
         <div style="margin-top: 20px; font-size: 12px; color: #888888; text-align: center;">
-          Thank you for using Zakina.
+          ${t("thankYouMessage")}
         </div>
       </div>
     </div>
@@ -278,17 +326,15 @@ export const nonPaidAppointmentConfirmationTemplate = (
     appointmentId: string;
     appointmentTypeId: string;
   },
-  isTherapist: boolean
+  isTherapist: boolean,
+  t: any
 ) => {
-  const subject = isTherapist
-    ? "New Appointment Booking"
-    : "Appointment Confirmation";
+  const subject = isTherapist ? t("therapistSubject") : t("clientSubject");
 
   const appointmentsLink = isTherapist
     ? `${process.env.NEXT_PUBLIC_APP_URL}/therapist/appointments`
     : `${process.env.NEXT_PUBLIC_APP_URL}/appointments`;
 
-  // Encode the date to ensure it's safely included in the URL
   const encodedDate = encodeURIComponent(appointmentDetails.date.toString());
   const formattedDate = format(new Date(appointmentDetails.date), "yyyy-MM-dd");
   const formattedTime = format(new Date(appointmentDetails.date), "HH:mm");
@@ -296,18 +342,18 @@ export const nonPaidAppointmentConfirmationTemplate = (
   const paymentLink = `${process.env.NEXT_PUBLIC_APP_URL}/invoices/${appointmentDetails.appointmentId}/checkout?appointmentId=${appointmentDetails.appointmentId}&appointmentTypeId=${appointmentDetails.appointmentTypeId}&date=${encodedDate}`;
 
   const buttonText = isTherapist
-    ? "See all my appointments"
-    : "View my appointments";
+    ? t("therapistButtonText")
+    : t("clientButtonText");
 
   const additionalMessage = isTherapist
-    ? "To join the session and manage all your appointments, please visit your appointments page."
-    : `Please note that this appointment needs to be paid for at least 1 hour before the meeting starts. You can make the payment using the link below. You can also join your upcoming session and see an overview of all your appointments on your appointments page.`;
+    ? t("therapistAdditionalMessage")
+    : t("clientAdditionalMessage");
 
   const payNowButton = !isTherapist
     ? `
       <div style="text-align: center; margin-top: 20px;">
         <a href="${paymentLink}" style="display: inline-block; padding: 12px 24px; margin-right: 10px; background-color: ${primaryColor}; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: bold;">
-          Pay Now
+          ${t("payNowButtonText")}
         </a>
       </div>
     `
@@ -317,14 +363,20 @@ export const nonPaidAppointmentConfirmationTemplate = (
     <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
         <div style="text-align: center; margin-bottom: 20px;">
-          <h1 style="color: ${primaryColor}; font-size: 24px; margin: 0;">Zakina</h1>
+          <h1 style="color: ${primaryColor}; font-size: 24px; margin: 0;">${t(
+    "zakina"
+  )}</h1>
         </div>
         <div style="margin-top: 20px;">
           <p>${subject}</p>
-          <p><strong>Therapist:</strong> ${appointmentDetails.therapistName}</p>
-          <p><strong>Client:</strong> ${appointmentDetails.clientName}</p>
-          <p><strong>Date:</strong> ${formattedDate}</p>
-          <p><strong>Time:</strong> ${formattedTime}</p>
+          <p><strong>${t("therapistLabel")}</strong> ${
+    appointmentDetails.therapistName
+  }</p>
+          <p><strong>${t("clientLabel")}</strong> ${
+    appointmentDetails.clientName
+  }</p>
+          <p><strong>${t("dateLabel")}</strong> ${formattedDate}</p>
+          <p><strong>${t("timeLabel")}</strong> ${formattedTime}</p>
         </div>
         <div style="margin-top: 20px; font-size: 16px; color: #333333;">
           <p>${additionalMessage}</p>
@@ -336,7 +388,7 @@ export const nonPaidAppointmentConfirmationTemplate = (
           </a>
         </div>
         <div style="margin-top: 20px; font-size: 12px; color: #888888; text-align: center;">
-          Thank you for using Zakina.
+          ${t("thankYouMessage")}
         </div>
       </div>
     </div>
@@ -346,7 +398,8 @@ export const nonPaidAppointmentConfirmationTemplate = (
 export const paymentReminderTemplate = (
   clientFirstName: string,
   appointmentId: string,
-  appointmentStartTime: string
+  appointmentStartTime: string,
+  t: any // Accept the translation function
 ) => {
   const paymentLink = `${process.env.NEXT_PUBLIC_APP_URL}/invoices/${appointmentId}/checkout?appointmentId=${appointmentId}`;
 
@@ -354,52 +407,47 @@ export const paymentReminderTemplate = (
     <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
         <div style="text-align: center; margin-bottom: 20px;">
-          <h1 style="color: ${primaryColor}; font-size: 24px; margin: 0;">Zakina</h1>
+          <h1 style="color: ${primaryColor}; font-size: 24px; margin: 0;">${t(
+    "companyName"
+  )}</h1>
         </div>
         <div style="margin-top: 20px;">
-          <p>Dear ${clientFirstName},</p>
-          <p>This is a friendly reminder that payment for your upcoming appointment at ${appointmentStartTime} is due.</p>
-          <p>Please ensure that your payment is completed at least 1 hour before the scheduled time.</p>
+          <p>${t("greeting", { clientFirstName })}</p>
+          <p>${t("reminderText", { appointmentStartTime })}</p>
+          <p>${t("paymentInstructions")}</p>
           <div style="text-align: center; margin-top: 20px;">
             <a href="${paymentLink}" style="display: inline-block; padding: 12px 24px; margin-right: 10px; background-color: ${primaryColor}; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: bold;">
-              Pay Now
+              ${t("payNowButton")}
             </a>
           </div>
         </div>
         <div style="margin-top: 20px; font-size: 12px; color: #888888; text-align: center;">
-          Thank you for using Zakina.
+          ${t("footerText")}
         </div>
       </div>
     </div>
   `;
 };
 
-export const reminderEmailTemplate = (appointmentDetails: {
-  date: string;
-  time: string;
-  therapistName: string;
-  clientName: string;
-}) => {
-  const appointmentsLink = `${process.env.NEXT_PUBLIC_APP_URL}/appointments`;
-
+export const reminderEmailTemplate = (t: any, appointmentDetails: any) => {
   return `
     <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
         <div style="text-align: center; margin-bottom: 20px;">
-          <h1 style="color: ${primaryColor}; font-size: 24px; margin: 0;">Zakina</h1>
+          <h1 style="color: #0073e6; font-size: 24px; margin: 0;">${t(
+            "zakina"
+          )}</h1>
         </div>
         <div style="margin-top: 20px;">
-          <p>Dear ${appointmentDetails.clientName},</p>
-          <p>This is a friendly reminder for your upcoming appointment with ${appointmentDetails.therapistName} on ${appointmentDetails.date} at ${appointmentDetails.time}.</p>
-          <p>Please make sure to be on time for your appointment.</p>
-        </div>
-        <div style="text-align: center; margin-top: 20px;">
-          <a href="${appointmentsLink}" style="display: inline-block; padding: 12px 24px; margin: 20px 0; background-color: ${primaryColor}; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: bold;">
-            View My Appointments
-          </a>
+          <p>${t("greeting", { name: appointmentDetails.clientName })}</p>
+          <p>${t("message", {
+            therapistName: appointmentDetails.therapistName,
+            date: appointmentDetails.date,
+            time: appointmentDetails.time,
+          })}</p>
         </div>
         <div style="margin-top: 20px; font-size: 12px; color: #888888; text-align: center;">
-          Thank you for choosing Zakina.
+          ${t("footer")}
         </div>
       </div>
     </div>

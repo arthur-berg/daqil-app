@@ -1,32 +1,39 @@
 import { qstashClient, scheduleTask } from "@/lib/qstash"; // Import necessary functions
 import ScheduledTask from "@/models/ScheduledTask";
-import { addMinutes, isAfter, subDays, subHours, subMinutes } from "date-fns";
+import {
+  addMinutes,
+  addSeconds,
+  isAfter,
+  subDays,
+  subHours,
+  subMinutes,
+  subSeconds,
+} from "date-fns";
 
 export const schedulePaymentReminders = async (
   appointmentId: string,
-  paymentExpiryDate: Date
+  paymentExpiryDate: Date,
+  locale: string
 ): Promise<void> => {
   const now = new Date();
 
-  // Calculate reminder times
   const reminderTimes = [
     subDays(paymentExpiryDate, 24), // 24 hours before
     subHours(paymentExpiryDate, 6), // 6 hours before
     subHours(paymentExpiryDate, 2), // 2 hours before
   ];
 
-  // Filter out reminder times that are in the past
   const validReminderTimes = reminderTimes.filter((reminderTime) =>
     isAfter(reminderTime, now)
   );
 
-  // Create an array of promises for scheduling tasks
   const taskPromises = validReminderTimes.map(async (reminderTime) => {
     const unixTimestampInSeconds = Math.floor(reminderTime.getTime() / 1000);
     const taskId: string = await scheduleTask(
       `${process.env.QSTASH_API_URL}/send-payment-reminder`,
       { appointmentId },
-      unixTimestampInSeconds
+      unixTimestampInSeconds,
+      locale
     );
 
     await ScheduledTask.create({
@@ -36,7 +43,6 @@ export const schedulePaymentReminders = async (
     });
   });
 
-  // Wait for all scheduling tasks to complete
   await Promise.all(taskPromises);
 };
 
@@ -73,19 +79,24 @@ export const scheduleStatusUpdateJob = async (appointment: any) => {
   });
 };
 
-export const scheduleReminderJobs = async (appointment: any) => {
+export const scheduleReminderJobs = async (
+  appointment: any,
+  locale: string
+) => {
   const appointmentId = appointment._id.toString();
   const now = new Date();
 
   const oneDayBefore = subDays(new Date(appointment.startDate), 1);
   const threeHourBefore = subHours(new Date(appointment.startDate), 3);
   const thirtyMinutesBefore = subMinutes(new Date(appointment.startDate), 30);
+  /*   const tenSecondsAfter = addSeconds(new Date(now), 10); */
 
   if (isAfter(oneDayBefore, addMinutes(now, 1))) {
     const emailReminderTaskIdOneDay = await scheduleTask(
       `${process.env.QSTASH_API_URL}/send-email-reminder`,
       { appointmentId: appointmentId },
-      Math.floor(oneDayBefore.getTime() / 1000)
+      Math.floor(oneDayBefore.getTime() / 1000),
+      locale
     );
 
     await ScheduledTask.create({
@@ -99,7 +110,8 @@ export const scheduleReminderJobs = async (appointment: any) => {
     const emailReminderTaskIdOneHour = await scheduleTask(
       `${process.env.QSTASH_API_URL}/send-email-reminder`,
       { clientEmail: appointment.clientEmail, appointmentId: appointmentId },
-      Math.floor(threeHourBefore.getTime() / 1000)
+      Math.floor(threeHourBefore.getTime() / 1000),
+      locale
     );
 
     await ScheduledTask.create({
@@ -112,7 +124,8 @@ export const scheduleReminderJobs = async (appointment: any) => {
   const smsReminderTaskId = await scheduleTask(
     `${process.env.QSTASH_API_URL}/sms-reminder`,
     { clientPhone: appointment.clientPhone, appointmentId: appointmentId },
-    Math.floor(thirtyMinutesBefore.getTime() / 1000)
+    Math.floor(thirtyMinutesBefore.getTime() / 1000),
+    locale
   );
 
   await ScheduledTask.create({
@@ -126,7 +139,6 @@ export const cancelAllScheduledJobsForAppointment = async (
   appointmentId: string
 ): Promise<void> => {
   try {
-    // Fetch all scheduled tasks for this appointment
     const tasks = await ScheduledTask.find({ appointmentId });
     if (tasks.length === 0) {
       console.log(`No scheduled jobs found for appointment ${appointmentId}.`);
@@ -162,7 +174,6 @@ export const cancelPaymentRelatedJobsForAppointment = async (
       return;
     }
 
-    // Cancel each task and remove it from the collection
     const taskIds = tasks.map((task) => task.taskId);
 
     await qstashClient.messages.deleteMany(taskIds);

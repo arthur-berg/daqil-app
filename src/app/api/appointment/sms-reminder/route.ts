@@ -3,11 +3,17 @@ import { verifySignatureAppRouter } from "@upstash/qstash/nextjs";
 import Appointment from "@/models/Appointment";
 import { sendSmsReminder } from "@/lib/twilio-sms";
 import { format, subMinutes } from "date-fns"; // Import format from date-fns
+import { getTranslations } from "next-intl/server";
 
 export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
   try {
     const body = await req.json();
-    const { appointmentId } = body;
+    const { appointmentId, locale } = body;
+
+    const t = await getTranslations({
+      locale,
+      namespace: "SmsReminder",
+    });
 
     const appointment = await Appointment.findById(appointmentId)
       .populate("participants.userId")
@@ -41,7 +47,8 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
       clientPhone,
       hostFirstName,
       hostLastName,
-      formattedTime
+      formattedTime,
+      t
     );
 
     return NextResponse.json({

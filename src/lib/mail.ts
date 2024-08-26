@@ -14,6 +14,7 @@ import {
 } from "./emailTemplates";
 import Appointment from "@/models/Appointment";
 import { format } from "date-fns";
+import { getTranslations } from "next-intl/server";
 
 mailchimpMarketing.setConfig({
   apiKey: process.env.MAILCHIMP_MARKETING_KEY,
@@ -89,10 +90,11 @@ export const addUserNameToSubscriberProfile = async (
 };
 
 export const sendTwoFactorTokenEmail = async (email: string, token: string) => {
+  const t = await getTranslations("TwoFactorEmail");
   const message = {
     from_email: "info@zakina-app.com",
-    subject: "Your Two-Factor Authentication Code",
-    html: twoFactorTokenTemplate(token),
+    subject: t("subject"),
+    html: twoFactorTokenTemplate(token, t),
     to: [
       {
         email,
@@ -116,10 +118,12 @@ export const sendVerificationEmail = async (
   password?: string,
   isTherapist?: boolean
 ) => {
+  const t = await getTranslations("VerificationEmail");
+
   const message = {
     from_email: "info@zakina-app.com",
-    subject: "Confirm Your Email Address",
-    html: verificationEmailTemplate(token, password, isTherapist),
+    subject: t("subject"),
+    html: verificationEmailTemplate(t, token, password, isTherapist),
     to: [
       {
         email,
@@ -138,10 +142,12 @@ export const sendVerificationEmail = async (
 };
 
 export const sendPasswordResetEmail = async (email: string, token: string) => {
+  const t = await getTranslations("PasswordResetEmail");
+
   const message = {
     from_email: "info@zakina-app.com",
-    subject: "Reset Your Password",
-    html: passwordResetEmailTemplate(token),
+    subject: t("subject"),
+    html: passwordResetEmailTemplate(token, t),
     to: [
       {
         email,
@@ -170,10 +176,12 @@ export const sendAppointmentCancellationEmail = async (
     clientName: string;
   }
 ) => {
+  const t = await getTranslations("AppointmentCancellationEmail");
+
   const therapistMessage = {
     from_email: "info@zakina-app.com",
-    subject: "Appointment Cancellation",
-    html: appointmentCancellationTemplate(appointmentDetails, true),
+    subject: t("therapistSubject"),
+    html: appointmentCancellationTemplate(appointmentDetails, true, t),
     to: [
       {
         email: therapistEmail,
@@ -184,8 +192,8 @@ export const sendAppointmentCancellationEmail = async (
 
   const clientMessage = {
     from_email: "info@zakina-app.com",
-    subject: "Appointment Cancellation",
-    html: appointmentCancellationTemplate(appointmentDetails, false),
+    subject: t("clientSubject"),
+    html: appointmentCancellationTemplate(appointmentDetails, false, t),
     to: [
       {
         email: clientEmail,
@@ -215,10 +223,12 @@ export const sendNonPaidBookingConfirmationEmail = async (
     appointmentTypeId: string;
   }
 ) => {
+  const t = await getTranslations("NonPaidAppointmentConfirmationEmail");
+
   const therapistMessage = {
     from_email: "info@zakina-app.com",
-    subject: "New Appointment Booking",
-    html: nonPaidAppointmentConfirmationTemplate(appointmentDetails, true),
+    subject: t("therapistSubject"),
+    html: nonPaidAppointmentConfirmationTemplate(appointmentDetails, true, t),
     to: [
       {
         email: therapistEmail,
@@ -229,9 +239,8 @@ export const sendNonPaidBookingConfirmationEmail = async (
 
   const clientMessage = {
     from_email: "info@zakina-app.com",
-    subject:
-      "Action Needed: Complete Your Payment for Your Upcoming Appointment",
-    html: nonPaidAppointmentConfirmationTemplate(appointmentDetails, false),
+    subject: t("clientSubject"),
+    html: nonPaidAppointmentConfirmationTemplate(appointmentDetails, false, t),
     to: [
       {
         email: clientEmail,
@@ -265,12 +274,15 @@ export const sendInvoicePaidEmail = async (
     amountPaid: string;
     paymentMethod: string;
     transactionId: string;
-  }
+  },
+  t: any
 ) => {
   const therapistMessage = {
     from_email: "info@zakina-app.com",
-    subject: `${appointmentDetails.clientName} has paid for their appointment`,
-    html: invoicePaidTemplate(appointmentDetails, true),
+    subject: t("therapistSubject", {
+      clientName: appointmentDetails.clientName,
+    }),
+    html: invoicePaidTemplate(appointmentDetails, true, t),
     to: [
       {
         email: therapistEmail,
@@ -281,8 +293,8 @@ export const sendInvoicePaidEmail = async (
 
   const clientMessage = {
     from_email: "info@zakina-app.com",
-    subject: "Invoice Successfully Paid",
-    html: invoicePaidTemplate(appointmentDetails, false),
+    subject: t("clientSubject"),
+    html: invoicePaidTemplate(appointmentDetails, false, t),
     to: [
       {
         email: clientEmail,
@@ -316,12 +328,13 @@ export const sendPaidBookingConfirmationEmail = async (
     amountPaid: string;
     paymentMethod: string;
     transactionId: string;
-  }
+  },
+  t: any
 ) => {
   const therapistMessage = {
     from_email: "info@zakina-app.com",
-    subject: "New Appointment Booking",
-    html: paidAppointmentConfirmationTemplate(appointmentDetails, true),
+    subject: t("therapistSubject"),
+    html: paidAppointmentConfirmationTemplate(appointmentDetails, true, t),
     to: [
       {
         email: therapistEmail,
@@ -332,8 +345,8 @@ export const sendPaidBookingConfirmationEmail = async (
 
   const clientMessage = {
     from_email: "info@zakina-app.com",
-    subject: "Appointment Confirmation",
-    html: paidAppointmentConfirmationTemplate(appointmentDetails, false),
+    subject: t("clientSubject"),
+    html: paidAppointmentConfirmationTemplate(appointmentDetails, false, t),
     to: [
       {
         email: clientEmail,
@@ -359,15 +372,17 @@ export const sendPaymentReminderEmail = async (
   email: string,
   clientFirstName: string,
   appointmentId: string,
-  appointmentStartTime: string
+  appointmentStartTime: string,
+  t: any
 ) => {
   const message = {
     from_email: "info@zakina-app.com",
-    subject: "Reminder: Payment Required for Your Upcoming Appointment",
+    subject: t("subject"),
     html: paymentReminderTemplate(
       clientFirstName,
       appointmentId,
-      appointmentStartTime
+      appointmentStartTime,
+      t
     ),
     to: [
       {
@@ -388,7 +403,8 @@ export const sendPaymentReminderEmail = async (
 
 export const sendReminderEmail = async (
   clientEmail: string,
-  appointment: any
+  appointment: any,
+  t: any
 ) => {
   try {
     const appointmentDetails = {
@@ -398,8 +414,8 @@ export const sendReminderEmail = async (
       clientName: `${appointment.participants[0].userId.firstName}`,
     };
 
-    const subject = "Upcoming Appointment Reminder";
-    const html = reminderEmailTemplate(appointmentDetails);
+    const subject = t("subject");
+    const html = reminderEmailTemplate(t, appointmentDetails);
 
     const message = {
       from_email: "info@zakina-app.com",

@@ -2,13 +2,17 @@ import { NextRequest, NextResponse } from "next/server";
 import { verifySignatureAppRouter } from "@upstash/qstash/nextjs";
 import { sendReminderEmail } from "@/lib/mail";
 import Appointment from "@/models/Appointment";
+import { getTranslations } from "next-intl/server";
 
 export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
   try {
     const body = await req.json();
-    const { appointmentId } = body;
+    const { appointmentId, locale } = body;
 
-    // Logic to send email reminder
+    const t = await getTranslations({
+      locale,
+      namespace: "ReminderEmail",
+    });
 
     const appointment = await Appointment.findById(appointmentId)
       .populate("participants.userId")
@@ -23,7 +27,7 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
 
     const clientEmail = appointment.participants[0].userId.email;
 
-    await sendReminderEmail(clientEmail, appointment);
+    await sendReminderEmail(clientEmail, appointment, t);
 
     return NextResponse.json({
       message: `Email reminder sent to ${clientEmail} for appointment ${appointmentId}.`,

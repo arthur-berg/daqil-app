@@ -3,11 +3,17 @@ import { verifySignatureAppRouter } from "@upstash/qstash/nextjs";
 import { sendPaymentReminderEmail } from "@/lib/mail";
 import Appointment from "@/models/Appointment";
 import { format } from "date-fns";
+import { getTranslations } from "next-intl/server";
 
 export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
   try {
     const body = await req.json();
-    const { appointmentId } = body;
+    const { appointmentId, locale } = body;
+
+    const t = await getTranslations({
+      locale,
+      namespace: "PaymentReminderEmail",
+    });
 
     const appointment = await Appointment.findById(appointmentId).populate(
       "participants.userId"
@@ -31,7 +37,8 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
       clientEmail,
       clientFirstName,
       appointmentId,
-      appointmentStartTime
+      appointmentStartTime,
+      t
     );
 
     return NextResponse.json({

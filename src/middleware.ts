@@ -33,6 +33,7 @@ const authMiddleware = auth(async (req) => {
 
   if (isApiRoute) {
     // Skip locale handling for API routes
+
     return;
   }
 

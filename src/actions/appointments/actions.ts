@@ -9,7 +9,7 @@ import { UserRole } from "@/generalTypes";
 import User from "@/models/User";
 import { getAppointmentTypeById } from "@/data/appointment-types";
 import { revalidatePath } from "next/cache";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { format } from "date-fns";
 import {
   sendAppointmentCancellationEmail,
@@ -223,6 +223,7 @@ export const confirmBookingPayLater = async (
     getTranslations("SuccessMessages"),
     getTranslations("ErrorMessages"),
   ]);
+  const locale = await getLocale();
 
   const client = await requireAuth([UserRole.CLIENT, UserRole.ADMIN]);
 
@@ -320,7 +321,7 @@ export const confirmBookingPayLater = async (
       appointmentDetails
     );
 
-    await schedulePaymentReminders(appointmentId, paymentExpiryDate);
+    await schedulePaymentReminders(appointmentId, paymentExpiryDate, locale);
     await scheduleRemoveUnpaidJobs(appointmentId, paymentExpiryDate);
 
     revalidatePath("/book-appointment");
@@ -508,6 +509,7 @@ export const scheduleAppointment = async (
     getTranslations("SuccessMessages"),
     getTranslations("ErrorMessages"),
   ]);
+  const locale = await getLocale();
   const therapist = await requireAuth([UserRole.THERAPIST]);
 
   const validatedFields = AppointmentSchema.safeParse(values);
@@ -583,7 +585,7 @@ export const scheduleAppointment = async (
 
     paymentExpiryDate.setHours(paymentExpiryDate.getHours() - 1);
 
-    await schedulePaymentReminders(appointment[0], paymentExpiryDate);
+    await schedulePaymentReminders(appointment[0], paymentExpiryDate, locale);
     await scheduleStatusUpdateJob(appointment[0]);
 
     // Check and update client's selected therapist

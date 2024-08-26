@@ -7,12 +7,13 @@ export const qstashClient = new Client({
 export const scheduleTask = async (
   url: string,
   body: any,
-  unixTimestampInSeconds: number
+  unixTimestampInSeconds: number,
+  locale?: string
 ) => {
   try {
     const response = await qstashClient.publishJSON({
       url,
-      body,
+      body: { ...body, locale: locale },
       retries: 3,
       method: "POST",
       notBefore: unixTimestampInSeconds,

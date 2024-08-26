@@ -15,6 +15,7 @@ import {
   scheduleReminderJobs,
   scheduleStatusUpdateJob,
 } from "@/lib/schedule-appointment-jobs";
+import { getTranslations } from "next-intl/server";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET as string;
@@ -44,6 +45,7 @@ export async function POST(req: Request): Promise<NextResponse> {
     if (eventType === "payment_intent.succeeded") {
       const paymentIntent = data;
       const appointmentId = paymentIntent.metadata.appointmentId;
+      const locale = paymentIntent.metadata.locale;
       const trackDiscountCodeRedeemed =
         paymentIntent.metadata.trackDiscountCodeRedeemed;
       const discountCodeId = paymentIntent.metadata.discountCodeId;
@@ -157,13 +159,19 @@ export async function POST(req: Request): Promise<NextResponse> {
               amountPaid: amountPaid,
             });
 
+            const t = await getTranslations({
+              locale,
+              namespace: "PaidBookingConfirmationEmail",
+            });
+
             await sendPaidBookingConfirmationEmail(
               therapistEmail,
               clientEmail,
-              appointmentDetails
+              appointmentDetails,
+              t
             );
 
-            await scheduleReminderJobs(appointment);
+            await scheduleReminderJobs(appointment, locale);
             await scheduleStatusUpdateJob(appointment);
           } else if (appointment.payment.method === "payAfterBooking") {
             await Appointment.findByIdAndUpdate(appointmentId, {
@@ -172,10 +180,16 @@ export async function POST(req: Request): Promise<NextResponse> {
 
             await scheduleStatusUpdateJob(appointment);
 
+            const t = await getTranslations({
+              locale,
+              namespace: "InvoicePaidEmail",
+            });
+
             await sendInvoicePaidEmail(
               therapistEmail,
               clientEmail,
-              appointmentDetails
+              appointmentDetails,
+              t
             );
           }
 

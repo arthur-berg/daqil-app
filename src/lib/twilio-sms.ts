@@ -13,14 +13,20 @@ const client = twilio(
  * @param hostLastName - Last name of the host (therapist)
  * @param appointmentTime - The formatted appointment start time
  */
+
 export const sendSmsReminder = async (
   to: string,
   hostFirstName: string,
   hostLastName: string,
-  appointmentTime: string
+  appointmentTime: string,
+  t: any // Pass the translation function
 ): Promise<void> => {
   try {
-    const message = `Reminder: Your appointment with ${hostFirstName} ${hostLastName} starts in 30 minutes at ${appointmentTime}. Please be ready and ensure your microphone and video are working properly.`;
+    const message = t("reminderMessage", {
+      hostFirstName,
+      hostLastName,
+      appointmentTime,
+    }); // Use the translation function to generate the message
 
     // Send SMS via Twilio
     await client.messages.create({
