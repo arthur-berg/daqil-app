@@ -174,7 +174,7 @@ const DefaultAvailabilityManager = ({
   const intervalOptions = ["15", "30", "45", "60"];
 
   return timeRangeInputs ? (
-    <div className="mt-6 bg-white rounded-lg p-6">
+    <div className="bg-white rounded-lg md:p-6">
       {/* <h2 className="text-xl font-bold mb-4">Recurring times & settings</h2> */}
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmitDefaultAvailability)}>

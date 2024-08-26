@@ -110,7 +110,7 @@ export const scheduleReminderJobs = async (appointment: any) => {
   }
 
   const smsReminderTaskId = await scheduleTask(
-    `${process.env.QSTASH_API_URL}/send-sms-reminder`,
+    `${process.env.QSTASH_API_URL}/sms-reminder`,
     { clientPhone: appointment.clientPhone, appointmentId: appointmentId },
     Math.floor(thirtyMinutesBefore.getTime() / 1000)
   );

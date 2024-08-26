@@ -20,10 +20,14 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
     }
 
     // Check if the appointment's payment status is pending
+
     if (appointment.payment.status === "pending") {
       // Remove the appointment from the client's temporarilyReservedAppointments
       await User.updateOne(
-        { _id: appointment.participants[0].userId }, // assuming first participant is the client
+        {
+          _id: appointment.participants[0].userId,
+          "appointments.temporarilyReservedAppointments": appointmentId,
+        }, // assuming first participant is the client
         {
           $pull: {
             "appointments.$.temporarilyReservedAppointments": appointmentId,
@@ -33,7 +37,10 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
 
       // Remove the appointment from the therapist's temporarilyReservedAppointments
       await User.updateOne(
-        { _id: appointment.hostUserId },
+        {
+          _id: appointment.hostUserId,
+          "appointments.temporarilyReservedAppointments": appointmentId,
+        },
         {
           $pull: {
             "appointments.$.temporarilyReservedAppointments": appointmentId,
