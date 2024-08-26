@@ -13,6 +13,7 @@ import {
   reminderEmailTemplate,
 } from "./emailTemplates";
 import Appointment from "@/models/Appointment";
+import { format } from "date-fns";
 
 mailchimpMarketing.setConfig({
   apiKey: process.env.MAILCHIMP_MARKETING_KEY,
@@ -228,7 +229,8 @@ export const sendNonPaidBookingConfirmationEmail = async (
 
   const clientMessage = {
     from_email: "info@zakina-app.com",
-    subject: "Appointment Confirmation",
+    subject:
+      "Action Needed: Complete Your Payment for Your Upcoming Appointment",
     html: nonPaidAppointmentConfirmationTemplate(appointmentDetails, false),
     to: [
       {
@@ -355,12 +357,18 @@ export const sendPaidBookingConfirmationEmail = async (
 
 export const sendPaymentReminderEmail = async (
   email: string,
-  appointmentId: string
+  clientFirstName: string,
+  appointmentId: string,
+  appointmentStartTime: string
 ) => {
   const message = {
     from_email: "info@zakina-app.com",
     subject: "Reminder: Payment Required for Your Upcoming Appointment",
-    html: paymentReminderTemplate(appointmentId), // Use the new template function
+    html: paymentReminderTemplate(
+      clientFirstName,
+      appointmentId,
+      appointmentStartTime
+    ),
     to: [
       {
         email,
@@ -380,24 +388,16 @@ export const sendPaymentReminderEmail = async (
 
 export const sendReminderEmail = async (
   clientEmail: string,
-  appointmentId: string
+  appointment: any
 ) => {
   try {
-    // Fetch appointment details
-    const appointment = await Appointment.findById(appointmentId);
-    if (!appointment) {
-      console.log(`Appointment ${appointmentId} not found.`);
-      return;
-    }
-
     const appointmentDetails = {
-      date: appointment.startDate.toDateString(),
-      time: appointment.startDate.toLocaleTimeString(),
+      date: format(new Date(appointment.startDate), "PPPP"),
+      time: format(new Date(appointment.startDate), "p"),
       therapistName: `${appointment.hostUserId.firstName} ${appointment.hostUserId.lastName}`,
-      clientName: `${appointment.participants[0].userId.firstName} ${appointment.participants[0].userId.lastName}`,
+      clientName: `${appointment.participants[0].userId.firstName}`,
     };
 
-    // Prepare email content
     const subject = "Upcoming Appointment Reminder";
     const html = reminderEmailTemplate(appointmentDetails);
 
@@ -413,17 +413,16 @@ export const sendReminderEmail = async (
       ],
     };
 
-    // Send the email
     await mailchimpTx.messages.send({
       message: message as any,
     });
 
     console.log(
-      `Email reminder sent to ${clientEmail} for appointment ${appointmentId}.`
+      `Email reminder sent to ${clientEmail} for appointment ${appointment._id}.`
     );
   } catch (error) {
     console.error(
-      `Error sending email reminder for appointment ${appointmentId}:`,
+      `Error sending email reminder for appointment ${appointment._id}:`,
       error
     );
   }

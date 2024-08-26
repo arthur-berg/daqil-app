@@ -12,8 +12,8 @@ import {
 import CodeRedemption from "@/models/CodeRedemption";
 import {
   cancelPaymentRelatedJobsForAppointment,
-  scheduleAppointmentJobs,
-  scheduleCancelUnpaidJobs,
+  scheduleReminderJobs,
+  scheduleStatusUpdateJob,
 } from "@/lib/schedule-appointment-jobs";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
@@ -163,11 +163,14 @@ export async function POST(req: Request): Promise<NextResponse> {
               appointmentDetails
             );
 
-            await scheduleAppointmentJobs(appointment);
+            await scheduleReminderJobs(appointment);
+            await scheduleStatusUpdateJob(appointment);
           } else if (appointment.payment.method === "payAfterBooking") {
             await Appointment.findByIdAndUpdate(appointmentId, {
               "payment.status": "paid",
             });
+
+            await scheduleStatusUpdateJob(appointment);
 
             await sendInvoicePaidEmail(
               therapistEmail,

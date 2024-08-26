@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import Cookies from "js-cookie";
+import { useEffect, useState } from "react";
 import { FaCalendarAlt, FaList } from "react-icons/fa";
 import AppointmentList from "./appointment-list";
 import AppointmentCalendar from "./appointment-calendar";
@@ -8,15 +9,29 @@ import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
 
 const AppointmentSwitch = ({ appointments }: { appointments: any }) => {
-  const [view, setView] = useState("calendar");
+  const [view, setView] = useState<any>(null);
   const t = useTranslations("AppointmentList");
+
+  // Load the preferred view from cookies when the component mounts
+  useEffect(() => {
+    const savedView = Cookies.get("preferredView");
+    if (savedView) {
+      setView(savedView);
+    }
+  }, []);
+
+  const handleViewChange = (newView: string) => {
+    setView(newView);
+    Cookies.set("preferredView", newView, { expires: 365 }); // Set cookie to expire in 1 year
+  };
 
   return (
     <div className="flex flex-col w-full">
       <div className="flex justify-center mb-4">
         <Button
+          disabled={!view}
           variant={view === "calendar" ? undefined : "outline"}
-          onClick={() => setView("calendar")}
+          onClick={() => handleViewChange("calendar")}
           className={`flex items-center mr-2 rtl:mr-0 rtl:ml-2 ${
             view === "calendar"
               ? "bg-primary text-white"
@@ -27,8 +42,9 @@ const AppointmentSwitch = ({ appointments }: { appointments: any }) => {
           {t("calendarView")}
         </Button>
         <Button
+          disabled={!view}
           variant={view === "list" ? undefined : "outline"}
-          onClick={() => setView("list")}
+          onClick={() => handleViewChange("list")}
           className={`mr-2 rtl:mr-0 rtl:ml-2 flex items-center ${
             view === "list"
               ? "bg-primary text-white"

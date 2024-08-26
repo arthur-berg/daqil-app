@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { reserveAppointment } from "@/actions/appointments/actions";
 import { Link, useRouter } from "@/navigation";
 import { currencyToSymbol } from "@/utils";
-import { getTherapistAvailableTimeSlots } from "./helpers";
+import { getTherapistAvailableTimeSlots } from "@/utils/therapistAvailability";
 import { useTranslations } from "next-intl";
 import {
   Dialog,

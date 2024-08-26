@@ -343,7 +343,11 @@ export const nonPaidAppointmentConfirmationTemplate = (
   `;
 };
 
-export const paymentReminderTemplate = (appointmentId: string) => {
+export const paymentReminderTemplate = (
+  clientFirstName: string,
+  appointmentId: string,
+  appointmentStartTime: string
+) => {
   const paymentLink = `${process.env.NEXT_PUBLIC_APP_URL}/invoices/${appointmentId}/checkout?appointmentId=${appointmentId}`;
 
   return `
@@ -353,8 +357,8 @@ export const paymentReminderTemplate = (appointmentId: string) => {
           <h1 style="color: ${primaryColor}; font-size: 24px; margin: 0;">Zakina</h1>
         </div>
         <div style="margin-top: 20px;">
-          <p>Dear Client,</p>
-          <p>This is a friendly reminder that payment for your upcoming appointment is due.</p>
+          <p>Dear ${clientFirstName},</p>
+          <p>This is a friendly reminder that payment for your upcoming appointment at ${appointmentStartTime} is due.</p>
           <p>Please ensure that your payment is completed at least 1 hour before the scheduled time.</p>
           <div style="text-align: center; margin-top: 20px;">
             <a href="${paymentLink}" style="display: inline-block; padding: 12px 24px; margin-right: 10px; background-color: ${primaryColor}; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: bold;">
@@ -376,7 +380,6 @@ export const reminderEmailTemplate = (appointmentDetails: {
   therapistName: string;
   clientName: string;
 }) => {
-  const subject = "Upcoming Appointment Reminder";
   const appointmentsLink = `${process.env.NEXT_PUBLIC_APP_URL}/appointments`;
 
   return `

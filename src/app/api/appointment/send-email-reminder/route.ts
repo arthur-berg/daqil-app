@@ -10,9 +10,9 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
 
     // Logic to send email reminder
 
-    const appointment = await Appointment.findById(appointmentId).populate(
-      "participants.userId"
-    );
+    const appointment = await Appointment.findById(appointmentId)
+      .populate("participants.userId")
+      .populate("hostUserId");
 
     if (!appointment) {
       return NextResponse.json(
@@ -23,7 +23,7 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
 
     const clientEmail = appointment.participants[0].userId.email;
 
-    await sendReminderEmail(clientEmail, appointmentId);
+    await sendReminderEmail(clientEmail, appointment);
 
     return NextResponse.json({
       message: `Email reminder sent to ${clientEmail} for appointment ${appointmentId}.`,

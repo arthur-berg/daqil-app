@@ -1,11 +1,11 @@
 import {
-  scheduleAppointmentJobs,
   cancelAllScheduledJobsForAppointment,
-  scheduleCancelUnpaidJobs,
+  scheduleRemoveUnpaidJobs,
 } from "@/lib/schedule-appointment-jobs";
 import Appointment from "@/models/Appointment";
 import User from "@/models/User";
-import { format } from "date-fns";
+import { getTherapistAvailableTimeSlots } from "@/utils/therapistAvailability";
+import { format, isAfter, isBefore, isEqual } from "date-fns";
 import { startSession } from "mongoose";
 
 const removeRelatedJobs = async (appointmentIds: any) => {
@@ -21,7 +21,7 @@ export const createAppointment = async (appointmentData: any, session: any) => {
     throw new Error("Failed to create appointment.");
   }
 
-  await scheduleCancelUnpaidJobs(
+  await scheduleRemoveUnpaidJobs(
     appointment[0]._id.toString(),
     appointment[0].payment.paymentExpiryDate
   );
@@ -108,52 +108,32 @@ export const checkForOverlappingAppointments = (
 export const checkTherapistAvailability = async (
   therapist: any,
   startDate: any,
-  endDate: any
+  endDate: any,
+  appointmentType: any
 ) => {
-  const appointmentDate = format(new Date(startDate), "yyyy-MM-dd");
-
-  const appointmentEntry = therapist.appointments.find(
-    (appointment: any) => appointment.date === appointmentDate
+  const validTimeSlots = getTherapistAvailableTimeSlots(
+    therapist.availableTimes,
+    appointmentType,
+    startDate,
+    therapist.appointments
   );
+  // Check if the given start and end date fall within the valid slots
+  const requestedStart = new Date(startDate);
+  const requestedEnd = new Date(endDate);
 
-  if (!appointmentEntry) {
-    return { available: true };
-  }
+  const isSlotAvailable = validTimeSlots.some((slot) => {
+    // Check if the requested slot starts and ends within any valid slot
+    return (
+      (isEqual(slot.start, requestedStart) ||
+        isBefore(slot.start, requestedStart)) &&
+      (isEqual(slot.end, requestedEnd) || isAfter(slot.end, requestedEnd))
+    );
+  });
 
-  const { bookedAppointments, temporarilyReservedAppointments } =
-    appointmentEntry;
-
-  const validBookedAppointments = bookedAppointments.filter(
-    (appointment: any) => appointment.status !== "canceled"
-  );
-
-  if (
-    checkForOverlappingAppointments(
-      validBookedAppointments,
-      startDate,
-      endDate,
-      therapist.availableTimes.settings.interval
-    )
-  ) {
-    return { available: false, message: "This time slot is already booked." };
-  }
-
-  const validTempReservedAppointments = temporarilyReservedAppointments.filter(
-    (appointment: any) =>
-      new Date(appointment.payment.paymentExpiryDate) > new Date()
-  );
-
-  if (
-    checkForOverlappingAppointments(
-      validTempReservedAppointments,
-      startDate,
-      endDate,
-      therapist.availableTimes.settings.interval
-    )
-  ) {
+  if (!isSlotAvailable) {
     return {
       available: false,
-      message: "This time slot is temporarily reserved.",
+      message: "This time slot is already booked or blocked.",
     };
   }
 

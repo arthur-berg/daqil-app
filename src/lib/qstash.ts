@@ -15,7 +15,7 @@ export const scheduleTask = async (
       body,
       retries: 3,
       method: "POST",
-      unixTimestampInSeconds,
+      notBefore: unixTimestampInSeconds,
     });
     console.log(
       `Scheduled task to ${url} with absolute time ${unixTimestampInSeconds}.`

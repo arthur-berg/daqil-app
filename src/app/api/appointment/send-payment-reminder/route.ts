@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { verifySignatureAppRouter } from "@upstash/qstash/nextjs";
 import { sendPaymentReminderEmail } from "@/lib/mail";
 import Appointment from "@/models/Appointment";
+import { format } from "date-fns";
 
 export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
   try {
@@ -20,8 +21,18 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
     }
 
     const clientEmail = appointment.participants[0].userId.email;
+    const clientFirstName = appointment.participants[0].userId.firstName;
+    const appointmentStartTime = format(
+      new Date(appointment.startDate),
+      "hh:mm a"
+    );
 
-    await sendPaymentReminderEmail(clientEmail, appointmentId);
+    await sendPaymentReminderEmail(
+      clientEmail,
+      clientFirstName,
+      appointmentId,
+      appointmentStartTime
+    );
 
     return NextResponse.json({
       message: `Payment reminder sent to ${clientEmail} for appointment ${appointmentId}.`,

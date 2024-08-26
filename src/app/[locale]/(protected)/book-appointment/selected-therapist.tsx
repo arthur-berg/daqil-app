@@ -14,7 +14,6 @@ import { useTranslations } from "next-intl";
 import BookingCalendar from "@/app/[locale]/(protected)/book-appointment/[therapistId]/booking-calendar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { FaUser } from "react-icons/fa";
-import { getCurrentUser } from "@/lib/auth";
 
 const SelectedTherapist = ({
   selectedTherapistData,
