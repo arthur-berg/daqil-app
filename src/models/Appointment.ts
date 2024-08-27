@@ -34,6 +34,10 @@ const appointmentSchema = new Schema(
         },
       },
     ],
+    appointmentTypeId: {
+      type: Schema.Types.ObjectId,
+      ref: "AppointmentType",
+    },
     durationInMinutes: {
       type: Number,
       required: true,
@@ -53,22 +57,6 @@ const appointmentSchema = new Schema(
     price: {
       type: Number,
       required: false,
-      /* validate: {
-        validator: function (this: any, value: number): boolean {
-          return value === undefined || this.credits === undefined;
-        },
-        message: "Either price or credits must be set, not both.",
-      }, */
-    },
-    credits: {
-      type: Number,
-      required: false,
-      /*  validate: {
-        validator: function (this: any, value: number): boolean {
-          return value === undefined || this.price === undefined;
-        },
-        message: "Either credits or price must be set, not both.",
-      }, */
     },
     currency: {
       type: String,

@@ -103,6 +103,28 @@ const availableTimesSchema = new Schema({
 
 const userSchema = new Schema(
   {
+    balance: {
+      amount: {
+        type: Number,
+        required: function (this: any) {
+          return this.role === "CLIENT";
+        },
+        default: function (this: any) {
+          return this.role === "CLIENT" ? 0 : undefined;
+        },
+      },
+      currency: {
+        type: String,
+        enum: ["USD", "AED", "EUR"],
+        required: function (this: any) {
+          return this.role === "CLIENT";
+        },
+        default: function (this: any) {
+          return this.role === "CLIENT" ? "USD" : undefined;
+        },
+      },
+    },
+
     firstName: {
       type: String,
       required: false,
@@ -202,8 +224,19 @@ const userSchema = new Schema(
     },
     selectedTherapistHistory: [therapistHistorySchema],
     selectedTherapist: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
+      therapist: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+        default: null,
+      },
+      clientAcceptedTherapist: {
+        type: Boolean,
+        default: false,
+      },
+      introCallDone: {
+        type: Boolean,
+        default: false,
+      },
     },
     assignedClients: [
       {
@@ -246,7 +279,6 @@ const userSchema = new Schema(
             default: [],
           },
         ],
-        default: [],
       },
     ],
     availableTimes: {

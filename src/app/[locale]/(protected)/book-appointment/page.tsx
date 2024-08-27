@@ -1,12 +1,20 @@
-import { getAppointmentTypeById } from "@/data/appointment-types";
+import {
+  getAppointmentTypeById,
+  getAppointmentTypesByIDs,
+} from "@/data/appointment-types";
 import SelectedTherapist from "./selected-therapist";
 import { Button } from "@/components/ui/button";
-
-import { getClientByIdAppointments, getTherapistById } from "@/data/user";
+import { getTherapistById } from "@/data/user";
 import { getCurrentUser } from "@/lib/auth";
-import { Link, redirect } from "@/navigation";
+import { Link } from "@/navigation";
 import { getTranslations } from "next-intl/server";
-import { APPOINTMENT_TYPE_ID } from "@/contants/config";
+import {
+  APPOINTMENT_TYPE_ID_LONG_SESSION,
+  APPOINTMENT_TYPE_ID_SHORT_SESSION,
+} from "@/contants/config";
+import { redirectUserIfReservationExist } from "./helpers";
+import IntroCallStepManager from "@/app/[locale]/(protected)/book-appointment/intro-call-step-manager";
+import AcceptTherapist from "./accept-therapist";
 
 const BookAppointmentPage = async ({
   params,
@@ -14,61 +22,39 @@ const BookAppointmentPage = async ({
   params: { locale: string };
 }) => {
   const ErrorMessages = await getTranslations("ErrorMessages");
-
+  const t = await getTranslations("BookAppointmentPage");
   const user = await getCurrentUser();
 
   if (!user) {
     return ErrorMessages("userNotFound");
   }
 
-  const appointmentType = await getAppointmentTypeById(APPOINTMENT_TYPE_ID);
+  const selectedTherapist = user?.selectedTherapist?.therapist
+    ? await getTherapistById(user?.selectedTherapist.therapist)
+    : null;
 
-  const client = await getClientByIdAppointments(user?.id);
-
-  if (!client) {
-    return ErrorMessages("userNotFound");
+  if (user?.appointments?.length > 0) {
+    await redirectUserIfReservationExist(user.id, ErrorMessages);
   }
 
-  const selectedTherapist = (
-    user?.selectedTherapist
-      ? await getTherapistById(user?.selectedTherapist)
-      : null
-  ) as any;
+  const pendingSelectedTherapist =
+    user?.selectedTherapist &&
+    user?.selectedTherapist.therapist &&
+    !user?.selectedTherapist.clientAcceptedTherapist;
 
-  // Function to find a valid temporarily reserved appointment
-  const findValidTemporarilyReservedAppointment = (client: any) => {
-    for (const appointment of client?.appointments) {
-      const validAppointment = appointment.temporarilyReservedAppointments.find(
-        (reservedAppointment: any) =>
-          reservedAppointment.payment.paymentExpiryDate > new Date()
-      );
+  const browseTherapists =
+    user?.selectedTherapist &&
+    user?.selectedTherapist.introCallDone &&
+    !user?.selectedTherapist.clientAcceptedTherapist;
 
-      if (validAppointment) {
-        return {
-          appointment: validAppointment,
-          date: appointment.date,
-        };
-      }
-    }
-    return null; // Return null if no valid appointment is found
-  };
+  const appointmentTypes = await getAppointmentTypesByIDs([
+    APPOINTMENT_TYPE_ID_SHORT_SESSION,
+    APPOINTMENT_TYPE_ID_LONG_SESSION,
+  ]);
 
-  // Retrieve the valid appointment
-  const validAppointmentData = findValidTemporarilyReservedAppointment(client);
-  if (validAppointmentData) {
-    const { appointment, date } = validAppointmentData;
-    // Extract necessary details from the found appointment
-    const appointmentTypeId = appointmentType._id; // Assume this field exists
-    const appointmentId = appointment._id; // MongoDB document ID
-    const therapistId = appointment.hostUserId; // Assume this field exists
-
-    // Construct the redirect URL with query params
-    const redirectUrl = `/checkout?appointmentTypeId=${appointmentTypeId}&date=${date}&appointmentId=${appointmentId}&therapistId=${therapistId}`;
-
-    redirect(redirectUrl);
+  if (!appointmentTypes) {
+    return ErrorMessages("appointmentTypeNotExist");
   }
-
-  const t = await getTranslations("BookAppointmentPage");
 
   return (
     <>
@@ -81,40 +67,49 @@ const BookAppointmentPage = async ({
               </h1>
             </div>
 
-            {selectedTherapist ? (
+            {/* Conditional Rendering for Pending Selected Therapist */}
+            {pendingSelectedTherapist ? (
+              <div className="bg-white shadow-lg rounded-lg p-6 text-center hover:shadow-xl transition-shadow duration-300 mb-6">
+                <h2 className="text-xl font-bold mb-4">
+                  {t("awaitingApproval")}
+                </h2>
+                <p className="mb-4">
+                  {selectedTherapist?.firstName} {selectedTherapist?.lastName}
+                </p>
+                <p className="mb-4">
+                  {
+                    selectedTherapist?.therapistWorkProfile[params.locale]
+                      ?.description
+                  }
+                </p>
+                <AcceptTherapist />
+              </div>
+            ) : selectedTherapist ? (
               <SelectedTherapist
-                appointmentType={appointmentType}
+                appointmentTypes={appointmentTypes}
                 selectedTherapistData={JSON.stringify(selectedTherapist)}
                 locale={params.locale}
               />
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
-                <div className="bg-white shadow-lg rounded-lg p-6 text-center hover:shadow-xl transition-shadow duration-300">
-                  <h2 className="text-xl font-bold mb-4">
-                    {t("introCallTitle")}
-                  </h2>
-                  <p className="mb-4">{t("introCallDescription")}</p>
-                  <Link href="/book-appointment/intro-call">
-                    <Button className="w-full py-4 text-lg">
-                      {t("bookIntroCall")}
-                    </Button>
-                  </Link>
-                  <p className="text-sm text-gray-500 mt-2">
-                    {t("recommendedForNewClients")}
-                  </p>
-                </div>
-                <div className="bg-white shadow-lg rounded-lg p-6 text-center hover:shadow-xl transition-shadow duration-300">
-                  <h2 className="text-xl font-bold mb-4">
-                    {t("browseTherapistsTitle")}
-                  </h2>
-                  <p className="mb-4">{t("browseTherapistsDescription")}</p>
+            ) : browseTherapists ? (
+              <div className="flex justify-center">
+                <div className="bg-white shadow-lg rounded-lg p-6 text-center hover:shadow-xl transition-shadow duration-300  w-1/2">
+                  <div>
+                    <h2 className="text-xl font-bold mb-4">
+                      {t("browseTherapistsTitle")}
+                    </h2>
+                    <p className="mb-4">
+                      {t("browseTherapistsDescriptionOnlyOption")}
+                    </p>
+                  </div>
                   <Link href="/book-appointment/browse-therapists">
-                    <Button className="w-full py-4 text-lg">
+                    <Button className="w-full py-4 text-lg mt-auto">
                       {t("browseTherapistsButton")}
                     </Button>
                   </Link>
                 </div>
               </div>
+            ) : (
+              <IntroCallStepManager />
             )}
           </div>
         </div>

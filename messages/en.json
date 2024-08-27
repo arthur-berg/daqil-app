@@ -151,7 +151,14 @@
     "changeTherapistTitle": "Change Your Therapist",
     "changeTherapistDescription": "You can browse therapists and choose a new one if you like. Note that your therapist will only be changed after you book an appointment with a new therapist from the list.",
     "close": "Close",
-    "yourTherapist": "Your Therapist"
+    "yourTherapist": "Your Therapist",
+    "chooseForMe": "See All Available Times",
+    "chooseForMeDescription": "If you don't want to choose a therapist and just want to see all available times, click here.",
+    "seeAvailableTimes": "See Available Times",
+    "reject": "Reject",
+    "accept": "Accept",
+    "awaitingApproval": "Do you wish to proceed with this therapist?",
+    "browseTherapistsDescriptionOnlyOption": "Browse through our therapists and select the one you'd like to book an appointment with."
   },
   "BookingCalendar": {
     "calendar": "Calendar",
@@ -174,7 +181,9 @@
     "bookAppointment": "Book appointment",
     "changeTherapistButton": "Change Therapist",
     "bookingAppointmentLoading": "Booking appointment... Please wait",
-    "loadingCheckout": "Loading checkout..."
+    "loadingCheckout": "Loading checkout...",
+    "free": "Free",
+    "selectAppointmentType": "Select type of appointment"
   },
   "Checkout": {
       "appointmentDetails": "Appointment Details",
@@ -414,7 +423,9 @@
     "discountCodeValid": "Discount code is valid",
     "discountCodeApplied": "Discount code applied",
     "discountLoading": "Applying discount code...",
-    "reservationCancelled": "Reservation cancelled"
+    "reservationCancelled": "Reservation cancelled",
+    "therapistAccepted": "Therapist accepted",
+    "therapistRejected": "Therapist rejected"
   },
   "AppointmentAction": {
     "therapySessionWith": "Therapy session with"

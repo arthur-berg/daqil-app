@@ -1,5 +1,5 @@
 import { getUserById } from "@/data/user";
-import { APPOINTMENT_TYPE_ID } from "@/contants/config";
+import { APPOINTMENT_TYPE_ID_SHORT_SESSION } from "@/contants/config";
 import { getAppointmentTypeById } from "@/data/appointment-types";
 import ScheduleAppointmentForm from "./schedule-appointment-form";
 import { Button } from "@/components/ui/button";
@@ -12,7 +12,9 @@ const ScheduleAppointmentPage = async ({
   params: { clientId: string };
 }) => {
   const user = await getUserById(params.clientId);
-  const appointmentType = await getAppointmentTypeById(APPOINTMENT_TYPE_ID);
+  const appointmentType = await getAppointmentTypeById(
+    APPOINTMENT_TYPE_ID_SHORT_SESSION
+  );
   const t = await getTranslations("MyClientsPage");
 
   if (!user) return "No user found";

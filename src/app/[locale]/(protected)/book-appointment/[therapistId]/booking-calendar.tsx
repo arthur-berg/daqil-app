@@ -3,7 +3,10 @@ import { Calendar } from "@/components/ui/calendar";
 import { useState, useTransition } from "react";
 import { addDays, format, isAfter, isBefore, set } from "date-fns";
 import { Button } from "@/components/ui/button";
-import { reserveAppointment } from "@/actions/appointments/actions";
+import {
+  bookIntroAppointment,
+  reserveAppointment,
+} from "@/actions/appointments/actions";
 import { Link, useRouter } from "@/navigation";
 import { currencyToSymbol } from "@/utils";
 import { getTherapistAvailableTimeSlots } from "@/utils/therapistAvailability";
@@ -16,8 +19,17 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
 import { BeatLoader } from "react-spinners";
+import { APPOINTMENT_TYPE_ID_INTRO_SESSION } from "@/contants/config";
 
 type DateType = {
   justDate: Date | undefined;
@@ -25,17 +37,19 @@ type DateType = {
 };
 
 const BookingCalendar = ({
-  appointmentType,
   therapistId,
   therapistsAvailableTimes,
   appointments,
   setChangeTherapistDialogOpen,
+  appointmentTypes,
+  showOnlyIntroCalls,
 }: {
-  appointmentType: any;
   therapistId: string;
   therapistsAvailableTimes: string;
   appointments: string;
   setChangeTherapistDialogOpen?: (value: boolean) => void;
+  appointmentTypes: any[];
+  showOnlyIntroCalls: boolean;
 }) => {
   const [bookingDialogOpen, setBookingDialogOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
@@ -52,6 +66,9 @@ const BookingCalendar = ({
   const router = useRouter();
   const [reservedAppointment, setReservedAppointment] = useState<any>(null);
   const { toast } = useToast();
+  const [appointmentType, setAppointmentType] = useState(
+    showOnlyIntroCalls ? appointmentTypes[0] : ""
+  );
 
   const setTimeSlots = (selectedDate: Date) => {
     if (!selectedDate) return [];
@@ -92,28 +109,49 @@ const BookingCalendar = ({
       minutes: date?.dateTime?.getMinutes(),
     });
 
-    startTransition(async () => {
-      const data = await reserveAppointment(
-        appointmentType,
-        therapistId,
-        combinedDateTime
-      );
-      if (data.error) {
-        toast({
-          title: data.error,
-          variant: "destructive",
-        });
-      }
-      if (data.success) {
-        router.push(
-          `/checkout?appointmentId=${data.appointmentId}&appointmentTypeId=${
-            appointmentType._id
-          }&date=${encodeURIComponent(
-            combinedDateTime.toString()
-          )}&therapistId=${therapistId}`
+    const isFree = appointmentType._id === APPOINTMENT_TYPE_ID_INTRO_SESSION;
+
+    if (isFree) {
+      startTransition(async () => {
+        const data = await bookIntroAppointment(
+          appointmentType,
+          therapistId,
+          combinedDateTime
         );
-      }
-    });
+        if (data.error) {
+          toast({
+            title: data.error,
+            variant: "destructive",
+          });
+        }
+        if (data.success) {
+          router.push(`/appointments`);
+        }
+      });
+    } else {
+      startTransition(async () => {
+        const data = await reserveAppointment(
+          appointmentType,
+          therapistId,
+          combinedDateTime
+        );
+        if (data.error) {
+          toast({
+            title: data.error,
+            variant: "destructive",
+          });
+        }
+        if (data.success) {
+          router.push(
+            `/checkout?appointmentId=${data.appointmentId}&appointmentTypeId=${
+              appointmentType._id
+            }&date=${encodeURIComponent(
+              combinedDateTime.toString()
+            )}&therapistId=${therapistId}`
+          );
+        }
+      });
+    }
   };
 
   return (
@@ -127,48 +165,115 @@ const BookingCalendar = ({
         </div>
       ) : (
         <>
-          {success || error ? (
-            <div className="mt-4 p-4 border rounded">
-              {success && (
-                <div className="bg-green-100 border border-green-300 p-2 rounded">
-                  <p>{success}</p>
-                  <Link href="/appointments">
-                    <Button className="mt-2">
-                      {t("goToAppointmentsOverview")}
-                    </Button>
-                  </Link>
-                  <Button
-                    variant="outline"
-                    className="ml-2 rtl:ml-0 rtl:mr-2"
-                    onClick={() => {
-                      setSuccess(undefined);
-                      setError(undefined);
-                      setDate({
-                        justDate: undefined,
-                        dateTime: undefined,
-                      });
-                    }}
-                  >
-                    {t("bookAnotherAppointment")}
-                  </Button>
-                </div>
-              )}
-              {error && (
-                <div className="bg-red-100 border border-red-300 p-2 rounded">
-                  <p>{error}</p>
-                </div>
-              )}
-            </div>
-          ) : (
-            <>
-              <div className="flex">
-                <h2 className="text-xl font-bold mb-4 mr-4">{t("calendar")}</h2>
+          <>
+            <div className="flex justify-center">
+              <div className="w-1/3 mb-4">
+                <Select
+                  onValueChange={(value) => {
+                    setDate({
+                      justDate: undefined,
+                      dateTime: undefined,
+                    });
+                    setAppointmentType(value);
+                  }}
+                  value={appointmentType}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder={t("selectAppointmentType")} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {appointmentTypes.map((appointmentType: any) => (
+                        <SelectItem
+                          key={appointmentType._id}
+                          value={appointmentType}
+                        >
+                          {appointmentType.title}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
               </div>
-              {date.justDate ? (
-                <>
+            </div>
+            {appointmentType && (
+              <>
+                <div className="flex">
+                  <h2 className="text-xl font-bold mb-4 mr-4">
+                    {t("calendar")}
+                  </h2>
+                </div>
+                {date.justDate ? (
+                  <>
+                    <Calendar
+                      mode="single"
+                      selected={date.justDate ? date.justDate : today}
+                      onSelect={(date) => {
+                        setDate((prev) => ({
+                          ...prev,
+                          justDate: date ? date : today,
+                        }));
+                        if (date) {
+                          setTimeSlots(date);
+                        }
+                      }}
+                      disabled={(date) =>
+                        isBefore(date, today) || isAfter(date, maxDate)
+                      }
+                      className="rounded-md border h-full w-full flex"
+                      classNames={{
+                        months:
+                          "flex w-full flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0 flex-1",
+                        month: "space-y-4 w-full flex flex-col",
+                        table: "w-full h-full border-collapse space-y-1",
+                        head_row: "",
+                        row: "w-full mt-2",
+                      }}
+                    />
+                    <div className="mt-4">
+                      <h3 className="text-lg font-semibold mb-2">
+                        {t("availableSlots")}
+                      </h3>
+
+                      {Object.entries(groupTimeSlots(availableTimeSlots)).map(
+                        ([timeOfDay, slots], idx) => (
+                          <div key={idx} className="mb-4">
+                            <h4 className="text-md font-medium mb-2 capitalize text-blue-600">
+                              {t(timeOfDay)}
+                            </h4>
+                            <div className="flex flex-wrap gap-2">
+                              {slots.length ? (
+                                slots.map((time, i) => (
+                                  <Button
+                                    key={`time-${i}`}
+                                    className="mb-2"
+                                    onClick={() => {
+                                      setDate((prev) => ({
+                                        ...prev,
+                                        dateTime: time.start,
+                                      }));
+                                      setBookingDialogOpen(true);
+                                    }}
+                                  >
+                                    {format(time.start, "kk:mm")} -{" "}
+                                    {format(time.end, "kk:mm")}
+                                  </Button>
+                                ))
+                              ) : (
+                                <p className="text-gray-500 italic">
+                                  {t("noSlotsAvailable")}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        )
+                      )}
+                    </div>
+                  </>
+                ) : (
                   <Calendar
                     mode="single"
-                    selected={date.justDate ? date.justDate : today}
+                    selected={date.justDate ? date.justDate : undefined}
                     onSelect={(date) => {
                       setDate((prev) => ({
                         ...prev,
@@ -191,75 +296,11 @@ const BookingCalendar = ({
                       row: "w-full mt-2",
                     }}
                   />
-                  <div className="mt-4">
-                    <h3 className="text-lg font-semibold mb-2">
-                      {t("availableSlots")}
-                    </h3>
+                )}
+              </>
+            )}
+          </>
 
-                    {Object.entries(groupTimeSlots(availableTimeSlots)).map(
-                      ([timeOfDay, slots], idx) => (
-                        <div key={idx} className="mb-4">
-                          <h4 className="text-md font-medium mb-2 capitalize text-blue-600">
-                            {t(timeOfDay)}
-                          </h4>
-                          <div className="flex flex-wrap gap-2">
-                            {slots.length ? (
-                              slots.map((time, i) => (
-                                <Button
-                                  key={`time-${i}`}
-                                  className="mb-2"
-                                  onClick={() => {
-                                    setDate((prev) => ({
-                                      ...prev,
-                                      dateTime: time.start,
-                                    }));
-                                    setBookingDialogOpen(true);
-                                  }}
-                                >
-                                  {format(time.start, "kk:mm")} -{" "}
-                                  {format(time.end, "kk:mm")}
-                                </Button>
-                              ))
-                            ) : (
-                              <p className="text-gray-500 italic">
-                                {t("noSlotsAvailable")}
-                              </p>
-                            )}
-                          </div>
-                        </div>
-                      )
-                    )}
-                  </div>
-                </>
-              ) : (
-                <Calendar
-                  mode="single"
-                  selected={date.justDate ? date.justDate : undefined}
-                  onSelect={(date) => {
-                    setDate((prev) => ({
-                      ...prev,
-                      justDate: date ? date : today,
-                    }));
-                    if (date) {
-                      setTimeSlots(date);
-                    }
-                  }}
-                  disabled={(date) =>
-                    isBefore(date, today) || isAfter(date, maxDate)
-                  }
-                  className="rounded-md border h-full w-full flex"
-                  classNames={{
-                    months:
-                      "flex w-full flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0 flex-1",
-                    month: "space-y-4 w-full flex flex-col",
-                    table: "w-full h-full border-collapse space-y-1",
-                    head_row: "",
-                    row: "w-full mt-2",
-                  }}
-                />
-              )}
-            </>
-          )}
           {setChangeTherapistDialogOpen &&
             typeof setChangeTherapistDialogOpen === "function" && (
               <div className="text-center mt-6">
@@ -298,8 +339,11 @@ const BookingCalendar = ({
               <div>
                 <strong>{t("cost")}:</strong>{" "}
                 <span>
-                  {currencyToSymbol(appointmentType.currency)}
-                  {appointmentType.price}
+                  {appointmentType.price === 0
+                    ? t("free")
+                    : `${currencyToSymbol(appointmentType.currency)}${
+                        appointmentType.price
+                      }`}
                 </span>
               </div>
             </DialogDescription>

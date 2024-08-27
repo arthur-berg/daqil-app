@@ -4,6 +4,7 @@ import { isUserAuthorized } from "@/actions/videoSessions/utils";
 import { getCurrentRole, requireAuth } from "@/lib/auth";
 import { createSessionAndToken, generateToken } from "@/lib/vonage";
 import Appointment from "@/models/Appointment";
+import User from "@/models/User";
 import VideoSession from "@/models/VideoSession";
 import { getTranslations } from "next-intl/server";
 
@@ -69,6 +70,12 @@ export const getSessionData = async (appointmentId: string) => {
 
       if (!participant) {
         return { error: ErrorMessages("userNotFound") };
+      }
+
+      if (!user.selectedTherapist?.introCallDone) {
+        await User.findByIdAndUpdate(user.id, {
+          $set: { "selectedTherapist.introCallDone": true },
+        });
       }
 
       updateOptions.arrayFilters = [{ "elem.userId": user.id }];

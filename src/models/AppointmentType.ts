@@ -15,7 +15,7 @@ const appointmentTypeSchema = new Schema(
     currency: {
       type: String,
       enum: ["USD", "AED", "EUR"],
-      required: false,
+      required: true,
     },
     active: {
       type: Boolean,
@@ -24,23 +24,7 @@ const appointmentTypeSchema = new Schema(
     },
     price: {
       type: Number,
-      required: false,
-      validate: {
-        validator: function (this: any, value: number): boolean {
-          return value === undefined || this.credits === undefined;
-        },
-        message: "Either price or credits must be set, not both.",
-      },
-    },
-    credits: {
-      type: Number,
-      required: false,
-      validate: {
-        validator: function (this: any, value: number): boolean {
-          return value === undefined || this.price === undefined;
-        },
-        message: "Either credits or price must be set, not both.",
-      },
+      required: true,
     },
     durationInMinutes: {
       type: Number,
@@ -54,19 +38,3 @@ const appointmentTypeSchema = new Schema(
 
 export default mongoose.models?.AppointmentType ||
   mongoose.model("AppointmentType", appointmentTypeSchema);
-
-/* For later if we want to support group sessions
-
-   maxParticipants: {
-      type: Number,
-      required: false,
-    },
-
-    type: {
-      type: String,
-      enum: ["appointment", "group"],
-      required: true,
-      default: "appointment",
-    },
-    
-    */

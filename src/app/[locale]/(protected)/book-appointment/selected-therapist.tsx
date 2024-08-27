@@ -17,11 +17,11 @@ import { FaUser } from "react-icons/fa";
 
 const SelectedTherapist = ({
   selectedTherapistData,
-  appointmentType,
+  appointmentTypes,
   locale,
 }: {
   selectedTherapistData: any;
-  appointmentType: any;
+  appointmentTypes: any[];
   locale: string;
 }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -32,7 +32,7 @@ const SelectedTherapist = ({
   return (
     <>
       <div className="bg-white shadow-lg rounded-lg p-6 mb-4 ">
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center mb-4">
           {/* Therapist Image or Placeholder */}
           {selectedTherapist.image ? (
             <Avatar className="w-28 h-28">
@@ -60,8 +60,9 @@ const SelectedTherapist = ({
           therapistsAvailableTimes={JSON.stringify(
             selectedTherapist.availableTimes
           )}
+          showOnlyIntroCalls={false}
           appointments={JSON.stringify(selectedTherapist.appointments)}
-          appointmentType={appointmentType}
+          appointmentTypes={appointmentTypes}
           therapistId={selectedTherapist._id}
           setChangeTherapistDialogOpen={setIsDialogOpen}
         />

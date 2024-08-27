@@ -127,9 +127,7 @@ const ScheduleAppointmentForm = ({
                 <div className="bg-gray-100 p-4 rounded-md mb-4">
                   <p className="font-semibold text-lg">{t("cost")}</p>
                   <p className="text-gray-700">
-                    {appointmentType?.price
-                      ? `${appointmentType?.price} ${appointmentType?.currency}`
-                      : `${appointmentType?.credits} credits`}
+                    {`${appointmentType?.price} ${appointmentType?.currency}`}
                   </p>
                 </div>
                 <div className="bg-gray-100 p-4 rounded-md mb-4">

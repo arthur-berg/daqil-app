@@ -1,4 +1,6 @@
+import connectToMongoDB from "@/lib/mongoose";
 import { UserRole } from "@/generalTypes";
+import Appointment from "@/models/Appointment";
 import User from "@/models/User";
 
 export const getUserByEmail = async (email: string) => {
@@ -25,10 +27,10 @@ export const getClientById = async (id: string) => {
   try {
     const client = await User.findById(id)
       .select(
-        "firstName lastName email selectedTherapist selectedTherapistHistory appointments"
+        "firstName lastName email selectedTherapist.therapist selectedTherapistHistory appointments"
       )
       .populate({
-        path: "selectedTherapist",
+        path: "selectedTherapist.therapist",
         select: "firstName lastName email",
       })
       .populate({
@@ -76,7 +78,7 @@ export const getClientById = async (id: string) => {
       firstName: client.firstName,
       lastName: client.lastName,
       email: client.email,
-      selectedTherapist: client.selectedTherapist,
+      selectedTherapist: client.selectedTherapist.therapist,
       therapistAppointmentCounts,
     };
   } catch (error) {
@@ -116,13 +118,21 @@ export const getClients = async (therapistId: string) => {
 
 const getUserWithAppointments = async (id: string) => {
   try {
+    await connectToMongoDB();
+
     const user = await User.findById(id).populate([
       "appointments.bookedAppointments",
       "appointments.temporarilyReservedAppointments",
     ]);
 
+    if (!user) {
+      console.log(`User with id ${id} not found.`);
+      return null;
+    }
+
     return user;
-  } catch {
+  } catch (error) {
+    console.error(`Error fetching user with id ${id}:`, error);
     return null;
   }
 };
@@ -131,8 +141,14 @@ export const getClientByIdAppointments = async (id: string) => {
   try {
     const client = await getUserWithAppointments(id);
 
+    if (!client) {
+      console.log(`Client with id ${id} not found or error occurred.`);
+      return null;
+    }
+
     return client;
-  } catch {
+  } catch (error) {
+    console.error(`Error fetching client with id ${id}:`, error);
     return null;
   }
 };

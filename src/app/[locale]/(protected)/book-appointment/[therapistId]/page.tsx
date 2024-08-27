@@ -1,13 +1,19 @@
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { APPOINTMENT_TYPE_ID } from "@/contants/config";
-import { getAppointmentTypeById } from "@/data/appointment-types";
-import { getClientByIdAppointments, getTherapistById } from "@/data/user";
+import {
+  APPOINTMENT_TYPE_ID_INTRO_SESSION,
+  APPOINTMENT_TYPE_ID_LONG_SESSION,
+  APPOINTMENT_TYPE_ID_SHORT_SESSION,
+} from "@/contants/config";
+import {
+  getAppointmentTypeById,
+  getAppointmentTypesByIDs,
+} from "@/data/appointment-types";
+import { getTherapistById } from "@/data/user";
 import { getTranslations } from "next-intl/server";
 import { FaUser } from "react-icons/fa";
 
 import BookingCalendar from "@/app/[locale]/(protected)/book-appointment/[therapistId]/booking-calendar";
 import { getCurrentUser } from "@/lib/auth";
-import { redirect } from "@/navigation";
 
 const TherapistUserProfile = async ({
   params,
@@ -16,15 +22,28 @@ const TherapistUserProfile = async ({
 }) => {
   const ErrorMessages = await getTranslations("ErrorMessages");
   const therapistId = params.therapistId;
+  const user = await getCurrentUser();
   const therapist = (await getTherapistById(therapistId)) as any;
-  const appointmentType = await getAppointmentTypeById(APPOINTMENT_TYPE_ID);
+
   const locale = params.locale;
 
   if (!therapist) {
     return ErrorMessages("therapistNotExist");
   }
 
-  if (!appointmentType) {
+  const showOnlyIntroCalls =
+    user?.selectedTherapist && user?.selectedTherapist.introCallDone
+      ? false
+      : true;
+
+  const appointmentTypes = showOnlyIntroCalls
+    ? [await getAppointmentTypeById(APPOINTMENT_TYPE_ID_INTRO_SESSION)]
+    : await getAppointmentTypesByIDs([
+        APPOINTMENT_TYPE_ID_SHORT_SESSION,
+        APPOINTMENT_TYPE_ID_LONG_SESSION,
+      ]);
+
+  if (!appointmentTypes) {
     return ErrorMessages("appointmentTypeNotExist");
   }
 
@@ -58,9 +77,10 @@ const TherapistUserProfile = async ({
 
         <div className="mt-6 rounded-lg p-6 w-full">
           <BookingCalendar
+            appointmentTypes={appointmentTypes}
+            showOnlyIntroCalls={showOnlyIntroCalls}
             therapistsAvailableTimes={JSON.stringify(therapist.availableTimes)}
             appointments={JSON.stringify(therapist.appointments)}
-            appointmentType={appointmentType}
             therapistId={therapistId}
           />
         </div>

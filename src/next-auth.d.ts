@@ -25,7 +25,11 @@ export type ExtendedUser = DefaultSession["user"] & {
     appointmentCount: number;
     current: boolean;
   }[];
-  selectedTherapist?: string;
+  selectedTherapist?: {
+    therapist: string;
+    introCallDone: boolean;
+    clientAcceptedTherapist: boolean;
+  };
   assignedClients?: string[];
 
   therapistWorkProfile?: {

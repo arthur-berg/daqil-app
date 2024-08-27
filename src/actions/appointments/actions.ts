@@ -28,6 +28,119 @@ import {
   scheduleRemoveUnpaidJobs,
   scheduleStatusUpdateJob,
 } from "@/lib/schedule-appointment-jobs";
+import { APPOINTMENT_TYPE_ID_INTRO_SESSION } from "@/contants/config";
+
+export const bookIntroAppointment = async (
+  appointmentType: any,
+  therapistId: string,
+  startDate: Date
+) => {
+  const [SuccessMessages, ErrorMessages, t] = await Promise.all([
+    getTranslations("SuccessMessages"),
+    getTranslations("ErrorMessages"),
+    getTranslations("AppointmentAction"),
+  ]);
+
+  const therapist = (await getTherapistById(therapistId)) as any;
+
+  if (!therapist) {
+    return { error: ErrorMessages("therapistNotExist") };
+  }
+
+  const isFree = appointmentType._id === APPOINTMENT_TYPE_ID_INTRO_SESSION;
+
+  if (!isFree) {
+    return { error: ErrorMessages("invalidFields") };
+  }
+
+  let transactionCommitted = false;
+
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
+  const endDate = new Date(
+    startDate.getTime() + appointmentType.durationInMinutes * 60000
+  );
+
+  try {
+    const client = await requireAuth([UserRole.CLIENT]);
+
+    const appointmentData = {
+      title: `${t("therapySessionWith")} ${therapist?.firstName}`,
+      startDate,
+      endDate,
+      participants: [{ userId: client.id, showUp: false }],
+      appointmentTypeId: appointmentType._id,
+      hostUserId: therapistId,
+      durationInMinutes: appointmentType.durationInMinutes,
+      payment: {
+        method: "payBeforeBooking",
+        status: "paid",
+      },
+      status: "confirmed",
+      price: appointmentType.price,
+      currency: appointmentType.currency,
+    };
+
+    const appointment = await Appointment.create([appointmentData], {
+      session,
+    });
+
+    if (!appointment) {
+      throw new Error("Failed to create appointment.");
+    }
+
+    const appointmentId = appointment[0]._id;
+    const appointmentDate = format(new Date(startDate), "yyyy-MM-dd");
+
+    // Check and update client's selected therapist
+
+    await User.findByIdAndUpdate(
+      client.id,
+      {
+        selectedTherapist: {
+          therapist: therapist.id,
+          introCallDone: false,
+          clientAcceptedTherapist: false,
+        },
+      },
+      { session }
+    );
+
+    // Update the clients appointments
+    await updateAppointments(
+      client.id,
+      appointmentDate,
+      appointmentId,
+      session,
+      "bookedAppointments"
+    );
+
+    // Update the therapist's appointments
+    await updateAppointments(
+      therapist.id,
+      appointmentDate,
+      appointmentId,
+      session,
+      "bookedAppointments"
+    );
+
+    await session.commitTransaction();
+    transactionCommitted = true;
+    session.endSession();
+
+    return {
+      success: SuccessMessages("bookingConfirmed"),
+    };
+  } catch (error) {
+    if (!transactionCommitted) {
+      await session.abortTransaction();
+    }
+    session.endSession();
+    console.error("Error in cancelTempReservation:", error);
+    return { error: ErrorMessages("somethingWentWrong") };
+  }
+};
 
 export const getClients = async () => {
   await requireAuth([UserRole.THERAPIST]);
@@ -403,9 +516,9 @@ export const reserveAppointment = async (
         paymentExpiryDate: new Date(Date.now() + 15 * 60000),
       },
       status: "temporarily-reserved",
-      credits: appointmentType.credits,
       price: appointmentType.price,
       currency: appointmentType.currency,
+      appointmentTypeId: appointmentType._id,
     };
 
     const appointment = await createAppointment(appointmentData, session);
@@ -414,7 +527,7 @@ export const reserveAppointment = async (
 
     if (
       !client.selectedTherapist ||
-      client.selectedTherapist?.toString() !== therapistId
+      client.selectedTherapist?.therapist?.toString() !== therapistId
     ) {
       // Update the previous therapist in selectedTherapistHistory
       await User.updateOne(
@@ -432,7 +545,11 @@ export const reserveAppointment = async (
       await User.findByIdAndUpdate(
         client.id,
         {
-          selectedTherapist: therapistId,
+          selectedTherapist: {
+            therapist: therapistId,
+            introCallDone: true,
+            clientAcceptedTherapist: true,
+          },
           $push: {
             selectedTherapistHistory: {
               therapist: therapistId,
@@ -446,7 +563,7 @@ export const reserveAppointment = async (
 
       // Remove client from old therapist's assignedClients list
       await User.findByIdAndUpdate(
-        client.selectedTherapist,
+        client.selectedTherapist?.therapist,
         { $pull: { assignedClients: client.id } },
         { session }
       );
@@ -543,7 +660,6 @@ export const scheduleAppointment = async (
     appointmentCost.currency = appointmentType.currency;
   }
   if ("credits" in appointmentType) {
-    appointmentCost.credits = appointmentType.credits;
     appointmentCost.price = appointmentType.price;
   }
 
@@ -564,6 +680,7 @@ export const scheduleAppointment = async (
           description,
           startDate,
           endDate,
+          appointmentTypeId: appointmentType._id,
           payment: {
             method: "payAfterBooking",
             status: "pending",
@@ -592,7 +709,7 @@ export const scheduleAppointment = async (
 
     if (
       client.selectedTherapist &&
-      client.selectedTherapist.toString() !== therapist.id
+      client.selectedTherapist.therapist.toString() !== therapist.id
     ) {
       // Update the previous therapist in selectedTherapistHistory
       await User.updateOne(
@@ -608,7 +725,7 @@ export const scheduleAppointment = async (
 
       // Remove client from old therapist's assignedClients list
       await User.findByIdAndUpdate(
-        client.selectedTherapist,
+        client.selectedTherapist.therapist,
         { $pull: { assignedClients: client.id } },
         { session }
       );
@@ -617,7 +734,11 @@ export const scheduleAppointment = async (
       await User.findByIdAndUpdate(
         clientId,
         {
-          selectedTherapist: therapist.id,
+          selectedTherapist: {
+            therapist: therapist.id,
+            introCallDone: true,
+            clientAcceptedTherapist: true,
+          },
           $push: {
             selectedTherapistHistory: {
               therapist: therapist.id,

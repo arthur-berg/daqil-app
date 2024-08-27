@@ -1,5 +1,5 @@
 import AvailabilityTabs from "@/app/[locale]/(protected)/therapist/availability/availability-tabs";
-import { APPOINTMENT_TYPE_ID } from "@/contants/config";
+import { APPOINTMENT_TYPE_ID_SHORT_SESSION } from "@/contants/config";
 import { getAppointmentTypeById } from "@/data/appointment-types";
 import { UserRole } from "@/generalTypes";
 import { requireAuth } from "@/lib/auth";
@@ -11,7 +11,9 @@ const AvailabilityPage = async () => {
   if (!user) return <div>{ErrorMessages("userNotFound")}</div>;
 
   const availableTimes = user.availableTimes;
-  const appointmentType = await getAppointmentTypeById(APPOINTMENT_TYPE_ID);
+  const appointmentType = await getAppointmentTypeById(
+    APPOINTMENT_TYPE_ID_SHORT_SESSION
+  );
 
   return (
     <div className="lg:10/12 mx-auto">
