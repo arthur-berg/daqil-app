@@ -55,7 +55,7 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
     if (filters.length === 0) {
       return appointments;
     }
-    return appointments.filter((appointment: any) =>
+    return appointments?.filter((appointment: any) =>
       filters.includes(appointment.status)
     );
   }, [appointments, filters]);

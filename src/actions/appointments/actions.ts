@@ -129,6 +129,9 @@ export const bookIntroAppointment = async (
     transactionCommitted = true;
     session.endSession();
 
+    revalidatePath("/appointments");
+    revalidatePath("/book-appointment");
+
     return {
       success: SuccessMessages("bookingConfirmed"),
     };
@@ -235,6 +238,19 @@ export const cancelAppointment = async (
       clientName: `${appointment.participants[0].userId.firstName} ${appointment.participants[0].userId.lastName}`,
     };
 
+    if (
+      appointment.appointmentTypeId.toString() ===
+      APPOINTMENT_TYPE_ID_INTRO_SESSION
+    ) {
+      await User.findByIdAndUpdate(appointment.participants[0].userId._id, {
+        selectedTherapist: {
+          therapist: null,
+          introCallDone: false,
+          clientAcceptedTherapist: false,
+        },
+      });
+    }
+
     await sendAppointmentCancellationEmail(
       therapistEmail,
       clientEmail,
@@ -242,6 +258,8 @@ export const cancelAppointment = async (
     );
 
     revalidatePath("/therapist/appointments");
+    revalidatePath("/appointments");
+    revalidatePath("/book-appointment");
 
     return { success: SuccessMessages("appointmentCanceled") };
   } catch (error) {
@@ -570,7 +588,7 @@ export const reserveAppointment = async (
     }
 
     // Add client to new therapist's assignedClients list if not already present
-    if (!therapist.assignedClients.includes(client.id)) {
+    if (!therapist.assignedClients?.includes(client.id)) {
       await User.findByIdAndUpdate(
         therapistId,
         { $addToSet: { assignedClients: client.id } }, // $addToSet ensures no duplicates

@@ -74,6 +74,7 @@
     "myProfile": "ملفي الشخصي"
   },
   "AppointmentList": {
+    "title": "العنوان",
     "all": "الكل",
     "confirmed": "مؤكد",
     "canceled": "ملغى",
@@ -152,7 +153,16 @@
     "changeTherapistTitle": "غير معالجك",
     "changeTherapistDescription": "يمكنك تصفح المعالجين واختيار معالج جديد إذا أردت. لاحظ أن معالجك سيتغير فقط بعد حجز موعد مع معالج جديد من القائمة.",
     "close": "إغلاق",
-    "yourTherapist": "معالجك"
+    "yourTherapist": "معالجك",
+    "chooseForMe": "اختر لي",
+    "chooseForMeDescription": "إذا كنت لا ترغب في اختيار معالج وتريد فقط رؤية جميع الأوقات المتاحة، انقر هنا.",
+    "seeAvailableTimes": "عرض الأوقات المتاحة",
+    "reject": "رفض",
+    "accept": "قبول",
+    "awaitingApproval": "هل ترغب في المتابعة مع هذا المعالج؟",
+    "browseTherapistsDescriptionOnlyOption": "تصفح معالجينا واختر المعالج الذي ترغب في حجز موعد معه.",
+    "introMeetingIsPending": "لديك بالفعل اجتماع تمهيدي محجوز. إذا كنت ترغب في اختيار وقت آخر، يرجى إلغاء موعدك لحجز موعد جديد.",
+    "seeAppointments": "عرض المواعيد"
   },
   "BookingCalendar": {
     "calendar": "التقويم",
@@ -328,11 +338,15 @@
     "close": "إغلاق",
     "deletingDiscountCode": "جارٍ حذف رمز الخصم..."
   },
+  "MyClientsPage": {
+    "goBackToClients": "العودة إلى نظرة عامة على العملاء",
+    "goBackToClient": "العودة إلى ملف العميل"
+  },
   "Breadcrumbs": {
     "myClients": "عملائي",
     "client": "عميل",
     "scheduleAppointment": "جدولة موعد",
-    "appontmentDetails": "تفاصيل الموعد"
+    "appointmentDetails": "تفاصيل الموعد"
   },
   "PaymentSuccessPage": {
     "thankYou": "شكرًا لك!",
@@ -343,7 +357,9 @@
     "minutes": "دقائق",
     "amountPaid": "المبلغ المدفوع:",
     "receiveConfirmation": "ستتلقى رسالة تأكيد بالبريد الإلكتروني تحتوي على تفاصيل الموعد.",
-    "loadingAmountPaid": "جاري تحميل المبلغ المدفوع..."
+    "loadingAmountPaid": "جاري تحميل المبلغ المدفوع...",
+    "bookingConfirmed": "تم تأكيد الحجز",
+    "amountToBePaid": "المبلغ المطلوب دفعه"
   },
   "ErrorMessages": {
     "invalidFields": "حقول غير صالحة!",
@@ -409,7 +425,10 @@
     "discountCodeDeleted": "تم حذف رمز الخصم",
     "discountCodeValid": "رمز الخصم صالح",
     "discountCodeApplied": "تم تطبيق رمز الخصم",
-    "discountLoading": "جارٍ تطبيق رمز الخصم..."
+    "discountLoading": "جارٍ تطبيق رمز الخصم...",
+    "therapistAccepted": "تم قبول المعالج",
+    "therapistRejected": "تم رفض المعالج",
+    "reservationCancelled": "تم إلغاء الحجز"
   },
   "AppointmentAction": {
     "therapySessionWith": "جلسة علاجية مع"

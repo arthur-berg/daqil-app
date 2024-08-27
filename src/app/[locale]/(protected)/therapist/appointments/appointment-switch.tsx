@@ -8,9 +8,10 @@ import AppointmentCalendar from "./appointment-calendar";
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
 
-const AppointmentSwitch = ({ appointments }: { appointments: any }) => {
+const AppointmentSwitch = ({ appointmentsJson }: { appointmentsJson: any }) => {
   const [view, setView] = useState<any>(null);
   const t = useTranslations("AppointmentList");
+  const appointments = JSON.parse(appointmentsJson);
 
   // Load the preferred view from cookies when the component mounts
   useEffect(() => {

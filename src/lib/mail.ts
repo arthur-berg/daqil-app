@@ -137,7 +137,7 @@ export const sendVerificationEmail = async (
       message: message as any,
     });
   } catch (error) {
-    console.error(error);
+    console.error("Error sending verification email: ", error);
   }
 };
 

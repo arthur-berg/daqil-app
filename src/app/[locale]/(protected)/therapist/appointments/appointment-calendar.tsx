@@ -176,14 +176,14 @@ const AppointmentCalendar = ({ appointments }: { appointments: any }) => {
     if (filters.length === 0) {
       return appointments;
     }
-    return appointments.filter((appointment: any) =>
+    return appointments?.filter((appointment: any) =>
       filters.includes(appointment.status)
     );
   }, [appointments, filters]);
 
   const events = useMemo(
     () =>
-      filteredAppointments.map((appointment: any) => ({
+      filteredAppointments?.map((appointment: any) => ({
         ...appointment,
         start: new Date(appointment.startDate),
         end: new Date(appointment.endDate),

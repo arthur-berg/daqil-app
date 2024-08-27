@@ -31,7 +31,9 @@ export const verificationEmailTemplate = (
   const encodedToken = encodeURIComponent(token);
   const confirmLink = `${process.env.NEXT_PUBLIC_APP_URL}/auth/new-verification?token=${encodedToken}`;
   const temporaryPasswordMessage = password
-    ? `<p>${t("temporaryPasswordMessage", { password })}</p>`
+    ? `<p>${t("temporaryPasswordMessage", {
+        password: `<strong>${password}</strong>`,
+      })}</p>`
     : "";
 
   const therapistMessage = isTherapist ? `<p>${t("therapistMessage")}</p>` : "";

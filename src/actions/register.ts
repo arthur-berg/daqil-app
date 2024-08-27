@@ -10,6 +10,7 @@ import { generateVerificationToken } from "@/lib/tokens";
 import { addUserToSubscriberList, sendVerificationEmail } from "@/lib/mail";
 import { generatePassword } from "@/utils";
 import { getTranslations } from "next-intl/server";
+import { UserRole } from "@/generalTypes";
 
 export const register = async (values: z.infer<typeof RegisterSchema>) => {
   const [SuccessMessages, ErrorMessages] = await Promise.all([
@@ -38,6 +39,7 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
 
   await User.create({
     password: hashedPassword,
+    role: UserRole.CLIENT,
     email,
   });
 
@@ -50,6 +52,7 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
   );
 
   const response = await addUserToSubscriberList(verificationToken.email);
+
   if (response?.error) {
     console.error(response.error);
   }
