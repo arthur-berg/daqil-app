@@ -12,10 +12,13 @@ export default function EndCallIcon({ handleEndCall }: { handleEndCall: any }) {
       <div className="flex">
         <Tooltip>
           <TooltipTrigger asChild>
-            <ExitIcon
-              className="w-8 h-8 text-white cursor-pointer"
+            <button
               onClick={handleEndCall}
-            />
+              className="flex items-center justify-center w-12 h-12 bg-red-600 rounded-full cursor-pointer hover:bg-red-700"
+              aria-label="End call"
+            >
+              <ExitIcon className="w-6 h-6 text-white" />
+            </button>
           </TooltipTrigger>
           <TooltipContent>
             <p>End call</p>

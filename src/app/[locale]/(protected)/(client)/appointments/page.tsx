@@ -6,7 +6,7 @@ const ClientAppointmentPage = async () => {
 
   return (
     <div className="flex justify-center">
-      <AppointmentList appointments={appointments} />
+      <AppointmentList appointmentsJson={JSON.stringify(appointments)} />
     </div>
   );
 };

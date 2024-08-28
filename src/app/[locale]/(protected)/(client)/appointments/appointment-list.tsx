@@ -40,7 +40,7 @@ import {
   MultiSelectorTrigger,
 } from "@/components/ui/multi-select";
 
-const AppointmentList = ({ appointments }: { appointments: any }) => {
+const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
   const [filters, setFilters] = useState<string[]>([
     "confirmed",
     "completed",
@@ -50,6 +50,8 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
   const [selectedAppointment, setSelectedAppointment] = useState<any>(null);
   const [isPending, startTransition] = useTransition();
   const t = useTranslations("AppointmentList");
+
+  const appointments = JSON.parse(appointmentsJson);
 
   const filteredAppointments = useMemo(() => {
     if (filters.length === 0) {

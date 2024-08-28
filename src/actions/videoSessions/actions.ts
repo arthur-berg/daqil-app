@@ -4,6 +4,7 @@ import { isUserAuthorized } from "@/actions/videoSessions/utils";
 import { APPOINTMENT_TYPE_ID_INTRO_SESSION } from "@/contants/config";
 import { getCurrentRole, requireAuth } from "@/lib/auth";
 import { createSessionAndToken, generateToken } from "@/lib/vonage";
+import { addMinutes, subMinutes, isBefore, isAfter } from "date-fns";
 import Appointment from "@/models/Appointment";
 import User from "@/models/User";
 import VideoSession from "@/models/VideoSession";
@@ -29,7 +30,6 @@ export const getSessionData = async (appointmentId: string) => {
     }
 
     if (appointment.status !== "confirmed") {
-      // Return error if the appointment is not confirmed
       return { error: ErrorMessages("appointmentNotConfirmed") };
     }
 
@@ -37,13 +37,13 @@ export const getSessionData = async (appointmentId: string) => {
     const startDate = new Date(appointment.startDate);
     const endDate = new Date(appointment.endDate);
 
-    // Calculate the time windows
-    const timeBeforeStart = new Date(startDate.getTime() - 20 * 60 * 1000); // 20 minutes before startDate
-    const timeAfterEnd = new Date(endDate.getTime() + 15 * 60 * 1000); // 15 minutes after endDate
+    const timeBeforeStart = subMinutes(startDate, 20);
+    const timeAfterEnd = addMinutes(endDate, 15);
 
-    // Check if the current time is within the allowed window
-    if (currentTime < timeBeforeStart || currentTime > timeAfterEnd) {
-      // Return error if the appointment is outside the allowed time window
+    if (
+      isBefore(currentTime, timeBeforeStart) ||
+      isAfter(currentTime, timeAfterEnd)
+    ) {
       return {
         error: ErrorMessages("videoMeetingOnlyAvailable"),
       };
