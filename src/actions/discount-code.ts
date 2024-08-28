@@ -1,5 +1,6 @@
 "use server";
 
+import { APPOINTMENT_TYPE_ID_INTRO_SESSION } from "@/contants/config";
 import { UserRole } from "@/generalTypes";
 import { requireAuth } from "@/lib/auth";
 import CodeRedemption from "@/models/CodeRedemption";
@@ -42,8 +43,13 @@ export const checkDiscountCodeValidity = async (discountCode: string) => {
     }
 
     if (code.firstTimeUserOnly) {
-      const hasPreviousBookings = user.appointments.some(
-        (appointment: any) => appointment.bookedAppointments.length > 0
+      const hasPreviousBookings = user.appointments.some((appointment: any) =>
+        appointment.bookedAppointments.some(
+          (bookedAppointment: any) =>
+            bookedAppointment.status === "completed" &&
+            bookedAppointment.appointmentTypeId.toString() !==
+              APPOINTMENT_TYPE_ID_INTRO_SESSION
+        )
       );
 
       if (hasPreviousBookings) {
@@ -63,8 +69,6 @@ export const checkDiscountCodeValidity = async (discountCode: string) => {
         error: ErrorMessages("redeemedCodeLimitReached"),
       };
     }
-
-    console.log("code", code);
 
     return {
       success: SuccessMessages("discountCodeValid"),

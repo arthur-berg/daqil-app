@@ -41,18 +41,20 @@ const BookAppointmentPage = async ({
   const pendingSelectedTherapist =
     user?.selectedTherapist &&
     user?.selectedTherapist.therapist &&
-    !user?.selectedTherapist.clientAcceptedTherapist &&
+    !user?.selectedTherapist.clientAcceptedIntroTherapist &&
     user?.selectedTherapist.introCallDone;
 
   const browseTherapists =
     user?.selectedTherapist &&
     user?.selectedTherapist.introCallDone &&
-    !user?.selectedTherapist.clientAcceptedTherapist;
+    !user?.selectedTherapist.clientAcceptedIntroTherapist;
 
   const appointmentTypes = await getAppointmentTypesByIDs([
     APPOINTMENT_TYPE_ID_SHORT_SESSION,
     APPOINTMENT_TYPE_ID_LONG_SESSION,
   ]);
+
+  console.log("pendingSelectedTherapist", pendingSelectedTherapist);
 
   if (!appointmentTypes) {
     return ErrorMessages("appointmentTypeNotExist");

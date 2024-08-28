@@ -119,7 +119,7 @@ export function Sidebar({
             )}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/zakina-logo.png" alt="zakina" className="object-cover" />
+            <img src="/daqil-logo.png" alt="zakina" className="object-cover" />
           </div>
           <Menu isOpen={isOpen} setIsOpen={setIsOpen} />
         </div>

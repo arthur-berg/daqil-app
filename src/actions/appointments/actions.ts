@@ -98,10 +98,8 @@ export const bookIntroAppointment = async (
     await User.findByIdAndUpdate(
       client.id,
       {
-        selectedTherapist: {
-          therapist: therapist.id,
-          introCallDone: false,
-          clientAcceptedTherapist: false,
+        $set: {
+          "selectedTherapist.therapist": therapist.id,
         },
       },
       { session }
@@ -243,10 +241,8 @@ export const cancelAppointment = async (
       APPOINTMENT_TYPE_ID_INTRO_SESSION
     ) {
       await User.findByIdAndUpdate(appointment.participants[0].userId._id, {
-        selectedTherapist: {
-          therapist: null,
-          introCallDone: false,
-          clientAcceptedTherapist: false,
+        $set: {
+          "selectedTherapist.therapist": null,
         },
       });
     }
@@ -559,14 +555,11 @@ export const reserveAppointment = async (
         { session }
       );
 
-      // Add new therapist to selectedTherapistHistory
       await User.findByIdAndUpdate(
         client.id,
         {
-          selectedTherapist: {
-            therapist: therapistId,
-            introCallDone: true,
-            clientAcceptedTherapist: true,
+          $set: {
+            "selectedTherapist.therapist": therapistId,
           },
           $push: {
             selectedTherapistHistory: {
@@ -752,10 +745,8 @@ export const scheduleAppointment = async (
       await User.findByIdAndUpdate(
         clientId,
         {
-          selectedTherapist: {
-            therapist: therapist.id,
-            introCallDone: true,
-            clientAcceptedTherapist: true,
+          $set: {
+            "selectedTherapist.therapist": therapist.id,
           },
           $push: {
             selectedTherapistHistory: {

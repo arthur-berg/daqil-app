@@ -43,13 +43,10 @@ export const createPaymentIntent = async (
         discountCodeError = error;
       }
       if (success) {
-        console.log("discount", discount);
         discountCodeSuccess = SuccessMessages("discountCodeApplied");
         finalAmount = finalAmount - (finalAmount * discount) / 100;
-        console.log("finalAmount", finalAmount);
         trackDiscountCodeRedeemed = track;
         discountCodeId = id;
-        console.log("id", id);
       }
     }
 

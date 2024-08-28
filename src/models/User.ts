@@ -229,7 +229,7 @@ const userSchema = new Schema(
         ref: "User",
         default: null,
       },
-      clientAcceptedTherapist: {
+      clientAcceptedIntroTherapist: {
         type: Boolean,
         default: false,
       },

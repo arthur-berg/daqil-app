@@ -24,7 +24,6 @@ export const rejectTherapist = async (therapistId: string) => {
     await User.findByIdAndUpdate(user.id, {
       $set: {
         "selectedTherapist.therapist": null,
-        "selectedTherapist.clientAcceptedTherapist": false,
       },
     });
 
@@ -52,12 +51,11 @@ export const acceptTherapist = async (therapistId: string) => {
       return { error: ErrorMessages("therapistNotExist") };
     }
 
-    const update = await User.findByIdAndUpdate(user.id, {
+    await User.findByIdAndUpdate(user.id, {
       $set: {
-        "selectedTherapist.clientAcceptedTherapist": true,
+        "selectedTherapist.clientAcceptedIntroTherapist": true,
       },
     });
-    console.log("update", update);
 
     revalidatePath("/book-appointment");
 

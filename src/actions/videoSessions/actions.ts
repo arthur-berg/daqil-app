@@ -1,6 +1,7 @@
 "use server";
 
 import { isUserAuthorized } from "@/actions/videoSessions/utils";
+import { APPOINTMENT_TYPE_ID_INTRO_SESSION } from "@/contants/config";
 import { getCurrentRole, requireAuth } from "@/lib/auth";
 import { createSessionAndToken, generateToken } from "@/lib/vonage";
 import Appointment from "@/models/Appointment";
@@ -72,7 +73,11 @@ export const getSessionData = async (appointmentId: string) => {
         return { error: ErrorMessages("userNotFound") };
       }
 
-      if (!user.selectedTherapist?.introCallDone) {
+      if (
+        !user.selectedTherapist?.introCallDone &&
+        appointment.appointmentTypeId.toString() ===
+          APPOINTMENT_TYPE_ID_INTRO_SESSION
+      ) {
         await User.findByIdAndUpdate(user.id, {
           $set: { "selectedTherapist.introCallDone": true },
         });
