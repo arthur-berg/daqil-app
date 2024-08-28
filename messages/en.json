@@ -491,7 +491,7 @@
   "NonPaidAppointmentConfirmationEmail": {
     "zakina": "Zakina",
     "therapistSubject": "New Appointment Booking",
-    "clientSubject": "Appointment Confirmation",
+    "clientSubject": "Action Required: Confirm Your Appointment with Payment",
     "therapistButtonText": "See all my appointments",
     "clientButtonText": "View my appointments",
     "therapistAdditionalMessage": "To join the session and manage all your appointments, please visit your appointments page.",

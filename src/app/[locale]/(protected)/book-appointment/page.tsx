@@ -39,28 +39,23 @@ const BookAppointmentPage = async ({
   }
 
   const pendingSelectedTherapist =
-    user?.selectedTherapist &&
-    user?.selectedTherapist.therapist &&
-    !user?.selectedTherapist.clientAcceptedIntroTherapist &&
-    user?.selectedTherapist.introCallDone;
+    user?.selectedTherapist?.clientIntroTherapistSelectionStatus ===
+      "PENDING" && user?.selectedTherapist.introCallDone;
 
   const browseTherapists =
-    user?.selectedTherapist &&
-    user?.selectedTherapist.introCallDone &&
-    !user?.selectedTherapist.clientAcceptedIntroTherapist;
+    user?.selectedTherapist?.clientIntroTherapistSelectionStatus ===
+      "REJECTED" && user?.selectedTherapist.introCallDone;
 
   const appointmentTypes = await getAppointmentTypesByIDs([
     APPOINTMENT_TYPE_ID_SHORT_SESSION,
     APPOINTMENT_TYPE_ID_LONG_SESSION,
   ]);
 
-  console.log("pendingSelectedTherapist", pendingSelectedTherapist);
-
   if (!appointmentTypes) {
     return ErrorMessages("appointmentTypeNotExist");
   }
 
-  const introMeetingIsPending =
+  const introMeetingIsBookedButNotFinished =
     client?.appointments?.some((appointment: any) =>
       appointment.bookedAppointments?.some(
         (bookedAppointment: any) => bookedAppointment.status !== "canceled"
@@ -78,7 +73,7 @@ const BookAppointmentPage = async ({
               </h1>
             </div>
 
-            {introMeetingIsPending ? (
+            {introMeetingIsBookedButNotFinished ? (
               <div className="bg-white p-4 rounded-md mb-6 flex items-center flex-col text-center">
                 <MdEvent className="mr-2 text-destructive mb-4" size={48} />
                 <p className="text-lg mb-4 flex items-center justify-center">

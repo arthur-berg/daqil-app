@@ -24,6 +24,7 @@ export const rejectTherapist = async (therapistId: string) => {
     await User.findByIdAndUpdate(user.id, {
       $set: {
         "selectedTherapist.therapist": null,
+        "selectedTherapist.clientIntroTherapistSelectionStatus": "REJECTED",
       },
     });
 
@@ -53,7 +54,7 @@ export const acceptTherapist = async (therapistId: string) => {
 
     await User.findByIdAndUpdate(user.id, {
       $set: {
-        "selectedTherapist.clientAcceptedIntroTherapist": true,
+        "selectedTherapist.clientIntroTherapistSelectionStatus": "ACCEPTED",
       },
     });
 

@@ -3,10 +3,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { useState, useTransition } from "react";
 import { addDays, format, isAfter, isBefore, set } from "date-fns";
 import { Button } from "@/components/ui/button";
-import {
-  bookIntroAppointment,
-  reserveAppointment,
-} from "@/actions/appointments/actions";
+import { bookIntroAppointment } from "@/actions/appointments/book-intro-appointment";
 import { Link, useRouter } from "@/navigation";
 import { currencyToSymbol } from "@/utils";
 import { getTherapistAvailableTimeSlots } from "@/utils/therapistAvailability";
@@ -30,6 +27,7 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import { BeatLoader } from "react-spinners";
 import { APPOINTMENT_TYPE_ID_INTRO_SESSION } from "@/contants/config";
+import { reserveAppointment } from "@/actions/appointments/reserve-appointment";
 
 type DateType = {
   justDate: Date | undefined;

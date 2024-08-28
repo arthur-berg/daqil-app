@@ -493,7 +493,7 @@
   "NonPaidAppointmentConfirmationEmail": {
     "zakina": "زاكينا",
     "therapistSubject": "حجز موعد جديد",
-    "clientSubject": "تأكيد الموعد",
+    "clientSubject": "الإجراء مطلوب: يرجى تأكيد موعدك عن طريق الدفع",
     "therapistButtonText": "عرض جميع مواعيدي",
     "clientButtonText": "عرض مواعيدي",
     "therapistAdditionalMessage": "للإنضمام إلى الجلسة وإدارة جميع مواعيدك، يرجى زيارة صفحة المواعيد الخاصة بك.",

@@ -11,15 +11,13 @@ import Countdown from "react-countdown";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "@/navigation";
 import { RadioGroupItem, RadioGroup } from "@/components/ui/radio-group";
-import {
-  cancelTempReservation,
-  confirmBookingPayLater,
-} from "@/actions/appointments/actions";
 import { useToast } from "@/components/ui/use-toast";
 import { BeatLoader } from "react-spinners";
 import { Input } from "@/components/ui/input";
 import { checkDiscountCodeValidity } from "@/actions/discount-code";
 import { createPaymentIntent } from "@/actions/stripe";
+import { cancelTempReservation } from "@/actions/appointments/cancel-temp-reservation";
+import { confirmBookingPayLater } from "@/actions/appointments/confirm-booking-pay-later";
 
 if (process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY === undefined) {
   throw new Error("NEXT_PUBLIC_STRIPE_PUBLIC_KEY is not defined");

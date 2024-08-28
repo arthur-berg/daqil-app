@@ -229,9 +229,10 @@ const userSchema = new Schema(
         ref: "User",
         default: null,
       },
-      clientAcceptedIntroTherapist: {
-        type: Boolean,
-        default: false,
+      clientIntroTherapistSelectionStatus: {
+        type: String,
+        enum: ["PENDING", "ACCEPTED", "REJECTED"],
+        default: "PENDING",
       },
       introCallDone: {
         type: Boolean,
