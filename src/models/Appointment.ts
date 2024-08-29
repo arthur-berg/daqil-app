@@ -109,7 +109,13 @@ const appointmentSchema = new Schema(
     },
     cancellationReason: {
       type: String,
-      enum: ["no-show-both", "no-show-host", "no-show-participant", "custom"],
+      enum: [
+        "no-show-both",
+        "no-show-host",
+        "no-show-participant",
+        "not-paid-in-time",
+        "custom",
+      ],
       required: function (this: any) {
         return this.status === "canceled";
       },

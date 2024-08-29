@@ -48,12 +48,14 @@ export const schedulePaymentReminders = async (
 
 export const scheduleRemoveUnpaidJobs = async (
   appointmentId: string,
-  paymentExpiryDate: Date
+  paymentExpiryDate: Date,
+  locale: string
 ) => {
   const removeUnpaidTaskId = await scheduleTask(
     `${process.env.QSTASH_API_URL}/remove-unpaid-appointment`,
     { appointmentId: appointmentId },
-    Math.floor(paymentExpiryDate.getTime() / 1000)
+    Math.floor(paymentExpiryDate.getTime() / 1000),
+    locale
   );
   await ScheduledTask.create({
     appointmentId: appointmentId,

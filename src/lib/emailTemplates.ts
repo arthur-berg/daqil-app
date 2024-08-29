@@ -455,3 +455,45 @@ export const reminderEmailTemplate = (t: any, appointmentDetails: any) => {
     </div>
   `;
 };
+
+export const clientNotPaidInTimeTemplate = (
+  appointmentDetails: {
+    date: string;
+    time: string;
+    therapistName: string;
+    clientName: string;
+  },
+  t: any
+) => {
+  const formattedDate = format(new Date(appointmentDetails.date), "PPPP");
+  const formattedTime = format(new Date(appointmentDetails.time), "p");
+
+  return `
+    <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
+      <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+        <div style="text-align: center; margin-bottom: 20px;">
+          <h1 style="color: ${primaryColor}; font-size: 24px; margin: 0;">${t(
+    "zakina"
+  )}</h1>
+        </div>
+        <div style="margin-top: 20px;">
+          <p>${t("clientSubject")}</p>
+          <p><strong>${t("therapistLabel")}</strong> ${
+    appointmentDetails.therapistName
+  }</p>
+          <p><strong>${t("clientLabel")}</strong> ${
+    appointmentDetails.clientName
+  }</p>
+          <p><strong>${t("dateLabel")}</strong> ${formattedDate}</p>
+          <p><strong>${t("timeLabel")}</strong> ${formattedTime}</p>
+        </div>
+        <div style="margin-top: 20px; font-size: 16px; color: #333333;">
+          <p>${t("notPaidInTimeMessage")}</p>
+        </div>
+        <div style="margin-top: 20px; font-size: 12px; color: #888888; text-align: center;">
+          ${t("thankYouMessage")}
+        </div>
+      </div>
+    </div>
+  `;
+};

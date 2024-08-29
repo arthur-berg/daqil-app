@@ -94,6 +94,8 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
         return t("noShowParticipant");
       case "no-show-both":
         return t("noShowBoth");
+      case "not-paid-in-time":
+        return t("notPaidInTime");
       default:
         return "";
     }

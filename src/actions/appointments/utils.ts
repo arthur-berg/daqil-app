@@ -7,6 +7,7 @@ import User from "@/models/User";
 import { getTherapistAvailableTimeSlots } from "@/utils/therapistAvailability";
 import { format, isAfter, isBefore, isEqual } from "date-fns";
 import { startSession } from "mongoose";
+import { getLocale } from "next-intl/server";
 
 const removeRelatedJobs = async (appointmentIds: any) => {
   for (const appointmentId of appointmentIds) {
@@ -15,6 +16,7 @@ const removeRelatedJobs = async (appointmentIds: any) => {
 };
 
 export const createAppointment = async (appointmentData: any, session: any) => {
+  const locale = await getLocale();
   const appointment = await Appointment.create([appointmentData], { session });
 
   if (!appointment) {
@@ -23,7 +25,8 @@ export const createAppointment = async (appointmentData: any, session: any) => {
 
   await scheduleRemoveUnpaidJobs(
     appointment[0]._id.toString(),
-    appointment[0].payment.paymentExpiryDate
+    appointment[0].payment.paymentExpiryDate,
+    locale
   );
 
   return appointment;

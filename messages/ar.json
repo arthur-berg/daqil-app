@@ -113,7 +113,8 @@
     "refreshMessage": "قم بتحديث الصفحة إذا كنت داخل النافذة ولكنك لا تزال ترى هذه الرسالة.",
     "noShowHost": "لم يحضر المعالج",
     "noShowClient": "لم يحضر العميل",
-    "noShowBoth": "لم يحضر المعالج ولا العميل"
+    "noShowBoth": "لم يحضر المعالج ولا العميل",
+    "notPaidInTime": "العميل لم يدفع في الوقت المحدد"
   },
   "SettingsPage": {
     "firstNameLabel": "الاسم الأول",
@@ -544,5 +545,15 @@
     "durationLabel": "المدة:",
     "minutesLabel": "دقائق",
     "thankYouMessage": "شكرًا لاستخدامك زاكينا."
+  },
+  "ClientNotPaidInTimeEmail": {
+    "clientSubject": "تم إلغاء موعدك لأن العميل لم يدفع في الوقت المحدد",
+    "zakina": "زاكينا",
+    "therapistLabel": "المعالج:",
+    "clientLabel": "العميل:",
+    "dateLabel": "التاريخ:",
+    "timeLabel": "الوقت:",
+    "notPaidInTimeMessage": "للأسف، تم إلغاء موعدك لأن الدفع لم يتم في الوقت المحدد. يرجى التأكد من الدفع مسبقًا للحجوزات المستقبلية.",
+    "thankYouMessage": "شكرًا لاستخدامك Zakina."
   }
 }
