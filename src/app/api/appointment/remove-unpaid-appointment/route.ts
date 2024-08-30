@@ -70,6 +70,7 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
       if (appointment.payment.method === "payAfterBooking") {
         await sendClientNotPaidInTimeEmail(
           appointment.participants[0].userId.email,
+          appointment.hostUserId.email,
           {
             date: appointment.startDate,
             time: appointment.startDate,

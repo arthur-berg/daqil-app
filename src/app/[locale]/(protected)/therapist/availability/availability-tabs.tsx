@@ -20,10 +20,10 @@ import {
 } from "@/components/ui/select";
 
 const AvailabilityTabs = ({
-  appointmentType,
+  appointmentTypes,
   availableTimes,
 }: {
-  appointmentType: any;
+  appointmentTypes: any[];
   availableTimes: any;
 }) => {
   const t = useTranslations("AvailabilityPage");
@@ -60,7 +60,7 @@ const AvailabilityTabs = ({
             </TabsContent>
             <TabsContent value="default-availability">
               <RecurringAvailabilityManager
-                appointmentType={appointmentType}
+                appointmentTypes={appointmentTypes}
                 settings={availableTimes?.settings}
                 recurringAvailableTimes={
                   availableTimes?.recurringAvailableTimes
@@ -110,7 +110,7 @@ const AvailabilityTabs = ({
           )}
           {activeTab === "default-availability" && (
             <RecurringAvailabilityManager
-              appointmentType={appointmentType}
+              appointmentTypes={appointmentTypes}
               settings={availableTimes?.settings}
               recurringAvailableTimes={availableTimes?.recurringAvailableTimes}
             />

@@ -35,6 +35,13 @@ const timeRangeSchema = new Schema({
     type: Date,
     required: false,
   },
+  appointmentTypeIds: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "AppointmentType",
+      required: true,
+    },
+  ],
 });
 
 const timeRangeStringsSchema = new Schema({
@@ -46,6 +53,13 @@ const timeRangeStringsSchema = new Schema({
     type: String,
     required: false,
   },
+  appointmentTypeIds: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "AppointmentType",
+      required: true,
+    },
+  ],
 });
 
 const dateTimesSchema = new Schema({

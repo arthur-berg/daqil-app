@@ -22,3 +22,15 @@ export const getAppointmentTypesByIDs = async (ids: string[]) => {
     return null;
   }
 };
+
+export const getAllAppointmentTypes = async () => {
+  try {
+    const appointmentTypes = (await AppointmentType.find().lean()) as any[];
+    return appointmentTypes.map((appointmentType) => ({
+      ...appointmentType,
+      _id: appointmentType._id.toString(),
+    }));
+  } catch (error) {
+    return null;
+  }
+};

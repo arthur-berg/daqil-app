@@ -546,12 +546,14 @@
   },
   "ClientNotPaidInTimeEmail": {
     "clientSubject": "Your Appointment Was Canceled Because Payment Was Not Made on Time",
-    "zakina": "Zakina",  
+    "therapistSubject": "Appointment Canceled: Client Did Not Pay on Time",
+    "zakina": "Zakina",
     "therapistLabel": "Therapist:",
     "clientLabel": "Client:",
     "dateLabel": "Date:",
     "timeLabel": "Time:",
-    "notPaidInTimeMessage": "Unfortunately, your appointment has been canceled because payment was not received on time. Please make sure to pay in advance for future bookings.",
+    "notPaidInTimeMessageClient": "Unfortunately, your appointment was canceled because you did not pay on time. Please make sure to pay in advance for future bookings.",
+    "notPaidInTimeMessageTherapist": "The appointment with your client was canceled because the client did not pay on time. Please check your upcoming appointments.",
     "thankYouMessage": "Thank you for using Zakina."
   }
 }

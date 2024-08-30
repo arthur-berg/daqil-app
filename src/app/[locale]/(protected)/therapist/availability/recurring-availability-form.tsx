@@ -32,6 +32,7 @@ import {
 } from "@/components/ui/popover";
 import { PopoverClose } from "@radix-ui/react-popover";
 import { useTranslations } from "next-intl";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const generateTimeIntervals = (intervalMinutes = 15) => {
   const times = [];
@@ -64,14 +65,14 @@ const RecurringAvailabilityForm = ({
   setTimeRangeInputs,
   editModes,
   setEditModes,
-  fullDayRange,
+  appointmentTypes,
 }: {
   day: any;
   timeRangeInputs: any;
   setTimeRangeInputs: any;
   editModes: any;
   setEditModes: any;
-  fullDayRange: any;
+  appointmentTypes: any[];
 }) => {
   const [isPending, startTransition] = useTransition();
   const [popoverOpen, setIsPopoverOpen] = useState(false);
@@ -85,10 +86,21 @@ const RecurringAvailabilityForm = ({
     defaultValues: {
       day,
       timeRanges:
-        timeRangeInputs[day]?.map(({ from, to }: { from: any; to: any }) => ({
-          startTime: from,
-          endTime: to,
-        })) || [],
+        timeRangeInputs[day]?.map(
+          ({
+            from,
+            to,
+            appointmentTypeIds,
+          }: {
+            from: any;
+            to: any;
+            appointmentTypeIds: string[];
+          }) => ({
+            startTime: from,
+            endTime: to,
+            appointmentTypeIds: appointmentTypeIds || [],
+          })
+        ) || [],
     },
   });
 
@@ -98,24 +110,11 @@ const RecurringAvailabilityForm = ({
     );
   };
 
-  const setAvailableFullDay = (day: string) => {
-    const { from, to } = fullDayRange;
-    setTimeRangeInputs((prev: any) => ({
-      ...prev,
-      [day]: [{ from, to }],
-    }));
-
-    // Programmatically set values in the form
-    form.setValue(`timeRanges`, [{ startTime: from, endTime: to }]);
-    form.trigger(`timeRanges`);
-  };
-
   const removeTimeRange = (day: string, index: number) => {
     setTimeRangeInputs((prev: any) => {
       const newRanges = [...(prev[day] || [])];
       newRanges.splice(index, 1);
 
-      // Update the form values programmatically
       form.setValue(
         `timeRanges`,
         newRanges.map(({ from, to }) => ({
@@ -158,14 +157,25 @@ const RecurringAvailabilityForm = ({
   };
 
   const addTimeRange = (day: string) => {
-    setTimeRangeInputs((prev: any) => ({
-      ...prev,
-      [day]: [...(prev[day] || []), { from: "", to: "" }],
-    }));
+    setTimeRangeInputs((prev: any) => {
+      const newTimeRange = {
+        from: "",
+        to: "",
+        appointmentTypeIds: appointmentTypes.map((type) => type._id),
+      };
+      return {
+        ...prev,
+        [day]: [...(prev[day] || []), newTimeRange],
+      };
+    });
   };
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmitDay)}>
+      <form
+        onSubmit={form.handleSubmit(onSubmitDay)}
+        onError={() => console.log("here")}
+      >
         <div className="mb-8">
           <div className="flex flex-col space-y-2">
             {timeRangeInputs[day] && timeRangeInputs[day].length > 0 ? (
@@ -313,6 +323,56 @@ const RecurringAvailabilityForm = ({
                       />
                     </div>
                   </div>
+                  <FormField
+                    control={form.control}
+                    name={`timeRanges.${index}.appointmentTypeIds`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <div className="flex flex-wrap mt-2">
+                          {appointmentTypes.map((type) => (
+                            <div
+                              key={type._id}
+                              className="flex items-center mr-4"
+                            >
+                              <Checkbox
+                                id={`${day}-${index}-${type._id}`}
+                                checked={field?.value?.includes(type._id)}
+                                onCheckedChange={() => {
+                                  // Ensure field.value is always an array
+                                  const currentValue = Array.isArray(
+                                    field.value
+                                  )
+                                    ? field.value
+                                    : [];
+                                  const updatedIds = currentValue.includes(
+                                    type._id
+                                  )
+                                    ? currentValue.filter(
+                                        (id: string) => id !== type._id
+                                      )
+                                    : [...currentValue, type._id];
+                                  form.setValue(
+                                    `timeRanges.${index}.appointmentTypeIds`,
+                                    updatedIds
+                                  );
+                                  form.trigger(
+                                    `timeRanges.${index}.appointmentTypeIds`
+                                  );
+                                }}
+                              />
+
+                              <label
+                                htmlFor={`${day}-${index}-${type._id}`}
+                                className="ml-2"
+                              >
+                                {type.title}
+                              </label>
+                            </div>
+                          ))}
+                        </div>
+                      </FormItem>
+                    )}
+                  />
                   {editModes[day] && (
                     <Button
                       variant="outline"
@@ -329,6 +389,8 @@ const RecurringAvailabilityForm = ({
               <p className="text-gray-500">{t("noRecurringSet")}</p>
             )}
           </div>
+          {/* Add appointment type selection UI here */}
+
           {editModes[day] && (
             <div className="mt-4 sm:space-x-4 space-y-4 sm:space-y-0">
               <Button
@@ -340,15 +402,6 @@ const RecurringAvailabilityForm = ({
               >
                 {t("addTimeRange")}
               </Button>
-              {/*  <Button
-                className="block sm:inline"
-                type="button"
-                onClick={() => setAvailableFullDay(day)}
-                disabled={isPending}
-                variant="outline"
-              >
-                Set Available Full Day
-              </Button> */}
               <Button
                 className="block sm:inline"
                 variant="success"

@@ -121,6 +121,7 @@ export const RecurringAvailabilitySchema = z.object({
     z.object({
       startTime: timeStringOrDateSchema,
       endTime: timeStringOrDateSchema,
+      appointmentTypeIds: z.array(z.string()), // Corrected typo here
     })
   ),
 });

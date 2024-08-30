@@ -12,6 +12,7 @@ import {
   paymentReminderTemplate,
   reminderEmailTemplate,
   clientNotPaidInTimeTemplate,
+  therapistNotPaidInTimeTemplate,
 } from "./emailTemplates";
 import { format } from "date-fns";
 import { getTranslations } from "next-intl/server";
@@ -442,6 +443,7 @@ export const sendReminderEmail = async (
 
 export const sendClientNotPaidInTimeEmail = async (
   clientEmail: string,
+  therapistEmail: string,
   appointmentDetails: {
     date: string;
     time: string;
@@ -450,7 +452,19 @@ export const sendClientNotPaidInTimeEmail = async (
   },
   t: any
 ) => {
-  const message = {
+  const therapistMessage = {
+    from_email: "info@zakina-app.com",
+    subject: t("therapistSubject"),
+    html: therapistNotPaidInTimeTemplate(appointmentDetails, t),
+    to: [
+      {
+        email: therapistEmail,
+        type: "to",
+      },
+    ],
+  };
+
+  const clientMessage = {
     from_email: "info@zakina-app.com",
     subject: t("clientSubject"),
     html: clientNotPaidInTimeTemplate(appointmentDetails, t),
@@ -463,10 +477,11 @@ export const sendClientNotPaidInTimeEmail = async (
   };
 
   try {
-    await mailchimpTx.messages.send({
-      message: message as any,
-    });
+    await Promise.all([
+      mailchimpTx.messages.send({ message: therapistMessage as any }),
+      mailchimpTx.messages.send({ message: clientMessage as any }),
+    ]);
   } catch (error) {
-    console.error("Error sending client not paid in time email:", error);
+    console.error("Error sending 'not paid in time' email:", error);
   }
 };

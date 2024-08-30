@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState, useTransition } from "react";
-import { useForm, FormProvider } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import RecurringAvailabilityForm from "@/app/[locale]/(protected)/therapist/availability/recurring-availability-form";
@@ -21,7 +21,6 @@ import {
   Command,
   CommandEmpty,
   CommandGroup,
-  CommandInput,
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
@@ -77,13 +76,22 @@ const initialEditModes = daysOfWeek.reduce((acc: any, day: any) => {
 
 const getInitialTimeRanges = (recurringAvailableTimes: any) => {
   const initialTimeRanges: {
-    [key: string]: { from: string; to: string }[];
+    [key: string]: { from: string; to: string; appointmentTypeIds: string[] }[];
   } = {};
   recurringAvailableTimes?.forEach(({ day, timeRanges }: any) => {
     initialTimeRanges[day] = timeRanges.map(
-      ({ startTime, endTime }: { startTime: string; endTime: string }) => ({
+      ({
+        startTime,
+        endTime,
+        appointmentTypeIds,
+      }: {
+        startTime: string;
+        endTime: string;
+        appointmentTypeIds: string[];
+      }) => ({
         from: startTime,
         to: endTime,
+        appointmentTypeIds,
       })
     );
   });
@@ -91,18 +99,18 @@ const getInitialTimeRanges = (recurringAvailableTimes: any) => {
 };
 
 const DefaultAvailabilityManager = ({
-  appointmentType,
+  appointmentTypes,
   recurringAvailableTimes,
   settings,
 }: {
-  appointmentType: any;
+  appointmentTypes: any[];
   recurringAvailableTimes: any[];
   settings: any;
 }) => {
   const [isPending, startTransition] = useTransition();
 
   const [timeRangeInputs, setTimeRangeInputs] = useState<{
-    [key: string]: { from: string; to: string }[];
+    [key: string]: { from: string; to: string; appointmentTypeIds: string[] }[];
   }>({});
   const [editModes, setEditModes] = useState<{ [key: string]: boolean }>(
     initialEditModes
@@ -143,21 +151,6 @@ const DefaultAvailabilityManager = ({
     });
   };
 
-  /*   const handleTimeRangeChange = (
-    day: string,
-    index: number,
-    field: "from" | "to",
-    value: string
-  ) => {
-    setTimeRangeInputs((prev) => {
-      const newRanges = [...(prev[day] || [])];
-      newRanges[index][field] = value;
-      // Filter out empty ranges
-      const filteredRanges = newRanges.filter(({ from, to }) => from && to);
-      return { ...prev, [day]: filteredRanges };
-    });
-  }; */
-
   const onSubmitDefaultAvailability = (
     values: z.infer<typeof DefaultAvailabilitySettingsSchemaFE>
   ) => {
@@ -175,7 +168,6 @@ const DefaultAvailabilityManager = ({
 
   return timeRangeInputs ? (
     <div className="bg-white rounded-lg md:p-6">
-      {/* <h2 className="text-xl font-bold mb-4">Recurring times & settings</h2> */}
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmitDefaultAvailability)}>
           <div className="mt-4">
@@ -236,116 +228,6 @@ const DefaultAvailabilityManager = ({
               )}
             />
           </div>
-          {/*    <div className="mt-4">
-            <label className="block text-lg font-semibold mb-2">
-              Available All Day Range
-            </label>
-
-            <div className="flex flex-wrap space-y-2 md:space-y-0">
-              <FormField
-                control={form.control}
-                name="fullDayRange.from"
-                render={({ field }) => (
-                  <FormItem className="mr-4">
-                    <FormControl>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <Button
-                            variant="outline"
-                            role="combobox"
-                            className="w-[150px] justify-between"
-                          >
-                            {field.value ? field.value : "Select time"}
-                            <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-[150px] p-0">
-                          <Command>
-                            <CommandInput placeholder="Search time..." />
-                            <CommandList>
-                              <CommandEmpty>No time found.</CommandEmpty>
-                              <CommandGroup>
-                                {timeOptions.map((time) => (
-                                  <CommandItem
-                                    value={time}
-                                    key={time}
-                                    onSelect={() => {
-                                      form.setValue("fullDayRange.from", time);
-                                    }}
-                                  >
-                                    <CheckIcon
-                                      className={`mr-2 h-4 w-4 ${
-                                        time === field.value
-                                          ? "opacity-100"
-                                          : "opacity-0"
-                                      }`}
-                                    />
-                                    {time}
-                                  </CommandItem>
-                                ))}
-                              </CommandGroup>
-                            </CommandList>
-                          </Command>
-                        </PopoverContent>
-                      </Popover>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="fullDayRange.to"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <Button
-                            variant="outline"
-                            role="combobox"
-                            className="w-[150px] justify-between"
-                          >
-                            {field.value ? field.value : "Select time"}
-                            <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-[150px] p-0">
-                          <Command>
-                            <CommandInput placeholder="Search time..." />
-                            <CommandList>
-                              <CommandEmpty>No time found.</CommandEmpty>
-                              <CommandGroup>
-                                {timeOptions.map((time) => (
-                                  <CommandItem
-                                    value={time}
-                                    key={time}
-                                    onSelect={() => {
-                                      form.setValue("fullDayRange.to", time);
-                                    }}
-                                  >
-                                    <CheckIcon
-                                      className={`mr-2 h-4 w-4 ${
-                                        time === field.value
-                                          ? "opacity-100"
-                                          : "opacity-0"
-                                      }`}
-                                    />
-                                    {time}
-                                  </CommandItem>
-                                ))}
-                              </CommandGroup>
-                            </CommandList>
-                          </Command>
-                        </PopoverContent>
-                      </Popover>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-          </div> */}
 
           <Button
             type="submit"
@@ -386,12 +268,12 @@ const DefaultAvailabilityManager = ({
             </div>
             {editModes[day] ? (
               <RecurringAvailabilityForm
+                appointmentTypes={appointmentTypes}
                 editModes={editModes}
                 setEditModes={setEditModes}
                 day={day}
                 timeRangeInputs={timeRangeInputs}
                 setTimeRangeInputs={setTimeRangeInputs}
-                fullDayRange={fullDayRange}
               />
             ) : (
               <div className="space-y-2 space-x-2">
@@ -405,6 +287,25 @@ const DefaultAvailabilityManager = ({
                         {range.from}
                       </span>
                       <span className="px-2 py-1 text-center">{range.to}</span>
+                      <div className="flex flex-wrap mt-2">
+                        {appointmentTypes.map((type) => {
+                          const isSelected = range.appointmentTypeIds?.includes(
+                            type._id
+                          );
+
+                          if (isSelected) {
+                            return (
+                              <div
+                                key={type._id}
+                                className="flex items-center mr-4"
+                              >
+                                <span className="ml-2">{type.title}</span>
+                              </div>
+                            );
+                          }
+                          return null;
+                        })}
+                      </div>
                     </div>
                   ))
                 ) : (
