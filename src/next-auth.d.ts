@@ -7,8 +7,14 @@ export type ExtendedUser = DefaultSession["user"] & {
   email: string;
   isOAuth: boolean;
   isTwoFactorEnabled: boolean;
-  firstName: string;
-  lastName: string;
+  firstName: {
+    en: string;
+    ar: string;
+  };
+  lastName: {
+    en: string;
+    ar: string;
+  };
   isOnboardingDone: boolean;
   appointments: string[];
   stripePaymentMethodId?: string;

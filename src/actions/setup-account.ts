@@ -27,8 +27,8 @@ const verifyPasswordAndLogin = async ({
   existingUser: any;
   currentPassword?: string;
   hashedPassword: string;
-  firstName: string;
-  lastName: string;
+  firstName: { en: string; ar?: string };
+  lastName: { en: string; ar?: string };
   email: string;
   password: string;
   locale: string;
@@ -50,6 +50,7 @@ const verifyPasswordAndLogin = async ({
   if (!passwordsMatch) {
     return { error: ErrorMessages("incorrectPassword") };
   }
+
   await User.findByIdAndUpdate(existingUser._id, {
     password: hashedPassword,
     isAccountSetupDone: true,
@@ -133,12 +134,12 @@ export const setupAccount = async (
     isAccountSetupDone: true,
     firstName,
     lastName,
-    personalInfo, // Update personalInfo as an object
+    personalInfo,
   });
 
   await VerificationToken.findByIdAndDelete(existingToken._id);
 
-  await addUserNameToSubscriberProfile(email, firstName, lastName);
+  await addUserNameToSubscriberProfile(email, firstName.en, lastName.en);
 
   await login({ email, password }, locale);
 

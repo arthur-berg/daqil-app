@@ -285,15 +285,21 @@ export const SetupAccountSchema = z.object({
     message: "Minimum 6 characters required",
   }),
   currentPassword: z.optional(z.string().min(6)),
-  firstName: z.string().min(1, {
-    message: "First name is required",
+  firstName: z.object({
+    en: z.string().min(1, {
+      message: "First name (English) is required",
+    }),
+    ar: z.string().optional(),
   }),
-  lastName: z.string().min(1, {
-    message: "Last name is required",
+  lastName: z.object({
+    en: z.string().min(1, {
+      message: "Last name (English) is required",
+    }),
+    ar: z.string().optional(),
   }),
   personalInfo: z.object({
     phoneNumber: z.string(),
-    sex: z.enum(["MALE", "FEMALE", "OTHER"]), // Optional sex field with specific enum values
+    sex: z.enum(["MALE", "FEMALE", "OTHER"]),
     dateOfBirth: z.string().regex(/^\d{4}\/\d{2}\/\d{2}$/, {
       message: "Invalid date format. Use YYYY/MM/DD.",
     }),

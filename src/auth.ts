@@ -54,8 +54,8 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       if (session.user) {
         session.user.isOnboardingDone = token.isOnboardingDone as boolean;
         session.user.isTwoFactorEnabled = token.isTwoFactorEnabled as boolean;
-        session.user.firstName = token.firstName as string;
-        session.user.lastName = token.lastName as string;
+        session.user.firstName = token.firstName as { en: string; ar: string };
+        session.user.lastName = token.lastName as { en: string; ar: string };
         session.user.role = token.role as UserRole;
         session.user.email = token.email as string;
         session.user.isOAuth = token.isOAuth as boolean;

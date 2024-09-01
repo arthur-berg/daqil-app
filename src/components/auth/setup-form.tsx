@@ -33,6 +33,7 @@ export const SetupForm = () => {
   const [success, setSuccess] = useState<string | undefined>("");
   const [currentPasswordRequired, setCurrentPasswordRequired] = useState(false);
   const [isPending, startTransition] = useTransition();
+  const [showArabicNameFields, setShowArabicNameFields] = useState(false); // New state for Arabic fields visibility
   const searchParams = useSearchParams();
   const locale = useLocale();
   const t = useTranslations("AuthPage");
@@ -46,8 +47,8 @@ export const SetupForm = () => {
       email: email ? email : "",
       currentPassword: token ? undefined : "",
       password: "",
-      firstName: "",
-      lastName: "",
+      firstName: { en: "", ar: "" },
+      lastName: { en: "", ar: "" },
       personalInfo: {
         phoneNumber: "",
         sex: undefined,
@@ -106,10 +107,11 @@ export const SetupForm = () => {
             />
             <FormField
               control={form.control}
-              name="firstName"
+              name="firstName.en"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t("firstName")}</FormLabel>
+                  <FormLabel>{t("firstNameEn")}</FormLabel>{" "}
+                  {/* Updated Label */}
                   <FormControl>
                     <Input disabled={isPending} {...field} />
                   </FormControl>
@@ -119,10 +121,10 @@ export const SetupForm = () => {
             />
             <FormField
               control={form.control}
-              name="lastName"
+              name="lastName.en"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t("lastName")}</FormLabel>
+                  <FormLabel>{t("lastNameEn")}</FormLabel> {/* Updated Label */}
                   <FormControl>
                     <Input disabled={isPending} {...field} />
                   </FormControl>
@@ -130,6 +132,51 @@ export const SetupForm = () => {
                 </FormItem>
               )}
             />
+
+            {/* Toggle Arabic Name Fields */}
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setShowArabicNameFields(!showArabicNameFields)}
+              className="mt-2"
+            >
+              {showArabicNameFields ? t("hideArabicName") : t("addArabicName")}
+            </Button>
+
+            {/* Conditional Arabic Fields */}
+            {showArabicNameFields && (
+              <>
+                <FormField
+                  control={form.control}
+                  name="firstName.ar"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t("firstNameAr")}</FormLabel>{" "}
+                      {/* Arabic First Name Label */}
+                      <FormControl>
+                        <Input disabled={isPending} {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="lastName.ar"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t("lastNameAr")}</FormLabel>{" "}
+                      {/* Arabic Last Name Label */}
+                      <FormControl>
+                        <Input disabled={isPending} {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </>
+            )}
+
             {/* New Fields for personalInfo */}
             <FormField
               control={form.control}
@@ -157,9 +204,9 @@ export const SetupForm = () => {
 
                   <FormControl>
                     <RadioGroup
-                      value={field.value} // Use the current value from the form
-                      onValueChange={field.onChange} // Update the form state on change
-                      className="flex flex-col space-y-2" // Add some spacing between radio items
+                      value={field.value}
+                      onValueChange={field.onChange}
+                      className="flex flex-col space-y-2"
                     >
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="MALE" id="male" />
@@ -192,21 +239,15 @@ export const SetupForm = () => {
                       placeholder="YYYY/MM/DD"
                       value={field.value}
                       onChange={(e) => {
-                        // Remove non-numeric characters
                         let input = e.target.value.replace(/\D/g, "");
-
-                        // Limit input to 8 digits (YYYYMMDD format)
                         if (input.length > 8) input = input.slice(0, 8);
-
-                        // Automatically add slashes after YYYY and MM
                         if (input.length >= 4) {
                           input = input.slice(0, 4) + "/" + input.slice(4);
                         }
                         if (input.length >= 7) {
                           input = input.slice(0, 7) + "/" + input.slice(7);
                         }
-
-                        field.onChange(input); // Update form field with formatted value
+                        field.onChange(input);
                       }}
                       disabled={isPending}
                       className={cn("w-[240px]")}

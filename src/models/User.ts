@@ -138,14 +138,25 @@ const userSchema = new Schema(
         },
       },
     },
-
     firstName: {
-      type: String,
-      required: false,
+      en: {
+        type: String,
+        required: true,
+      },
+      ar: {
+        type: String,
+        required: false,
+      },
     },
     lastName: {
-      type: String,
-      required: false,
+      en: {
+        type: String,
+        required: false,
+      },
+      ar: {
+        type: String,
+        required: false,
+      },
     },
     personalInfo: {
       phoneNumber: { type: String, required: false },
