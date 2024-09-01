@@ -17,21 +17,22 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { currencyToSymbol } from "@/utils";
+import { getTherapistAvailableTimeSlots } from "@/utils/therapistAvailability";
+import { bookIntroAppointment } from "@/actions/appointments/book-intro-appointment";
 
 type DateType = {
   justDate: Date | undefined;
   dateTime: Date | undefined;
 };
 
-const hardcodedTimeSlots = [
-  { start: new Date(2023, 8, 20, 9, 0), end: new Date(2023, 8, 20, 9, 15) },
-  { start: new Date(2023, 8, 20, 11, 0), end: new Date(2023, 8, 20, 11, 15) },
-  { start: new Date(2023, 8, 20, 14, 0), end: new Date(2023, 8, 20, 14, 15) },
-  { start: new Date(2023, 8, 20, 16, 0), end: new Date(2023, 8, 20, 16, 15) },
-];
-
-const BookIntroCall = ({ appointmentType }: { appointmentType: any }) => {
-  const t = useTranslations("BookAppointmentPage");
+const BookIntroCall = ({
+  appointmentType,
+  therapists,
+}: {
+  appointmentType: any;
+  therapists: any;
+}) => {
+  const t = useTranslations("BookingCalendar");
   const [bookingDialogOpen, setBookingDialogOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | undefined>();
@@ -65,17 +66,32 @@ const BookIntroCall = ({ appointmentType }: { appointmentType: any }) => {
     return { morning, afternoon, evening };
   };
 
-  const setTimeSlots = (selectedDate: Date) => {
-    /*    if (!selectedDate) return [];
+  const setTimeSlots = async (selectedDate: Date) => {
+    if (!selectedDate) return;
 
-    const timeSlots = getTherapistAvailableTimeSlots(
-      JSON.parse(therapistsAvailableTimes),
-      appointmentType,
-      selectedDate,
-      JSON.parse(appointments)
-    );
+    try {
+      const allAvailableSlots = therapists.reduce(
+        (slots: any, therapist: any) => {
+          const therapistAvailableTimes = therapist.availableTimes;
+          const therapistAppointments = therapist.appointments;
 
-    setAvailableTimeSlots(timeSlots); */
+          const introCallSlots = getTherapistAvailableTimeSlots(
+            therapistAvailableTimes,
+            appointmentType,
+            selectedDate,
+            therapistAppointments
+          );
+
+          return [...slots, ...introCallSlots];
+        },
+        []
+      );
+
+      setAvailableTimeSlots(allAvailableSlots);
+    } catch (error) {
+      console.error("Error fetching therapist data:", error);
+      setAvailableTimeSlots([]);
+    }
   };
 
   const handleTimeSlotClicked = () => {
@@ -85,8 +101,12 @@ const BookIntroCall = ({ appointmentType }: { appointmentType: any }) => {
       minutes: date?.dateTime?.getMinutes(),
     });
 
+    const randomTherapistIndex = Math.floor(Math.random() * therapists.length);
+    const selectedTherapist = therapists[randomTherapistIndex];
+    const therapistId = selectedTherapist._id;
+
     startTransition(async () => {
-      /*  const data = await reserveAppointment(
+      const data = await bookIntroAppointment(
         appointmentType,
         therapistId,
         combinedDateTime
@@ -98,14 +118,8 @@ const BookIntroCall = ({ appointmentType }: { appointmentType: any }) => {
         });
       }
       if (data.success) {
-        router.push(
-          `/checkout?appointmentId=${data.appointmentId}&appointmentTypeId=${
-            appointmentType._id
-          }&date=${encodeURIComponent(
-            combinedDateTime.toString()
-          )}&therapistId=${therapistId}`
-        );
-      } */
+        router.push(`/appointments`);
+      }
     });
   };
 
@@ -248,8 +262,11 @@ const BookIntroCall = ({ appointmentType }: { appointmentType: any }) => {
               <div>
                 <strong>{t("cost")}:</strong>{" "}
                 <span>
-                  {currencyToSymbol(appointmentType.currency)}
-                  {appointmentType.price}
+                  {appointmentType.price === 0
+                    ? t("free")
+                    : `${currencyToSymbol(appointmentType.currency)}${
+                        appointmentType.price
+                      }`}
                 </span>
               </div>
             </DialogDescription>

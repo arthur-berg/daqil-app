@@ -11,6 +11,7 @@ import {
 type TimeRange = {
   startTime: string;
   endTime: string;
+  appointmentTypeIds?: string[];
 };
 
 type BlockedTime = {
@@ -37,6 +38,7 @@ type AvailableTimes = {
 };
 
 type AppointmentType = {
+  _id: string;
   durationInMinutes: number;
 };
 
@@ -44,6 +46,19 @@ type TimeSlot = {
   start: Date;
   end: Date;
 };
+
+const filterTimeRangesByAppointmentType = (
+  timeRanges: TimeRange[],
+  appointmentTypeId: string
+) => {
+  return timeRanges.filter((range) =>
+    range.appointmentTypeIds?.includes(appointmentTypeId)
+  );
+};
+
+function safeFormat(date: Date, dateFormat: string) {
+  return isNaN(date.getTime()) ? null : format(date, dateFormat);
+}
 
 export const getTherapistAvailableTimeSlots = (
   availableTimes: AvailableTimes,
@@ -57,6 +72,7 @@ export const getTherapistAvailableTimeSlots = (
     nonRecurringAvailableTimes,
     recurringAvailableTimes,
   } = availableTimes;
+
   const { interval } = settings;
 
   const appointmentDate = format(selectedDate, "yyyy-MM-dd");
@@ -86,16 +102,24 @@ export const getTherapistAvailableTimeSlots = (
     ...validTemporarilyReservedAppointments,
   ];
 
-  const appointmentsForDate = allAppointmentsForDate.map(
-    (appointment: any) => ({
-      startTime: format(new Date(appointment.startDate), "HH:mm"),
-      endTime: format(new Date(appointment.endDate), "HH:mm"),
-    })
-  );
+  const appointmentsForDate = allAppointmentsForDate.map((appointment: any) => {
+    const start = new Date(appointment.startDate);
+    const end = new Date(appointment.endDate);
+
+    return {
+      startTime: safeFormat(start, "HH:mm"),
+      endTime: safeFormat(end, "HH:mm"),
+    };
+  });
 
   const getTimeRangesForDay = (day: string): TimeRange[] => {
     const recurring = recurringAvailableTimes.find((r) => r.day === day);
-    return recurring ? recurring.timeRanges : [];
+    return recurring
+      ? filterTimeRangesByAppointmentType(
+          recurring.timeRanges,
+          appointmentType._id
+        )
+      : [];
   };
 
   const getBlockedOutTimesForDate = (date: Date): BlockedTime[] => {

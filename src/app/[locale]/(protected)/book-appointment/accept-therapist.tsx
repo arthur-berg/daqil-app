@@ -13,8 +13,6 @@ const AcceptTherapist = () => {
   const t = useTranslations("BookAppointmentPage");
   const { responseToast } = useToast();
 
-  console.log("user?.selectedTherapist", user?.selectedTherapist);
-
   const handleAccept = () => {
     startTransition(async () => {
       const data = await acceptTherapist(
