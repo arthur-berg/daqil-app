@@ -187,7 +187,8 @@
     "changeTherapistButton": "تغيير المعالج",
     "bookingAppointmentLoading": "جارٍ حجز الموعد... يرجى الانتظار",
     "loadingCheckout": "جارٍ تحميل عملية الدفع...",
-    "zakina": "زكينا"
+    "zakina": "زكينا",
+    "selectAppointmentType": "اختر نوع الموعد"
   },
   "Checkout": {
     "appointmentDetails": "تفاصيل الموعد",
@@ -557,5 +558,10 @@
     "notPaidInTimeMessageClient": "للأسف، تم إلغاء موعدك لأنك لم تدفع في الوقت المحدد. يرجى التأكد من الدفع مسبقًا للحجوزات المستقبلية.",
     "notPaidInTimeMessageTherapist": "تم إلغاء الموعد مع عميلك لأن العميل لم يدفع في الوقت المحدد. يرجى التحقق من مواعيدك القادمة.",
     "thankYouMessage": "شكرًا لاستخدامك زاكينا."
-  }
+  },
+   "AppointmentTypes": {
+  "6692b4919a6b12347d0afac4": "جلسة علاجية - 30 دقيقة",
+  "66cd9d22e83c327cf7e0f57b": "جلسة علاجية - 60 دقيقة",
+  "66cd9e05e83c327cf7e0f57c": "اجتماع تعريفي"
+}
 }

@@ -52,6 +52,7 @@ const BookingCalendar = ({
   const [bookingDialogOpen, setBookingDialogOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const t = useTranslations("BookingCalendar");
+  const tAppointmentTypes = useTranslations("AppointmentTypes");
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
   const [availableTimeSlots, setAvailableTimeSlots] = useState<
@@ -186,7 +187,7 @@ const BookingCalendar = ({
                           key={appointmentType._id}
                           value={appointmentType}
                         >
-                          {appointmentType.title}
+                          {tAppointmentTypes(appointmentType._id)}
                         </SelectItem>
                       ))}
                     </SelectGroup>
@@ -350,6 +351,7 @@ const BookingCalendar = ({
             <Button
               variant="outline"
               onClick={() => setBookingDialogOpen(false)}
+              className="rtl:ml-2"
             >
               {t("close")}
             </Button>

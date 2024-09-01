@@ -560,5 +560,10 @@
     "notPaidInTimeMessageClient": "Unfortunately, your appointment was canceled because you did not pay on time. Please make sure to pay in advance for future bookings.",
     "notPaidInTimeMessageTherapist": "The appointment with your client was canceled because the client did not pay on time. Please check your upcoming appointments.",
     "thankYouMessage": "Thank you for using Zakina."
+  },
+  "AppointmentTypes": {
+    "6692b4919a6b12347d0afac4": "Therapy session - 30 minutes",
+    "66cd9d22e83c327cf7e0f57b": "Therapy session - 60 minutes",
+    "66cd9e05e83c327cf7e0f57c": "Introduction meeting"
   }
 }
