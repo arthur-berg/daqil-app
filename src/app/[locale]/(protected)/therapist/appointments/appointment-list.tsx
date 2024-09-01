@@ -125,6 +125,17 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
     pending: t("pending"),
   };
 
+  const filterOptions = [
+    { value: "confirmed", label: t("confirmed") },
+    { value: "canceled", label: t("canceled") },
+    { value: "completed", label: t("completed") },
+    { value: "pending", label: t("pending") },
+  ];
+
+  const translatedFilters = filters.map(
+    (filter) => filterOptions.find((option) => option.value === filter)?.label
+  );
+
   return (
     <Card className="md:w-8/12">
       <CardContent>
@@ -135,7 +146,10 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
                 <div className="mr-4 rtl:mr-0 rtl:ml-4">
                   {t("appointmentStatus")}:{" "}
                 </div>
-                <MultiSelector values={filters} onValuesChange={setFilters}>
+                <MultiSelector
+                  values={translatedFilters as string[]}
+                  onValuesChange={setFilters}
+                >
                   <MultiSelectorTrigger>
                     <MultiSelectorInput placeholder={t("selectStatus")} />
                   </MultiSelectorTrigger>
