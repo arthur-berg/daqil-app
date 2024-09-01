@@ -18,6 +18,9 @@ import { checkDiscountCodeValidity } from "@/actions/discount-code";
 import { createPaymentIntent } from "@/actions/stripe";
 import { cancelTempReservation } from "@/actions/appointments/cancel-temp-reservation";
 import { confirmBookingPayLater } from "@/actions/appointments/confirm-booking-pay-later";
+import { useCurrentUser } from "@/hooks/use-current-user";
+import { getClientById } from "@/data/user";
+import { APPOINTMENT_TYPE_ID_INTRO_SESSION } from "@/contants/config";
 
 if (process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY === undefined) {
   throw new Error("NEXT_PUBLIC_STRIPE_PUBLIC_KEY is not defined");
@@ -52,6 +55,7 @@ const CheckoutWrapper = ({
   const [discountLoading, setDiscountLoading] = useState(false);
   const { toast, responseToast } = useToast();
   const router = useRouter();
+  const user = useCurrentUser();
 
   const [discountCode, setDiscountCode] = useState("");
   const [discountCodeApplied, setDiscountCodeApplied] = useState(false);
@@ -210,6 +214,15 @@ const CheckoutWrapper = ({
       </div>
     );
   };
+
+  /*  const hasCompletedAppointments = appointments.some((appointment) =>
+    appointment?.bookedAppointments?.some(
+      (bookedAppointment: any) =>
+        bookedAppointment.status === "completed" &&
+        bookedAppointment.appointmentTypeId.toString() !==
+          APPOINTMENT_TYPE_ID_INTRO_SESSION
+    )
+  ); */
 
   return (
     <>

@@ -96,7 +96,8 @@
     "noShowHost": "Therapist didn't show up",
     "noShowClient": "Client didn't show up",
     "noShowBoth": "Neither the therapist nor the client showed up.",
-    "notPaidInTime": "Client didn't pay on time"
+    "notPaidInTime": "Client didn't pay on time",
+    "warningNoRefund": "Warning: No refund will be issued if canceled within 24 hours of the appointment."
   },
   "RegisterPage": {
     "emailLabel": "Email",
@@ -492,7 +493,9 @@
     "dateLabel": "Date:",
     "timeLabel": "Time:",
     "reasonLabel": "Reason:",
-    "thankYouMessage": "Thank you for using Zakina."
+    "thankYouMessage": "Thank you for using Zakina.",
+    "refundLabel": "Refund",
+    "refundIssuedMessage": "A refund of {{refundAmount}} has been issued to your account."
   },
   "NonPaidAppointmentConfirmationEmail": {
     "zakina": "Zakina",

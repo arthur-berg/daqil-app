@@ -22,7 +22,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { format } from "date-fns";
+import { format, differenceInHours } from "date-fns";
 import { Textarea } from "@/components/ui/textarea";
 import { cancelAppointment } from "@/actions/appointments/cancel-appointment";
 import { useUserName } from "@/hooks/use-user-name";
@@ -43,6 +43,13 @@ const CancelAppontmentForm = ({
   const t = useTranslations("AppointmentList");
   const { responseToast } = useToast();
   const { getFullName } = useUserName();
+
+  // Calculate if appointment is less than 24 hours away
+  const hoursUntilAppointment = differenceInHours(
+    new Date(selectedAppointment.startDate),
+    new Date()
+  );
+
   const form = useForm<z.infer<typeof CancelAppointmentSchema>>({
     resolver: zodResolver(CancelAppointmentSchema),
     defaultValues: {
@@ -77,6 +84,13 @@ const CancelAppontmentForm = ({
             <DialogHeader>
               <DialogTitle>{t("areYouSure")}</DialogTitle>
               <DialogDescription>
+                {/* Warning Message for Less Than 24 Hours */}
+                {hoursUntilAppointment < 24 && (
+                  <p className="text-red-600 font-bold">
+                    {t("warningNoRefund")}
+                  </p>
+                )}
+
                 <p>
                   <strong>{t("title")}: </strong> {selectedAppointment?.title}
                 </p>

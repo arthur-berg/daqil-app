@@ -114,7 +114,8 @@
     "noShowHost": "لم يحضر المعالج",
     "noShowClient": "لم يحضر العميل",
     "noShowBoth": "لم يحضر المعالج ولا العميل",
-    "notPaidInTime": "العميل لم يدفع في الوقت المحدد"
+    "notPaidInTime": "العميل لم يدفع في الوقت المحدد",
+    "warningNoRefund": "تحذير: لن يتم إصدار أي استرداد إذا تم الإلغاء خلال 24 ساعة من الموعد."
   },
   "SettingsPage": {
     "firstNameLabel": "الاسم الأول",

@@ -90,7 +90,7 @@ export const cancelAppointment = async (
         new Date()
       );
 
-      if (hoursUntilAppointment > 48) {
+      if (hoursUntilAppointment > 24) {
         // Fetch the payment intent using the appointmentId as metadata
         const paymentIntents = await stripe.paymentIntents.list({
           customer: appointment.participants[0].userId.stripeCustomerId,
@@ -143,6 +143,8 @@ export const cancelAppointment = async (
       refundIssued,
       refundAmount,
     };
+
+    console.log("refundAmount", refundAmount);
 
     if (
       appointment.appointmentTypeId.toString() ===

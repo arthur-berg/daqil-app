@@ -3,6 +3,8 @@ import CheckoutWrapper from "./checkout-wrapper";
 import { getAppointmentById } from "@/data/appointment";
 import { getTranslations } from "next-intl/server";
 import { redirect } from "@/navigation";
+import { getCurrentUser } from "@/lib/auth";
+import { getClientByIdAppointments } from "@/data/user";
 
 const CheckoutPage = async ({
   searchParams: { appointmentTypeId, date, appointmentId, therapistId },
@@ -16,6 +18,9 @@ const CheckoutPage = async ({
 }) => {
   const appointment = await getAppointmentById(appointmentId);
   const t = await getTranslations("Checkout");
+  const currentUser = await getCurrentUser();
+
+  if (!currentUser) return "User not found";
 
   if (!appointment) {
     return "No appointment found";
@@ -35,6 +40,7 @@ const CheckoutPage = async ({
   }
 
   const appointmentType = await getAppointmentTypeById(appointmentTypeId);
+
   const dateObject = new Date(decodeURIComponent(date));
 
   return (

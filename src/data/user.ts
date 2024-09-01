@@ -44,7 +44,7 @@ export const getClientById = async (id: string) => {
         path: "appointments.bookedAppointments",
         populate: {
           path: "hostUserId",
-          select: "firstName lastName",
+          select: "firstName lastName status appointmentTypeId",
         },
         match: { status: { $ne: "canceled" } },
       });

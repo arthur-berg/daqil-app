@@ -183,16 +183,25 @@ export const sendAppointmentCancellationEmail = async (
     reason: string;
     therapistName: string;
     clientName: string;
-    refundIssued?: boolean;
-    refundAmount?: number;
+    refundIssued: boolean;
+    refundAmount: number;
   }
 ) => {
   const t = await getTranslations("AppointmentCancellationEmail");
 
+  const refundMessage = appointmentDetails.refundIssued
+    ? `${t("refundLabel")}: $${appointmentDetails.refundAmount}`
+    : "";
+
   const therapistMessage = {
     from_email: "info@zakina-app.com",
     subject: t("therapistSubject"),
-    html: appointmentCancellationTemplate(appointmentDetails, true, t),
+    html: appointmentCancellationTemplate(
+      appointmentDetails,
+      true,
+      t,
+      refundMessage
+    ),
     to: [
       {
         email: therapistEmail,
@@ -204,7 +213,12 @@ export const sendAppointmentCancellationEmail = async (
   const clientMessage = {
     from_email: "info@zakina-app.com",
     subject: t("clientSubject"),
-    html: appointmentCancellationTemplate(appointmentDetails, false, t),
+    html: appointmentCancellationTemplate(
+      appointmentDetails,
+      false,
+      t,
+      refundMessage
+    ),
     to: [
       {
         email: clientEmail,

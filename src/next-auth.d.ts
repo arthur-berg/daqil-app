@@ -16,7 +16,11 @@ export type ExtendedUser = DefaultSession["user"] & {
     ar: string;
   };
   isOnboardingDone: boolean;
-  appointments: string[];
+  appointments: {
+    date: Date;
+    bookedAppointments: string[];
+    temporarilyReservedAppointments: string[];
+  }[];
   stripePaymentMethodId?: string;
   stripeCustomerId?: string;
   personalInfo: {

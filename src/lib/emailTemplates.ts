@@ -97,11 +97,10 @@ export const appointmentCancellationTemplate = (
     reason: string;
     therapistName: string;
     clientName: string;
-    refundIssued?: boolean;
-    refundAmount?: number;
   },
   isTherapist: boolean,
-  t: any
+  t: any,
+  refundMessage: string
 ) => {
   const subject = isTherapist ? t("therapistSubject") : t("clientSubject");
 
@@ -134,14 +133,7 @@ export const appointmentCancellationTemplate = (
           <p><strong>${t("reasonLabel")}</strong> ${
     appointmentDetails.reason
   }</p>
-          ${
-            appointmentDetails.refundIssued
-              ? `<p><strong>${t("refundLabel")}</strong> ${t(
-                  "refundIssuedMessage",
-                  { amount: appointmentDetails.refundAmount?.toFixed(2) }
-                )}</p>`
-              : ""
-          }
+          ${refundMessage ? `<p><strong>${refundMessage}</strong></p>` : ""}
         </div>
         <div style="text-align: center; margin-top: 20px;">
           <a href="${appointmentsLink}" style="display: inline-block; padding: 12px 24px; margin: 20px 0; background-color: ${primaryColor}; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: bold;">
