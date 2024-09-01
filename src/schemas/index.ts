@@ -135,7 +135,7 @@ export const RecurringAvailabilitySettingsSchemaBE = z.object({
     to: z.string({
       required_error: "To time is required",
     }),
-    appointmentTypeIds: z.array(z.string()),
+    appointmentTypeIds: z.array(z.string()).optional(),
   }),
 });
 
@@ -214,6 +214,7 @@ export const DefaultAvailabilitySettingsSchemaFE = z.object({
     to: z.string({
       required_error: "To time is required",
     }),
+    appointmentTypeIds: z.array(z.string()).optional(),
   }),
 });
 

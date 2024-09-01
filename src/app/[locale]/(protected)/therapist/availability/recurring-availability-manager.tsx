@@ -281,13 +281,17 @@ const DefaultAvailabilityManager = ({
                   timeRangeInputs[day].map((range, index) => (
                     <div
                       key={index}
-                      className="bg-blue-200 p-2 rounded-md text-blue-900 items-center inline-flex"
+                      className="bg-blue-200 p-2 rounded-md text-blue-900 md:flex md:items-center"
                     >
-                      <span className="px-2 py-1 text-center">
-                        {range.from}
-                      </span>
-                      <span className="px-2 py-1 text-center">{range.to}</span>
-                      <ul className="flex flex-wrap">
+                      <div className="flex">
+                        <span className="px-2 py-1 text-center">
+                          {range.from}
+                        </span>
+                        <span className="px-2 py-1 text-center">
+                          {range.to}
+                        </span>
+                      </div>
+                      <ul className="list-disc md:ml-4 flex flex-col">
                         {appointmentTypes.map((type) => {
                           const isSelected = range.appointmentTypeIds?.includes(
                             type._id
