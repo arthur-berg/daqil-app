@@ -22,6 +22,7 @@ import { useCurrentUser } from "@/hooks/use-current-user";
 import { LogoutButton } from "@/components/auth/logout-button";
 import { Link } from "@/navigation";
 import { useTranslations } from "next-intl";
+import { useUserName } from "@/hooks/use-user-name";
 
 const TherapistMenu = ({ t }: { t: any }) => {
   return (
@@ -69,6 +70,7 @@ const ClientMenu = ({ t }: { t: any }) => {
 
 export const UserButton = () => {
   const user = useCurrentUser();
+  const { fullName } = useUserName();
   const t = useTranslations("Sidebar");
 
   const isTherapist = user?.role === "THERAPIST";
@@ -87,7 +89,7 @@ export const UserButton = () => {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <div className="px-4 py-2 text-sm text-gray-700 text-center">
-          {user?.firstName} {user?.lastName} <br />
+          {fullName} <br />
           <span className="text-xs text-gray-500">{user?.role}</span>
           <DropdownMenuSeparator />
         </div>

@@ -14,6 +14,7 @@ import { format } from "date-fns";
 import mongoose from "mongoose";
 import User from "@/models/User";
 import { revalidatePath } from "next/cache";
+import { getFirstName } from "@/utils/formatName";
 
 export const reserveAppointment = async (
   appointmentType: any,
@@ -67,7 +68,9 @@ export const reserveAppointment = async (
 
   try {
     const appointmentData = {
-      title: `${t("therapySessionWith")} ${therapist?.firstName}`,
+      title: `${t("therapySessionWith")} ${await getFirstName(
+        therapist?.firstName
+      )}`,
       startDate,
       endDate,
       participants: [{ userId: client.id, showUp: false }],

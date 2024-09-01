@@ -2,6 +2,7 @@ import { getTherapists } from "@/data/user";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/navigation";
 import { getTranslations } from "next-intl/server";
+import { getFullName } from "@/utils/formatName";
 
 const BrowseTherapistsPage = async ({
   params,
@@ -15,7 +16,7 @@ const BrowseTherapistsPage = async ({
   return (
     <div className="px-10">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {therapists?.map((therapist: any) => (
+        {therapists?.map(async (therapist: any) => (
           <div
             key={therapist.email}
             className="bg-white shadow-lg rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col justify-between"
@@ -25,7 +26,10 @@ const BrowseTherapistsPage = async ({
                 {therapist.image ? (
                   <img
                     src={therapist.image}
-                    alt={`${therapist.firstName} ${therapist.lastName}`}
+                    alt={`${await getFullName(
+                      therapist.firstName,
+                      therapist.lastName
+                    )} `}
                     className="w-24 h-24 rounded-full object-cover"
                   />
                 ) : (
@@ -35,7 +39,7 @@ const BrowseTherapistsPage = async ({
                 )}
               </div>
               <div className="font-bold text-xl mb-1 text-center mt-2">
-                {therapist.firstName} {therapist.lastName}
+                {await getFullName(therapist.firstName, therapist.lastName)}
               </div>
               <div className="text-gray-600 mb-4 text-center">
                 {therapist.email}

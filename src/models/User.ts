@@ -141,7 +141,7 @@ const userSchema = new Schema(
     firstName: {
       en: {
         type: String,
-        required: true,
+        required: false,
       },
       ar: {
         type: String,

@@ -15,6 +15,7 @@ import S3oosh from "@/components/s3oosh";
 import { uploadTherapistProfileImage } from "@/actions/therapist-profile";
 import { useToast } from "@/components/ui/use-toast";
 import Image from "next/image";
+import { useUserName } from "@/hooks/use-user-name";
 
 const MyProfileInfo = ({ therapistJson }: { therapistJson: any }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -22,6 +23,7 @@ const MyProfileInfo = ({ therapistJson }: { therapistJson: any }) => {
   const [uploadSuccess, setUploadSuccess] = useState<boolean | null>(null);
   const [isPending, startTransition] = useTransition();
   const { responseToast } = useToast();
+  const { getFullName } = useUserName();
 
   const therapist = JSON.parse(therapistJson);
   const [imageUrl, setImageUrl] = useState(therapist?.image);
@@ -64,7 +66,7 @@ const MyProfileInfo = ({ therapistJson }: { therapistJson: any }) => {
             {imageUrl ? (
               <img
                 src={imageUrl}
-                alt={`${therapist.firstName} ${therapist.lastName}`}
+                alt={`${getFullName(therapist.firstName, therapist.lastName)}`}
                 className="w-24 h-24 rounded-full object-cover"
               />
             ) : (
@@ -86,7 +88,7 @@ const MyProfileInfo = ({ therapistJson }: { therapistJson: any }) => {
           ) : (
             <>
               <h2 className="text-xl font-bold mb-2">
-                {therapist.firstName} {therapist.lastName}
+                {getFullName(therapist.firstName, therapist.lastName)}
               </h2>
               <p className="text-gray-600 mb-4">{therapist.email}</p>
 

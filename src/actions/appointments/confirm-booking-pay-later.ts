@@ -10,6 +10,7 @@ import {
 } from "@/lib/schedule-appointment-jobs";
 import Appointment from "@/models/Appointment";
 import User from "@/models/User";
+import { getFullName } from "@/utils/formatName";
 import mongoose from "mongoose";
 import { getLocale, getTranslations } from "next-intl/server";
 import { revalidatePath } from "next/cache";
@@ -110,8 +111,11 @@ export const confirmBookingPayLater = async (
 
     const appointmentDetails = {
       date: appointment.startDate,
-      therapistName: `${therapist.firstName} ${therapist.lastName}`,
-      clientName: `${client.firstName} ${client.lastName}`,
+      therapistName: `${await getFullName(
+        therapist.firstName,
+        therapist.lastName
+      )}`,
+      clientName: `${await getFullName(client.firstName, client.lastName)}`,
       appointmentId: appointmentId,
       appointmentTypeId: appointmentTypeId,
     };
@@ -123,14 +127,14 @@ export const confirmBookingPayLater = async (
     );
 
     await schedulePaymentReminders(appointmentId, paymentExpiryDate, locale);
-    await scheduleRemoveUnpaidJobs(appointmentId, paymentExpiryDate);
+    await scheduleRemoveUnpaidJobs(appointmentId, paymentExpiryDate, locale);
 
     revalidatePath("/book-appointment");
 
     return { success: SuccessMessages("bookingConfirmed") };
   } catch (error) {
     if (!transactionCommitted) {
-      await session.abortTransaction(); // Abort transaction only if it hasn't been committed
+      await session.abortTransaction();
     }
     session.endSession();
 

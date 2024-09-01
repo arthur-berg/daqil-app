@@ -2,8 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { verifySignatureAppRouter } from "@upstash/qstash/nextjs";
 import Appointment from "@/models/Appointment";
 import { sendSmsReminder } from "@/lib/twilio-sms";
-import { format, subMinutes } from "date-fns"; // Import format from date-fns
+import { format } from "date-fns"; // Import format from date-fns
 import { getTranslations } from "next-intl/server";
+import { getFirstName, getLastName } from "@/utils/nameUtilsForApiRoutes";
 
 export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
   try {
@@ -28,8 +29,14 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
 
     const clientPhone =
       appointment.participants[0].userId.personalInfo.phoneNumber;
-    const hostFirstName = appointment.hostUserId.firstName;
-    const hostLastName = appointment.hostUserId.lastName;
+    const hostFirstName = await getFirstName(
+      appointment.hostUserId.firstName,
+      locale
+    );
+    const hostLastName = await getLastName(
+      appointment.hostUserId.lastName,
+      locale
+    );
     const appointmentStartTime = new Date(appointment.startDate);
 
     if (!clientPhone) {

@@ -26,6 +26,7 @@ import {
 import { format } from "date-fns";
 import { Textarea } from "@/components/ui/textarea";
 import { cancelAppointment } from "@/actions/appointments/cancel-appointment";
+import { useUserName } from "@/hooks/use-user-name";
 
 const CancelAppontmentForm = ({
   selectedAppointment,
@@ -42,6 +43,7 @@ const CancelAppontmentForm = ({
 }) => {
   const t = useTranslations("AppointmentList");
   const { responseToast } = useToast();
+  const { getFullName } = useUserName();
   const form = useForm<z.infer<typeof CancelAppointmentSchema>>({
     resolver: zodResolver(CancelAppointmentSchema),
     defaultValues: {
@@ -82,8 +84,8 @@ const CancelAppontmentForm = ({
                   <strong>{t("participants")}: </strong>{" "}
                   {selectedAppointment.participants.map((participant: any) => (
                     <div key={participant.userId}>
-                      {participant.firstName} {participant.lastName} (
-                      {participant.email})
+                      {getFullName(participant.firstName, participant.lastName)}{" "}
+                      ({participant.email})
                     </div>
                   ))}
                 </p>

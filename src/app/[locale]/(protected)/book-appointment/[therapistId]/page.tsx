@@ -14,6 +14,7 @@ import { FaUser } from "react-icons/fa";
 
 import BookingCalendar from "@/app/[locale]/(protected)/book-appointment/[therapistId]/booking-calendar";
 import { getCurrentUser } from "@/lib/auth";
+import { getFullName } from "@/utils/formatName";
 
 const TherapistUserProfile = async ({
   params,
@@ -65,7 +66,7 @@ const TherapistUserProfile = async ({
             </div>
           )}
           <h2 className="text-xl font-bold mb-2">
-            {therapist.firstName} {therapist.lastName}
+            {await getFullName(therapist.firstName, therapist.lastName)}
           </h2>
           <p className="text-gray-600 mb-2">
             {therapist.therapistWorkProfile[locale].title}

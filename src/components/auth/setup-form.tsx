@@ -61,7 +61,6 @@ export const SetupForm = () => {
     setError("");
     setSuccess("");
     startTransition(async () => {
-      console.log("values", values);
       const data = await setupAccount(values, locale, token);
       if ("success" in data && data.success) {
         setSuccess(data?.success);
@@ -136,7 +135,7 @@ export const SetupForm = () => {
             {/* Toggle Arabic Name Fields */}
             <Button
               type="button"
-              variant="outline"
+              variant={showArabicNameFields ? "destructive" : "outline"}
               onClick={() => setShowArabicNameFields(!showArabicNameFields)}
               className="mt-2"
             >

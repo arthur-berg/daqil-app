@@ -38,6 +38,7 @@ import {
   MultiSelectorList,
   MultiSelectorTrigger,
 } from "@/components/ui/multi-select";
+import { useUserName } from "@/hooks/use-user-name";
 
 const AppointmentList = ({ appointments }: { appointments: any }) => {
   const [filters, setFilters] = useState<string[]>([
@@ -49,6 +50,7 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
   const [selectedAppointment, setSelectedAppointment] = useState<any>(null);
   const [isPending, startTransition] = useTransition();
   const [cancelReason, setCancelReason] = useState<string>("");
+  const { getFullName } = useUserName();
   const t = useTranslations("AppointmentList");
 
   const filteredAppointments = useMemo(() => {
@@ -233,9 +235,19 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
                                             firstName,
                                             lastName,
                                           }: {
-                                            firstName: string;
-                                            lastName: string;
-                                          }) => `${firstName} ${lastName}`
+                                            firstName: {
+                                              en: string;
+                                              ar?: string;
+                                            };
+                                            lastName: {
+                                              en: string;
+                                              ar?: string;
+                                            };
+                                          }) =>
+                                            `${getFullName(
+                                              firstName,
+                                              lastName
+                                            )} `
                                         )
                                         .join(", ")}
                                     </span>
@@ -324,9 +336,11 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
                                           {appointment.participants.map(
                                             (participant: any) => (
                                               <li key={participant.userId}>
-                                                {participant.firstName}{" "}
-                                                {participant.lastName} (
-                                                {participant.email})
+                                                {getFullName(
+                                                  participant.firstName,
+                                                  participant.lastName
+                                                )}{" "}
+                                                ({participant.email})
                                               </li>
                                             )
                                           )}

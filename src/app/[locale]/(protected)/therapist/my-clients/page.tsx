@@ -9,6 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Link } from "@/navigation";
+import { getFullName } from "@/utils/formatName";
 
 const MyClientsPage = async () => {
   const user = await getCurrentUser();
@@ -31,11 +32,11 @@ const MyClientsPage = async () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {clients.map((client: any) => (
+          {clients.map(async (client: any) => (
             <TableRow key={client.email}>
               <TableCell className="font-medium">
                 <Link href={`/therapist/my-clients/${client.id}`}>
-                  {client.firstName} {client.lastName}
+                  {await getFullName(client.firstName, client.lastName)}
                 </Link>
               </TableCell>
               <TableCell>{client.email}</TableCell>

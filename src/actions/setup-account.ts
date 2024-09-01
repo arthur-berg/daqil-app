@@ -74,8 +74,6 @@ export const setupAccount = async (
   ]);
   const validatedFields = SetupAccountSchema.safeParse(values);
 
-  console.log("validatedFields", validatedFields);
-
   if (!validatedFields.success) {
     return { error: ErrorMessages("invalidFields") };
   }
@@ -139,7 +137,7 @@ export const setupAccount = async (
 
   await VerificationToken.findByIdAndDelete(existingToken._id);
 
-  await addUserNameToSubscriberProfile(email, firstName.en, lastName.en);
+  await addUserNameToSubscriberProfile(email, firstName, lastName);
 
   await login({ email, password }, locale);
 

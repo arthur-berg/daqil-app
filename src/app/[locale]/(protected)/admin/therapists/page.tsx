@@ -12,6 +12,7 @@ import {
 
 import InviteTherapistForm from "./invite-therapist-form";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { getFullName } from "@/utils/formatName";
 
 const AdminTherapistsPage = async () => {
   const therapists = await getTherapists();
@@ -35,10 +36,10 @@ const AdminTherapistsPage = async () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {therapists?.map((therapist) => (
+              {therapists?.map(async (therapist) => (
                 <TableRow key={therapist.email}>
                   <TableCell className="font-medium">
-                    {therapist.firstName} {therapist.lastName}
+                    {await getFullName(therapist.firstName, therapist.lastName)}
                   </TableCell>
                   <TableCell>{therapist.email}</TableCell>
                 </TableRow>

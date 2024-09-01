@@ -2,6 +2,7 @@ import { getClientById } from "@/data/user";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/navigation";
 import { getTranslations } from "next-intl/server";
+import { getFullName } from "@/utils/formatName";
 
 const ClientPage = async ({ params }: { params: { clientId: string } }) => {
   const clientId = params.clientId;
@@ -23,7 +24,7 @@ const ClientPage = async ({ params }: { params: { clientId: string } }) => {
         <Button variant="secondary">{t("goBackToClients")}</Button>
       </Link>
       <h1 className="text-xl sm:text-2xl font-semibold mb-4 text-center">
-        {client.firstName} {client.lastName}
+        {await getFullName(client.firstName, client.lastName)}
       </h1>
       <div className="space-y-2">
         <p className="text-gray-700">
@@ -32,7 +33,10 @@ const ClientPage = async ({ params }: { params: { clientId: string } }) => {
         <p className="text-gray-700">
           <strong>Current Therapist:</strong>{" "}
           {client.selectedTherapist
-            ? `${client.selectedTherapist.firstName} ${client.selectedTherapist.lastName}`
+            ? `${await getFullName(
+                client.selectedTherapist.firstName,
+                client.selectedTherapist.lastName
+              )}`
             : "None"}
         </p>
         {currentTherapistHistory && (
@@ -50,14 +54,18 @@ const ClientPage = async ({ params }: { params: { clientId: string } }) => {
             Therapist History
           </h2>
           <div className="space-y-4">
-            {pastTherapistsHistory.map((history: any, index: number) => (
+            {pastTherapistsHistory.map(async (history: any, index: number) => (
               <div
                 key={index}
                 className="p-4 border rounded-lg shadow-sm bg-gray-50"
               >
                 <p className="text-gray-800">
-                  <strong>Therapist:</strong> {history.therapist.firstName}{" "}
-                  {history.therapist.lastName} ({history.therapist.email})
+                  <strong>Therapist:</strong>{" "}
+                  {await getFullName(
+                    history.therapist.firstName,
+                    history.therapist.lastName
+                  )}{" "}
+                  ({history.therapist.email})
                 </p>
                 <p className="text-gray-800">
                   <strong>Appointments:</strong> {history.appointmentCount}

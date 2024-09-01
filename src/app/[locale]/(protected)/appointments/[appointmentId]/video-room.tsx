@@ -8,6 +8,7 @@ import ToolBar from "@/app/[locale]/(protected)/appointments/[appointmentId]/too
 import { useToast } from "@/components/ui/use-toast";
 import { useCurrentRole } from "@/hooks/use-current-role";
 import { useRouter } from "@/navigation";
+import { useUserName } from "@/hooks/use-user-name";
 
 const VideoRoom = ({
   sessionData,
@@ -37,9 +38,10 @@ const VideoRoom = ({
   const user = useCurrentUser();
   const { isClient } = useCurrentRole();
   const { toast } = useToast();
+  const { fullName } = useUserName();
   const router = useRouter();
 
-  const userName = `${user?.firstName} ${user?.lastName}`;
+  const userName = fullName;
 
   useEffect(() => {
     if ("error" in sessionData) {

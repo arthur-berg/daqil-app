@@ -13,6 +13,7 @@ import {
   scheduleStatusUpdateJob,
 } from "@/lib/schedule-appointment-jobs";
 import { getTranslations } from "next-intl/server";
+import { getFullName } from "@/utils/nameUtilsForApiRoutes";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
@@ -112,8 +113,16 @@ async function processAppointmentPayment(
   const appointmentDetails = {
     date: format(new Date(appointment.startDate), "yyyy-MM-dd"),
     time: format(new Date(appointment.startDate), "HH:mm"),
-    therapistName: `${therapist.firstName} ${therapist.lastName}`,
-    clientName: `${client.firstName} ${client.lastName}`,
+    therapistName: `${await getFullName(
+      therapist.firstName,
+      therapist.lastName,
+      locale
+    )}`,
+    clientName: `${await getFullName(
+      client.firstName,
+      client.lastName,
+      locale
+    )}`,
     durationInMinutes: appointment.durationInMinutes,
     amountPaid: `$${amountPaid}`,
     paymentMethod,
@@ -135,12 +144,17 @@ async function handlePayBeforeBooking(
   locale: string
 ) {
   const appointmentDate = format(new Date(appointment.startDate), "yyyy-MM-dd");
-
   await updateAppointments(appointment, appointmentDate);
+
+  // Convert amountPaid to a number (removing the '$' sign and parsing as float)
+  const amountPaidNumber = parseFloat(
+    appointmentDetails.amountPaid.replace("$", "")
+  );
+
   await Appointment.findByIdAndUpdate(appointment._id, {
     status: "confirmed",
     "payment.status": "paid",
-    amountPaid: appointmentDetails.amountPaid,
+    amountPaid: amountPaidNumber, // Store it as a number
   });
 
   const t = await getTranslations({

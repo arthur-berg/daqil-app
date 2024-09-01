@@ -4,6 +4,7 @@ import { sendPaymentReminderEmail } from "@/lib/mail";
 import Appointment from "@/models/Appointment";
 import { format } from "date-fns";
 import { getTranslations } from "next-intl/server";
+import { getFirstName } from "@/utils/nameUtilsForApiRoutes";
 
 export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
   try {
@@ -27,7 +28,10 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
     }
 
     const clientEmail = appointment.participants[0].userId.email;
-    const clientFirstName = appointment.participants[0].userId.firstName;
+    const clientFirstName = await getFirstName(
+      appointment.participants[0].userId.firstName,
+      locale
+    );
     const appointmentStartTime = format(
       new Date(appointment.startDate),
       "hh:mm a"

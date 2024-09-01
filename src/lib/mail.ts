@@ -1,3 +1,4 @@
+import { getFirstName, getFullName } from "./../utils/formatName";
 import mailchimp from "@mailchimp/mailchimp_transactional";
 import mailchimpMarketing from "@mailchimp/mailchimp_marketing";
 import { UserRole } from "@/generalTypes";
@@ -62,8 +63,8 @@ export const addUserToSubscriberList = async (
 
 export const addUserNameToSubscriberProfile = async (
   email: string,
-  firstName: string,
-  lastName: string
+  firstName: { en: string; ar?: string },
+  lastName: { en: string; ar?: string }
 ) => {
   try {
     const existingMember = await mailchimpMarketing.lists.getListMember(
@@ -73,20 +74,27 @@ export const addUserNameToSubscriberProfile = async (
 
     if (existingMember.status === "subscribed") {
       console.log("User is already subscribed. Updating profile...");
+
+      const updateData = {
+        merge_fields: {
+          FNAME_EN: firstName.en,
+          LNAME_EN: lastName.en,
+          FNAME_AR: firstName.ar || firstName.en,
+          LNAME_AR: lastName.ar || lastName.en,
+        },
+      };
+
+      // Update the member's profile in Mailchimp
       await mailchimpMarketing.lists.updateListMember(
         process.env.MAILCHIMP_LIST_ID as string,
         email,
-        {
-          merge_fields: {
-            FNAME: firstName,
-            LNAME: lastName,
-          },
-        }
+        updateData
       );
+
       return;
     }
   } catch (error) {
-    console.error(error);
+    console.error("Error updating Mailchimp member:", error);
   }
 };
 
@@ -413,8 +421,13 @@ export const sendReminderEmail = async (
     const appointmentDetails = {
       date: format(new Date(appointment.startDate), "PPPP"),
       time: format(new Date(appointment.startDate), "p"),
-      therapistName: `${appointment.hostUserId.firstName} ${appointment.hostUserId.lastName}`,
-      clientName: `${appointment.participants[0].userId.firstName}`,
+      therapistName: `${await getFullName(
+        appointment.hostUserId.firstName,
+        appointment.hostUserId.lastName
+      )} `,
+      clientName: `${await getFirstName(
+        appointment.participants[0].userId.firstName
+      )}`,
     };
 
     const subject = t("subject");

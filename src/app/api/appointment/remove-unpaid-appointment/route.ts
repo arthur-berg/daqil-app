@@ -6,6 +6,7 @@ import { cancelAllScheduledJobsForAppointment } from "@/lib/schedule-appointment
 import { sendClientNotPaidInTimeEmail } from "@/lib/mail";
 import { getTranslations } from "next-intl/server";
 import mongoose from "mongoose";
+import { getFullName } from "@/utils/nameUtilsForApiRoutes";
 
 export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
   const session = await mongoose.startSession();
@@ -74,8 +75,16 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
           {
             date: appointment.startDate,
             time: appointment.startDate,
-            therapistName: `${appointment.hostUserId.firstName} ${appointment.hostUserId.lastName}`,
-            clientName: `${appointment.participants[0].userId.firstName} ${appointment.participants[0].userId.lastName}`,
+            therapistName: `${await getFullName(
+              appointment.hostUserId.firstName,
+              appointment.hostUserId.lastName,
+              locale
+            )} `,
+            clientName: `${await getFullName(
+              appointment.participants[0].userId.firstName,
+              appointment.participants[0].userId.lastName,
+              locale
+            )}`,
           },
           t
         );

@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifySignatureAppRouter } from "@upstash/qstash/nextjs";
 import Appointment from "@/models/Appointment";
-import User from "@/models/User";
 
 export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
   try {

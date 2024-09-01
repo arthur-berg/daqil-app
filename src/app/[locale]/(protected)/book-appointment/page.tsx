@@ -14,6 +14,7 @@ import { MdEvent } from "react-icons/md"; // Import the calendar icon from react
 
 import IntroCallStepManager from "@/app/[locale]/(protected)/book-appointment/intro-call-step-manager";
 import AcceptTherapist from "./accept-therapist";
+import { getFullName } from "@/utils/formatName";
 
 const BookAppointmentPage = async ({
   params,
@@ -94,8 +95,10 @@ const BookAppointmentPage = async ({
                       {t("awaitingApproval")}
                     </h2>
                     <p className="mb-4">
-                      {selectedTherapist?.firstName}{" "}
-                      {selectedTherapist?.lastName}
+                      {await getFullName(
+                        selectedTherapist?.firstName,
+                        selectedTherapist?.lastName
+                      )}
                     </p>
                     <p className="mb-4">
                       {

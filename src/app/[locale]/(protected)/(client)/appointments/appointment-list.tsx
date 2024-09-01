@@ -32,6 +32,7 @@ import {
   MultiSelectorList,
   MultiSelectorTrigger,
 } from "@/components/ui/multi-select";
+import { useUserName } from "@/hooks/use-user-name";
 
 const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
   const [filters, setFilters] = useState<string[]>([
@@ -43,6 +44,8 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
   const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
   const [selectedAppointment, setSelectedAppointment] = useState<any>(null);
   const [isPending, startTransition] = useTransition();
+  const { getFullName } = useUserName();
+
   const t = useTranslations("AppointmentList");
 
   const appointments = JSON.parse(appointmentsJson);
@@ -224,8 +227,10 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
                                     </span>
                                     <span className="flex items-center gap-2">
                                       {getStatusIcon(appointment.status)}
-                                      {appointment.hostUserId.firstName}{" "}
-                                      {appointment.hostUserId.lastName}
+                                      {getFullName(
+                                        appointment.hostUserId.firstName,
+                                        appointment.hostUserId.lastName
+                                      )}
                                     </span>
                                   </AccordionTrigger>
                                   <AccordionContent className="p-4 border-t border-gray-200">
@@ -295,9 +300,11 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
                                         {t("host")}:
                                       </h4>
                                       <p className="text-sm text-gray-500">
-                                        {appointment.hostUserId.firstName}{" "}
-                                        {appointment.hostUserId.lastName} (
-                                        {appointment.hostUserId.email})
+                                        {getFullName(
+                                          appointment.hostUserId.firstName,
+                                          appointment.hostUserId.lastName
+                                        )}{" "}
+                                        ({appointment.hostUserId.email})
                                       </p>
                                     </div>
                                     <div className="mt-6 flex justify-center">

@@ -25,6 +25,7 @@ import { DateTimePicker } from "@/components/ui/datetime-picker";
 import { Link } from "@/navigation";
 import { useTranslations } from "next-intl";
 import { scheduleAppointment } from "@/actions/appointments/schedule-appointment";
+import { useUserName } from "@/hooks/use-user-name";
 
 const ScheduleAppointmentForm = ({
   clientJson,
@@ -39,6 +40,7 @@ const ScheduleAppointmentForm = ({
   const [isPending, startTransition] = useTransition();
   const { responseToast } = useToast();
   const user = useCurrentUser();
+  const { firstName, getFullName } = useUserName();
   const t = useTranslations("ScheduleAppointmentPage");
 
   const form = useForm<z.infer<typeof AppointmentSchema>>({
@@ -46,9 +48,7 @@ const ScheduleAppointmentForm = ({
     defaultValues: {
       startDate: undefined,
       title:
-        user?.role === "THERAPIST"
-          ? `Therapy session with ${user?.firstName}`
-          : "",
+        user?.role === "THERAPIST" ? `Therapy session with ${firstName}` : "",
       description: "",
       paid: false,
       status: "confirmed",
@@ -99,7 +99,8 @@ const ScheduleAppointmentForm = ({
       <Card className="md:w-[600px] border-none shadow-none">
         <CardHeader>
           <p className="text-2xl font-semibold text-center">
-            {t("scheduleAppointmentWith")} {client.firstName} {client.lastName}
+            {t("scheduleAppointmentWith")}{" "}
+            {getFullName(client.firstName, client.lastName)}
           </p>
         </CardHeader>
         <CardContent>

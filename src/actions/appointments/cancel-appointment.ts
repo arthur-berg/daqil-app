@@ -13,6 +13,7 @@ import { differenceInHours, format } from "date-fns";
 import { getTranslations } from "next-intl/server";
 import { revalidatePath } from "next/cache";
 import Stripe from "stripe";
+import { getFullName } from "@/utils/formatName";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
@@ -48,8 +49,6 @@ export const cancelAppointment = async (
           "firstName lastName email stripeCustomerId stripePaymentMethodId",
       })
       .populate("hostUserId", "email firstName lastName");
-
-    const amountPaid = appointment.amountPaid;
 
     if (!appointment) {
       return { error: ErrorMessages("appointmentNotExist") };
@@ -119,7 +118,6 @@ export const cancelAppointment = async (
       }
     }
 
-    // **Remove any scheduled jobs for this appointment**
     await cancelAllScheduledJobsForAppointment(appointmentId);
 
     await Appointment.findByIdAndUpdate(appointmentId, {
@@ -128,15 +126,20 @@ export const cancelAppointment = async (
       customCancellationReason: reason,
     });
 
-    // Send cancellation emails to both therapist and client
     const therapistEmail = appointment.hostUserId.email;
     const clientEmail = appointment.participants[0].userId.email;
     const appointmentDetails = {
       date: format(appointment.startDate, "yyyy-MM-dd"),
       time: format(appointment.startDate, "HH:mm"),
       reason,
-      therapistName: `${appointment.hostUserId.firstName} ${appointment.hostUserId.lastName}`,
-      clientName: `${appointment.participants[0].userId.firstName} ${appointment.participants[0].userId.lastName}`,
+      therapistName: `${await getFullName(
+        appointment.hostUserId.firstName,
+        appointment.hostUserId.lastName
+      )}`,
+      clientName: `${await getFullName(
+        appointment.participants[0].userId.firstName,
+        appointment.participants[0].userId.lastName
+      )}`,
       refundIssued,
       refundAmount,
     };

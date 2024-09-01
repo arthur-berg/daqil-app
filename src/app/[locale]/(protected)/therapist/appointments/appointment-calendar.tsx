@@ -32,6 +32,7 @@ import {
   MultiSelectorList,
   MultiSelectorItem,
 } from "@/components/ui/multi-select";
+import { useUserName } from "@/hooks/use-user-name";
 
 const localizer = momentLocalizer(moment);
 
@@ -108,6 +109,7 @@ const AppointmentCalendar = ({ appointments }: { appointments: any }) => {
   const [selectedAppointment, setSelectedAppointment] = useState<any>(null);
   const [showCancelForm, setShowCancelForm] = useState(false);
   const [isPending, startTransition] = useTransition();
+  const { getFullName } = useUserName();
   const [filters, setFilters] = useState<string[]>([
     "confirmed",
     "completed",
@@ -319,7 +321,10 @@ const AppointmentCalendar = ({ appointments }: { appointments: any }) => {
                   {selectedAppointment.participants.map(
                     (participant: any, index: number) => (
                       <span key={index}>
-                        {participant.firstName} {participant.lastName}
+                        {getFullName(
+                          participant.firstName,
+                          participant.lastName
+                        )}
                         {index < selectedAppointment.participants.length - 1
                           ? ", "
                           : ""}

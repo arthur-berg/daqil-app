@@ -1,9 +1,11 @@
 import { getClientById } from "@/data/user";
 import { getCurrentUser } from "@/lib/auth";
+import { getCurrentUserFullName, getFullName } from "@/utils/formatName";
 import { getTranslations } from "next-intl/server";
 
 const MyProfileClientPage = async () => {
   const user = await getCurrentUser();
+  const fullName = await getCurrentUserFullName();
 
   const t = await getTranslations("AuthPage");
 
@@ -11,7 +13,7 @@ const MyProfileClientPage = async () => {
 
   const client = await getClientById(user.id);
 
-  if (!client) return null;
+  if (!client) return "User not found";
 
   // Calculate total appointments and get therapist history
   const totalAppointments = client.therapistAppointmentCounts.reduce(
@@ -39,8 +41,7 @@ const MyProfileClientPage = async () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="bg-gray-100 p-4 rounded-lg shadow-sm">
             <p className="text-gray-800">
-              <span className="font-semibold">{t("name")}:</span>{" "}
-              {client.firstName} {client.lastName}
+              <span className="font-semibold">{t("name")}:</span> {fullName}
             </p>
 
             <p className="text-gray-800">
@@ -83,8 +84,10 @@ const MyProfileClientPage = async () => {
             <div className="mt-4">
               <p className="text-gray-800">
                 <span className="font-semibold">{t("currentTherapist")}:</span>{" "}
-                {currentTherapist.therapist.firstName}{" "}
-                {currentTherapist.therapist.lastName}
+                {await getFullName(
+                  currentTherapist.therapist.firstName,
+                  currentTherapist.therapist.lastName
+                )}
               </p>
               <p className="text-gray-800">
                 <span className="font-semibold">{t("startedOn")}:</span>{" "}
@@ -107,11 +110,14 @@ const MyProfileClientPage = async () => {
             {t("pastTherapists")}
           </h2>
           <ul className="space-y-4">
-            {pastTherapists.map((history: any, index: number) => (
+            {pastTherapists.map(async (history: any, index: number) => (
               <li key={index} className="bg-gray-100 p-4 rounded-lg shadow-sm">
                 <p className="text-gray-800">
                   <span className="font-semibold">{t("therapist")}:</span>{" "}
-                  {history.therapist.firstName} {history.therapist.lastName}
+                  {await getFullName(
+                    history.therapist.firstName,
+                    history.therapist.lastName
+                  )}
                 </p>
                 <p className="text-gray-800">
                   <span className="font-semibold">{t("period")}:</span>{" "}

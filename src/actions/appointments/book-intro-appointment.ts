@@ -1,5 +1,6 @@
 "use server";
 
+import { getFirstName } from "./../../utils/formatName";
 import { APPOINTMENT_TYPE_ID_INTRO_SESSION } from "@/contants/config";
 import { getTherapistById } from "@/data/user";
 import { UserRole } from "@/generalTypes";
@@ -48,7 +49,9 @@ export const bookIntroAppointment = async (
     const client = await requireAuth([UserRole.CLIENT]);
 
     const appointmentData = {
-      title: `${t("therapySessionWith")} ${therapist?.firstName}`,
+      title: `${t("therapySessionWith")} ${await getFirstName(
+        therapist?.firstName
+      )}`,
       startDate,
       endDate,
       participants: [{ userId: client.id, showUp: false }],

@@ -15,8 +15,8 @@
     "noAccount": "Don't have an account?",
     "twoFactorCode": "Two factor code",
     "confirm": "Confirm",
-    "firstName": "First name",
-    "lastName": "Last name",
+    "firstNameEn": "First name (English)",
+    "lastNameEn": "Last name (English)",
     "currentPassword": "Current password",
     "newPassword": "New password",
     "createAccount": "Create an account",
@@ -50,7 +50,11 @@
     "pastTherapists": "Past therapists",
     "therapist": "Therapist",
     "period": "Period",
-    "appointments": "Appointments"
+    "appointments": "Appointments",
+    "addArabicName": "Add Arabic name (optional)",
+    "hideArabicName": "Remove Arabic name",
+    "firstNameAr": "First name (Arabic)",
+    "lastNameAr": "Last name (Arabic)"
   },
   "AppointmentList": {
     "all": "All",

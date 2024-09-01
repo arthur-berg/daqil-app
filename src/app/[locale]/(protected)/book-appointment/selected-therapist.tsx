@@ -14,6 +14,7 @@ import { useTranslations } from "next-intl";
 import BookingCalendar from "@/app/[locale]/(protected)/book-appointment/[therapistId]/booking-calendar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { FaUser } from "react-icons/fa";
+import { useUserName } from "@/hooks/use-user-name";
 
 const SelectedTherapist = ({
   selectedTherapistData,
@@ -25,7 +26,7 @@ const SelectedTherapist = ({
   locale: string;
 }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-
+  const { getFullName } = useUserName();
   const t = useTranslations("BookAppointmentPage");
   const selectedTherapist = JSON.parse(selectedTherapistData);
 
@@ -47,7 +48,10 @@ const SelectedTherapist = ({
             </div>
           )}
           <h2 className="text-xl font-bold mb-2">
-            {selectedTherapist.firstName} {selectedTherapist.lastName}
+            {getFullName(
+              selectedTherapist.firstName,
+              selectedTherapist.lastName
+            )}
           </h2>
           <p className="text-gray-600 mb-2">
             {selectedTherapist.therapistWorkProfile[locale].title}
