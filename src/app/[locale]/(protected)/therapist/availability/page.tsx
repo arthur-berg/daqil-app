@@ -12,6 +12,8 @@ const AvailabilityPage = async () => {
   const availableTimes = user.availableTimes;
   const appointmentTypes = await getAllAppointmentTypes();
 
+  if (!appointmentTypes) return;
+
   return (
     <div className="lg:10/12 mx-auto">
       <AvailabilityTabs

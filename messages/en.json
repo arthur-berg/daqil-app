@@ -245,11 +245,12 @@
     "cancel": "Cancel",
     "addTimeSlot": "Add time slot",
     "setAvailableTimesFor": "Set available times for",
-    "selectStartTime": "Select start time",
-    "selectEndTime": "Select end time",
+    "selectStartTime": "Select time",
+    "selectEndTime": "Select time",
     "blockedTimesSaved": "Blocked times saved successfully.",
     "blockTimesFor": "Block times for",
-    "overview": "Overview"
+    "overview": "Overview",
+    "selectView": "Select a view"
   },
   "LoadingPages": {
     "loading": "Loading...",

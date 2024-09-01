@@ -56,7 +56,10 @@ const AvailabilityTabs = ({
 
           <div className="mt-6 bg-white shadow-md rounded-lg p-6">
             <TabsContent value="overview">
-              <Overview availableTimes={availableTimes} />
+              <Overview
+                availableTimes={availableTimes}
+                appointmentTypes={appointmentTypes}
+              />
             </TabsContent>
             <TabsContent value="default-availability">
               <RecurringAvailabilityManager
@@ -69,6 +72,7 @@ const AvailabilityTabs = ({
             </TabsContent>
             <TabsContent value="non-recurring-times">
               <NonRecurringAvailabilityForm
+                appointmentTypes={appointmentTypes}
                 nonRecurringAvailableTimes={
                   availableTimes?.nonRecurringAvailableTimes
                 }
@@ -76,6 +80,7 @@ const AvailabilityTabs = ({
             </TabsContent>
             <TabsContent value="block-dates">
               <BlockAvailabilityForm
+                appointmentTypes={appointmentTypes}
                 blockedOutTimes={availableTimes?.blockedOutTimes}
               />
             </TabsContent>
@@ -84,8 +89,8 @@ const AvailabilityTabs = ({
       </div>
 
       {/* Dropdown for mobile screens (md and down) */}
-      <div className="block md:hidden bg-white shadow-md rounded-lg p-6">
-        <div className="sm:flex sm:justify-center">
+      <div className="block md:hidden bg-white shadow-md rounded-lg md:p-6">
+        <div className="sm:flex sm:justify-center p-6">
           <div className="sm:w-64">
             <Select onValueChange={handleTabChange} value={activeTab}>
               <SelectTrigger className="md:w-[180px]">
@@ -104,28 +109,41 @@ const AvailabilityTabs = ({
           </div>
         </div>
 
-        <div className="bg-white rounded-lg p-6">
+        <div className="bg-white rounded-lg md:p-6">
           {activeTab === "overview" && (
-            <Overview availableTimes={availableTimes} />
+            <Overview
+              availableTimes={availableTimes}
+              appointmentTypes={appointmentTypes}
+            />
           )}
           {activeTab === "default-availability" && (
-            <RecurringAvailabilityManager
-              appointmentTypes={appointmentTypes}
-              settings={availableTimes?.settings}
-              recurringAvailableTimes={availableTimes?.recurringAvailableTimes}
-            />
+            <div className="p-6">
+              <RecurringAvailabilityManager
+                appointmentTypes={appointmentTypes}
+                settings={availableTimes?.settings}
+                recurringAvailableTimes={
+                  availableTimes?.recurringAvailableTimes
+                }
+              />
+            </div>
           )}
           {activeTab === "non-recurring-times" && (
-            <NonRecurringAvailabilityForm
-              nonRecurringAvailableTimes={
-                availableTimes?.nonRecurringAvailableTimes
-              }
-            />
+            <div className="p-6">
+              <NonRecurringAvailabilityForm
+                appointmentTypes={appointmentTypes}
+                nonRecurringAvailableTimes={
+                  availableTimes?.nonRecurringAvailableTimes
+                }
+              />
+            </div>
           )}
           {activeTab === "block-dates" && (
-            <BlockAvailabilityForm
-              blockedOutTimes={availableTimes?.blockedOutTimes}
-            />
+            <div className="p-6">
+              <BlockAvailabilityForm
+                appointmentTypes={appointmentTypes}
+                blockedOutTimes={availableTimes?.blockedOutTimes}
+              />
+            </div>
           )}
         </div>
       </div>

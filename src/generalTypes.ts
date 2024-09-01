@@ -11,16 +11,19 @@ export type UserRole = (typeof UserRole)[keyof typeof UserRole];
 export type TimeRange = {
   startDate?: Date;
   endDate?: Date;
+  appointmentTypeIds?: any[];
 };
 
 export type TimeRangeStrings = {
   startTime?: string;
   endTime?: string;
+  appointmentTypeIds?: any[];
 };
 
 export type DateTimes = {
   date?: Date;
   timeRanges: TimeRange[];
+  appointmentTypeIds?: any[];
 };
 
 export type DayTimes = {

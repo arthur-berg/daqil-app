@@ -3,9 +3,11 @@ import { FaClock } from "react-icons/fa";
 
 const RecurringTimes = ({
   recurringAvailableTimes,
+  appointmentTypes,
   t,
 }: {
   recurringAvailableTimes: DayTimes[];
+  appointmentTypes: any[];
   t: any;
 }) => {
   const dayOrder = ["monday", "tuesday", "wednesday", "thursday", "friday"];
@@ -14,6 +16,15 @@ const RecurringTimes = ({
       dayOrder.indexOf(a.day.toLowerCase()) -
       dayOrder.indexOf(b.day.toLowerCase())
   );
+
+  // Helper function to get appointment type names by IDs and return as an array
+  const getAppointmentTypeNames = (ids: string[]) => {
+    return (
+      appointmentTypes
+        ?.filter((type) => ids.includes(type._id))
+        .map((type) => type.title) || []
+    ); // Ensure it always returns an array
+  };
 
   return (
     <div>
@@ -33,13 +44,25 @@ const RecurringTimes = ({
                 <h3 className="text-lg font-semibold text-blue-800 mb-2">
                   {dayTime.day.charAt(0).toUpperCase() + dayTime.day.slice(1)}
                 </h3>
-                <div className="space-y-2 ">
+                <div className="space-y-2">
                   {dayTime.timeRanges.map((timeRange: TimeRangeStrings) => (
                     <div
                       key={timeRange.startTime}
-                      className="bg-blue-200 p-2 rounded-md text-blue-900 inline-flex mr-2"
+                      className="bg-blue-200 p-2 rounded-md text-blue-900 inline-flex flex-col mr-2"
                     >
-                      {timeRange.startTime} - {timeRange.endTime}
+                      <div>
+                        {timeRange.startTime} - {timeRange.endTime}
+                      </div>
+                      {/* Display appointment type names as a bullet list */}
+                      <ul className="text-sm text-blue-700 mt-1 list-disc pl-4">
+                        {(
+                          getAppointmentTypeNames(
+                            timeRange?.appointmentTypeIds as any
+                          ) || []
+                        ).map((name, index) => (
+                          <li key={index}>{name}</li>
+                        ))}
+                      </ul>
                     </div>
                   ))}
                 </div>

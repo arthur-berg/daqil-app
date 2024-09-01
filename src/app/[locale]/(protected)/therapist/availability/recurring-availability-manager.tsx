@@ -167,7 +167,7 @@ const DefaultAvailabilityManager = ({
   const intervalOptions = ["15", "30", "45", "60"];
 
   return timeRangeInputs ? (
-    <div className="bg-white rounded-lg md:p-6">
+    <div className="bg-white rounded-lg">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmitDefaultAvailability)}>
           <div className="mt-4">
@@ -276,7 +276,7 @@ const DefaultAvailabilityManager = ({
                 setTimeRangeInputs={setTimeRangeInputs}
               />
             ) : (
-              <div className="space-y-2 space-x-2">
+              <div className="space-y-2">
                 {timeRangeInputs[day] && timeRangeInputs[day].length > 0 ? (
                   timeRangeInputs[day].map((range, index) => (
                     <div
@@ -287,7 +287,7 @@ const DefaultAvailabilityManager = ({
                         {range.from}
                       </span>
                       <span className="px-2 py-1 text-center">{range.to}</span>
-                      <div className="flex flex-wrap mt-2">
+                      <ul className="flex flex-wrap">
                         {appointmentTypes.map((type) => {
                           const isSelected = range.appointmentTypeIds?.includes(
                             type._id
@@ -295,17 +295,17 @@ const DefaultAvailabilityManager = ({
 
                           if (isSelected) {
                             return (
-                              <div
+                              <li
                                 key={type._id}
-                                className="flex items-center mr-4"
+                                className="flex items-center mr-4 ml-2"
                               >
-                                <span className="ml-2">{type.title}</span>
-                              </div>
+                                {type.title}
+                              </li>
                             );
                           }
                           return null;
                         })}
-                      </div>
+                      </ul>
                     </div>
                   ))
                 ) : (

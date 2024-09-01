@@ -63,8 +63,10 @@ const timeOptions = generateTimeIntervals(15);
 
 const BlockAvailabilityForm = ({
   blockedOutTimes,
+  appointmentTypes,
 }: {
   blockedOutTimes: any;
+  appointmentTypes: any[];
 }) => {
   const [isPending, startTransition] = useTransition();
   const [date, setDate] = useState<any>();
@@ -174,7 +176,7 @@ const BlockAvailabilityForm = ({
                                   <Button
                                     variant="outline"
                                     role="combobox"
-                                    className="w-[150px] justify-between"
+                                    className="w-[120px] justify-between"
                                   >
                                     {field.value
                                       ? field.value
@@ -182,7 +184,7 @@ const BlockAvailabilityForm = ({
                                     <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                                   </Button>
                                 </PopoverTrigger>
-                                <PopoverContent className="w-[150px] p-0">
+                                <PopoverContent className="w-[120px] p-0">
                                   <Command>
                                     <CommandInput
                                       placeholder={t("searchTime")}
@@ -234,7 +236,7 @@ const BlockAvailabilityForm = ({
                                   <Button
                                     variant="outline"
                                     role="combobox"
-                                    className="w-[150px] justify-between"
+                                    className="w-[120px] justify-between"
                                   >
                                     {field.value
                                       ? field.value
@@ -242,7 +244,7 @@ const BlockAvailabilityForm = ({
                                     <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                                   </Button>
                                 </PopoverTrigger>
-                                <PopoverContent className="w-[150px] p-0">
+                                <PopoverContent className="w-[120px] p-0">
                                   <Command>
                                     <CommandInput
                                       placeholder={t("searchTime")}

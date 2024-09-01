@@ -5,11 +5,20 @@ import { FaCalendarAlt } from "react-icons/fa";
 
 const NonRecurringTimes = ({
   nonRecurringAvailableTimes,
+  appointmentTypes,
   t,
 }: {
   nonRecurringAvailableTimes: DateTimes[];
+  appointmentTypes: any[];
   t: any;
 }) => {
+  // Helper function to get appointment type names
+  const getAppointmentTypeNames = (ids: string[]) => {
+    return appointmentTypes
+      ?.filter((type) => ids.includes(type._id))
+      .map((type) => type.title);
+  };
+
   return (
     <div>
       <h2 className="text-xl md:text-2xl font-bold text-green-600 flex items-center mb-4">
@@ -31,10 +40,20 @@ const NonRecurringTimes = ({
                 {dateTime.timeRanges.map((timeRange: TimeRange) => (
                   <div
                     key={timeRange.startDate?.toString()}
-                    className="bg-green-200 p-2 rounded-md text-green-900 inline-flex mr-2"
+                    className="bg-green-200 p-2 rounded-md text-green-900 inline-flex flex-col mr-2"
                   >
-                    {formatDateTime(timeRange.startDate!)} -{" "}
-                    {formatDateTime(timeRange.endDate!)}
+                    <div>
+                      {formatDateTime(timeRange.startDate!)} -{" "}
+                      {formatDateTime(timeRange.endDate!)}
+                    </div>
+                    {/* Display appointment type names as a list */}
+                    <ul className="text-sm text-green-700 mt-1 list-disc list-inside">
+                      {getAppointmentTypeNames(
+                        timeRange.appointmentTypeIds as any
+                      ).map((name, index) => (
+                        <li key={index}>{name}</li>
+                      ))}
+                    </ul>
                   </div>
                 ))}
               </div>

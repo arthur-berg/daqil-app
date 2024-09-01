@@ -35,6 +35,7 @@ import { Separator } from "@/components/ui/separator";
 import { formatDateTime } from "@/utils";
 import { useTranslations } from "next-intl";
 import NonRecurringTimes from "./non-recurring-times";
+import { Checkbox } from "@/components/ui/checkbox";
 
 // Utility function to generate time options
 const generateTimeIntervals = (intervalMinutes = 15) => {
@@ -63,19 +64,28 @@ const timeOptions = generateTimeIntervals(15);
 
 const NonRecurringAvailabilityForm = ({
   nonRecurringAvailableTimes,
+  appointmentTypes,
 }: {
   nonRecurringAvailableTimes: any;
+  appointmentTypes: any[];
 }) => {
   const [isPending, startTransition] = useTransition();
   const [date, setDate] = useState<any>();
   const [showCalendar, setShowCalendar] = useState(false);
   const { responseToast } = useToast();
   const t = useTranslations("AvailabilityPage");
-  const ErrorMessages = useTranslations("ErrorMessages");
+
+  // Initialize form with default values
   const form = useForm<z.infer<typeof NonRecurringAvailabilitySchemaFE>>({
     defaultValues: {
       date: new Date(),
-      timeRanges: [{ startDate: "", endDate: "" }],
+      timeRanges: [
+        {
+          startDate: "",
+          endDate: "",
+          appointmentTypeIds: appointmentTypes?.map((type) => type._id), // Default select all appointment types
+        },
+      ],
     },
   });
 
@@ -83,7 +93,15 @@ const NonRecurringAvailabilityForm = ({
     const formattedData = {
       date: values.date, // Use local date
       timeRanges: values.timeRanges.map(
-        ({ startDate, endDate }: { startDate: string; endDate: string }) => ({
+        ({
+          startDate,
+          endDate,
+          appointmentTypeIds,
+        }: {
+          startDate: string;
+          endDate: string;
+          appointmentTypeIds: string[];
+        }) => ({
           startDate: set(new Date(date!), {
             hours: parseInt(startDate.split(":")[0], 10),
             minutes: parseInt(startDate.split(":")[1], 10),
@@ -96,6 +114,7 @@ const NonRecurringAvailabilityForm = ({
             seconds: 0,
             milliseconds: 0,
           }),
+          appointmentTypeIds,
         })
       ),
     };
@@ -105,7 +124,16 @@ const NonRecurringAvailabilityForm = ({
       setShowCalendar(false);
       responseToast(data);
       if (data?.success) {
-        form.reset();
+        form.reset({
+          date: new Date(),
+          timeRanges: [
+            {
+              startDate: "",
+              endDate: "",
+              appointmentTypeIds: appointmentTypes.map((type) => type._id), // Reset with all appointment types selected
+            },
+          ],
+        });
         setDate(null);
       }
     });
@@ -115,6 +143,7 @@ const NonRecurringAvailabilityForm = ({
     <div>
       <div className="mb-8">
         <NonRecurringTimes
+          appointmentTypes={appointmentTypes}
           nonRecurringAvailableTimes={nonRecurringAvailableTimes}
           t={t}
         />
@@ -130,7 +159,7 @@ const NonRecurringAvailabilityForm = ({
       </Button>
       {showCalendar && (
         <>
-          <div className="flex justify-center w-full">
+          <div className="flex w-full">
             <Calendar
               mode="single"
               selected={date}
@@ -138,7 +167,15 @@ const NonRecurringAvailabilityForm = ({
                 setDate(date);
                 form.reset({
                   date: date,
-                  timeRanges: [{ startDate: "", endDate: "" }],
+                  timeRanges: [
+                    {
+                      startDate: "",
+                      endDate: "",
+                      appointmentTypeIds: appointmentTypes.map(
+                        (type) => type._id
+                      ), // Default select all appointment types
+                    },
+                  ],
                 });
               }}
               className="rounded-md border h-full w-full flex max-w-2xl"
@@ -162,124 +199,174 @@ const NonRecurringAvailabilityForm = ({
                     {t("setAvailableTimesFor")} {format(date, "PPPP")}
                   </h3>
                   {form.watch("timeRanges").map((_: any, index: number) => (
-                    <div key={index} className="flex gap-4 mt-4">
+                    <div key={index} className="flex flex-col gap-4 mt-4">
+                      <div className="flex gap-4">
+                        <FormField
+                          control={form.control}
+                          name={`timeRanges.${index}.startDate`}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormControl>
+                                <Popover>
+                                  <PopoverTrigger asChild>
+                                    <Button
+                                      variant="outline"
+                                      role="combobox"
+                                      className="w-[120px] justify-between"
+                                    >
+                                      {field.value
+                                        ? field.value
+                                        : t("selectStartTime")}
+                                      <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                    </Button>
+                                  </PopoverTrigger>
+                                  <PopoverContent className="w-[120px] p-0">
+                                    <Command>
+                                      <CommandInput
+                                        placeholder={t("searchTime")}
+                                      />
+                                      <CommandList>
+                                        <CommandEmpty>
+                                          {t("noTimeFound")}
+                                        </CommandEmpty>
+                                        <CommandGroup>
+                                          {timeOptions.map((time) => (
+                                            <CommandItem
+                                              value={time}
+                                              key={time}
+                                              onSelect={() => {
+                                                form.setValue(
+                                                  `timeRanges.${index}.startDate`,
+                                                  time
+                                                );
+                                              }}
+                                            >
+                                              <CheckIcon
+                                                className={`mr-2 h-4 w-4 ${
+                                                  time === field.value
+                                                    ? "opacity-100"
+                                                    : "opacity-0"
+                                                }`}
+                                              />
+                                              {time}
+                                            </CommandItem>
+                                          ))}
+                                        </CommandGroup>
+                                      </CommandList>
+                                    </Command>
+                                  </PopoverContent>
+                                </Popover>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name={`timeRanges.${index}.endDate`}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormControl>
+                                <Popover>
+                                  <PopoverTrigger asChild>
+                                    <Button
+                                      variant="outline"
+                                      role="combobox"
+                                      className="w-[120px] justify-between"
+                                    >
+                                      {field.value
+                                        ? field.value
+                                        : t("selectEndTime")}
+                                      <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                    </Button>
+                                  </PopoverTrigger>
+                                  <PopoverContent className="w-[120px] p-0">
+                                    <Command>
+                                      <CommandInput
+                                        placeholder={t("searchTime")}
+                                      />
+                                      <CommandList>
+                                        <CommandEmpty>
+                                          {t("noTimeFound")}
+                                        </CommandEmpty>
+                                        <CommandGroup>
+                                          {timeOptions.map((time) => (
+                                            <CommandItem
+                                              value={time}
+                                              key={time}
+                                              onSelect={() => {
+                                                form.setValue(
+                                                  `timeRanges.${index}.endDate`,
+                                                  time
+                                                );
+                                              }}
+                                            >
+                                              <CheckIcon
+                                                className={`mr-2 h-4 w-4 ${
+                                                  time === field.value
+                                                    ? "opacity-100"
+                                                    : "opacity-0"
+                                                }`}
+                                              />
+                                              {time}
+                                            </CommandItem>
+                                          ))}
+                                        </CommandGroup>
+                                      </CommandList>
+                                    </Command>
+                                  </PopoverContent>
+                                </Popover>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
                       <FormField
                         control={form.control}
-                        name={`timeRanges.${index}.startDate`}
+                        name={`timeRanges.${index}.appointmentTypeIds`}
                         render={({ field }) => (
                           <FormItem>
-                            <FormControl>
-                              <Popover>
-                                <PopoverTrigger asChild>
-                                  <Button
-                                    variant="outline"
-                                    role="combobox"
-                                    className="w-[150px] justify-between"
+                            <div className="flex flex-wrap mt-2">
+                              {appointmentTypes.map((type) => (
+                                <div
+                                  key={type._id}
+                                  className="flex items-center mr-4"
+                                >
+                                  <Checkbox
+                                    id={`nonrecurring-${index}-${type._id}`}
+                                    checked={field?.value?.includes(type._id)}
+                                    onCheckedChange={() => {
+                                      const currentValue = Array.isArray(
+                                        field.value
+                                      )
+                                        ? field.value
+                                        : [];
+                                      const updatedIds = currentValue.includes(
+                                        type._id
+                                      )
+                                        ? currentValue.filter(
+                                            (id: string) => id !== type._id
+                                          )
+                                        : [...currentValue, type._id];
+                                      form.setValue(
+                                        `timeRanges.${index}.appointmentTypeIds`,
+                                        updatedIds
+                                      );
+                                      form.trigger(
+                                        `timeRanges.${index}.appointmentTypeIds`
+                                      );
+                                    }}
+                                  />
+                                  <label
+                                    htmlFor={`nonrecurring-${index}-${type._id}`}
+                                    className="ml-2"
                                   >
-                                    {field.value
-                                      ? field.value
-                                      : t("selectStartTime")}
-                                    <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                  </Button>
-                                </PopoverTrigger>
-                                <PopoverContent className="w-[150px] p-0">
-                                  <Command>
-                                    <CommandInput
-                                      placeholder={t("searchTime")}
-                                    />
-                                    <CommandList>
-                                      <CommandEmpty>
-                                        {t("noTimeFound")}
-                                      </CommandEmpty>
-                                      <CommandGroup>
-                                        {timeOptions.map((time) => (
-                                          <CommandItem
-                                            value={time}
-                                            key={time}
-                                            onSelect={() => {
-                                              form.setValue(
-                                                `timeRanges.${index}.startDate`,
-                                                time
-                                              );
-                                            }}
-                                          >
-                                            <CheckIcon
-                                              className={`mr-2 h-4 w-4 ${
-                                                time === field.value
-                                                  ? "opacity-100"
-                                                  : "opacity-0"
-                                              }`}
-                                            />
-                                            {time}
-                                          </CommandItem>
-                                        ))}
-                                      </CommandGroup>
-                                    </CommandList>
-                                  </Command>
-                                </PopoverContent>
-                              </Popover>
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name={`timeRanges.${index}.endDate`}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormControl>
-                              <Popover>
-                                <PopoverTrigger asChild>
-                                  <Button
-                                    variant="outline"
-                                    role="combobox"
-                                    className="w-[150px] justify-between"
-                                  >
-                                    {field.value
-                                      ? field.value
-                                      : t("selectEndTime")}
-                                    <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                  </Button>
-                                </PopoverTrigger>
-                                <PopoverContent className="w-[150px] p-0">
-                                  <Command>
-                                    <CommandInput
-                                      placeholder={t("searchTime")}
-                                    />
-                                    <CommandList>
-                                      <CommandEmpty>
-                                        {t("noTimeFound")}
-                                      </CommandEmpty>
-                                      <CommandGroup>
-                                        {timeOptions.map((time) => (
-                                          <CommandItem
-                                            value={time}
-                                            key={time}
-                                            onSelect={() => {
-                                              form.setValue(
-                                                `timeRanges.${index}.endDate`,
-                                                time
-                                              );
-                                            }}
-                                          >
-                                            <CheckIcon
-                                              className={`mr-2 h-4 w-4 ${
-                                                time === field.value
-                                                  ? "opacity-100"
-                                                  : "opacity-0"
-                                              }`}
-                                            />
-                                            {time}
-                                          </CommandItem>
-                                        ))}
-                                      </CommandGroup>
-                                    </CommandList>
-                                  </Command>
-                                </PopoverContent>
-                              </Popover>
-                            </FormControl>
-                            <FormMessage />
+                                    {type.title}
+                                  </label>
+                                </div>
+                              ))}
+                            </div>
                           </FormItem>
                         )}
                       />
@@ -289,7 +376,13 @@ const NonRecurringAvailabilityForm = ({
                     onClick={() =>
                       form.setValue("timeRanges", [
                         ...form.watch("timeRanges"),
-                        { startDate: "", endDate: "" },
+                        {
+                          startDate: "",
+                          endDate: "",
+                          appointmentTypeIds: appointmentTypes.map(
+                            (type) => type._id
+                          ), // Default select all appointment types
+                        },
                       ])
                     }
                     type="button"

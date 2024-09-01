@@ -4,7 +4,13 @@ import RecurringTimes from "./recurring-times";
 import { AvailableTimes } from "@/generalTypes";
 import { useTranslations } from "next-intl";
 
-const Overview = ({ availableTimes }: { availableTimes: AvailableTimes }) => {
+const Overview = ({
+  availableTimes,
+  appointmentTypes,
+}: {
+  availableTimes: AvailableTimes;
+  appointmentTypes: any[];
+}) => {
   const { recurringAvailableTimes } = availableTimes;
 
   const t = useTranslations("AvailabilityPage");
@@ -20,10 +26,12 @@ const Overview = ({ availableTimes }: { availableTimes: AvailableTimes }) => {
   return (
     <div className="p-4 space-y-6">
       <RecurringTimes
+        appointmentTypes={appointmentTypes}
         recurringAvailableTimes={sortedRecurringAvailableTimes}
         t={t}
       />
       <NonRecurringTimes
+        appointmentTypes={appointmentTypes} // Pass appointmentTypes here
         nonRecurringAvailableTimes={availableTimes.nonRecurringAvailableTimes}
         t={t}
       />
