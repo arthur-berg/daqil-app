@@ -175,6 +175,8 @@ export const sendAppointmentCancellationEmail = async (
     reason: string;
     therapistName: string;
     clientName: string;
+    refundIssued?: boolean;
+    refundAmount?: number;
   }
 ) => {
   const t = await getTranslations("AppointmentCancellationEmail");

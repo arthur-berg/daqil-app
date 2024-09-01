@@ -9,9 +9,12 @@ import { cancelAllScheduledJobsForAppointment } from "@/lib/schedule-appointment
 import Appointment from "@/models/Appointment";
 import User from "@/models/User";
 import { CancelAppointmentSchema } from "@/schemas";
-import { format } from "date-fns";
+import { differenceInHours, format } from "date-fns";
 import { getTranslations } from "next-intl/server";
 import { revalidatePath } from "next/cache";
+import Stripe from "stripe";
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
 export const cancelAppointment = async (
   values: z.infer<typeof CancelAppointmentSchema>
@@ -41,9 +44,12 @@ export const cancelAppointment = async (
     const appointment = await Appointment.findById(appointmentId)
       .populate({
         path: "participants.userId",
-        select: "firstName lastName email",
+        select:
+          "firstName lastName email stripeCustomerId stripePaymentMethodId",
       })
       .populate("hostUserId", "email firstName lastName");
+
+    const amountPaid = appointment.amountPaid;
 
     if (!appointment) {
       return { error: ErrorMessages("appointmentNotExist") };
@@ -67,6 +73,9 @@ export const cancelAppointment = async (
       }
     }
 
+    let refundIssued = false;
+    let refundAmount = 0;
+
     if (isClient) {
       const participant = appointment.participants.some(
         (p: any) => p.userId._id.toString() === user.id
@@ -75,10 +84,42 @@ export const cancelAppointment = async (
       if (!participant) {
         return { error: ErrorMessages("notAuthorized") };
       }
+
+      // Check if the appointment is eligible for a refund (more than 48 hours away)
+      const hoursUntilAppointment = differenceInHours(
+        new Date(appointment.startDate),
+        new Date()
+      );
+
+      if (hoursUntilAppointment > 48) {
+        // Fetch the payment intent using the appointmentId as metadata
+        const paymentIntents = await stripe.paymentIntents.list({
+          customer: appointment.participants[0].userId.stripeCustomerId,
+          limit: 100, // Adjust the limit as needed
+        });
+
+        const paymentIntent = paymentIntents.data.find(
+          (pi) => pi.metadata && pi.metadata.appointmentId === appointmentId
+        );
+
+        console.log("paymentIntent", paymentIntent);
+
+        if (paymentIntent) {
+          try {
+            const refund = await stripe.refunds.create({
+              payment_intent: paymentIntent.id,
+            });
+            refundIssued = true;
+            refundAmount = refund.amount / 100;
+          } catch (refundError) {
+            console.error("Error processing refund:", refundError);
+            return { error: ErrorMessages("refundFailed") };
+          }
+        }
+      }
     }
 
     // **Remove any scheduled jobs for this appointment**
-
     await cancelAllScheduledJobsForAppointment(appointmentId);
 
     await Appointment.findByIdAndUpdate(appointmentId, {
@@ -96,6 +137,8 @@ export const cancelAppointment = async (
       reason,
       therapistName: `${appointment.hostUserId.firstName} ${appointment.hostUserId.lastName}`,
       clientName: `${appointment.participants[0].userId.firstName} ${appointment.participants[0].userId.lastName}`,
+      refundIssued,
+      refundAmount,
     };
 
     if (

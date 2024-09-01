@@ -18,18 +18,11 @@ import {
   AccordionTrigger,
   AccordionContent,
 } from "@/components/ui/accordion";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 import { FaCheck, FaTimes, FaClock, FaQuestion } from "react-icons/fa";
 import { useTranslations } from "next-intl";
 
-import CancelAppointmentForm from "./cancel-appointment-form"; // Import your client CancelAppointmentForm
+import CancelAppointmentForm from "./cancel-appointment-form";
 import { BeatLoader } from "react-spinners";
 import {
   MultiSelector,
