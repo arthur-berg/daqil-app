@@ -3,7 +3,6 @@ import {
   Calendar,
   Views,
   momentLocalizer,
-  ToolbarProps,
   NavigateAction,
   View,
 } from "react-big-calendar";
@@ -33,6 +32,22 @@ import {
   MultiSelectorItem,
 } from "@/components/ui/multi-select";
 import { useUserName } from "@/hooks/use-user-name";
+import { useMediaQuery } from "react-responsive";
+
+const resourceMap = [
+  {
+    resourceId: "6692b4919a6b12347d0afac4",
+    resourceTitle: "Therapy session - 30 minutes",
+  },
+  {
+    resourceId: "66cd9d22e83c327cf7e0f57b",
+    resourceTitle: "Therapy session - 60 minutes",
+  },
+  {
+    resourceId: "66cd9e05e83c327cf7e0f57c",
+    resourceTitle: "Introduction meeting",
+  },
+];
 
 const localizer = momentLocalizer(moment);
 
@@ -60,21 +75,22 @@ const CustomToolbar = ({
   const goToCurrent = () => {
     onNavigate("TODAY" as NavigateAction);
   };
+  const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
 
   return (
-    <div className="flex justify-between items-center mb-4">
-      <div className="flex items-center">
+    <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
+      <div className="flex items-center mb-4 sm:mb-0">
         <Button
           onClick={goToBack}
           variant="secondary"
-          className="mr-4 p-2 rtl:mr-0 rtl:ml-4 rounded"
+          className="mr-2 sm:mr-4 p-2 rtl:mr-0 rtl:ml-4 rounded"
         >
           {t("back")}
         </Button>
         <Button
           onClick={goToCurrent}
           variant="secondary"
-          className="mr-4 rtl:mr-0 rtl:ml-4 p-2 rounded"
+          className="mr-2 sm:mr-4 rtl:mr-0 rtl:ml-4 p-2 rounded"
         >
           {t("today")}
         </Button>
@@ -82,22 +98,43 @@ const CustomToolbar = ({
           {t("next")}
         </Button>
       </div>
-      <div className="text-lg font-bold">{label}</div>
+      <div className="text-lg font-bold mb-4 sm:mb-0">{label}</div>
       <div className="flex items-center">
-        <Button
-          variant={view === Views.WEEK ? undefined : "secondary"}
-          onClick={() => onView(Views.WEEK)}
-          className={`mr-4 rtl:mr-0 rtl:ml-4 p-2 rounded`}
-        >
-          {t("week")}
-        </Button>
-        <Button
-          variant={view === Views.MONTH ? undefined : "secondary"}
-          onClick={() => onView(Views.MONTH)}
-          className={`p-2 rounded`}
-        >
-          {t("month")}
-        </Button>
+        {isMobile ? (
+          <>
+            <Button
+              variant={view === Views.DAY ? undefined : "secondary"}
+              onClick={() => onView(Views.DAY)}
+              className="mr-2 sm:mr-4 rtl:mr-0 rtl:ml-4 p-2 rounded"
+            >
+              {t("day")}
+            </Button>
+            <Button
+              variant={view === Views.WEEK ? undefined : "secondary"}
+              onClick={() => onView(Views.WEEK)}
+              className="mr-2 sm:mr-4 rtl:mr-0 rtl:ml-4 p-2 rounded"
+            >
+              {t("week")}
+            </Button>
+          </>
+        ) : (
+          <>
+            <Button
+              variant={view === Views.WEEK ? undefined : "secondary"}
+              onClick={() => onView(Views.WEEK)}
+              className="mr-2 sm:mr-4 rtl:mr-0 rtl:ml-4 p-2 rounded"
+            >
+              {t("week")}
+            </Button>
+            <Button
+              variant={view === Views.MONTH ? undefined : "secondary"}
+              onClick={() => onView(Views.MONTH)}
+              className="p-2 rounded"
+            >
+              {t("month")}
+            </Button>
+          </>
+        )}
       </div>
     </div>
   );
@@ -105,7 +142,10 @@ const CustomToolbar = ({
 
 const AppointmentCalendar = ({ appointments }: { appointments: any }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [currentView, setCurrentView] = useState<View>(Views.WEEK);
+  const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
+  const [currentView, setCurrentView] = useState<View>(
+    isMobile ? Views.DAY : Views.WEEK
+  );
   const [selectedAppointment, setSelectedAppointment] = useState<any>(null);
   const [showCancelForm, setShowCancelForm] = useState(false);
   const [isPending, startTransition] = useTransition();
@@ -185,12 +225,20 @@ const AppointmentCalendar = ({ appointments }: { appointments: any }) => {
 
   const events = useMemo(
     () =>
-      filteredAppointments?.map((appointment: any) => ({
-        ...appointment,
-        start: new Date(appointment.startDate),
-        end: new Date(appointment.endDate),
-        title: appointment.title,
-      })),
+      filteredAppointments?.map((appointment: any) => {
+        // Find the matching resource based on appointmentTypeId
+        const matchingResource = resourceMap.find(
+          (resource) => resource.resourceId === appointment.appointmentTypeId
+        );
+
+        return {
+          ...appointment,
+          start: new Date(appointment.startDate),
+          end: new Date(appointment.endDate),
+          title: appointment.title,
+          resourceId: matchingResource ? matchingResource.resourceId : null, // Assign resourceId if found
+        };
+      }),
     [filteredAppointments]
   );
 
@@ -210,22 +258,15 @@ const AppointmentCalendar = ({ appointments }: { appointments: any }) => {
   };
 
   return (
-    <div className="p-4 space-y-6 bg-white md:w-9/12">
+    <div className="p-4 space-y-6 bg-white w-full lg:w-9/12">
       <h2 className="text-xl md:text-2xl font-bold text-primary mb-4">
         {t("appointmentsCalendar")}
       </h2>
-      <CustomToolbar
-        onNavigate={handleNavigate}
-        label={moment(currentDate).format("MMMM YYYY")}
-        onView={handleViewChange}
-        view={currentView}
-        t={t}
-      />
       <div className="flex justify-center mb-6">
         <div className="flex items-center mb-6 flex-col">
           <div className="mr-4">{t("appointmentStatus")}:</div>
           <MultiSelector values={filters} onValuesChange={setFilters}>
-            <MultiSelectorTrigger>
+            <MultiSelectorTrigger className="flex-col items-start sm:flex-row sm:items-center">
               <MultiSelectorInput placeholder={t("selectStatus")} />
             </MultiSelectorTrigger>
             <MultiSelectorContent>
@@ -247,33 +288,78 @@ const AppointmentCalendar = ({ appointments }: { appointments: any }) => {
           </MultiSelector>
         </div>
       </div>
-      <Calendar
-        localizer={localizer}
-        events={events}
-        toolbar={false}
-        formats={{
-          timeGutterFormat: (date, culture, localizer) => formatAMPM(date),
-          eventTimeRangeFormat: ({ start, end }, culture, localizer) =>
-            `${formatAMPM(start)} - ${formatAMPM(end)}`,
-          agendaTimeRangeFormat: ({ start, end }, culture, localizer) =>
-            `${formatAMPM(start)} - ${formatAMPM(end)}`,
-        }}
-        startAccessor="start"
-        endAccessor="end"
-        style={{ height: 600 }}
-        date={currentDate}
+      <CustomToolbar
+        onNavigate={handleNavigate}
+        label={moment(currentDate).format("MMMM YYYY")}
+        onView={handleViewChange}
         view={currentView}
-        defaultView={Views.WEEK}
-        views={{ month: true, week: true, day: true }}
-        scrollToTime={new Date(currentDate.setHours(8, 0, 0, 0))}
-        onSelectEvent={handleEventClick}
-        eventPropGetter={(event) => ({
-          style: { backgroundColor: getStatusColor(event.status) },
-        })}
-        dayPropGetter={() => ({
-          className: "border-b border-gray-200",
-        })}
+        t={t}
       />
+
+      {isMobile ? (
+        <>
+          <Calendar
+            localizer={localizer}
+            events={events}
+            toolbar={false}
+            resourceIdAccessor="resourceId"
+            resources={resourceMap}
+            resourceTitleAccessor="resourceTitle"
+            formats={{
+              timeGutterFormat: (date, culture, localizer) => formatAMPM(date),
+              eventTimeRangeFormat: ({ start, end }, culture, localizer) =>
+                `${formatAMPM(start)} - ${formatAMPM(end)}`,
+              agendaTimeRangeFormat: ({ start, end }, culture, localizer) =>
+                `${formatAMPM(start)} - ${formatAMPM(end)}`,
+            }}
+            startAccessor="start"
+            endAccessor="end"
+            style={{ height: "100vh" }}
+            date={currentDate}
+            view={currentView}
+            defaultView={Views.DAY}
+            views={{ day: true, week: true }}
+            step={60}
+            scrollToTime={new Date(currentDate.setHours(8, 0, 0, 0))}
+            onSelectEvent={handleEventClick}
+            eventPropGetter={(event) => ({
+              style: { backgroundColor: getStatusColor(event.status) },
+            })}
+            dayPropGetter={() => ({
+              className: "border-b border-gray-200",
+            })}
+          />
+        </>
+      ) : (
+        <Calendar
+          localizer={localizer}
+          events={events}
+          toolbar={false}
+          formats={{
+            timeGutterFormat: (date, culture, localizer) => formatAMPM(date),
+            eventTimeRangeFormat: ({ start, end }, culture, localizer) =>
+              `${formatAMPM(start)} - ${formatAMPM(end)}`,
+            agendaTimeRangeFormat: ({ start, end }, culture, localizer) =>
+              `${formatAMPM(start)} - ${formatAMPM(end)}`,
+          }}
+          startAccessor="start"
+          endAccessor="end"
+          style={{ height: "100%", minHeight: 500 }}
+          date={currentDate}
+          view={currentView}
+          defaultView={Views.WEEK}
+          views={{ month: true, week: true, day: true }}
+          scrollToTime={new Date(currentDate.setHours(8, 0, 0, 0))}
+          onSelectEvent={handleEventClick}
+          eventPropGetter={(event) => ({
+            style: { backgroundColor: getStatusColor(event.status) },
+          })}
+          dayPropGetter={() => ({
+            className: "border-b border-gray-200",
+          })}
+        />
+      )}
+
       {showCancelForm && (
         <CancelAppontmentForm
           selectedAppointment={selectedAppointment}
@@ -296,7 +382,7 @@ const AppointmentCalendar = ({ appointments }: { appointments: any }) => {
           <DialogTrigger asChild>
             <div />
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
+          <DialogContent className="max-w-full sm:max-w-[425px] p-4 sm:p-6">
             <DialogHeader>
               <DialogTitle>{selectedAppointment.title}</DialogTitle>
               <DialogDescription>

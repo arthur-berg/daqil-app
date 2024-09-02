@@ -6,10 +6,14 @@ export default async function TherapistsLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { isClient } = await getCurrentRole();
+  const { isTherapist, isAdmin } = await getCurrentRole();
 
-  if (!isClient) {
-    redirect("/unauthorized");
+  if (isTherapist) {
+    redirect("/therapist/appointments");
+  }
+
+  if (isAdmin) {
+    redirect("/admin");
   }
 
   return children;

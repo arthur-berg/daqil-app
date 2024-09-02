@@ -7,18 +7,23 @@ import AppointmentList from "./appointment-list";
 import AppointmentCalendar from "./appointment-calendar";
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
+import { BeatLoader } from "react-spinners";
 
 const AppointmentSwitch = ({ appointmentsJson }: { appointmentsJson: any }) => {
   const [view, setView] = useState<any>(null);
   const t = useTranslations("AppointmentList");
   const appointments = JSON.parse(appointmentsJson);
+  const [loading, setLoading] = useState(true);
 
   // Load the preferred view from cookies when the component mounts
   useEffect(() => {
     const savedView = Cookies.get("preferredView");
     if (savedView) {
       setView(savedView);
+    } else {
+      setView("calendar");
     }
+    setLoading(false);
   }, []);
 
   const handleViewChange = (newView: string) => {
@@ -56,14 +61,18 @@ const AppointmentSwitch = ({ appointmentsJson }: { appointmentsJson: any }) => {
           {t("listView")}
         </Button>
       </div>
-      {view === "calendar" ? (
+      {loading ? (
+        <div className="flex items-center mt-20 flex-col justify-center">
+          <BeatLoader color="#fff" />
+          <div className="mt-4 text-white">{t("loadingAppointments")}</div>
+        </div>
+      ) : view === "list" ? (
         <div className="flex justify-center">
-          <AppointmentCalendar appointments={appointments} />
+          <AppointmentList appointments={appointments} />
         </div>
       ) : (
         <div className="flex justify-center">
-          {" "}
-          <AppointmentList appointments={appointments} />
+          <AppointmentCalendar appointments={appointments} />
         </div>
       )}
     </div>

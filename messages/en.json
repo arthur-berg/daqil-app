@@ -97,7 +97,8 @@
     "noShowClient": "Client didn't show up",
     "noShowBoth": "Neither the therapist nor the client showed up.",
     "notPaidInTime": "Client didn't pay on time",
-    "warningNoRefund": "Warning: No refund will be issued if canceled within 24 hours of the appointment."
+    "warningNoRefund": "Warning: No refund will be issued if canceled within 24 hours of the appointment.",
+    "loadingAppointments": "Loading appointments..."
   },
   "RegisterPage": {
     "emailLabel": "Email",
@@ -298,7 +299,8 @@
     "cancelAppointment": "Cancel appointment",
     "appointmentStatus": "Appointment Status",
     "all": "All",
-    "selectStatus": "Select a status"
+    "selectStatus": "Select a status",
+    "day": "Day"
   },
   "ScheduleAppointmentPage": {
     "scheduleAnotherAppointment": "Schedule another appointment",

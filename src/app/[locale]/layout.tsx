@@ -22,7 +22,7 @@ export default async function LocaleLayout({
   params: { locale: string };
 }>) {
   try {
-    await connectToMongoDB();
+    const con = await connectToMongoDB();
     console.log("Mongo connected and cron jobs running for appointments");
   } catch {
     console.log("Mongo connection failed");
