@@ -21,7 +21,7 @@ const AppointmentSwitch = ({ appointmentsJson }: { appointmentsJson: any }) => {
     if (savedView) {
       setView(savedView);
     } else {
-      setView("calendar");
+      setView("list");
     }
     setLoading(false);
   }, []);
@@ -36,19 +36,6 @@ const AppointmentSwitch = ({ appointmentsJson }: { appointmentsJson: any }) => {
       <div className="flex justify-center mb-4">
         <Button
           disabled={!view}
-          variant={view === "calendar" ? undefined : "outline"}
-          onClick={() => handleViewChange("calendar")}
-          className={`flex items-center mr-2 rtl:mr-0 rtl:ml-2 ${
-            view === "calendar"
-              ? "bg-primary text-white"
-              : "bg-gray-200 text-gray-800"
-          }`}
-        >
-          <FaCalendarAlt className="mr-2 rtl:mr-0 rtl:ml-2" />
-          {t("calendarView")}
-        </Button>
-        <Button
-          disabled={!view}
           variant={view === "list" ? undefined : "outline"}
           onClick={() => handleViewChange("list")}
           className={`mr-2 rtl:mr-0 rtl:ml-2 flex items-center ${
@@ -60,19 +47,32 @@ const AppointmentSwitch = ({ appointmentsJson }: { appointmentsJson: any }) => {
           <FaList className="mr-2 rtl:ml-2 rtl:mr-0" />
           {t("listView")}
         </Button>
+        <Button
+          disabled={!view}
+          variant={view === "calendar" ? undefined : "outline"}
+          onClick={() => handleViewChange("calendar")}
+          className={`flex items-center mr-2 rtl:mr-0 rtl:ml-2 ${
+            view === "calendar"
+              ? "bg-primary text-white"
+              : "bg-gray-200 text-gray-800"
+          }`}
+        >
+          <FaCalendarAlt className="mr-2 rtl:mr-0 rtl:ml-2" />
+          {t("calendarView")}
+        </Button>
       </div>
       {loading ? (
         <div className="flex items-center mt-20 flex-col justify-center">
           <BeatLoader color="#fff" />
           <div className="mt-4 text-white">{t("loadingAppointments")}</div>
         </div>
-      ) : view === "list" ? (
+      ) : view === "calendar" ? (
         <div className="flex justify-center">
-          <AppointmentList appointments={appointments} />
+          <AppointmentCalendar appointments={appointments} />
         </div>
       ) : (
         <div className="flex justify-center">
-          <AppointmentCalendar appointments={appointments} />
+          <AppointmentList appointments={appointments} />
         </div>
       )}
     </div>
