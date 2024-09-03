@@ -28,6 +28,10 @@ type MultiSelectorProps = {
   loop?: boolean;
 } & React.ComponentPropsWithoutRef<typeof CommandPrimitive>;
 
+type MultiSelectorTriggerProps = React.HTMLAttributes<HTMLDivElement> & {
+  badgeClassName?: string;
+};
+
 interface MultiSelectContextProps {
   value: string[];
   onValueChange: (value: any) => void;
@@ -70,7 +74,7 @@ const MultiSelector = ({
         onValueChange([...value, val]);
       }
     },
-    [value]
+    [value] // eslint-disable-line react-hooks/exhaustive-deps
   );
 
   // TODO : change from else if use to switch case statement
@@ -123,7 +127,7 @@ const MultiSelector = ({
         }
       }
     },
-    [value, inputValue, activeIndex, loop]
+    [value, inputValue, activeIndex, loop] // eslint-disable-line react-hooks/exhaustive-deps
   );
 
   return (
@@ -156,8 +160,8 @@ const MultiSelector = ({
 
 const MultiSelectorTrigger = forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, children, ...props }, ref) => {
+  React.HTMLAttributes<HTMLDivElement> & MultiSelectorTriggerProps
+>(({ className, children, badgeClassName, ...props }, ref) => {
   const { value, onValueChange, activeIndex } = useMultiSelect();
 
   const mousePreventDefault = useCallback((e: React.MouseEvent) => {
@@ -179,7 +183,8 @@ const MultiSelectorTrigger = forwardRef<
           key={item}
           className={cn(
             "px-1 rounded-xl flex items-center gap-1",
-            activeIndex === index && "ring-2 ring-muted-foreground "
+            activeIndex === index && "ring-2 ring-muted-foreground ",
+            badgeClassName
           )}
           variant={"secondary"}
         >

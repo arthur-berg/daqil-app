@@ -18,7 +18,7 @@ import {
   CommandGroup,
   CommandEmpty,
 } from "@/components/ui/command";
-import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
+import { CaretSortIcon, CheckIcon, TrashIcon } from "@radix-ui/react-icons";
 import {
   Form,
   FormField,
@@ -116,6 +116,19 @@ const BlockAvailabilityForm = ({
     });
   };
 
+  const removeTimeRange = (index: number) => {
+    const currentTimeRanges = form.getValues("timeRanges");
+
+    if (currentTimeRanges.length > 0) {
+      const updatedTimeRanges = currentTimeRanges.filter(
+        (_: any, i: number) => i !== index
+      );
+      form.setValue("timeRanges", updatedTimeRanges);
+
+      form.trigger("timeRanges");
+    }
+  };
+
   return (
     <div>
       <div className="mb-8">
@@ -164,7 +177,7 @@ const BlockAvailabilityForm = ({
                     {t("blockTimesFor")} {format(date, "PPPP")}
                   </h3>
                   {form.watch("timeRanges").map((_: any, index: number) => (
-                    <div key={index} className="flex gap-4 mt-4">
+                    <div key={index} className="flex gap-4 mt-4 flex-wrap">
                       <FormField
                         control={form.control}
                         name={`timeRanges.${index}.startDate`}
@@ -285,6 +298,14 @@ const BlockAvailabilityForm = ({
                           </FormItem>
                         )}
                       />
+                      <Button
+                        variant="outline"
+                        type="button"
+                        onClick={() => removeTimeRange(index)}
+                        className="flex items-center justify-center p-2"
+                      >
+                        <TrashIcon className="w-5 h-5 text-destructive hover:text-white" />
+                      </Button>
                     </div>
                   ))}
                   <Button

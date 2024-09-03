@@ -18,7 +18,7 @@ import {
   CommandGroup,
   CommandEmpty,
 } from "@/components/ui/command";
-import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
+import { CaretSortIcon, CheckIcon, TrashIcon } from "@radix-ui/react-icons";
 import {
   Form,
   FormField,
@@ -29,10 +29,7 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import { NonRecurringAvailabilitySchemaFE } from "@/schemas";
 import { saveNonRecurringAvailableTimes } from "@/actions/availability";
-import { FaCalendarAlt } from "react-icons/fa";
-import { TimeRange } from "@/generalTypes";
 import { Separator } from "@/components/ui/separator";
-import { formatDateTime } from "@/utils";
 import { useTranslations } from "next-intl";
 import NonRecurringTimes from "./non-recurring-times";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -88,6 +85,19 @@ const NonRecurringAvailabilityForm = ({
       ],
     },
   });
+
+  const removeTimeRange = (index: number) => {
+    const currentTimeRanges = form.getValues("timeRanges");
+
+    if (currentTimeRanges.length > 0) {
+      const updatedTimeRanges = currentTimeRanges.filter(
+        (_: any, i: number) => i !== index
+      );
+      form.setValue("timeRanges", updatedTimeRanges);
+
+      form.trigger("timeRanges");
+    }
+  };
 
   const onSubmit = (values: any) => {
     const formattedData = {
@@ -200,7 +210,7 @@ const NonRecurringAvailabilityForm = ({
                   </h3>
                   {form.watch("timeRanges").map((_: any, index: number) => (
                     <div key={index} className="flex flex-col gap-4 mt-4">
-                      <div className="flex gap-4">
+                      <div className="flex gap-4 flex-wrap">
                         <FormField
                           control={form.control}
                           name={`timeRanges.${index}.startDate`}
@@ -261,6 +271,7 @@ const NonRecurringAvailabilityForm = ({
                             </FormItem>
                           )}
                         />
+
                         <FormField
                           control={form.control}
                           name={`timeRanges.${index}.endDate`}
@@ -321,6 +332,14 @@ const NonRecurringAvailabilityForm = ({
                             </FormItem>
                           )}
                         />
+                        <Button
+                          variant="outline"
+                          type="button"
+                          onClick={() => removeTimeRange(index)}
+                          className="flex items-center justify-center p-2"
+                        >
+                          <TrashIcon className="w-5 h-5 text-destructive hover:text-white" />
+                        </Button>
                       </div>
                       <FormField
                         control={form.control}

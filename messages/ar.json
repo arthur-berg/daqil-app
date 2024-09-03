@@ -126,7 +126,8 @@
     "roleLabel": "الدور",
     "twoFactorAuthLabel": "المصادقة الثنائية",
     "twoFactorText": "تمكين المصادقة الثنائية لحسابك",
-    "saveBtn": "حفظ"
+    "saveBtn": "حفظ",
+    "settings": "الإعدادات"
   },
   "PricingPage": {
     "heading": "اختر بين الاشتراكات أو شراء جلسة واحدة"

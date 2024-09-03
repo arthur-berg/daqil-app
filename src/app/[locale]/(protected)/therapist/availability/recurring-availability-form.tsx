@@ -190,14 +190,14 @@ const RecurringAvailabilityForm = ({
             {timeRangeInputs[day] && timeRangeInputs[day].length > 0 ? (
               timeRangeInputs[day].map((range: any, index: any) => (
                 <div key={index} className="flex items-center gap-4 flex-wrap">
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 flex-wrap">
                     {/* Start time input */}
                     <FormField
                       control={form.control}
                       name={`timeRanges.${index}.startTime`}
                       render={({ field }) => (
                         <FormItem>
-                          <div className="flex items-center gap-2 jb">
+                          <div className="flex items-center gap-2 ">
                             <FormControl>
                               <Popover>
                                 <PopoverTrigger asChild>

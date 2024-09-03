@@ -50,6 +50,22 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
 
   const appointments = JSON.parse(appointmentsJson);
 
+  const nextAppointment = useMemo(() => {
+    const futureAppointments = appointments
+      .filter(
+        (appointment: any) =>
+          new Date(appointment.startDate) > new Date() &&
+          (appointment.status === "confirmed" ||
+            appointment.status === "pending")
+      )
+      .sort(
+        (a: any, b: any) =>
+          new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
+      );
+
+    return futureAppointments[0] || null;
+  }, [appointments]);
+
   const filteredAppointments = useMemo(() => {
     if (filters.length === 0) {
       return appointments;
@@ -122,33 +138,84 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
     pending: t("pending"),
   };
 
-  const filterOptions = [
-    { value: "confirmed", label: t("confirmed") },
-    { value: "canceled", label: t("canceled") },
-    { value: "completed", label: t("completed") },
-    { value: "pending", label: t("pending") },
-  ];
+  const renderNextAppointment = () => {
+    const timeUntilStart = differenceInMinutes(
+      new Date(nextAppointment.startDate),
+      new Date()
+    );
 
-  const translatedFilters = filters.map(
-    (filter) => filterOptions.find((option) => option.value === filter)?.label
-  );
+    const hasMeetingEnded = new Date() > new Date(nextAppointment.endDate);
+
+    const isJoinEnabled =
+      timeUntilStart <= 20 && timeUntilStart >= 0 && !hasMeetingEnded;
+
+    return (
+      <div className="mb-6 p-4 w-full bg-green-100 border-l-4 border-green-500">
+        <h2 className="text-2xl font-bold text-green-800 mb-2">
+          {t("yourNextAppointment")}
+        </h2>
+        <div className="text-sm text-gray-700">
+          <p>
+            <strong>{t("title")}:</strong> {nextAppointment.title}
+          </p>
+          <p>
+            <strong>{t("start")}:</strong>{" "}
+            {format(
+              new Date(nextAppointment.startDate),
+              "EEEE, MMMM d, h:mm aa"
+            )}
+          </p>
+          <p>
+            <strong>{t("participants")}:</strong>{" "}
+            {nextAppointment.participants
+              .map((participant: any) =>
+                getFullName(participant.firstName, participant.lastName)
+              )
+              .join(", ")}
+          </p>
+          <div className="mt-4">
+            {isJoinEnabled ? (
+              <Link
+                className="text-center"
+                href={`/appointments/${nextAppointment._id}`}
+              >
+                <Button disabled={!isJoinEnabled}>{t("joinMeeting")}</Button>
+              </Link>
+            ) : (
+              <div className="text-center">
+                <Button disabled={!isJoinEnabled}>{t("joinMeeting")}</Button>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <Card className="md:w-8/12">
       <CardContent>
         <div className="flex justify-center py-8">
           <div className="space-y-8 w-full max-w-4xl">
-            <div className="flex justify-center mb-6">
-              <div className="flex justify-center items-center mb-6 flex-col">
+            <div className="flex justify-center">
+              <div className="flex justify-center items-center flex-col">
+                {nextAppointment && renderNextAppointment()}
                 <div className="mr-4 rtl:mr-0 rtl:ml-4">
                   {t("appointmentStatus")}:{" "}
                 </div>
                 <MultiSelector
-                  values={translatedFilters as string[]}
+                  values={filters as string[]}
                   onValuesChange={setFilters}
+                  className="w-2/3 sm:w-full"
                 >
-                  <MultiSelectorTrigger>
-                    <MultiSelectorInput placeholder={t("selectStatus")} />
+                  <MultiSelectorTrigger
+                    className="flex-col items-start  sm:flex-row sm:items-center"
+                    badgeClassName="w-full justify-center sm:w-auto sm:justify-start mb-2 sm:mb-0"
+                  >
+                    <MultiSelectorInput
+                      placeholder={t("selectStatus")}
+                      className="w-full justify-center sm:w-auto sm:justify-start"
+                    />
                   </MultiSelectorTrigger>
                   <MultiSelectorContent>
                     <MultiSelectorList>
@@ -231,7 +298,7 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
                                   key={appointment._id.toString()}
                                   value={appointment._id.toString()}
                                 >
-                                  <AccordionTrigger className="flex justify-between p-4 bg-gray-100 rounded">
+                                  <AccordionTrigger className="flex justify-between p-4 bg-gray-100 rounded flex-col md:flex-row">
                                     <span>
                                       {format(
                                         new Date(appointment.startDate),
@@ -241,10 +308,12 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
                                     </span>
                                     <span className="flex items-center gap-2">
                                       {getStatusIcon(appointment.status)}
-                                      {getFullName(
-                                        appointment.hostUserId.firstName,
-                                        appointment.hostUserId.lastName
-                                      )}
+                                      <div className="mt-2 mb-2 md:mt-0 md:mb-0">
+                                        {getFullName(
+                                          appointment.hostUserId.firstName,
+                                          appointment.hostUserId.lastName
+                                        )}
+                                      </div>
                                     </span>
                                   </AccordionTrigger>
                                   <AccordionContent className="p-4 border-t border-gray-200">

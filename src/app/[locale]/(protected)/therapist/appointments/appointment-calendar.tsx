@@ -36,16 +36,8 @@ import { useMediaQuery } from "react-responsive";
 
 const resourceMap = [
   {
-    resourceId: "6692b4919a6b12347d0afac4",
-    resourceTitle: "Therapy session - 30 minutes",
-  },
-  {
-    resourceId: "66cd9d22e83c327cf7e0f57b",
-    resourceTitle: "Therapy session - 60 minutes",
-  },
-  {
-    resourceId: "66cd9e05e83c327cf7e0f57c",
-    resourceTitle: "Introduction meeting",
+    resourceId: 1,
+    resourceTitle: "Appointments",
   },
 ];
 
@@ -226,17 +218,12 @@ const AppointmentCalendar = ({ appointments }: { appointments: any }) => {
   const events = useMemo(
     () =>
       filteredAppointments?.map((appointment: any) => {
-        // Find the matching resource based on appointmentTypeId
-        const matchingResource = resourceMap.find(
-          (resource) => resource.resourceId === appointment.appointmentTypeId
-        );
-
         return {
           ...appointment,
           start: new Date(appointment.startDate),
           end: new Date(appointment.endDate),
           title: appointment.title,
-          resourceId: matchingResource ? matchingResource.resourceId : null, // Assign resourceId if found
+          resourceId: 1,
         };
       }),
     [filteredAppointments]
@@ -259,15 +246,21 @@ const AppointmentCalendar = ({ appointments }: { appointments: any }) => {
 
   return (
     <div className="p-4 space-y-6 bg-white w-full lg:w-9/12">
-      <h2 className="text-xl md:text-2xl font-bold text-primary mb-4">
+      <h2 className="text-xl md:text-2xl font-bold text-primary mb-4 text-center sm:text-left">
         {t("appointmentsCalendar")}
       </h2>
       <div className="flex justify-center mb-6">
         <div className="flex items-center mb-6 flex-col">
           <div className="mr-4">{t("appointmentStatus")}:</div>
           <MultiSelector values={filters} onValuesChange={setFilters}>
-            <MultiSelectorTrigger className="flex-col items-start sm:flex-row sm:items-center">
-              <MultiSelectorInput placeholder={t("selectStatus")} />
+            <MultiSelectorTrigger
+              className="flex-col items-start sm:flex-row sm:items-center"
+              badgeClassName="w-full justify-center sm:w-auto sm:justify-start mb-2 sm:mb-0"
+            >
+              <MultiSelectorInput
+                placeholder={t("selectStatus")}
+                className="w-full justify-center sm:w-auto sm:justify-start"
+              />
             </MultiSelectorTrigger>
             <MultiSelectorContent>
               <MultiSelectorList>

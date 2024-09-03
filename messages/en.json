@@ -98,7 +98,8 @@
     "noShowBoth": "Neither the therapist nor the client showed up.",
     "notPaidInTime": "Client didn't pay on time",
     "warningNoRefund": "Warning: No refund will be issued if canceled within 24 hours of the appointment.",
-    "loadingAppointments": "Loading appointments..."
+    "loadingAppointments": "Loading appointments...",
+    "yourNextAppointment": "Your next appointment"
   },
   "RegisterPage": {
     "emailLabel": "Email",
@@ -129,7 +130,8 @@
     "roleLabel": "Role",
     "twoFactorAuthLabel": "Two Factor Authentication",
     "twoFactorText": "Enable two factor authentication for your account",
-    "saveBtn": "Save"
+    "saveBtn": "Save",
+    "settings": "Settings"
   },
   "PricingPage": {
     "heading": "Choose between subscriptions or buy a single session"

@@ -34,7 +34,7 @@ const MyClientsPage = async () => {
         <TableBody>
           {clients.map(async (client: any) => (
             <TableRow key={client.email}>
-              <TableCell className="font-medium">
+              <TableCell className="font-medium underline text-primary">
                 <Link href={`/therapist/my-clients/${client.id}`}>
                   {await getFullName(client.firstName, client.lastName)}
                 </Link>

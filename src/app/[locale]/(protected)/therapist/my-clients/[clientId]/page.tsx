@@ -20,13 +20,15 @@ const ClientPage = async ({ params }: { params: { clientId: string } }) => {
 
   return (
     <div>
-      <Link href={`/therapist/my-clients`}>
-        <Button variant="secondary">{t("goBackToClients")}</Button>
-      </Link>
+      <div className="mb-4 flex items-center flex-col sm:items-start">
+        <Link href={`/therapist/my-clients`}>
+          <Button variant="secondary">{t("goBackToClients")}</Button>
+        </Link>
+      </div>
       <h1 className="text-xl sm:text-2xl font-semibold mb-4 text-center">
         {await getFullName(client.firstName, client.lastName)}
       </h1>
-      <div className="space-y-2">
+      <div className="space-y-2 text-center">
         <p className="text-gray-700">
           <strong>Email:</strong> {client.email}
         </p>
@@ -81,7 +83,7 @@ const ClientPage = async ({ params }: { params: { clientId: string } }) => {
         </div>
       )}
 
-      <div className="mt-6 flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0">
+      <div className="mt-6 flex flex-col sm:flex-row sm:space-x-4 space-y-4 justify-center sm:space-y-0">
         <Link href={`/therapist/my-clients/${clientId}/schedule-appointment`}>
           <Button className="w-full sm:w-auto">Schedule Appointment</Button>
         </Link>

@@ -82,12 +82,9 @@ const ScheduleAppointmentForm = ({
     return (
       <div className="flex flex-col items-center space-y-4 min-h-52 justify-center">
         <FormSuccess message={success} />
-        <div className="flex space-x-4">
-          <Button onClick={() => setSuccess(undefined)}>
-            {t("scheduleAnotherAppointment")}
-          </Button>
+        <div className="flex sm:space-x-4 space-y-4 sm:space-y-0 flex-col sm:flex-row items-center sm:items-left">
           <Link href="/therapist/appointments">
-            <Button variant="secondary">{t("goToAppointmentsOverview")}</Button>
+            <Button>{t("goToAppointmentsOverview")}</Button>
           </Link>
         </div>
       </div>

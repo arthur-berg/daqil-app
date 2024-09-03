@@ -53,6 +53,22 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
   const { getFullName } = useUserName();
   const t = useTranslations("AppointmentList");
 
+  const nextAppointment = useMemo(() => {
+    const futureAppointments = appointments
+      .filter(
+        (appointment: any) =>
+          new Date(appointment.startDate) > new Date() &&
+          (appointment.status === "confirmed" ||
+            appointment.status === "pending")
+      )
+      .sort(
+        (a: any, b: any) =>
+          new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
+      );
+
+    return futureAppointments[0] || null;
+  }, [appointments]);
+
   const filteredAppointments = useMemo(() => {
     if (filters.length === 0) {
       return appointments;
@@ -125,33 +141,84 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
     pending: t("pending"),
   };
 
-  const filterOptions = [
-    { value: "confirmed", label: t("confirmed") },
-    { value: "canceled", label: t("canceled") },
-    { value: "completed", label: t("completed") },
-    { value: "pending", label: t("pending") },
-  ];
+  const renderNextAppointment = () => {
+    const timeUntilStart = differenceInMinutes(
+      new Date(nextAppointment.startDate),
+      new Date()
+    );
 
-  const translatedFilters = filters.map(
-    (filter) => filterOptions.find((option) => option.value === filter)?.label
-  );
+    const hasMeetingEnded = new Date() > new Date(nextAppointment.endDate);
+
+    const isJoinEnabled =
+      timeUntilStart <= 20 && timeUntilStart >= 0 && !hasMeetingEnded;
+
+    return (
+      <div className="mb-6 p-4 w-full bg-green-100 border-l-4 border-green-500">
+        <h2 className="text-2xl font-bold text-green-800 mb-2">
+          {t("yourNextAppointment")}
+        </h2>
+        <div className="text-sm text-gray-700">
+          <p>
+            <strong>{t("title")}:</strong> {nextAppointment.title}
+          </p>
+          <p>
+            <strong>{t("start")}:</strong>{" "}
+            {format(
+              new Date(nextAppointment.startDate),
+              "EEEE, MMMM d, h:mm aa"
+            )}
+          </p>
+          <p>
+            <strong>{t("participants")}:</strong>{" "}
+            {nextAppointment.participants
+              .map((participant: any) =>
+                getFullName(participant.firstName, participant.lastName)
+              )
+              .join(", ")}
+          </p>
+          <div className="mt-4">
+            {isJoinEnabled ? (
+              <Link
+                className="text-center"
+                href={`/appointments/${nextAppointment._id}`}
+              >
+                <Button disabled={!isJoinEnabled}>{t("startMeeting")}</Button>
+              </Link>
+            ) : (
+              <div className="text-center">
+                <Button disabled={!isJoinEnabled}>{t("startMeeting")}</Button>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <Card className="md:w-8/12">
       <CardContent>
         <div className="flex justify-center py-8">
           <div className="space-y-8 w-full max-w-4xl">
-            <div className="flex justify-center mb-6">
-              <div className="flex justify-center items-center mb-6 flex-col whitespace-nowrap">
+            <div className="flex justify-center">
+              <div className="flex justify-center items-center flex-col whitespace-nowrap">
+                {nextAppointment && renderNextAppointment()}
                 <div className="mr-4 rtl:mr-0 rtl:ml-4">
                   {t("appointmentStatus")}:{" "}
                 </div>
                 <MultiSelector
-                  values={translatedFilters as string[]}
+                  values={filters as string[]}
                   onValuesChange={setFilters}
+                  className="w-2/3 sm:w-full"
                 >
-                  <MultiSelectorTrigger>
-                    <MultiSelectorInput placeholder={t("selectStatus")} />
+                  <MultiSelectorTrigger
+                    className="flex-col items-start  sm:flex-row sm:items-center"
+                    badgeClassName="w-full justify-center sm:w-auto sm:justify-start mb-2 sm:mb-0"
+                  >
+                    <MultiSelectorInput
+                      placeholder={t("selectStatus")}
+                      className="w-full justify-center sm:w-auto sm:justify-start"
+                    />
                   </MultiSelectorTrigger>
                   <MultiSelectorContent>
                     <MultiSelectorList>
@@ -172,6 +239,7 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
                 </MultiSelector>
               </div>
             </div>
+
             {sortedStatuses.length ? (
               sortedStatuses.map((status) => (
                 <div key={status}>
@@ -233,7 +301,7 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
                                   key={appointment._id.toString()}
                                   value={appointment._id.toString()}
                                 >
-                                  <AccordionTrigger className="flex justify-between p-4 bg-gray-100 rounded">
+                                  <AccordionTrigger className="flex justify-between p-4 bg-gray-100 rounded flex-col md:flex-row">
                                     <span>
                                       {format(
                                         new Date(appointment.startDate),
@@ -243,27 +311,29 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
                                     </span>
                                     <span className="flex items-center gap-2">
                                       {getStatusIcon(appointment.status)}
-                                      {appointment.participants
-                                        .map(
-                                          ({
-                                            firstName,
-                                            lastName,
-                                          }: {
-                                            firstName: {
-                                              en: string;
-                                              ar?: string;
-                                            };
-                                            lastName: {
-                                              en: string;
-                                              ar?: string;
-                                            };
-                                          }) =>
-                                            `${getFullName(
+                                      <div className="mt-2 mb-2 md:mt-0 md:mb-0">
+                                        {appointment.participants
+                                          .map(
+                                            ({
                                               firstName,
-                                              lastName
-                                            )} `
-                                        )
-                                        .join(", ")}
+                                              lastName,
+                                            }: {
+                                              firstName: {
+                                                en: string;
+                                                ar?: string;
+                                              };
+                                              lastName: {
+                                                en: string;
+                                                ar?: string;
+                                              };
+                                            }) =>
+                                              `${getFullName(
+                                                firstName,
+                                                lastName
+                                              )} `
+                                          )
+                                          .join(", ")}
+                                      </div>
                                     </span>
                                   </AccordionTrigger>
                                   <AccordionContent className="p-4 border-t border-gray-200">
@@ -271,8 +341,8 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
                                       <p className="text-gray-600 mb-4">
                                         {appointment.description}
                                       </p>
-                                      <div className="flex justify-between">
-                                        <div className="text-sm text-gray-500 space-y-1">
+                                      <div className="flex justify-between flex-col sm:flex-row reverse">
+                                        <div className="text-sm text-gray-500 space-y-1 order-last sm:order-1">
                                           <p>
                                             <strong>{t("start")}: </strong>
                                             {format(
@@ -328,18 +398,20 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
                                         {(appointment.status === "pending" ||
                                           appointment.status ===
                                             "confirmed") && (
-                                          <Button
-                                            disabled={isPending}
-                                            variant="secondary"
-                                            onClick={() => {
-                                              setSelectedAppointment(
-                                                appointment
-                                              );
-                                              setIsCancelDialogOpen(true);
-                                            }}
-                                          >
-                                            {t("cancelAppointment")}
-                                          </Button>
+                                          <div className="mb-8 sm:mb-0 inline-flex sm:block justify-center sm:justify-start">
+                                            <Button
+                                              disabled={isPending}
+                                              variant="secondary"
+                                              onClick={() => {
+                                                setSelectedAppointment(
+                                                  appointment
+                                                );
+                                                setIsCancelDialogOpen(true);
+                                              }}
+                                            >
+                                              {t("cancelAppointment")}
+                                            </Button>
+                                          </div>
                                         )}
                                       </div>
                                       <div className="mt-4">
