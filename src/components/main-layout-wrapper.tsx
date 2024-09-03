@@ -39,7 +39,7 @@ export default function AdminPanelLayout({
       <Sidebar setIsOpen={setIsOpen} isOpen={isOpen} />
       <div
         className={cn(
-          "min-h-screen pt-[74px] pb-20 dark:bg-zinc-900 transition-[margin-left] ease-in-out duration-300",
+          "min-h-screen pt-[40px] lg:pt-[74px] pb-20 dark:bg-zinc-900 transition-[margin-left] ease-in-out duration-300",
           isOpen
             ? "lg:ml-[256px] rtl:lg:mr-[256px] rtl:lg:ml-[0px]"
             : "lg:ml-[90px] rtl:lg:mr-[90px] rtl:lg:ml-[0px]"
@@ -50,61 +50,3 @@ export default function AdminPanelLayout({
     </>
   );
 }
-
-/*
-  const breadcrumbs = findBreadcrumbs(pathname, t);
-function findBreadcrumbs(pathname: string, t: any) {
-  const breadcrumbs = [];
-  const segments = pathname.split("/").filter(Boolean);
-
-  let cumulativePath = "";
-  const breadcrumbList = getBreadcrumbsList(t);
-
-  for (let i = 0; i < segments.length; i++) {
-    cumulativePath += `/${segments[i]}`;
-
-    const breadcrumb = breadcrumbList.find((b) => {
-      const dynamicSegmentPattern = b.path.replace(/\[.*?\]/g, "[^/]+");
-      const regex = new RegExp(`^${dynamicSegmentPattern}$`);
-      return regex.test(cumulativePath);
-    });
-
-    if (breadcrumb) {
-      breadcrumbs.push({
-        path: cumulativePath,
-        label: breadcrumb.label,
-      });
-    }
-  }
-
-  return breadcrumbs;
-}
-
-
-     <div className="container mx-auto px-4">
-          {breadcrumbs.length > 0 && (
-            <Breadcrumb className="inline-block bg-white rounded-md p-2 mb-2">
-              <BreadcrumbList>
-                {breadcrumbs.map((crumb, index) => (
-                  <Fragment key={index}>
-                    {index > 0 && <BreadcrumbSeparator />}
-                    <BreadcrumbItem>
-                      {index === breadcrumbs.length - 1 ? (
-                        <BreadcrumbPage>{crumb.label}</BreadcrumbPage>
-                      ) : (
-                        <BreadcrumbLink
-                          href={crumb.path}
-                          className="hover:text-primary hover:underline"
-                        >
-                          {crumb.label}
-                        </BreadcrumbLink>
-                      )}
-                    </BreadcrumbItem>
-                  </Fragment>
-                ))}
-              </BreadcrumbList>
-            </Breadcrumb>
-          )}
-
-          {children}
-        </div> */

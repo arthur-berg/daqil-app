@@ -317,8 +317,8 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
                                     </span>
                                   </AccordionTrigger>
                                   <AccordionContent className="p-4 border-t border-gray-200">
-                                    <div className="flex justify-between items-start">
-                                      <div className="text-sm text-gray-500 space-y-1">
+                                    <div className="flex justify-between items-start flex-col reverse w-full">
+                                      <div className="text-sm text-gray-500 space-y-1 order-last sm:order-1">
                                         <p>
                                           <strong>{t("start")}: </strong>{" "}
                                           {format(
@@ -366,16 +366,20 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
                                       </div>
                                       {(appointment.status === "pending" ||
                                         appointment.status === "confirmed") && (
-                                        <Button
-                                          disabled={isPending}
-                                          variant="secondary"
-                                          onClick={() => {
-                                            setSelectedAppointment(appointment);
-                                            setIsCancelDialogOpen(true);
-                                          }}
-                                        >
-                                          {t("cancelAppointment")}
-                                        </Button>
+                                        <div className="mb-8 inline-flex justify-center sm:justify-end w-full">
+                                          <Button
+                                            disabled={isPending}
+                                            variant="secondary"
+                                            onClick={() => {
+                                              setSelectedAppointment(
+                                                appointment
+                                              );
+                                              setIsCancelDialogOpen(true);
+                                            }}
+                                          >
+                                            {t("cancelAppointment")}
+                                          </Button>
+                                        </div>
                                       )}
                                     </div>
                                     <div className="mt-4">

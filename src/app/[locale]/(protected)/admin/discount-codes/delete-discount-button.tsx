@@ -42,7 +42,7 @@ const DeleteDiscountCodeButton = ({
       </Button>
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent>
+        <DialogContent className="w-11/12 sm:max-w-md">
           {isPending ? (
             <div className="flex items-center flex-col">
               <BeatLoader />

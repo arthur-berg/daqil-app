@@ -29,7 +29,7 @@ const PaymentSuccessPage = async ({
   const formattedEndDate = format(new Date(appointment.endDate), "h:mm a");
 
   return (
-    <div className="bg-white shadow-lg rounded-lg p-8 max-w-4xl mx-auto text-center mt-12">
+    <div className="bg-white shadow-lg rounded-lg p-8 max-w-4xl mx-auto text-center lg:mt-12">
       <div className="flex flex-col items-center">
         <MdCheckCircle className="text-green-500 text-6xl mb-4" />
         <h1 className="text-4xl font-extrabold mb-2">{t("thankYou")}</h1>

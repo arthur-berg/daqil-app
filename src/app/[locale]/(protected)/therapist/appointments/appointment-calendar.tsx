@@ -375,7 +375,7 @@ const AppointmentCalendar = ({ appointments }: { appointments: any }) => {
           <DialogTrigger asChild>
             <div />
           </DialogTrigger>
-          <DialogContent className="max-w-full sm:max-w-[425px] p-4 sm:p-6">
+          <DialogContent className="w-11/12 sm:max-w-md p-4 sm:p-6">
             <DialogHeader>
               <DialogTitle>{selectedAppointment.title}</DialogTitle>
               <DialogDescription>

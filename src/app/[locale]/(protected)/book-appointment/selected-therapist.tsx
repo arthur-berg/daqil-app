@@ -72,7 +72,7 @@ const SelectedTherapist = ({
         />
       </div>
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent>
+        <DialogContent className="w-11/12 sm:max-w-md">
           <DialogHeader>
             <DialogTitle>{t("changeTherapistTitle")}</DialogTitle>
             <DialogDescription>

@@ -150,7 +150,7 @@ const MyProfileInfo = ({ therapistJson }: { therapistJson: any }) => {
         </div>
       </div>
       <Dialog open={isImageDialogOpen} onOpenChange={handleCloseDialog}>
-        <DialogContent>
+        <DialogContent className="w-11/12 sm:max-w-md">
           <DialogHeader>
             <DialogTitle>{t("uploadProfileImage")}</DialogTitle>
           </DialogHeader>

@@ -71,7 +71,7 @@ const CancelAppontmentForm = ({
       open={isCancelDialogOpen}
       onOpenChange={() => setIsCancelDialogOpen(false)}
     >
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="w-11/12 sm:max-w-md">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <DialogHeader>

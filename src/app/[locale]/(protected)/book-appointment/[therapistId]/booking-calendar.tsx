@@ -166,7 +166,7 @@ const BookingCalendar = ({
         <>
           <>
             <div className="flex justify-center">
-              <div className="w-1/3 mb-4">
+              <div className="sm:w-1/3 mb-4">
                 <Select
                   onValueChange={(value) => {
                     setDate({
@@ -314,7 +314,7 @@ const BookingCalendar = ({
         </>
       )}
       <Dialog open={bookingDialogOpen} onOpenChange={setBookingDialogOpen}>
-        <DialogContent>
+        <DialogContent className="w-11/12 sm:max-w-md">
           <DialogHeader>
             <DialogTitle>{t("appointmentDetails")}</DialogTitle>
             <DialogDescription>
@@ -351,11 +351,13 @@ const BookingCalendar = ({
             <Button
               variant="outline"
               onClick={() => setBookingDialogOpen(false)}
-              className="rtl:ml-2"
             >
               {t("close")}
             </Button>
-            <Button onClick={() => handleTimeSlotClicked()}>
+            <Button
+              onClick={() => handleTimeSlotClicked()}
+              className="rtl:ml-2 mb-4 sm:mb-0"
+            >
               {t("bookAppointment")}
             </Button>
           </DialogFooter>

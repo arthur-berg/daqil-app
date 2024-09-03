@@ -341,7 +341,7 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
                                       <p className="text-gray-600 mb-4">
                                         {appointment.description}
                                       </p>
-                                      <div className="flex justify-between flex-col sm:flex-row reverse">
+                                      <div className="flex justify-between items-start flex-col reverse w-full">
                                         <div className="text-sm text-gray-500 space-y-1 order-last sm:order-1">
                                           <p>
                                             <strong>{t("start")}: </strong>
@@ -398,7 +398,7 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
                                         {(appointment.status === "pending" ||
                                           appointment.status ===
                                             "confirmed") && (
-                                          <div className="mb-8 sm:mb-0 inline-flex sm:block justify-center sm:justify-start">
+                                          <div className="mb-8 inline-flex justify-center sm:justify-end w-full">
                                             <Button
                                               disabled={isPending}
                                               variant="secondary"

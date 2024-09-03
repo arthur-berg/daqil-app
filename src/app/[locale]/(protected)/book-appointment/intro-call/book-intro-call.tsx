@@ -238,7 +238,7 @@ const BookIntroCall = ({
         </>
       )}
       <Dialog open={bookingDialogOpen} onOpenChange={setBookingDialogOpen}>
-        <DialogContent>
+        <DialogContent className="w-11/12 sm:max-w-md">
           <DialogHeader>
             <DialogTitle>{t("appointmentDetails")}</DialogTitle>
             <DialogDescription>
