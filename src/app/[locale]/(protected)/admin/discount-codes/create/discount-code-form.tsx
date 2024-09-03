@@ -56,7 +56,7 @@ const DiscountCodeForm = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto py-8 px-4">
+    <div className="sm:max-w-4xl mx-auto py-8 sm:px-4 w-full">
       <Card>
         <CardHeader>
           <p className="text-xl text-center">🎟️ {t("createDiscountCode")}</p>
