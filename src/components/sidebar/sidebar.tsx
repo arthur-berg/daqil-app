@@ -1,11 +1,10 @@
 "use client";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, forwardRef } from "react";
 import { ChevronLeftIcon, HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Menu } from "@/components/sidebar/menu";
 import LanguageSwitcher from "../language-switcher";
-import { disableBodyScroll, clearAllBodyScrollLocks } from "body-scroll-lock";
 
 interface SidebarToggleProps {
   isOpen: boolean | undefined;
@@ -24,7 +23,6 @@ function SidebarToggle({ isOpen, setIsOpen }: SidebarToggleProps) {
     >
       <Button
         onClick={() => {
-          clearAllBodyScrollLocks();
           setIsOpen(!isOpen);
         }}
         className="rounded-md w-8 h-8"
@@ -43,27 +41,30 @@ function SidebarToggle({ isOpen, setIsOpen }: SidebarToggleProps) {
   );
 }
 
-export function Sidebar({
-  setIsOpen,
-  isOpen,
-}: {
-  setIsOpen: any;
-  isOpen: boolean;
-}) {
-  const sidebarMenuRef = useRef<any>();
+export const Sidebar = forwardRef<
+  HTMLDivElement,
+  {
+    setIsOpen: any;
+    isOpen: boolean;
+  }
+>(({ setIsOpen, isOpen }, sidebarMenuRef) => {
   const sidebarRef = useRef<any>();
 
   // Close sidebar when clicking outside on screens smaller than lg
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
+      const sidebarMenuElement = (
+        sidebarMenuRef as React.MutableRefObject<HTMLDivElement | null>
+      ).current;
+
       if (
         sidebarRef.current &&
-        !sidebarRef.current.contains(event.target) &&
-        !sidebarMenuRef.current.contains(event.target) &&
+        !sidebarRef.current.contains(event.target as Node) &&
+        sidebarMenuElement && // Check that the ref is not null and is an HTMLDivElement
+        !sidebarMenuElement.contains(event.target as Node) &&
         isOpen
       ) {
         setIsOpen(false);
-        clearAllBodyScrollLocks();
       }
     };
 
@@ -75,7 +76,7 @@ export function Sidebar({
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [isOpen, setIsOpen]);
+  }, [isOpen, setIsOpen, sidebarMenuRef]);
 
   return (
     <>
@@ -84,11 +85,9 @@ export function Sidebar({
           className="h-6 w-6"
           onClick={() => {
             if (isOpen) {
-              clearAllBodyScrollLocks();
               setIsOpen(false);
             } else {
               setIsOpen(true);
-              disableBodyScroll(sidebarMenuRef.current);
             }
           }}
         />
@@ -126,4 +125,6 @@ export function Sidebar({
       </aside>
     </>
   );
-}
+});
+
+Sidebar.displayName = "Sidebar";
