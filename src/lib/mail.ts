@@ -29,24 +29,64 @@ export const addUserToSubscriberList = async (
   email: string,
   userRole?: UserRole
 ) => {
-  // TODO: Fix the function to work correctly
+  const roleTag =
+    userRole === UserRole.THERAPIST
+      ? process.env.MAILCHIMP_THERAPIST_TAG
+      : process.env.MAILCHIMP_CLIENT_TAG;
+
   try {
-    const listId =
-      userRole && userRole === UserRole.THERAPIST
-        ? process.env.MAILCHIMP_THERAPIST_LIST_ID
-        : process.env.MAILCHIMP_LIST_ID;
+    const listResponse = await mailchimpMarketing.lists.getListMember(
+      process.env.MAILCHIMP_LIST_ID as string,
+      email
+    );
 
-    await mailchimpMarketing.lists.getListMember(listId as string, email);
+    if (listResponse.status === "subscribed") {
+      return { success: "User already exists in the list" };
+    } else if (
+      listResponse.status === "archived" ||
+      listResponse.status === "unsubscribed" ||
+      listResponse.status === "cleaned"
+    ) {
+      try {
+        await mailchimpMarketing.lists.updateListMember(
+          process.env.MAILCHIMP_LIST_ID as string,
+          email,
+          {
+            status: "subscribed",
+          }
+        );
 
-    return { success: "User already exists in the list" };
+        await mailchimpMarketing.lists.updateListMemberTags(
+          process.env.MAILCHIMP_LIST_ID as string,
+          email,
+          {
+            tags: [
+              {
+                name: roleTag as string,
+                status: "active",
+              },
+            ],
+          }
+        );
+
+        return { success: "User re-subscribed to the list" };
+      } catch (updateError) {
+        console.error("Error re-subscribing user to the list", updateError);
+        return { error: "Failed to re-subscribe user to the list" };
+      }
+    }
+
+    return { error: "Unexpected user status, unable to subscribe" };
   } catch (error: any) {
     if (error?.status === 404) {
+      // User does not exist, add them to the list
       try {
         await mailchimpMarketing.lists.addListMember(
           process.env.MAILCHIMP_LIST_ID as string,
           {
             email_address: email,
             status: "subscribed",
+            tags: [roleTag as string],
           }
         );
         return { success: "User added to the subscriber list" };
@@ -55,6 +95,7 @@ export const addUserToSubscriberList = async (
         return { error: "Failed to add user to the subscriber list" };
       }
     } else {
+      // Handle other errors
       console.error("Error in add user to subscriber list", error);
       return { error: "Something went wrong" };
     }

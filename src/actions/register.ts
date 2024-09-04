@@ -51,13 +51,13 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
     password
   );
 
-  const response = await addUserToSubscriberList(verificationToken.email);
+  const response = await addUserToSubscriberList(
+    verificationToken.email,
+    UserRole.THERAPIST
+  );
 
   if (response?.error) {
     console.error(response.error);
-  }
-  if (response?.success) {
-    console.log(response.success);
   }
 
   return {
