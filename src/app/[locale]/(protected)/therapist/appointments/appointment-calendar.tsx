@@ -355,7 +355,7 @@ const AppointmentCalendar = ({ appointments }: { appointments: any }) => {
           }}
           startAccessor="start"
           endAccessor="end"
-          style={{ height: "100%", minHeight: 500 }}
+          style={{ height: "100vh" }}
           date={currentDate}
           view={currentView}
           defaultView={Views.WEEK}
