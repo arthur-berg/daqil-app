@@ -131,7 +131,10 @@ export const inviteTherapist = async (
       isTherapist
     );
 
-    const response = await addUserToSubscriberList(verificationToken.email);
+    const response = await addUserToSubscriberList(
+      verificationToken.email,
+      UserRole.THERAPIST
+    );
 
     if (response?.error) {
       console.error(response.error);

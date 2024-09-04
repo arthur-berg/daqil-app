@@ -51,10 +51,7 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
     password
   );
 
-  const response = await addUserToSubscriberList(
-    verificationToken.email,
-    UserRole.THERAPIST
-  );
+  const response = await addUserToSubscriberList(verificationToken.email);
 
   if (response?.error) {
     console.error(response.error);
