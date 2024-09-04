@@ -192,8 +192,8 @@ const BookIntroCall = ({
                                   setBookingDialogOpen(true);
                                 }}
                               >
-                                {format(time.start, "kk:mm")} -{" "}
-                                {format(time.end, "kk:mm")}
+                                {format(time.start, "HH:mm")} -{" "}
+                                {format(time.end, "HH:mm")}
                               </Button>
                             ))
                           ) : (
@@ -251,7 +251,7 @@ const BookIntroCall = ({
               </div>
               <div>
                 <strong>{t("time")}:</strong>{" "}
-                <span>{date.dateTime && format(date.dateTime, "kk:mm")}</span>
+                <span>{date.dateTime && format(date.dateTime, "HH:mm")}</span>
               </div>
               <div>
                 <strong>{t("duration")}:</strong>{" "}

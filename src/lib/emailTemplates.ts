@@ -468,7 +468,7 @@ export const clientNotPaidInTimeTemplate = (
   t: any
 ) => {
   const formattedDate = format(new Date(appointmentDetails.date), "PPPP");
-  const formattedTime = format(new Date(appointmentDetails.time), "p");
+  const formattedTime = format(new Date(appointmentDetails.time), "HH:mm");
 
   return `
     <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
@@ -510,7 +510,7 @@ export const therapistNotPaidInTimeTemplate = (
   t: any
 ) => {
   const formattedDate = format(new Date(appointmentDetails.date), "PPPP");
-  const formattedTime = format(new Date(appointmentDetails.time), "p");
+  const formattedTime = format(new Date(appointmentDetails.time), "HH:mm");
 
   return `
     <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">

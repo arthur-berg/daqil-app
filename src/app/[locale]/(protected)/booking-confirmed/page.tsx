@@ -11,10 +11,9 @@ const BookingConfirmedPage = async ({
   const appointment = await getAppointmentById(appointmentId);
   const formattedStartDate = format(
     new Date(appointment.startDate),
-    "MMMM dd, yyyy - h:mm a"
+    "MMMM dd, yyyy - HH:mm"
   );
-  const formattedEndDate = format(new Date(appointment.endDate), "h:mm a");
-
+  const formattedEndDate = format(new Date(appointment.endDate), "HH:mm");
   const t = await getTranslations("PaymentSuccessPage");
 
   return (

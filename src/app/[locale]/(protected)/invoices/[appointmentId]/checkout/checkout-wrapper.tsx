@@ -136,7 +136,7 @@ const CheckoutWrapper = ({
             {t("day")}: {format(date, "eeee, MMMM d, yyyy")}{" "}
           </p>
           <p>
-            {t("time")}: {format(date, "kk:mm")}
+            {t("time")}: {format(date, "HH:mm")}
           </p>
           <p>
             {t("duration")}: {appointmentType.durationInMinutes} {t("minutes")}

@@ -24,9 +24,10 @@ const PaymentSuccessPage = async ({
 
   const formattedStartDate = format(
     new Date(appointment.startDate),
-    "MMMM dd, yyyy - h:mm a"
+    "MMMM dd, yyyy - HH:mm"
   );
-  const formattedEndDate = format(new Date(appointment.endDate), "h:mm a");
+
+  const formattedEndDate = format(new Date(appointment.endDate), "HH:mm");
 
   return (
     <div className="bg-white shadow-lg rounded-lg p-8 max-w-4xl mx-auto text-center lg:mt-12">

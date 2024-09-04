@@ -91,7 +91,7 @@ const CancelAppontmentForm = ({
                 </p>
                 <p>
                   <strong>{t("start")}: </strong>
-                  {format(new Date(selectedAppointment.startDate), "Pp")}
+                  {format(new Date(selectedAppointment.startDate), "P HH:mm")}
                 </p>
                 <p>
                   <strong>{t("duration")}: </strong>

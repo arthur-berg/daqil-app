@@ -46,10 +46,8 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
       );
     }
 
-    // Format the appointment start time (e.g., "3:30 PM")
-    const formattedTime = format(appointmentStartTime, "h:mm a");
+    const formattedTime = format(appointmentStartTime, "HH:mm");
 
-    // Send SMS reminder
     await sendSmsReminder(
       clientPhone,
       hostFirstName,

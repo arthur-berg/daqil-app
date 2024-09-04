@@ -160,10 +160,7 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
           </p>
           <p>
             <strong>{t("start")}:</strong>{" "}
-            {format(
-              new Date(nextAppointment.startDate),
-              "EEEE, MMMM d, h:mm aa"
-            )}
+            {format(new Date(nextAppointment.startDate), "EEEE, MMMM d, HH:mm")}
           </p>
           <p>
             <strong>{t("participants")}:</strong>{" "}
@@ -302,7 +299,7 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
                                     <span>
                                       {format(
                                         new Date(appointment.startDate),
-                                        "Pp"
+                                        "P HH:mm"
                                       )}{" "}
                                       - {appointment.title}
                                     </span>
@@ -323,7 +320,7 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
                                           <strong>{t("start")}: </strong>{" "}
                                           {format(
                                             new Date(appointment.startDate),
-                                            "Pp"
+                                            "P HH:mm"
                                           )}
                                         </p>
                                         <p>

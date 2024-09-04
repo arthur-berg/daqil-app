@@ -434,7 +434,7 @@ export const sendReminderEmail = async (
   try {
     const appointmentDetails = {
       date: format(new Date(appointment.startDate), "PPPP"),
-      time: format(new Date(appointment.startDate), "p"),
+      time: format(new Date(appointment.startDate), "HH:mm"),
       therapistName: `${await getFullName(
         appointment.hostUserId.firstName,
         appointment.hostUserId.lastName

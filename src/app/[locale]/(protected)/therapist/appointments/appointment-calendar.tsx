@@ -5,10 +5,13 @@ import {
   momentLocalizer,
   NavigateAction,
   View,
+  dateFnsLocalizer,
 } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { useState, useMemo, useTransition } from "react";
+import { enGB, ar } from "date-fns/locale"; // Import English and Arabic locales
+
 import {
   Dialog,
   DialogTrigger,
@@ -21,7 +24,15 @@ import {
 import { Button } from "@/components/ui/button";
 import { Link } from "@/navigation";
 import { useTranslations } from "next-intl";
-import { format, isPast, differenceInMinutes } from "date-fns";
+import {
+  format,
+  parse,
+  startOfWeek,
+  getDay,
+  sub,
+  add,
+  differenceInMinutes,
+} from "date-fns";
 import CancelAppontmentForm from "./cancel-appointment-form";
 import {
   MultiSelector,
@@ -34,6 +45,10 @@ import {
 import { useUserName } from "@/hooks/use-user-name";
 import { useMediaQuery } from "react-responsive";
 
+const locales = {
+  "en-GB": enGB,
+};
+
 const resourceMap = [
   {
     resourceId: 1,
@@ -41,7 +56,13 @@ const resourceMap = [
   },
 ];
 
-const localizer = momentLocalizer(moment);
+const localizer = dateFnsLocalizer({
+  format,
+  parse,
+  startOfWeek,
+  getDay,
+  locales,
+});
 
 const CustomToolbar = ({
   onNavigate,
@@ -151,20 +172,21 @@ const AppointmentCalendar = ({ appointments }: { appointments: any }) => {
   const t = useTranslations("AppointmentCalendar");
 
   const handleNavigate = (action: NavigateAction) => {
-    const newDate = moment(currentDate).toDate();
+    const newDate = new Date(currentDate);
+
     switch (action) {
       case "PREV":
         setCurrentDate(
-          moment(newDate)
-            .subtract(1, currentView === Views.MONTH ? "month" : "week")
-            .toDate()
+          sub(newDate, {
+            [currentView === Views.MONTH ? "months" : "weeks"]: 1,
+          })
         );
         break;
       case "NEXT":
         setCurrentDate(
-          moment(newDate)
-            .add(1, currentView === Views.MONTH ? "month" : "week")
-            .toDate()
+          add(newDate, {
+            [currentView === Views.MONTH ? "months" : "weeks"]: 1,
+          })
         );
         break;
       case "TODAY":
@@ -175,12 +197,8 @@ const AppointmentCalendar = ({ appointments }: { appointments: any }) => {
     }
   };
 
-  const formatAMPM = (date: Date) => {
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    const period = hours >= 12 ? t("pm") : t("am");
-    const adjustedHours = hours % 12 || 12;
-    return `${adjustedHours}:${minutes < 10 ? "0" : ""}${minutes} ${period}`;
+  const formatTime = (date: Date) => {
+    return format(date, "HH:mm", { locale: locales["en-GB"] });
   };
 
   const handleViewChange = (view: View) => {
@@ -283,7 +301,7 @@ const AppointmentCalendar = ({ appointments }: { appointments: any }) => {
       </div>
       <CustomToolbar
         onNavigate={handleNavigate}
-        label={moment(currentDate).format("MMMM YYYY")}
+        label={format(currentDate, "MMMM yyyy", { locale: locales["en-GB"] })}
         onView={handleViewChange}
         view={currentView}
         t={t}
@@ -299,11 +317,11 @@ const AppointmentCalendar = ({ appointments }: { appointments: any }) => {
             resources={resourceMap}
             resourceTitleAccessor="resourceTitle"
             formats={{
-              timeGutterFormat: (date, culture, localizer) => formatAMPM(date),
-              eventTimeRangeFormat: ({ start, end }, culture, localizer) =>
-                `${formatAMPM(start)} - ${formatAMPM(end)}`,
-              agendaTimeRangeFormat: ({ start, end }, culture, localizer) =>
-                `${formatAMPM(start)} - ${formatAMPM(end)}`,
+              timeGutterFormat: (date) => formatTime(date),
+              eventTimeRangeFormat: ({ start, end }) =>
+                `${formatTime(start)} - ${formatTime(end)}`,
+              agendaTimeRangeFormat: ({ start, end }) =>
+                `${formatTime(start)} - ${formatTime(end)}`,
             }}
             startAccessor="start"
             endAccessor="end"
@@ -329,11 +347,11 @@ const AppointmentCalendar = ({ appointments }: { appointments: any }) => {
           events={events}
           toolbar={false}
           formats={{
-            timeGutterFormat: (date, culture, localizer) => formatAMPM(date),
-            eventTimeRangeFormat: ({ start, end }, culture, localizer) =>
-              `${formatAMPM(start)} - ${formatAMPM(end)}`,
-            agendaTimeRangeFormat: ({ start, end }, culture, localizer) =>
-              `${formatAMPM(start)} - ${formatAMPM(end)}`,
+            timeGutterFormat: (date) => formatTime(date),
+            eventTimeRangeFormat: ({ start, end }) =>
+              `${formatTime(start)} - ${formatTime(end)}`,
+            agendaTimeRangeFormat: ({ start, end }) =>
+              `${formatTime(start)} - ${formatTime(end)}`,
           }}
           startAccessor="start"
           endAccessor="end"
@@ -381,14 +399,18 @@ const AppointmentCalendar = ({ appointments }: { appointments: any }) => {
               <DialogDescription>
                 <p>
                   <strong>{t("start")}:</strong>{" "}
-                  {moment(selectedAppointment.start).format(
-                    "MMMM Do YYYY, h:mm a"
+                  {format(
+                    new Date(selectedAppointment.start),
+                    "MMMM do yyyy, HH:mm",
+                    { locale: locales["en-GB"] }
                   )}
                 </p>
                 <p>
                   <strong>{t("end")}:</strong>{" "}
-                  {moment(selectedAppointment.end).format(
-                    "MMMM Do YYYY, h:mm a"
+                  {format(
+                    new Date(selectedAppointment.end),
+                    "MMMM do yyyy, HH:mm",
+                    { locale: locales["en-GB"] }
                   )}
                 </p>
                 <p>

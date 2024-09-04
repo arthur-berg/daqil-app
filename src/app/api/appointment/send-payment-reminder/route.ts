@@ -34,7 +34,7 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
     );
     const appointmentStartTime = format(
       new Date(appointment.startDate),
-      "hh:mm a"
+      "HH:mm"
     );
 
     await sendPaymentReminderEmail(
