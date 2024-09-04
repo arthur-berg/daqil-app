@@ -1,8 +1,8 @@
 "use client";
 import * as z from "zod";
 import { useState, useTransition } from "react";
-import { useForm, Controller } from "react-hook-form";
-import { format, set, addMinutes, isBefore, parseISO } from "date-fns";
+import { useForm } from "react-hook-form";
+import { format, set, addMinutes, isBefore } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -29,14 +29,10 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import { BlockAvailabilitySchemaFE } from "@/schemas";
 import { saveBlockedOutTimes } from "@/actions/availability";
-import { FaBan } from "react-icons/fa";
-import { TimeRange } from "@/generalTypes";
 import { Separator } from "@/components/ui/separator";
-import { formatDateTime } from "@/utils";
 import { useTranslations } from "next-intl";
 import BlockedOutTimes from "./blocked-out-times";
 
-// Utility function to generate time options
 const generateTimeIntervals = (intervalMinutes = 15) => {
   const times = [];
   const start = set(new Date(), {
@@ -71,8 +67,9 @@ const BlockAvailabilityForm = ({
   const [isPending, startTransition] = useTransition();
   const [date, setDate] = useState<any>();
   const [showCalendar, setShowCalendar] = useState(false);
+  const [startTimePopoverOpen, setStartTimePopoverOpen] = useState(false);
+  const [endTimePopoverOpen, setEndTimePopoverOpen] = useState(false);
   const t = useTranslations("AvailabilityPage");
-  const ErrorMessages = useTranslations("ErrorMessages");
 
   const { responseToast } = useToast();
 
@@ -85,7 +82,7 @@ const BlockAvailabilityForm = ({
 
   const onSubmit = (values: any) => {
     const formattedData = {
-      date: values.date, // Use local date
+      date: values.date,
       timeRanges: values.timeRanges.map(
         ({ startDate, endDate }: { startDate: string; endDate: string }) => ({
           startDate: set(new Date(date!), {
@@ -138,6 +135,7 @@ const BlockAvailabilityForm = ({
 
       <Button
         className="mb-2"
+        disabled={isPending}
         variant={showCalendar ? "destructive" : undefined}
         onClick={() => setShowCalendar(!showCalendar)}
       >
@@ -184,12 +182,20 @@ const BlockAvailabilityForm = ({
                         render={({ field }) => (
                           <FormItem>
                             <FormControl>
-                              <Popover>
+                              <Popover
+                                open={startTimePopoverOpen}
+                                onOpenChange={setStartTimePopoverOpen}
+                              >
                                 <PopoverTrigger asChild>
                                   <Button
                                     variant="outline"
                                     role="combobox"
                                     className="w-[120px] justify-between"
+                                    onClick={() =>
+                                      setStartTimePopoverOpen(
+                                        !startTimePopoverOpen
+                                      )
+                                    }
                                   >
                                     {field.value
                                       ? field.value
@@ -216,6 +222,7 @@ const BlockAvailabilityForm = ({
                                                 `timeRanges.${index}.startDate`,
                                                 time
                                               );
+                                              setStartTimePopoverOpen(false);
                                             }}
                                           >
                                             <CheckIcon
@@ -244,12 +251,18 @@ const BlockAvailabilityForm = ({
                         render={({ field }) => (
                           <FormItem>
                             <FormControl>
-                              <Popover>
+                              <Popover
+                                open={endTimePopoverOpen}
+                                onOpenChange={setEndTimePopoverOpen}
+                              >
                                 <PopoverTrigger asChild>
                                   <Button
                                     variant="outline"
                                     role="combobox"
                                     className="w-[120px] justify-between"
+                                    onClick={() =>
+                                      setEndTimePopoverOpen(!endTimePopoverOpen)
+                                    }
                                   >
                                     {field.value
                                       ? field.value
@@ -276,6 +289,7 @@ const BlockAvailabilityForm = ({
                                                 `timeRanges.${index}.endDate`,
                                                 time
                                               );
+                                              setEndTimePopoverOpen(false);
                                             }}
                                           >
                                             <CheckIcon
@@ -299,6 +313,7 @@ const BlockAvailabilityForm = ({
                         )}
                       />
                       <Button
+                        disabled={isPending}
                         variant="outline"
                         type="button"
                         onClick={() => removeTimeRange(index)}
@@ -309,6 +324,7 @@ const BlockAvailabilityForm = ({
                     </div>
                   ))}
                   <Button
+                    disabled={isPending}
                     onClick={() =>
                       form.setValue("timeRanges", [
                         ...form.watch("timeRanges"),
@@ -324,7 +340,11 @@ const BlockAvailabilityForm = ({
                 </div>
                 {form.watch("timeRanges").length > 0 && (
                   <div className="mt-4">
-                    <Button type="submit" variant="success">
+                    <Button
+                      type="submit"
+                      variant="success"
+                      disabled={isPending}
+                    >
                       {t("saveTimeRanges")}
                     </Button>
                   </div>

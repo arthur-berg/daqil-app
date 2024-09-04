@@ -6,7 +6,6 @@ import { DiscountCodeSchema } from "@/schemas";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { DateTimePicker } from "@/components/ui/datetime-picker";
 import {
   Form,
   FormField,
@@ -21,6 +20,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { useTranslations } from "next-intl";
 import { createDiscountCode } from "@/actions/admin";
 import { useRouter } from "@/navigation";
+import { DateTimePicker } from "@/components/ui/datetime-picker";
 
 const DiscountCodeForm = () => {
   const [isPending, startTransition] = useTransition();
@@ -39,8 +39,8 @@ const DiscountCodeForm = () => {
       percentage: null, // Set to null by default
       firstTimeUserOnly: false,
       limitPerUser: null,
-      startDate: null,
-      endDate: null,
+      startDate: undefined,
+      endDate: undefined,
     },
   });
 
@@ -187,8 +187,8 @@ const DiscountCodeForm = () => {
                         const isChecked = e.target.checked;
                         setSetTimePeriod(isChecked);
                         if (!isChecked) {
-                          form.setValue("startDate", null);
-                          form.setValue("endDate", null);
+                          form.setValue("startDate", undefined);
+                          form.setValue("endDate", undefined);
                         }
                       }}
                       disabled={isPending}
@@ -206,10 +206,10 @@ const DiscountCodeForm = () => {
                         <FormLabel>{t("startDateLabel")}</FormLabel>
                         <FormControl>
                           <DateTimePicker
-                            granularity="hour"
-                            showClearButton={false}
-                            jsDate={field.value}
-                            onJsDateChange={field.onChange}
+                            granularity="minute"
+                            hourCycle={24}
+                            value={field.value}
+                            onChange={field.onChange}
                           />
                         </FormControl>
                         <FormMessage />
@@ -224,10 +224,10 @@ const DiscountCodeForm = () => {
                         <FormLabel>{t("endDateLabel")}</FormLabel>
                         <FormControl>
                           <DateTimePicker
-                            granularity="hour"
-                            showClearButton={false}
-                            jsDate={field.value}
-                            onJsDateChange={field.onChange}
+                            granularity="minute"
+                            hourCycle={24}
+                            value={field.value}
+                            onChange={field.onChange}
                           />
                         </FormControl>
                         <FormMessage />

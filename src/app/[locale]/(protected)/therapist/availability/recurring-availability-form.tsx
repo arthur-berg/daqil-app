@@ -67,8 +67,8 @@ const RecurringAvailabilityForm = ({
   appointmentTypes: any[];
 }) => {
   const [isPending, startTransition] = useTransition();
-  const [popoverOpen, setIsPopoverOpen] = useState(false);
-
+  const [startTimePopoverOpen, setStartTimePopoverOpen] = useState(false);
+  const [endTimePopoverOpen, setEndTimePopoverOpen] = useState(false);
   const t = useTranslations("AvailabilityPage");
 
   const { responseToast } = useToast();
@@ -90,7 +90,6 @@ const RecurringAvailabilityForm = ({
           }) => ({
             startTime: from,
             endTime: to,
-            // Ensure all checkboxes are selected by default
             appointmentTypeIds:
               appointmentTypeIds.length > 0
                 ? appointmentTypeIds
@@ -111,17 +110,15 @@ const RecurringAvailabilityForm = ({
       const newRanges = [...(prev[day] || [])];
       newRanges.splice(index, 1);
 
-      // Update the form values with the correct indices
       form.setValue(
         `timeRanges`,
         newRanges.map(({ from, to, appointmentTypeIds }, idx) => ({
           startTime: from,
           endTime: to,
-          appointmentTypeIds: appointmentTypeIds || [], // Preserve existing appointmentTypeIds
+          appointmentTypeIds: appointmentTypeIds || [],
         }))
       );
 
-      // Trigger form validation after updating values
       form.trigger(`timeRanges`);
 
       return { ...prev, [day]: newRanges };
@@ -162,7 +159,6 @@ const RecurringAvailabilityForm = ({
       const newTimeRange = {
         from: "",
         to: "",
-        // Initialize with all appointment type IDs selected by default
         appointmentTypeIds: appointmentTypes.map((type) => type._id),
       };
       return {
@@ -171,7 +167,6 @@ const RecurringAvailabilityForm = ({
       };
     });
 
-    // Update the form's default value for this new time range
     const newIndex = timeRangeInputs[day] ? timeRangeInputs[day].length : 0;
     form.setValue(
       `timeRanges.${newIndex}.appointmentTypeIds`,
@@ -199,12 +194,20 @@ const RecurringAvailabilityForm = ({
                         <FormItem>
                           <div className="flex items-center gap-2 ">
                             <FormControl>
-                              <Popover>
+                              <Popover
+                                open={startTimePopoverOpen}
+                                onOpenChange={setStartTimePopoverOpen}
+                              >
                                 <PopoverTrigger asChild>
                                   <Button
                                     variant="outline"
                                     role="combobox"
                                     className="w-[150px] justify-between"
+                                    onClick={() =>
+                                      setStartTimePopoverOpen(
+                                        !startTimePopoverOpen
+                                      )
+                                    }
                                   >
                                     {field.value
                                       ? field.value
@@ -237,6 +240,7 @@ const RecurringAvailabilityForm = ({
                                                 "from",
                                                 time
                                               );
+                                              setStartTimePopoverOpen(false);
                                             }}
                                           >
                                             <CheckIcon
@@ -267,12 +271,18 @@ const RecurringAvailabilityForm = ({
                         <FormItem>
                           <div className="flex items-center gap-2">
                             <FormControl>
-                              <Popover>
+                              <Popover
+                                open={endTimePopoverOpen}
+                                onOpenChange={setEndTimePopoverOpen}
+                              >
                                 <PopoverTrigger asChild>
                                   <Button
                                     variant="outline"
                                     role="combobox"
                                     className="w-[150px] justify-between"
+                                    onClick={() =>
+                                      setEndTimePopoverOpen(!endTimePopoverOpen)
+                                    }
                                   >
                                     {field.value
                                       ? field.value
@@ -305,6 +315,7 @@ const RecurringAvailabilityForm = ({
                                                 "to",
                                                 time
                                               );
+                                              setEndTimePopoverOpen(false);
                                             }}
                                           >
                                             <CheckIcon

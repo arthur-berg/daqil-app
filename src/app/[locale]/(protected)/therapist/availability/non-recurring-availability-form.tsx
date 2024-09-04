@@ -34,7 +34,6 @@ import { useTranslations } from "next-intl";
 import NonRecurringTimes from "./non-recurring-times";
 import { Checkbox } from "@/components/ui/checkbox";
 
-// Utility function to generate time options
 const generateTimeIntervals = (intervalMinutes = 15) => {
   const times = [];
   const start = set(new Date(), {
@@ -70,6 +69,8 @@ const NonRecurringAvailabilityForm = ({
   const [date, setDate] = useState<any>();
   const [showCalendar, setShowCalendar] = useState(false);
   const { responseToast } = useToast();
+  const [startTimePopoverOpen, setStartTimePopoverOpen] = useState(false);
+  const [endTimePopoverOpen, setEndTimePopoverOpen] = useState(false);
   const t = useTranslations("AvailabilityPage");
 
   // Initialize form with default values
@@ -80,7 +81,7 @@ const NonRecurringAvailabilityForm = ({
         {
           startDate: "",
           endDate: "",
-          appointmentTypeIds: appointmentTypes?.map((type) => type._id), // Default select all appointment types
+          appointmentTypeIds: appointmentTypes?.map((type) => type._id),
         },
       ],
     },
@@ -140,7 +141,7 @@ const NonRecurringAvailabilityForm = ({
             {
               startDate: "",
               endDate: "",
-              appointmentTypeIds: appointmentTypes.map((type) => type._id), // Reset with all appointment types selected
+              appointmentTypeIds: appointmentTypes.map((type) => type._id),
             },
           ],
         });
@@ -148,6 +149,8 @@ const NonRecurringAvailabilityForm = ({
       }
     });
   };
+
+  console.log("startTimePopoverOpen", startTimePopoverOpen);
 
   return (
     <div>
@@ -161,6 +164,7 @@ const NonRecurringAvailabilityForm = ({
 
       <Separator className="my-4" />
       <Button
+        disabled={isPending}
         className="mb-2"
         variant={showCalendar ? "destructive" : undefined}
         onClick={() => setShowCalendar(!showCalendar)}
@@ -183,7 +187,7 @@ const NonRecurringAvailabilityForm = ({
                       endDate: "",
                       appointmentTypeIds: appointmentTypes.map(
                         (type) => type._id
-                      ), // Default select all appointment types
+                      ),
                     },
                   ],
                 });
@@ -217,12 +221,20 @@ const NonRecurringAvailabilityForm = ({
                           render={({ field }) => (
                             <FormItem>
                               <FormControl>
-                                <Popover>
+                                <Popover
+                                  open={startTimePopoverOpen}
+                                  onOpenChange={setStartTimePopoverOpen}
+                                >
                                   <PopoverTrigger asChild>
                                     <Button
                                       variant="outline"
                                       role="combobox"
                                       className="w-[120px] justify-between"
+                                      onClick={() =>
+                                        setStartTimePopoverOpen(
+                                          !startTimePopoverOpen
+                                        )
+                                      }
                                     >
                                       {field.value
                                         ? field.value
@@ -249,6 +261,7 @@ const NonRecurringAvailabilityForm = ({
                                                   `timeRanges.${index}.startDate`,
                                                   time
                                                 );
+                                                setStartTimePopoverOpen(false);
                                               }}
                                             >
                                               <CheckIcon
@@ -278,12 +291,20 @@ const NonRecurringAvailabilityForm = ({
                           render={({ field }) => (
                             <FormItem>
                               <FormControl>
-                                <Popover>
+                                <Popover
+                                  open={endTimePopoverOpen}
+                                  onOpenChange={setEndTimePopoverOpen}
+                                >
                                   <PopoverTrigger asChild>
                                     <Button
                                       variant="outline"
                                       role="combobox"
                                       className="w-[120px] justify-between"
+                                      onClick={() =>
+                                        setEndTimePopoverOpen(
+                                          !endTimePopoverOpen
+                                        )
+                                      }
                                     >
                                       {field.value
                                         ? field.value
@@ -310,6 +331,7 @@ const NonRecurringAvailabilityForm = ({
                                                   `timeRanges.${index}.endDate`,
                                                   time
                                                 );
+                                                setEndTimePopoverOpen(false);
                                               }}
                                             >
                                               <CheckIcon
@@ -333,6 +355,7 @@ const NonRecurringAvailabilityForm = ({
                           )}
                         />
                         <Button
+                          disabled={isPending}
                           variant="outline"
                           type="button"
                           onClick={() => removeTimeRange(index)}
@@ -392,6 +415,7 @@ const NonRecurringAvailabilityForm = ({
                     </div>
                   ))}
                   <Button
+                    disabled={isPending}
                     onClick={() =>
                       form.setValue("timeRanges", [
                         ...form.watch("timeRanges"),
@@ -400,7 +424,7 @@ const NonRecurringAvailabilityForm = ({
                           endDate: "",
                           appointmentTypeIds: appointmentTypes.map(
                             (type) => type._id
-                          ), // Default select all appointment types
+                          ),
                         },
                       ])
                     }
@@ -413,7 +437,11 @@ const NonRecurringAvailabilityForm = ({
                 </div>
                 {form.watch("timeRanges").length > 0 && (
                   <div className="mt-4">
-                    <Button type="submit" variant="success">
+                    <Button
+                      type="submit"
+                      variant="success"
+                      disabled={isPending}
+                    >
                       {t("saveTimeRanges")}
                     </Button>
                   </div>

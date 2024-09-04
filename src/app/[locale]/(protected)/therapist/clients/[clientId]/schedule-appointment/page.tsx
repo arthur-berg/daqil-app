@@ -21,7 +21,7 @@ const ScheduleAppointmentPage = async ({
 
   return (
     <div>
-      <Link href={`/therapist/my-clients/${params.clientId}`}>
+      <Link href={`/therapist/clients/${params.clientId}`}>
         <Button variant="secondary">{t("goBackToClient")}</Button>
       </Link>
       <ScheduleAppointmentForm

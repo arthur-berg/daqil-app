@@ -21,7 +21,7 @@ const ClientPage = async ({ params }: { params: { clientId: string } }) => {
   return (
     <div>
       <div className="mb-4 flex items-center flex-col sm:items-start">
-        <Link href={`/therapist/my-clients`}>
+        <Link href={`/therapist/clients`}>
           <Button variant="secondary">{t("goBackToClients")}</Button>
         </Link>
       </div>
@@ -84,16 +84,16 @@ const ClientPage = async ({ params }: { params: { clientId: string } }) => {
       )}
 
       <div className="mt-6 flex flex-col sm:flex-row sm:space-x-4 space-y-4 justify-center sm:space-y-0">
-        <Link href={`/therapist/my-clients/${clientId}/schedule-appointment`}>
+        <Link href={`/therapist/clients/${clientId}/schedule-appointment`}>
           <Button className="w-full sm:w-auto">Schedule Appointment</Button>
         </Link>
-        {client.selectedTherapist && (
+        {/*  {client.selectedTherapist && (
           <Link href={`/therapist-profile/${client.selectedTherapist._id}`}>
             <Button variant="secondary" className="w-full sm:w-auto">
               View Therapist Profile
             </Button>
           </Link>
-        )}
+        )} */}
       </div>
     </div>
   );

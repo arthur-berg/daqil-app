@@ -104,8 +104,6 @@ export const scheduleAppointment = async (
 
     // Check and update client's selected therapist
 
-    console.log("client.selectedTherapist", client.selectedTherapist);
-
     if (
       client.selectedTherapist &&
       client.selectedTherapist.therapist?.toString() !== therapist.id

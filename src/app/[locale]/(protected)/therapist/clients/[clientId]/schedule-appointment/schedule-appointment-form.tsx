@@ -21,11 +21,11 @@ import { useCurrentUser } from "@/hooks/use-current-user";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 import { useToast } from "@/components/ui/use-toast";
-import { DateTimePicker } from "@/components/ui/datetime-picker";
 import { Link } from "@/navigation";
 import { useTranslations } from "next-intl";
 import { scheduleAppointment } from "@/actions/appointments/schedule-appointment";
 import { useUserName } from "@/hooks/use-user-name";
+import { DateTimePicker } from "@/components/ui/datetime-picker";
 
 const ScheduleAppointmentForm = ({
   clientJson,
@@ -108,14 +108,14 @@ const ScheduleAppointmentForm = ({
                   control={form.control}
                   name="startDate"
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem className="flex flex-col">
                       <FormLabel>{t("startDate")}</FormLabel>
                       <FormControl>
                         <DateTimePicker
                           granularity="minute"
-                          showClearButton={false}
-                          jsDate={field.value}
-                          onJsDateChange={field.onChange}
+                          hourCycle={24}
+                          value={field.value}
+                          onChange={field.onChange}
                         />
                       </FormControl>
                       <FormMessage />
