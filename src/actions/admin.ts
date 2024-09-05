@@ -122,6 +122,7 @@ export const inviteTherapist = async (
         en: { title: "", description: "" },
         ar: { title: "", description: "" },
       },
+      appointments: [],
       assignedClients: [],
       availableTimes: {
         blockedOutTimes: [],

@@ -47,6 +47,7 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
       clientIntroTherapistSelectionStatus: "PENDING",
       introCallDone: false,
     },
+    appointments: [],
     selectedTherapistHistory: [],
   });
 
