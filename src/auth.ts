@@ -59,21 +59,22 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         session.user.role = token.role as UserRole;
         session.user.email = token.email as string;
         session.user.isOAuth = token.isOAuth as boolean;
-        session.user.selectedTherapist = token.selectedTherapist as any;
-        session.user.assignedClients = token.assignedClients as string[];
-        session.user.therapistWorkProfile = token.therapistWorkProfile as any;
         session.user.image = token.image as string;
-        session.user.selectedTherapistHistory =
-          token.selectedTherapistHistory as any;
         session.user.stripeCustomerId = token.stripeCustomerId as string;
         session.user.stripePaymentMethodId =
           token.stripePaymentMethodId as string;
         session.user.appointments = token.appointments as any;
         session.user.personalInfo = token.personalInfo as any;
-        if (
-          session.user.role === "THERAPIST" ||
-          session.user.role === "ADMIN"
-        ) {
+
+        if (session.user.role === "CLIENT") {
+          session.user.selectedTherapist = token.selectedTherapist as any;
+          session.user.selectedTherapistHistory =
+            token.selectedTherapistHistory as any;
+        }
+
+        if (session.user.role === "THERAPIST") {
+          session.user.therapistWorkProfile = token.therapistWorkProfile as any;
+          session.user.assignedClients = token.assignedClients as string[];
           session.user.availableTimes = token.availableTimes as any;
         }
       }
@@ -95,17 +96,22 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       token.email = existingUser.email;
       token.role = existingUser.role;
       token.isTwoFactorEnabled = existingUser.isTwoFactorEnabled;
-      token.selectedTherapist = existingUser.selectedTherapist;
-      token.assignedClients = existingUser.assignedClients;
-      token.therapistWorkProfile = existingUser.therapistWorkProfile;
+
       token.image = existingUser.image;
-      token.selectedTherapistHistory = existingUser.selectedTherapistHistory;
       token.stripeCustomerId = existingUser.stripeCustomerId;
       token.stripePaymentMethodId = existingUser.stripePaymentMethodId;
       token.appointments = existingUser.appointments;
       token.personalInfo = existingUser.personalInfo;
-      if (existingUser.role === "THERAPIST" || existingUser.role === "ADMIN") {
+
+      if (existingUser.role === "CLIENT") {
+        token.selectedTherapistHistory = existingUser.selectedTherapistHistory;
+        token.selectedTherapist = existingUser.selectedTherapist;
+      }
+
+      if (existingUser.role === "THERAPIST") {
+        token.assignedClients = existingUser.assignedClients;
         token.availableTimes = existingUser.availableTimes;
+        token.therapistWorkProfile = existingUser.therapistWorkProfile;
       }
 
       return token;
