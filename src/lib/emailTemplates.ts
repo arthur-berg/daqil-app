@@ -8,7 +8,7 @@ export const twoFactorTokenTemplate = (token: string, t: any) => `
     <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
       <div style="text-align: center; margin-bottom: 20px;">
         <h1 style="color: ${primaryColor}; font-size: 24px; margin: 0;">${t(
-  "zakina"
+  "daqil"
 )}</h1>
       </div>
       <div style="margin-top: 20px;">
@@ -43,7 +43,7 @@ export const verificationEmailTemplate = (
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
         <div style="text-align: center; margin-bottom: 20px;">
           <h1 style="color: ${primaryColor}; font-size: 24px; margin: 0;">${t(
-    "zakina"
+    "daqil"
   )}</h1>
         </div>
         <div style="margin-top: 20px;">
@@ -73,7 +73,7 @@ export const passwordResetEmailTemplate = (token: string, t: any) => {
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
         <div style="text-align: center; margin-bottom: 20px;">
           <h1 style="color: ${primaryColor}; font-size: 24px; margin: 0;">${t(
-    "zakina"
+    "daqil"
   )}</h1>
         </div>
         <div style="margin-top: 20px;">
@@ -117,7 +117,7 @@ export const appointmentCancellationTemplate = (
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
         <div style="text-align: center; margin-bottom: 20px;">
           <h1 style="color: ${primaryColor}; font-size: 24px; margin: 0;">${t(
-    "zakina"
+    "daqil"
   )}</h1>
         </div>
         <div style="margin-top: 20px;">
@@ -204,7 +204,7 @@ export const invoicePaidTemplate = (
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
         <div style="text-align: center; margin-bottom: 20px;">
           <h1 style="color: ${primaryColor}; font-size: 24px; margin: 0;">${t(
-    "zakina"
+    "daqil"
   )}</h1>
         </div>
         <div style="margin-top: 20px;">
@@ -288,7 +288,7 @@ export const paidAppointmentConfirmationTemplate = (
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
         <div style="text-align: center; margin-bottom: 20px;">
           <h1 style="color: ${primaryColor}; font-size: 24px; margin: 0;">${t(
-    "zakina"
+    "daqil"
   )}</h1>
         </div>
         <div style="margin-top: 20px;">
@@ -368,7 +368,7 @@ export const nonPaidAppointmentConfirmationTemplate = (
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
         <div style="text-align: center; margin-bottom: 20px;">
           <h1 style="color: ${primaryColor}; font-size: 24px; margin: 0;">${t(
-    "zakina"
+    "daqil"
   )}</h1>
         </div>
         <div style="margin-top: 20px;">
@@ -439,7 +439,7 @@ export const reminderEmailTemplate = (t: any, appointmentDetails: any) => {
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
         <div style="text-align: center; margin-bottom: 20px;">
           <h1 style="color: #0073e6; font-size: 24px; margin: 0;">${t(
-            "zakina"
+            "daqil"
           )}</h1>
         </div>
         <div style="margin-top: 20px;">
@@ -475,7 +475,7 @@ export const clientNotPaidInTimeTemplate = (
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
         <div style="text-align: center; margin-bottom: 20px;">
           <h1 style="color: ${primaryColor}; font-size: 24px; margin: 0;">${t(
-    "zakina"
+    "daqil"
   )}</h1>
         </div>
         <div style="margin-top: 20px;">
@@ -517,7 +517,7 @@ export const therapistNotPaidInTimeTemplate = (
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
         <div style="text-align: center; margin-bottom: 20px;">
           <h1 style="color: ${primaryColor}; font-size: 24px; margin: 0;">${t(
-    "zakina"
+    "daqil"
   )}</h1>
         </div>
         <div style="margin-top: 20px;">

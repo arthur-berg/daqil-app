@@ -118,7 +118,7 @@ export const Sidebar = forwardRef<
             )}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/daqil-logo.png" alt="zakina" className="object-cover" />
+            <img src="/daqil-logo.png" alt="daqil" className="object-cover" />
           </div>
           <Menu isOpen={isOpen} setIsOpen={setIsOpen} />
         </div>
