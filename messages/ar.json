@@ -256,10 +256,12 @@
     "overview": "نظرة عامة"
   },
   "LoadingPages": {
-    "loading": "جار التحميل...",
-    "loadingAppointments": "جار تحميل المواعيد...",
-    "loadingVideoSession": "جار تحميل جلسة الفيديو... يرجى الانتظار"
-  },
+  "loading": "جارٍ التحميل...",
+  "loadingAppointments": "جارٍ تحميل المواعيد...",
+  "loadingVideoSession": "جارٍ تحميل جلسة الفيديو... يرجى الانتظار",
+  "loadingProfile": "جارٍ تحميل الملف الشخصي...",
+  "loadingMyClients": "جارٍ تحميل قائمة العملاء..."
+},
   "TherapistProfilePage": {
     "workTitleLabelEn": "المسمى الوظيفي (EN)",
     "workDescriptionLabelEn": "وصف العمل (EN)",

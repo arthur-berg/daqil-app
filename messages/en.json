@@ -264,7 +264,8 @@
     "loading": "Loading...",
     "loadingAppointments": "Loading appointments...",
     "loadingVideoSession": "Loading video session... Please wait",
-    "loadingProfile": "Loading profile..."
+    "loadingProfile": "Loading profile...",
+    "loadingMyClients": "Loading my clients..."
   },
   "TherapistProfilePage": {
     "workTitleLabelEn": "Work Title (EN)",
