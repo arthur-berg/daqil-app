@@ -50,27 +50,21 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
 
   const appointments = JSON.parse(appointmentsJson);
 
-  console.log("appointments", appointments);
-
   const nextAppointment = useMemo(() => {
-    const futureAppointments =
-      appointments &&
-      appointments
-        .filter(
-          (appointment: any) =>
-            new Date(appointment.startDate) > new Date() &&
-            (appointment.status === "confirmed" ||
-              appointment.status === "pending")
-        )
-        .sort(
-          (a: any, b: any) =>
-            new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
-        );
+    const futureAppointments = appointments
+      .filter(
+        (appointment: any) =>
+          new Date(appointment.startDate) > new Date() &&
+          (appointment.status === "confirmed" ||
+            appointment.status === "pending")
+      )
+      .sort(
+        (a: any, b: any) =>
+          new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
+      );
 
     return futureAppointments[0] || null;
   }, [appointments]);
-
-  console.log("nextAppointment", nextAppointment);
 
   const filteredAppointments = useMemo(() => {
     if (filters.length === 0) {

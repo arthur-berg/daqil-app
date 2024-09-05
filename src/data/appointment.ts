@@ -48,10 +48,8 @@ export const getAppointmentById = async (id: string) => {
 export const getAppointments = async () => {
   const user = await requireAuth([UserRole.THERAPIST, UserRole.CLIENT]);
   const dbUser = (await User.findById(user.id).lean()) as any;
-  console.log("user", user);
-  console.log("dbUser", dbUser);
   if (!dbUser || !dbUser.appointments || dbUser.appointments.length === 0) {
-    return null;
+    return [];
   }
 
   const appointmentIds = dbUser.appointments
