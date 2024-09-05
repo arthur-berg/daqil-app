@@ -27,7 +27,6 @@ type NonRecurringTimeRange = {
 type AvailableTimes = {
   settings: {
     interval: number;
-    fullDayRange: { startTime: string; endTime: string };
   };
   blockedOutTimes: BlockedTime[];
   nonRecurringAvailableTimes: {

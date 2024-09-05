@@ -34,10 +34,6 @@ export type DayTimes = {
 export type AvailableTimes = {
   settings: {
     interval?: number;
-    fullDayRange: {
-      from?: string;
-      to?: string;
-    };
   };
   blockedOutTimes: DateTimes[];
   nonRecurringAvailableTimes: DateTimes[];

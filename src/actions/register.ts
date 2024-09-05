@@ -41,6 +41,13 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
     password: hashedPassword,
     role: UserRole.CLIENT,
     email,
+    clientBalance: { amount: 0, currency: "USD" },
+    selectedTherapist: {
+      therapist: null,
+      clientIntroTherapistSelectionStatus: "PENDING",
+      introCallDone: false,
+    },
+    selectedTherapistHistory: [],
   });
 
   const verificationToken = await generateVerificationToken(email);

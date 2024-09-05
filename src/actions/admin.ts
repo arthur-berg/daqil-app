@@ -118,6 +118,19 @@ export const inviteTherapist = async (
       email,
       password: hashedPassword,
       role: UserRole.THERAPIST,
+      therapistWorkProfile: {
+        en: { title: "", description: "" },
+        ar: { title: "", description: "" },
+      },
+      assignedClients: [],
+      availableTimes: {
+        blockedOutTimes: [],
+        nonRecurringAvailableTimes: [],
+        recurringAvailableTimes: [],
+        settings: {
+          interval: 15,
+        },
+      },
     });
 
     const verificationToken = await generateVerificationToken(email, 168); // 7 days

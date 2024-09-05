@@ -122,8 +122,6 @@ export const updateRecurringAvailabilitySettings = async (
     await User.findByIdAndUpdate(user.id, {
       $set: {
         "availableTimes.settings.interval": values.interval,
-        "availableTimes.settings.fullDayRange.from": values.fullDayRange.from,
-        "availableTimes.settings.fullDayRange.to": values.fullDayRange.to,
       },
     });
 

@@ -55,10 +55,6 @@ export type ExtendedUser = DefaultSession["user"] & {
   availableTimes?: {
     settings: {
       interval: number;
-      fullDayRange: {
-        from: string;
-        to;
-      };
     };
     blockedOutTimes: {
       date: Date;

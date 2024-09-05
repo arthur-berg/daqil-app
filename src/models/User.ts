@@ -11,7 +11,6 @@ const therapistHistorySchema = new Schema({
   startDate: {
     type: Date,
     required: true,
-    default: Date.now,
   },
   endDate: {
     type: Date,
@@ -22,7 +21,6 @@ const therapistHistorySchema = new Schema({
   current: {
     type: Boolean,
     required: true,
-    default: true,
   },
 });
 
@@ -84,58 +82,27 @@ const availableTimesSchema = new Schema({
       type: Number,
       required: false,
     },
-    fullDayRange: {
-      from: {
-        type: String,
-        required: false,
-      },
-      to: {
-        type: String,
-        required: false,
-      },
-    },
   },
   blockedOutTimes: {
     type: [dateTimesSchema],
-    default: function (this: any) {
-      return this.role === "THERAPIST" ? [] : undefined;
-    },
   },
   nonRecurringAvailableTimes: {
     type: [dateTimesSchema],
-    default: function (this: any) {
-      return this.role === "THERAPIST" ? [] : undefined;
-    },
   },
   recurringAvailableTimes: {
     type: [dayTimesSchema],
-    default: function (this: any) {
-      return this.role === "THERAPIST" ? [] : undefined;
-    },
   },
 });
 
 const userSchema = new Schema(
   {
-    balance: {
+    clientBalance: {
       amount: {
         type: Number,
-        required: function (this: any) {
-          return this.role === "CLIENT";
-        },
-        default: function (this: any) {
-          return this.role === "CLIENT" ? 0 : undefined;
-        },
       },
       currency: {
         type: String,
         enum: ["USD", "AED", "EUR"],
-        required: function (this: any) {
-          return this.role === "CLIENT";
-        },
-        default: function (this: any) {
-          return this.role === "CLIENT" ? "USD" : undefined;
-        },
       },
     },
     firstName: {
@@ -185,15 +152,6 @@ const userSchema = new Schema(
             required: false,
           },
         },
-      },
-      default: function (this: any) {
-        if (this.role === "THERAPIST") {
-          return {
-            en: { title: "", description: "" },
-            ar: { title: "", description: "" },
-          };
-        }
-        return undefined;
       },
     },
     hasAccess: {
@@ -252,25 +210,19 @@ const userSchema = new Schema(
       therapist: {
         type: Schema.Types.ObjectId,
         ref: "User",
-        default: null,
       },
       clientIntroTherapistSelectionStatus: {
         type: String,
         enum: ["PENDING", "ACCEPTED", "REJECTED"],
-        default: "PENDING",
       },
       introCallDone: {
         type: Boolean,
-        default: false,
       },
     },
     assignedClients: [
       {
         type: Schema.Types.ObjectId,
         ref: "User",
-        default: function (this: any) {
-          return this.role === "THERAPIST" ? [] : undefined;
-        },
       },
     ],
     accounts: [
@@ -309,23 +261,6 @@ const userSchema = new Schema(
     ],
     availableTimes: {
       type: availableTimesSchema,
-      default: function (this: any) {
-        if (this.role === "THERAPIST") {
-          return {
-            blockedOutTimes: [],
-            nonRecurringAvailableTimes: [],
-            recurringAvailableTimes: [],
-            settings: {
-              interval: 15,
-              fullDayRange: {
-                from: "09:00",
-                to: "18:00",
-              },
-            },
-          };
-        }
-        return undefined;
-      },
     },
     settings: {
       preferredCurrency: {

@@ -128,15 +128,7 @@ export const RecurringAvailabilitySchema = z.object({
 
 export const RecurringAvailabilitySettingsSchemaBE = z.object({
   interval: z.number().min(1, "Interval must be at least 1 minute").default(15),
-  fullDayRange: z.object({
-    from: z.string({
-      required_error: "From time is required",
-    }),
-    to: z.string({
-      required_error: "To time is required",
-    }),
-    appointmentTypeIds: z.array(z.string()).optional(),
-  }),
+  appointmentTypeIds: z.array(z.string()).optional(),
 });
 
 export const NonRecurringAvailabilitySchemaFE = z.object({
@@ -207,15 +199,7 @@ export const DefaultAvailabilitySettingsSchemaFE = z.object({
       message: "Interval must be at least 1 minute and a valid number",
     }
   ),
-  fullDayRange: z.object({
-    from: z.string({
-      required_error: "From time is required",
-    }),
-    to: z.string({
-      required_error: "To time is required",
-    }),
-    appointmentTypeIds: z.array(z.string()).optional(),
-  }),
+  appointmentTypeIds: z.array(z.string()).optional(),
 });
 
 export const AppointmentSchema = z.object({

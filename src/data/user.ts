@@ -15,6 +15,7 @@ export const getUserByEmail = async (email: string) => {
 
 export const getUserById = async (id: string) => {
   try {
+    console.log("find");
     const user = await User.findById(id);
 
     return user;

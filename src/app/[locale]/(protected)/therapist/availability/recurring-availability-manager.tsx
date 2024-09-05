@@ -119,16 +119,10 @@ const DefaultAvailabilityManager = ({
 
   const t = useTranslations("AvailabilityPage");
 
-  const fullDayRange = {
-    from: settings?.fullDayRange?.from || "09:00",
-    to: settings?.fullDayRange?.to || "18:00",
-  };
-
   const form = useForm({
     resolver: zodResolver(DefaultAvailabilitySettingsSchemaFE),
     defaultValues: {
       interval: settings?.interval.toString() ?? "15",
-      fullDayRange,
     },
   });
 
