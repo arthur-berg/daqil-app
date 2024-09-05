@@ -263,7 +263,8 @@
   "LoadingPages": {
     "loading": "Loading...",
     "loadingAppointments": "Loading appointments...",
-    "loadingVideoSession": "Loading video session... Please wait"
+    "loadingVideoSession": "Loading video session... Please wait",
+    "loadingProfile": "Loading profile..."
   },
   "TherapistProfilePage": {
     "workTitleLabelEn": "Work Title (EN)",
