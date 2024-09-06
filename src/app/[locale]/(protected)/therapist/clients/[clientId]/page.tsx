@@ -3,8 +3,11 @@ import { Button } from "@/components/ui/button";
 import { Link } from "@/navigation";
 import { getTranslations } from "next-intl/server";
 import { getFullName } from "@/utils/formatName";
+import connectToMongoDB from "@/lib/mongoose";
 
 const ClientPage = async ({ params }: { params: { clientId: string } }) => {
+  await connectToMongoDB();
+
   const clientId = params.clientId;
   const client = await getClientById(clientId);
   const t = await getTranslations("MyClientsPage");

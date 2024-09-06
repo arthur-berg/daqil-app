@@ -15,12 +15,14 @@ import { MdEvent } from "react-icons/md"; // Import the calendar icon from react
 import IntroCallStepManager from "@/app/[locale]/(protected)/book-appointment/intro-call-step-manager";
 import AcceptTherapist from "./accept-therapist";
 import { getFullName } from "@/utils/formatName";
+import connectToMongoDB from "@/lib/mongoose";
 
 const BookAppointmentPage = async ({
   params,
 }: {
   params: { locale: string };
 }) => {
+  await connectToMongoDB();
   const ErrorMessages = await getTranslations("ErrorMessages");
   const t = await getTranslations("BookAppointmentPage");
   const user = await getCurrentUser();

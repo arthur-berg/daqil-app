@@ -25,8 +25,6 @@ const MyProfileInfo = ({ therapistJson }: { therapistJson: any }) => {
   const { responseToast } = useToast();
   const { getFullName } = useUserName();
 
-  console.log("therapistJson",therapistJson)
-
   const therapist = JSON.parse(therapistJson);
   const [imageUrl, setImageUrl] = useState(therapist?.image);
 

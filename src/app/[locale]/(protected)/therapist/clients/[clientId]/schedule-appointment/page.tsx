@@ -5,12 +5,15 @@ import ScheduleAppointmentForm from "./schedule-appointment-form";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/navigation";
 import { getTranslations } from "next-intl/server";
+import connectToMongoDB from "@/lib/mongoose";
 
 const ScheduleAppointmentPage = async ({
   params,
 }: {
   params: { clientId: string };
 }) => {
+  await connectToMongoDB();
+
   const user = await getUserById(params.clientId);
   const appointmentType = await getAppointmentTypeById(
     APPOINTMENT_TYPE_ID_SHORT_SESSION

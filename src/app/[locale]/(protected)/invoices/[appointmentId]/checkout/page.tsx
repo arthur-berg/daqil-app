@@ -2,6 +2,7 @@ import { getAppointmentTypeById } from "@/data/appointment-types";
 import CheckoutWrapper from "./checkout-wrapper";
 import { getAppointmentById } from "@/data/appointment";
 import { getTranslations } from "next-intl/server";
+import connectToMongoDB from "@/lib/mongoose";
 
 const InvoiceCheckoutPage = async ({
   searchParams: { appointmentTypeId, date, appointmentId },
@@ -12,6 +13,7 @@ const InvoiceCheckoutPage = async ({
     date: string;
   };
 }) => {
+  await connectToMongoDB();
   const appointmentType = await getAppointmentTypeById(appointmentTypeId);
   const dateObject = new Date(decodeURIComponent(date));
   const appointment = await getAppointmentById(appointmentId);

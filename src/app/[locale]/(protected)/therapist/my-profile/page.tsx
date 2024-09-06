@@ -9,8 +9,6 @@ const MyProfileTherapistPage = async () => {
 
   if (!therapist) return null;
 
-  console.log("therapist", therapist);
-
   return (
     <div className="bg-white shadow-lg rounded-lg p-6 mb-4 max-w-4xl mx-auto">
       <div className="flex flex-col items-center">

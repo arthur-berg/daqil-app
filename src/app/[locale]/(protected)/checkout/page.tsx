@@ -5,6 +5,7 @@ import { getTranslations } from "next-intl/server";
 import { redirect } from "@/navigation";
 import { getCurrentUser } from "@/lib/auth";
 import { getClientByIdAppointments } from "@/data/user";
+import connectToMongoDB from "@/lib/mongoose";
 
 const CheckoutPage = async ({
   searchParams: { appointmentTypeId, date, appointmentId, therapistId },
@@ -16,6 +17,7 @@ const CheckoutPage = async ({
     therapistId: string;
   };
 }) => {
+  await connectToMongoDB();
   const appointment = await getAppointmentById(appointmentId);
   const t = await getTranslations("Checkout");
   const currentUser = await getCurrentUser();

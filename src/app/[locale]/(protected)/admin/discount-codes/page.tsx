@@ -3,8 +3,10 @@ import { Button } from "@/components/ui/button";
 import { Link } from "@/navigation";
 import { getDiscountCodes } from "@/data/discount-codes";
 import DeleteDiscountButton from "./delete-discount-button";
+import connectToMongoDB from "@/lib/mongoose";
 
 const DiscountCodesPage = async () => {
+  await connectToMongoDB();
   const discountCodes = await getDiscountCodes();
   const t = await getTranslations("AdminPage");
 

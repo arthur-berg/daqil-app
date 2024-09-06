@@ -3,8 +3,10 @@ import { getAllAppointmentTypes } from "@/data/appointment-types";
 import { UserRole } from "@/generalTypes";
 import { requireAuth } from "@/lib/auth";
 import { getTranslations } from "next-intl/server";
+import connectToMongoDB from "@/lib/mongoose";
 
 const AvailabilityPage = async () => {
+  await connectToMongoDB();
   const user = await requireAuth([UserRole.THERAPIST, UserRole.ADMIN]);
   const ErrorMessages = await getTranslations("ErrorMessages");
   if (!user) return <div>{ErrorMessages("userNotFound")}</div>;

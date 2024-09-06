@@ -1,8 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { getCurrentRole } from "@/lib/auth";
 import { Link } from "@/navigation";
+import connectToMongoDB from "@/lib/mongoose";
 
 const EndedAppointmentPage = async () => {
+  await connectToMongoDB();
   const { isTherapist } = await getCurrentRole();
   return (
     <div className="w-full h-screen flex flex-col items-center justify-center text-white">

@@ -2,12 +2,14 @@ import { getAppointmentById } from "@/data/appointment";
 import { MdCheckCircle } from "react-icons/md"; // Import a suitable icon
 import { format } from "date-fns"; // Assuming you have date-fns installed for date formatting
 import { getTranslations } from "next-intl/server";
+import connectToMongoDB from "@/lib/mongoose";
 
 const BookingConfirmedPage = async ({
   searchParams: { appointmentId },
 }: {
   searchParams: { appointmentId: string };
 }) => {
+  await connectToMongoDB();
   const appointment = await getAppointmentById(appointmentId);
   const formattedStartDate = format(
     new Date(appointment.startDate),

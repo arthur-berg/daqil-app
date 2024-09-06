@@ -13,8 +13,10 @@ import {
 import InviteTherapistForm from "./invite-therapist-form";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { getFullName } from "@/utils/formatName";
+import connectToMongoDB from "@/lib/mongoose";
 
 const AdminTherapistsPage = async () => {
+  await connectToMongoDB();
   const therapists = await getTherapists();
 
   return (

@@ -10,8 +10,11 @@ import {
 } from "@/components/ui/table";
 import { Link } from "@/navigation";
 import { getFullName } from "@/utils/formatName";
+import connectToMongoDB from "@/lib/mongoose";
 
 const MyClientsPage = async () => {
+  await connectToMongoDB();
+
   const user = await getCurrentUser();
   if (!user) return;
 

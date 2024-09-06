@@ -15,12 +15,14 @@ import { FaUser } from "react-icons/fa";
 import BookingCalendar from "@/app/[locale]/(protected)/book-appointment/[therapistId]/booking-calendar";
 import { getCurrentUser } from "@/lib/auth";
 import { getFullName } from "@/utils/formatName";
+import connectToMongoDB from "@/lib/mongoose";
 
 const TherapistUserProfile = async ({
   params,
 }: {
   params: { therapistId: string; locale: string };
 }) => {
+  await connectToMongoDB();
   const ErrorMessages = await getTranslations("ErrorMessages");
   const therapistId = params.therapistId;
   const user = await getCurrentUser();

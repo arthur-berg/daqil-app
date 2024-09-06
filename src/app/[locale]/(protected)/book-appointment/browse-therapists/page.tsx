@@ -3,12 +3,14 @@ import { Button } from "@/components/ui/button";
 import { Link } from "@/navigation";
 import { getTranslations } from "next-intl/server";
 import { getFullName } from "@/utils/formatName";
+import connectToMongoDB from "@/lib/mongoose";
 
 const BrowseTherapistsPage = async ({
   params,
 }: {
   params: { locale: string };
 }) => {
+  await connectToMongoDB();
   const locale = params.locale;
   const therapists = await getTherapists();
   const t = await getTranslations("BookAppointmentPage");

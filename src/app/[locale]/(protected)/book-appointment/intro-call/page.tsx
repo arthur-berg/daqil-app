@@ -2,8 +2,10 @@ import BookIntroCall from "./book-intro-call";
 import { APPOINTMENT_TYPE_ID_INTRO_SESSION } from "@/contants/config";
 import { getAppointmentTypeById } from "@/data/appointment-types";
 import { getTherapists } from "@/data/user";
+import connectToMongoDB from "@/lib/mongoose";
 
 const IntroCallPage = async () => {
+  await connectToMongoDB();
   const appointmentType = await getAppointmentTypeById(
     APPOINTMENT_TYPE_ID_INTRO_SESSION
   );

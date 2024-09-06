@@ -3,12 +3,14 @@ import { MdCheckCircle } from "react-icons/md"; // Import a suitable icon
 import { format } from "date-fns"; // Assuming you have date-fns installed for date formatting
 import { getTranslations } from "next-intl/server";
 import { currencyToSymbol } from "@/utils";
+import connectToMongoDB from "@/lib/mongoose";
 
 const PaymentSuccessPage = async ({
   searchParams: { appointmentId, amountPaid },
 }: {
   searchParams: { appointmentId: string; amountPaid: string };
 }) => {
+  await connectToMongoDB();
   const appointment = await getAppointmentById(appointmentId);
 
   const t = await getTranslations("PaymentSuccessPage");
