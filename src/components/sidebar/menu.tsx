@@ -23,7 +23,7 @@ import {
 import { LogoutButton } from "../auth/logout-button";
 import { ExitIcon } from "@radix-ui/react-icons";
 import LanguageSwitcher from "../language-switcher";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 
 interface MenuProps {
   isOpen: boolean | undefined;
@@ -32,7 +32,7 @@ interface MenuProps {
 
 export function Menu({ isOpen, setIsOpen }: MenuProps) {
   const pathname = usePathname();
-  const { isTherapist, isClient } = useCurrentRole();
+  const { isTherapist, isClient, isAdmin } = useCurrentRole();
   const locale = useLocale();
   const t = useTranslations("Sidebar");
 
@@ -42,11 +42,13 @@ export function Menu({ isOpen, setIsOpen }: MenuProps) {
     }
   }, [pathname, setIsOpen]);
 
-  const menuList = isTherapist
-    ? getTherapistMenuList(pathname, t)
-    : isClient
-    ? getClientMenuList(pathname, t)
-    : getAdmintMenuList(pathname, t);
+  const menuList = useMemo(() => {
+    return isTherapist
+      ? getTherapistMenuList(pathname, t)
+      : isClient
+      ? getClientMenuList(pathname, t)
+      : getAdmintMenuList(pathname, t);
+  }, [isTherapist, isClient, pathname, t]);
 
   return (
     <>
