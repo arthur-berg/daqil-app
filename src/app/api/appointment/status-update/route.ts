@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifySignatureAppRouter } from "@upstash/qstash/nextjs";
 import Appointment from "@/models/Appointment";
+import connectToMongoDB from "@/lib/mongoose";
 
 export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
+  await connectToMongoDB();
   try {
     const body = await req.json();
     const { appointmentId } = body;

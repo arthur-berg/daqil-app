@@ -1,9 +1,11 @@
 import { getCurrentUser } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
+import connectToMongoDB from "@/lib/mongoose";
 
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 export async function POST(request: NextRequest) {
+  await connectToMongoDB();
   const { amount, appointmentId } = await request.json();
   const user = await getCurrentUser();
   if (!user) {

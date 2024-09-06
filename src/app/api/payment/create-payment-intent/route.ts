@@ -6,9 +6,12 @@ import User from "@/models/User";
 import { convertToSubcurrency } from "@/utils";
 import { getTranslations } from "next-intl/server";
 import { NextRequest, NextResponse } from "next/server";
+import connectToMongoDB from "@/lib/mongoose";
+
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 export async function POST(request: NextRequest) {
+  await connectToMongoDB();
   const [SuccessMessages, ErrorMessages] = await Promise.all([
     getTranslations("SuccessMessages"),
     getTranslations("ErrorMessages"),

@@ -5,9 +5,12 @@ import Appointment from "@/models/Appointment";
 import { format } from "date-fns";
 import { getTranslations } from "next-intl/server";
 import { getFirstName } from "@/utils/nameUtilsForApiRoutes";
+import connectToMongoDB from "@/lib/mongoose";
 
 export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
   try {
+    await connectToMongoDB();
+
     const body = await req.json();
     const { appointmentId, locale } = body;
 

@@ -3,9 +3,12 @@ import { verifySignatureAppRouter } from "@upstash/qstash/nextjs";
 import { sendReminderEmail } from "@/lib/mail";
 import Appointment from "@/models/Appointment";
 import { getTranslations } from "next-intl/server";
+import connectToMongoDB from "@/lib/mongoose";
 
 export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
   try {
+    await connectToMongoDB();
+
     const body = await req.json();
     const { appointmentId, locale } = body;
 

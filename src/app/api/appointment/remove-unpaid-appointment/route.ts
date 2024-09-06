@@ -7,8 +7,10 @@ import { sendClientNotPaidInTimeEmail } from "@/lib/mail";
 import { getTranslations } from "next-intl/server";
 import mongoose from "mongoose";
 import { getFullName } from "@/utils/nameUtilsForApiRoutes";
+import connectToMongoDB from "@/lib/mongoose";
 
 export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
+  await connectToMongoDB();
   const session = await mongoose.startSession();
   session.startTransaction();
 
