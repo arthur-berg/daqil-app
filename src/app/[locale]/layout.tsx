@@ -5,8 +5,6 @@ import { getLangDir } from "rtl-detect";
 
 import "@/app/globals.css";
 
-import connectToMongoDB from "@/lib/mongoose";
-
 const dmSans = DM_Sans({ subsets: ["latin"], weight: ["400", "600"] });
 
 export const metadata: Metadata = {
@@ -21,13 +19,6 @@ export default async function LocaleLayout({
   children: React.ReactNode;
   params: { locale: string };
 }>) {
-  try {
-    const con = await connectToMongoDB();
-    console.log("Mongo connected and cron jobs running for appointments");
-  } catch {
-    console.log("Mongo connection failed");
-  }
-
   const direction = getLangDir(locale);
 
   return (
