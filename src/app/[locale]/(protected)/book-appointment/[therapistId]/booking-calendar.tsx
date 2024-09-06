@@ -78,13 +78,6 @@ const BookingCalendar = ({
       selectedDate,
       JSON.parse(appointments)
     );
-    console.log(
-      "JSON.parse(therapistsAvailableTimes)",
-      JSON.parse(therapistsAvailableTimes)
-    );
-    console.log("JSON.parse(appointments)", JSON.parse(appointments));
-    console.log("selectedDate", selectedDate);
-    console.log("timeSlots", timeSlots);
 
     setAvailableTimeSlots(timeSlots);
   };
