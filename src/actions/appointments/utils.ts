@@ -114,6 +114,10 @@ export const checkTherapistAvailability = async (
   endDate: any,
   appointmentType: any
 ) => {
+  console.log("therapist.availableTimes", therapist.availableTimes);
+  console.log("appointmentType", appointmentType);
+  console.log("startDate", startDate);
+  console.log("therapist.appointments", therapist.appointments);
   const validTimeSlots = getTherapistAvailableTimeSlots(
     therapist.availableTimes,
     appointmentType,
