@@ -114,10 +114,6 @@ export const checkTherapistAvailability = async (
   endDate: any,
   appointmentType: any
 ) => {
-  console.log("therapist.availableTimes", therapist.availableTimes);
-  console.log("appointmentType", appointmentType);
-  console.log("startDate", startDate);
-  console.log("therapist.appointments", therapist.appointments);
   const validTimeSlots = getTherapistAvailableTimeSlots(
     therapist.availableTimes,
     appointmentType,
@@ -128,15 +124,7 @@ export const checkTherapistAvailability = async (
   const requestedStart = new Date(startDate);
   const requestedEnd = new Date(endDate);
 
-  console.log("validTimeSlots", validTimeSlots);
-
-  console.log("requestedStart", requestedStart);
-  console.log("requestedEnd", requestedEnd);
-
   const isSlotAvailable = validTimeSlots.some((slot) => {
-    console.log("slot.start", slot.start);
-    console.log("slot.end", slot.end);
-
     // Check if the requested slot starts and ends within any valid slot
     return (
       (isEqual(slot.start, requestedStart) ||

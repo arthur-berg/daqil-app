@@ -7,6 +7,7 @@ import {
   isSameDay,
   set,
 } from "date-fns";
+import { formatInTimeZone } from "date-fns-tz";
 
 type TimeRange = {
   startTime: string;
@@ -73,7 +74,12 @@ export const getTherapistAvailableTimeSlots = (
   } = availableTimes;
 
   const { interval } = settings;
-
+  // 2014-10-25 06:46:20-04:00
+  const formattedSelectedDate = formatInTimeZone(
+    selectedDate,
+    "UTC",
+    "yyyy-MM-dd"
+  );
   const appointmentDate = format(selectedDate, "yyyy-MM-dd");
 
   const selectedAppointment = appointments.find(
@@ -131,9 +137,30 @@ export const getTherapistAvailableTimeSlots = (
   const getNonRecurringAvailableTimesForDate = (
     date: Date
   ): NonRecurringTimeRange[] => {
-    const nonRecurring = nonRecurringAvailableTimes.find((s) =>
-      isSameDay(new Date(s.date), date)
-    );
+    const nonRecurring = nonRecurringAvailableTimes.find((s) => {
+      console.log(
+        "stored non recurring date without any transformation to become a date: ",
+        s.date
+      );
+      console.log(
+        "stored non recurring date WITH new Date() transformation: ",
+        new Date(s.date)
+      );
+      console.log(
+        "stored non recurring date WITH date-fns-z",
+        formatInTimeZone(s.date, "UTC", "yyyy-MM-dd")
+      );
+      console.log("selected date without transformation", date);
+      console.log(
+        "selected date that is transformed with date-fnz-z",
+        formattedSelectedDate
+      );
+
+      return isSameDay(new Date(s.date), date);
+    });
+
+    console.log("nonRecurring", nonRecurring);
+
     return nonRecurring ? nonRecurring.timeRanges : [];
   };
 
