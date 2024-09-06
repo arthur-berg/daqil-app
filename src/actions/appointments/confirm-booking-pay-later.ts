@@ -14,6 +14,7 @@ import { getFullName } from "@/utils/formatName";
 import mongoose from "mongoose";
 import { getLocale, getTranslations } from "next-intl/server";
 import { revalidatePath } from "next/cache";
+import connectToMongoDB from "@/lib/mongoose";
 
 export const confirmBookingPayLater = async (
   appointmentId: string,
@@ -21,6 +22,8 @@ export const confirmBookingPayLater = async (
   therapistId: string,
   appointmentTypeId: string
 ) => {
+  await connectToMongoDB();
+
   const [SuccessMessages, ErrorMessages] = await Promise.all([
     getTranslations("SuccessMessages"),
     getTranslations("ErrorMessages"),

@@ -8,6 +8,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { checkDiscountCodeValidity } from "./discount-code";
 import User from "@/models/User";
 import CodeRedemption from "@/models/CodeRedemption";
+import connectToMongoDB from "@/lib/mongoose";
 
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
@@ -16,6 +17,7 @@ export const createPaymentIntent = async (
   appointmentId: string,
   discountCode?: string
 ) => {
+  await connectToMongoDB();
   const [SuccessMessages, ErrorMessages] = await Promise.all([
     getTranslations("SuccessMessages"),
     getTranslations("ErrorMessages"),

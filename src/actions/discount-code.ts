@@ -6,8 +6,10 @@ import { requireAuth } from "@/lib/auth";
 import CodeRedemption from "@/models/CodeRedemption";
 import DiscountCode from "@/models/DiscountCode";
 import { getTranslations } from "next-intl/server";
+import connectToMongoDB from "@/lib/mongoose";
 
 export const checkDiscountCodeValidity = async (discountCode: string) => {
+  await connectToMongoDB();
   const [SuccessMessages, ErrorMessages] = await Promise.all([
     getTranslations("SuccessMessages"),
     getTranslations("ErrorMessages"),

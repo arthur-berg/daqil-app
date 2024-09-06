@@ -11,6 +11,7 @@ import { getVerificationTokenByToken } from "@/data/verification-token";
 import VerificationToken from "@/models/VerificationToken";
 import { addUserNameToSubscriberProfile } from "@/lib/mail";
 import { getTranslations } from "next-intl/server";
+import connectToMongoDB from "@/lib/mongoose";
 
 const verifyPasswordAndLogin = async ({
   existingUser,
@@ -35,6 +36,7 @@ const verifyPasswordAndLogin = async ({
   SuccessMessages: any;
   ErrorMessages: any;
 }) => {
+  await connectToMongoDB();
   if (!currentPassword) {
     return {
       error: ErrorMessages("currentPasswordIsRequired"),
@@ -68,6 +70,8 @@ export const setupAccount = async (
   locale: string,
   token?: string | null
 ) => {
+  await connectToMongoDB();
+
   const [SuccessMessages, ErrorMessages] = await Promise.all([
     getTranslations("SuccessMessages"),
     getTranslations("ErrorMessages"),

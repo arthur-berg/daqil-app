@@ -8,8 +8,10 @@ import User from "@/models/User";
 import mongoose from "mongoose";
 import { getTranslations } from "next-intl/server";
 import { revalidatePath } from "next/cache";
+import connectToMongoDB from "@/lib/mongoose";
 
 export const cancelTempReservation = async (appointmentId: string) => {
+  await connectToMongoDB();
   const [SuccessMessages, ErrorMessages] = await Promise.all([
     getTranslations("SuccessMessages"),
     getTranslations("ErrorMessages"),

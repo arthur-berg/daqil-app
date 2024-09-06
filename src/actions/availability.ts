@@ -13,10 +13,12 @@ import {
 import { getTranslations } from "next-intl/server";
 import { isSameDay } from "date-fns";
 import { revalidatePath } from "next/cache";
+import connectToMongoDB from "@/lib/mongoose";
 
 export const saveBlockedOutTimes = async (
   values: z.infer<typeof BlockAvailabilitySchemaBE>
 ) => {
+  await connectToMongoDB();
   const [SuccessMessages, ErrorMessages] = await Promise.all([
     getTranslations("SuccessMessages"),
     getTranslations("ErrorMessages"),
@@ -59,6 +61,8 @@ export const saveBlockedOutTimes = async (
 export const saveNonRecurringAvailableTimes = async (
   values: z.infer<typeof NonRecurringAvailabilitySchemaBE>
 ) => {
+  await connectToMongoDB();
+
   const [SuccessMessages, ErrorMessages] = await Promise.all([
     getTranslations("SuccessMessages"),
     getTranslations("ErrorMessages"),
@@ -102,6 +106,8 @@ export const saveNonRecurringAvailableTimes = async (
 export const updateRecurringAvailabilitySettings = async (
   values: z.infer<typeof RecurringAvailabilitySettingsSchemaBE>
 ) => {
+  await connectToMongoDB();
+
   const [SuccessMessages, ErrorMessages] = await Promise.all([
     getTranslations("SuccessMessages"),
     getTranslations("ErrorMessages"),
@@ -135,6 +141,8 @@ export const updateRecurringAvailabilitySettings = async (
 export const saveRecurringAvailableTimes = async (
   values: z.infer<typeof RecurringAvailabilitySchema>
 ) => {
+  await connectToMongoDB();
+
   const [SuccessMessages, ErrorMessages] = await Promise.all([
     getTranslations("SuccessMessages"),
     getTranslations("ErrorMessages"),

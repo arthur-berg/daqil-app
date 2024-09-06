@@ -12,12 +12,15 @@ import mongoose from "mongoose";
 import { getTranslations } from "next-intl/server";
 import { updateAppointments } from "./utils";
 import { revalidatePath } from "next/cache";
+import connectToMongoDB from "@/lib/mongoose";
 
 export const bookIntroAppointment = async (
   appointmentType: any,
   therapistId: string,
   startDate: Date
 ) => {
+  await connectToMongoDB();
+
   const [SuccessMessages, ErrorMessages, t] = await Promise.all([
     getTranslations("SuccessMessages"),
     getTranslations("ErrorMessages"),

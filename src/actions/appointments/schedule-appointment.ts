@@ -15,10 +15,12 @@ import {
   scheduleStatusUpdateJob,
 } from "@/lib/schedule-appointment-jobs";
 import { updateAppointments } from "./utils";
+import connectToMongoDB from "@/lib/mongoose";
 
 export const scheduleAppointment = async (
   values: z.input<typeof AppointmentSchema>
 ) => {
+  await connectToMongoDB();
   const [SuccessMessages, ErrorMessages] = await Promise.all([
     getTranslations("SuccessMessages"),
     getTranslations("ErrorMessages"),

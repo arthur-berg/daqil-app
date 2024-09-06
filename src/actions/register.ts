@@ -11,8 +11,10 @@ import { addUserToSubscriberList, sendVerificationEmail } from "@/lib/mail";
 import { generatePassword } from "@/utils";
 import { getTranslations } from "next-intl/server";
 import { UserRole } from "@/generalTypes";
+import connectToMongoDB from "@/lib/mongoose";
 
 export const register = async (values: z.infer<typeof RegisterSchema>) => {
+  await connectToMongoDB();
   const [SuccessMessages, ErrorMessages] = await Promise.all([
     getTranslations("SuccessMessages"),
     getTranslations("ErrorMessages"),

@@ -9,12 +9,14 @@ import Appointment from "@/models/Appointment";
 import User from "@/models/User";
 import VideoSession from "@/models/VideoSession";
 import { getTranslations } from "next-intl/server";
+import connectToMongoDB from "@/lib/mongoose";
 
 if (!process.env.VONAGE_APP_ID) {
   throw new Error("Missing config values for env params VONAGE_APP_ID ");
 }
 
 export const getSessionData = async (appointmentId: string) => {
+  await connectToMongoDB();
   const [SuccessMessages, ErrorMessages] = await Promise.all([
     getTranslations("SuccessMessages"),
     getTranslations("ErrorMessages"),

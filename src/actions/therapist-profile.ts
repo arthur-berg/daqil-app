@@ -6,10 +6,12 @@ import { requireAuth } from "@/lib/auth";
 import { UserRole } from "@/generalTypes";
 import User from "@/models/User";
 import { revalidatePath } from "next/cache";
+import connectToMongoDB from "@/lib/mongoose";
 
 export const updateTherapistProfile = async (
   values: z.infer<typeof TherapistMyProfileSchema>
 ) => {
+  await connectToMongoDB();
   const [SuccessMessages, ErrorMessages] = await Promise.all([
     getTranslations("SuccessMessages"),
     getTranslations("ErrorMessages"),
@@ -52,6 +54,8 @@ export const updateTherapistProfile = async (
 };
 
 export const uploadTherapistProfileImage = async (uploadedFileKey: string) => {
+  await connectToMongoDB();
+
   const [SuccessMessages, ErrorMessages] = await Promise.all([
     getTranslations("SuccessMessages"),
     getTranslations("ErrorMessages"),

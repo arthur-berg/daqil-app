@@ -9,11 +9,14 @@ import { getUserByEmail } from "@/data/user";
 import PasswordResetToken from "@/models/PasswordResetToken";
 import User from "@/models/User";
 import { getTranslations } from "next-intl/server";
+import connectToMongoDB from "@/lib/mongoose";
 
 export const newPassword = async (
   values: z.infer<typeof NewPasswordSchema>,
   token?: string | null
 ) => {
+  await connectToMongoDB();
+
   const [SuccessMessages, ErrorMessages] = await Promise.all([
     getTranslations("SuccessMessages"),
     getTranslations("ErrorMessages"),

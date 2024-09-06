@@ -14,12 +14,14 @@ import { getTranslations } from "next-intl/server";
 import { revalidatePath } from "next/cache";
 import Stripe from "stripe";
 import { getFullName } from "@/utils/formatName";
+import connectToMongoDB from "@/lib/mongoose";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
 export const cancelAppointment = async (
   values: z.infer<typeof CancelAppointmentSchema>
 ) => {
+  await connectToMongoDB();
   const [SuccessMessages, ErrorMessages] = await Promise.all([
     getTranslations("SuccessMessages"),
     getTranslations("ErrorMessages"),

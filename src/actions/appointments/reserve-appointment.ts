@@ -15,12 +15,14 @@ import mongoose from "mongoose";
 import User from "@/models/User";
 import { revalidatePath } from "next/cache";
 import { getFirstName } from "@/utils/formatName";
+import connectToMongoDB from "@/lib/mongoose";
 
 export const reserveAppointment = async (
   appointmentType: any,
   therapistId: string,
   startDate: Date
 ) => {
+  await connectToMongoDB();
   const [SuccessMessages, ErrorMessages, t] = await Promise.all([
     getTranslations("SuccessMessages"),
     getTranslations("ErrorMessages"),

@@ -5,8 +5,10 @@ import { requireAuth } from "@/lib/auth";
 import User from "@/models/User";
 import { getTranslations } from "next-intl/server";
 import { revalidatePath } from "next/cache";
+import connectToMongoDB from "@/lib/mongoose";
 
 export const rejectTherapist = async (therapistId: string) => {
+  await connectToMongoDB();
   const [SuccessMessages, ErrorMessages] = await Promise.all([
     getTranslations("SuccessMessages"),
     getTranslations("ErrorMessages"),

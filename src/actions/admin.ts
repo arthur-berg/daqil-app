@@ -12,8 +12,10 @@ import { addUserToSubscriberList, sendVerificationEmail } from "@/lib/mail";
 import { generateVerificationToken } from "@/lib/tokens";
 import DiscountCode from "@/models/DiscountCode";
 import { revalidatePath } from "next/cache";
+import connectToMongoDB from "@/lib/mongoose";
 
 export const admin = async () => {
+  await connectToMongoDB();
   const { role } = await getCurrentRole();
 
   if (role === UserRole.ADMIN) {
@@ -24,6 +26,8 @@ export const admin = async () => {
 };
 
 export const deleteDiscountCode = async (discountCodeId: string) => {
+  await connectToMongoDB();
+
   const [SuccessMessages, ErrorMessages] = await Promise.all([
     getTranslations("SuccessMessages"),
     getTranslations("ErrorMessages"),
@@ -44,6 +48,8 @@ export const deleteDiscountCode = async (discountCodeId: string) => {
 export const createDiscountCode = async (
   values: z.infer<typeof DiscountCodeSchema>
 ) => {
+  await connectToMongoDB();
+
   const [SuccessMessages, ErrorMessages] = await Promise.all([
     getTranslations("SuccessMessages"),
     getTranslations("ErrorMessages"),
@@ -86,6 +92,8 @@ export const createDiscountCode = async (
 export const inviteTherapist = async (
   values: z.infer<typeof InviteTherapistSchema>
 ) => {
+  await connectToMongoDB();
+
   const [SuccessMessages, ErrorMessages] = await Promise.all([
     getTranslations("SuccessMessages"),
     getTranslations("ErrorMessages"),

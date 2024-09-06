@@ -9,8 +9,10 @@ import User from "@/models/User";
 import { generateVerificationToken } from "@/lib/tokens";
 import { sendVerificationEmail } from "@/lib/mail";
 import { getTranslations } from "next-intl/server";
+import connectToMongoDB from "@/lib/mongoose";
 
 export const settings = async (values: z.input<typeof SettingsSchema>) => {
+  await connectToMongoDB();
   const user = await getCurrentUser();
   const [SuccessMessages, ErrorMessages] = await Promise.all([
     getTranslations("SuccessMessages"),

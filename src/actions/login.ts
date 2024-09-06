@@ -13,10 +13,10 @@ import {
 } from "@/lib/tokens";
 import { getTwoFactorTokenByEmail } from "@/data/two-factor-token";
 import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation";
-
 import TwoFactorToken from "@/models/TwoFactorToken";
 import TwoFactorConfirmation from "@/models/TwoFactorConfirmation";
 import { getTranslations } from "next-intl/server";
+import connectToMongoDB from "@/lib/mongoose";
 
 export const login = async (
   values: z.infer<typeof LoginSchema>,
@@ -24,6 +24,8 @@ export const login = async (
   callbackUrl?: string | null,
   verifyAccountSetup?: boolean
 ) => {
+  await connectToMongoDB();
+
   const validatedFields = LoginSchema.safeParse(values);
   const [SuccessMessages, ErrorMessages] = await Promise.all([
     getTranslations("SuccessMessages"),
