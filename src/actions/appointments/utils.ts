@@ -1,6 +1,6 @@
 import {
   cancelAllScheduledJobsForAppointment,
-  scheduleRemoveUnpaidJobs,
+  schedulePayBeforePaymentExpiredStatusUpdateJobs,
 } from "@/lib/schedule-appointment-jobs";
 import Appointment from "@/models/Appointment";
 import User from "@/models/User";
@@ -23,7 +23,7 @@ export const createAppointment = async (appointmentData: any, session: any) => {
     throw new Error("Failed to create appointment.");
   }
 
-  await scheduleRemoveUnpaidJobs(
+  await schedulePayBeforePaymentExpiredStatusUpdateJobs(
     appointment[0]._id.toString(),
     appointment[0].payment.paymentExpiryDate,
     locale

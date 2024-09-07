@@ -11,6 +11,7 @@ import mongoose from "mongoose";
 import Appointment from "@/models/Appointment";
 import { format } from "date-fns";
 import {
+  schedulePayAfterPaymentExpiredStatusUpdateJobs,
   schedulePaymentReminders,
   scheduleStatusUpdateJob,
 } from "@/lib/schedule-appointment-jobs";
@@ -101,8 +102,13 @@ export const scheduleAppointment = async (
 
     paymentExpiryDate.setHours(paymentExpiryDate.getHours() - 1);
 
-    await schedulePaymentReminders(appointment[0], paymentExpiryDate, locale);
-    await scheduleStatusUpdateJob(appointment[0]);
+    await schedulePaymentReminders(appointmentId, paymentExpiryDate, locale);
+
+    await schedulePayAfterPaymentExpiredStatusUpdateJobs(
+      appointmentId,
+      paymentExpiryDate,
+      locale
+    );
 
     // Check and update client's selected therapist
 

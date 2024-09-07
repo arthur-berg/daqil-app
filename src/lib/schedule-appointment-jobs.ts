@@ -46,13 +46,31 @@ export const schedulePaymentReminders = async (
   await Promise.all(taskPromises);
 };
 
-export const scheduleRemoveUnpaidJobs = async (
+export const schedulePayBeforePaymentExpiredStatusUpdateJobs = async (
   appointmentId: string,
   paymentExpiryDate: Date,
   locale: string
 ) => {
   const removeUnpaidTaskId = await scheduleTask(
-    `${process.env.QSTASH_API_URL}/remove-unpaid-appointment`,
+    `${process.env.QSTASH_API_URL}/pay-before-booking/payment-expired-status-update`,
+    { appointmentId: appointmentId },
+    Math.floor(paymentExpiryDate.getTime() / 1000),
+    locale
+  );
+  await ScheduledTask.create({
+    appointmentId: appointmentId,
+    type: "removeUnpaid",
+    taskId: removeUnpaidTaskId,
+  });
+};
+
+export const schedulePayAfterPaymentExpiredStatusUpdateJobs = async (
+  appointmentId: string,
+  paymentExpiryDate: Date,
+  locale: string
+) => {
+  const removeUnpaidTaskId = await scheduleTask(
+    `${process.env.QSTASH_API_URL}/pay-after-booking/payment-expired-status-update`,
     { appointmentId: appointmentId },
     Math.floor(paymentExpiryDate.getTime() / 1000),
     locale
