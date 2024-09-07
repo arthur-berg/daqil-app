@@ -11,10 +11,10 @@ import {
 } from "@/components/ui/dialog";
 import { Link } from "@/navigation";
 import { useTranslations } from "next-intl";
-import BookingCalendar from "@/app/[locale]/(protected)/book-appointment/[therapistId]/booking-calendar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { FaUser } from "react-icons/fa";
 import { useUserName } from "@/hooks/use-user-name";
+import BookingCalendar from "./[therapistId]/booking-calendar";
 
 const SelectedTherapist = ({
   selectedTherapistData,
@@ -53,12 +53,22 @@ const SelectedTherapist = ({
               selectedTherapist.lastName
             )}
           </h2>
-          <p className="text-gray-600 mb-2">
+
+          <p className="text-gray-600">
             {selectedTherapist.therapistWorkProfile[locale].title}
           </p>
-          <p className="text-sm text-gray-700">
+          <div className="mb-2">
+            <Link
+              href={`/therapist-profile/${selectedTherapist._id}?selectedTherapistView=true`}
+            >
+              <Button variant="ghost" size="sm">
+                {t("goToProfilePage")}
+              </Button>
+            </Link>
+          </div>
+          {/* <p className="text-sm text-gray-700">
             {selectedTherapist.therapistWorkProfile[locale].description}
-          </p>
+          </p> */}
         </div>
         <BookingCalendar
           therapistsAvailableTimes={JSON.stringify(

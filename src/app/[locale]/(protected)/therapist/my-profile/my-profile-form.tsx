@@ -18,6 +18,7 @@ import { updateTherapistProfile } from "@/actions/therapist-profile";
 import { Input } from "@/components/ui/input";
 import { useTranslations } from "next-intl";
 import { Textarea } from "@/components/ui/textarea";
+import { Separator } from "@/components/ui/separator";
 
 const MyProfileForm = ({
   therapist,
@@ -59,80 +60,92 @@ const MyProfileForm = ({
   return (
     <Form {...form}>
       <form className="space-y-8 w-full" onSubmit={form.handleSubmit(onSubmit)}>
+        {/* English Section */}
         <div className="space-y-6">
-          <h2 className="text-xl font-semibold">{t("englishSection")}</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <FormField
-              control={form.control}
-              name="workTitleEn"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("workTitleLabelEn")}</FormLabel>
-                  <FormControl>
-                    <Input {...field} disabled={isPending} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="workDescriptionEn"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("workDescriptionLabelEn")}</FormLabel>
-                  <FormControl>
-                    <Textarea {...field} disabled={isPending} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-        </div>
+          <h2 className="text-2xl font-bold mb-4">{t("englishSection")}</h2>
 
+          <FormField
+            control={form.control}
+            name="workTitleEn"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t("workTitleLabelEn")}</FormLabel>
+                <FormControl>
+                  <Input {...field} disabled={isPending} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="workDescriptionEn"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t("workDescriptionLabelEn")}</FormLabel>
+                <FormControl>
+                  <Textarea
+                    {...field}
+                    disabled={isPending}
+                    className="h-64"
+                    placeholder={t("workDescriptionPlaceholderEn")}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        <Separator className="my-6" /> {/* Divider between sections */}
+        {/* Arabic Section */}
         <div className="space-y-6">
-          <h2 className="text-xl font-semibold">{t("arabicSection")}</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <FormField
-              control={form.control}
-              name="workTitleAr"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("workTitleLabelAr")}</FormLabel>
-                  <FormControl>
-                    <Input {...field} disabled={isPending} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="workDescriptionAr"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("workDescriptionLabelAr")}</FormLabel>
-                  <FormControl>
-                    <Textarea {...field} disabled={isPending} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-        </div>
+          <h2 className="text-2xl font-bold mb-4">{t("arabicSection")}</h2>
 
+          <FormField
+            control={form.control}
+            name="workTitleAr"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t("workTitleLabelAr")}</FormLabel>
+                <FormControl>
+                  <Input {...field} disabled={isPending} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="workDescriptionAr"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t("workDescriptionLabelAr")}</FormLabel>
+                <FormControl>
+                  <Textarea
+                    {...field}
+                    disabled={isPending}
+                    className="h-64"
+                    placeholder={t("workDescriptionPlaceholderAr")}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        {/* Form Actions */}
         <div className="flex flex-col-reverse md:flex-row justify-end space-y-4 md:space-y-0 md:space-x-4">
           <Button type="submit" disabled={isPending}>
-            Save
+            {t("save")}
           </Button>
           <Button
             onClick={handleCancel}
             variant="secondary"
             disabled={isPending}
           >
-            Cancel
+            {t("cancel")}
           </Button>
         </div>
       </form>

@@ -52,11 +52,11 @@
     "period": "الفترة",
     "appointments": "المواعيد",
     "firstNameEn": "الاسم الأول (بالإنجليزية)",
-  "lastNameEn": "اسم العائلة (بالإنجليزية)",
-  "addArabicName": "أضف الاسم بالعربية (اختياري)",
-  "hideArabicName": "إزالة الاسم بالعربية",
-  "firstNameAr": "الاسم الأول (بالعربية)",
-  "lastNameAr": "اسم العائلة (بالعربية)"
+    "lastNameEn": "اسم العائلة (بالإنجليزية)",
+    "addArabicName": "أضف الاسم بالعربية (اختياري)",
+    "hideArabicName": "إزالة الاسم بالعربية",
+    "firstNameAr": "الاسم الأول (بالعربية)",
+    "lastNameAr": "اسم العائلة (بالعربية)"
   },
   "RegisterPage": {
     "emailLabel": "البريد الإلكتروني",
@@ -123,7 +123,7 @@
     "notPaidInTime": "العميل لم يدفع في الوقت المحدد",
     "warningNoRefund": "تحذير: لن يتم إصدار أي استرداد إذا تم الإلغاء خلال 24 ساعة من الموعد.",
     "loadingAppointments": "جارٍ تحميل المواعيد...",
-  "yourNextAppointment": "موعدك القادم"
+    "yourNextAppointment": "موعدك القادم"
   },
   "SettingsPage": {
     "firstNameLabel": "الاسم الأول",
@@ -173,7 +173,8 @@
     "awaitingApproval": "هل ترغب في المتابعة مع هذا المعالج؟",
     "browseTherapistsDescriptionOnlyOption": "تصفح معالجينا واختر المعالج الذي ترغب في حجز موعد معه.",
     "introMeetingIsPending": "لديك بالفعل اجتماع تمهيدي محجوز. إذا كنت ترغب في اختيار وقت آخر، يرجى إلغاء موعدك لحجز موعد جديد.",
-    "seeAppointments": "عرض المواعيد"
+    "seeAppointments": "عرض المواعيد",
+    "goToProfilePage": "الانتقال إلى صفحة الملف الشخصي"
   },
   "BookingCalendar": {
     "calendar": "التقويم",
@@ -234,7 +235,6 @@
     "discountLoading": "جارٍ تطبيق رمز الخصم...",
     "calculatingPrice": "جارٍ حساب السعر...",
     "cancelReservation": "إلغاء الحجز"
-    
   },
   "AvailabilityPage": {
     "recurringAvailableTimes": "أوقات متاحة متكررة",
@@ -266,13 +266,13 @@
     "selectView": "اختر العرض"
   },
   "LoadingPages": {
-  "loading": "جارٍ التحميل...",
-  "loadingAppointments": "جارٍ تحميل المواعيد...",
-  "loadingVideoSession": "جارٍ تحميل جلسة الفيديو... يرجى الانتظار",
-  "loadingProfile": "جارٍ تحميل الملف الشخصي...",
-  "loadingMyClients": "جارٍ تحميل قائمة العملاء...",
-  "loadingAvailability": "جارٍ تحميل مدير التوافر..."
-},
+    "loading": "جارٍ التحميل...",
+    "loadingAppointments": "جارٍ تحميل المواعيد...",
+    "loadingVideoSession": "جارٍ تحميل جلسة الفيديو... يرجى الانتظار",
+    "loadingProfile": "جارٍ تحميل الملف الشخصي...",
+    "loadingMyClients": "جارٍ تحميل قائمة العملاء...",
+    "loadingAvailability": "جارٍ تحميل مدير التوافر..."
+  },
   "TherapistProfilePage": {
     "workTitleLabelEn": "المسمى الوظيفي (EN)",
     "workDescriptionLabelEn": "وصف العمل (EN)",
@@ -281,7 +281,19 @@
     "englishSection": "اللغة الإنجليزية",
     "arabicSection": "اللغة العربية",
     "uploadProfileImage": "تحميل صورة الملف الشخصي",
-    "uploadSuccess": "تم تحميل صورة الملف الشخصي بنجاح"
+    "uploadSuccess": "تم تحميل صورة الملف الشخصي بنجاح",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "edit": "تعديل",
+    "errorTherapistNotFound": "خطأ: لم يتم العثور على المعالج",
+    "noDescriptionProvided": "لم يتم تقديم وصف",
+    "noTitleProvided": "لم يتم تقديم عنوان",
+    "workTitleLabel": "عنوان العمل",
+    "workDescriptionLabel": "وصف العمل",
+    "contactInfo": "معلومات الاتصال",
+    "goBackBrowse": "العودة إلى تصفح المعالجين",
+"goBack": "العودة"
+
   },
   "AppointmentCalendar": {
     "appointmentsCalendar": "تقويم المواعيد",
@@ -574,9 +586,9 @@
     "notPaidInTimeMessageTherapist": "تم إلغاء الموعد مع عميلك لأن العميل لم يدفع في الوقت المحدد. يرجى التحقق من مواعيدك القادمة.",
     "thankYouMessage": "شكرًا لاستخدامك زاكينا."
   },
-   "AppointmentTypes": {
-  "6692b4919a6b12347d0afac4": "جلسة علاجية - 30 دقيقة",
-  "66cd9d22e83c327cf7e0f57b": "جلسة علاجية - 60 دقيقة",
-  "66cd9e05e83c327cf7e0f57c": "اجتماع تعريفي"
-}
+  "AppointmentTypes": {
+    "6692b4919a6b12347d0afac4": "جلسة علاجية - 30 دقيقة",
+    "66cd9d22e83c327cf7e0f57b": "جلسة علاجية - 60 دقيقة",
+    "66cd9e05e83c327cf7e0f57c": "اجتماع تعريفي"
+  }
 }

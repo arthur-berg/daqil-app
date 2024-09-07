@@ -16,6 +16,7 @@ import { uploadTherapistProfileImage } from "@/actions/therapist-profile";
 import { useToast } from "@/components/ui/use-toast";
 import Image from "next/image";
 import { useUserName } from "@/hooks/use-user-name";
+import { Separator } from "@/components/ui/separator";
 
 const MyProfileInfo = ({ therapistJson }: { therapistJson: any }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -36,7 +37,7 @@ const MyProfileInfo = ({ therapistJson }: { therapistJson: any }) => {
       const data = await uploadTherapistProfileImage(uploadedFileKey);
       responseToast(data);
       if (data.success) {
-        setImageUrl(uploadedFileKey); // Update the image URL with the new image path
+        setImageUrl(uploadedFileKey);
       }
     });
   };
@@ -52,17 +53,19 @@ const MyProfileInfo = ({ therapistJson }: { therapistJson: any }) => {
 
   const handleCloseDialog = () => {
     setIsImageDialogOpen(false);
-    setUploadSuccess(null); // Reset success state when closing the dialog
+    setUploadSuccess(null);
   };
 
   return (
     <>
       <div className="rounded-lg p-6 mb-4 w-full bg-white">
         <div className="flex flex-col items-center">
+          {/* Profile Image */}
           <div
             className="relative w-24 h-24 rounded-full cursor-pointer group"
             onClick={() => setIsImageDialogOpen(true)}
           >
+            {/* eslint-disable */}
             {imageUrl ? (
               <img
                 src={imageUrl}
@@ -74,81 +77,91 @@ const MyProfileInfo = ({ therapistJson }: { therapistJson: any }) => {
                 <span className="text-gray-500">No image</span>
               </div>
             )}
-
             {/* Edit Icon */}
             <div className="absolute top-1 right-1 bg-white p-1 rounded-full group-hover:scale-110 transition-transform duration-150 ease-in-out">
               <MdEdit className="text-gray-600" />
             </div>
-
             {/* Hover Effect */}
             <div className="absolute inset-0 bg-black opacity-0 rounded-full group-hover:opacity-20 transition-opacity duration-150 ease-in-out" />
           </div>
+
           {isEditing ? (
             <MyProfileForm therapist={therapist} setIsEditing={setIsEditing} />
           ) : (
             <>
-              <h2 className="text-xl font-bold mb-2">
+              {/* Therapist Name & Email */}
+              <h2 className="text-2xl font-bold mb-4">
                 {getFullName(therapist.firstName, therapist.lastName)}
               </h2>
-              <p className="text-gray-600 mb-4">{therapist.email}</p>
+              <p className="text-gray-600 mb-8">{therapist.email}</p>
+              {/* English Work Profile */}
+              <div className="w-full">
+                <h3 className="text-2xl font-bold mb-6">
+                  {t("englishSection")}
+                </h3>
 
-              <div className="w-full flex flex-col items-center md:items-start md:flex-row md:gap-8 justify-around">
-                <div>
-                  <h3 className="text-lg font-semibold mb-2">
-                    {t("englishSection")}
-                  </h3>
-                  <div className="mb-4">
-                    <label className="text-md font-bold text-gray-600">
-                      {t("workTitleLabelEn")}
-                    </label>
-                    <p className="text-sm text-gray-700">
-                      {therapist.therapistWorkProfile?.en?.title ||
-                        "No title provided"}
-                    </p>
-                  </div>
-                  <div className="mb-4">
-                    <label className="text-md font-bold text-gray-600">
-                      {t("workDescriptionLabelEn")}
-                    </label>
-                    <p className="text-sm text-gray-700">
-                      {therapist.therapistWorkProfile?.en?.description ||
-                        "No description provided"}
-                    </p>
-                  </div>
+                <div className="mb-6">
+                  <h4 className="text-lg font-semibold mb-2">
+                    {t("workTitleLabelEn")}
+                  </h4>
+                  <p className="text-base text-gray-700">
+                    {therapist.therapistWorkProfile?.en?.title ||
+                      "No title provided"}
+                  </p>
                 </div>
 
-                <div>
-                  <h3 className="text-lg font-semibold mb-2">
-                    {t("arabicSection")}
-                  </h3>
-                  <div className="mb-4">
-                    <label className="text-md font-bold text-gray-600">
-                      {t("workTitleLabelAr")}
-                    </label>
-                    <p className="text-sm text-gray-700">
-                      {therapist.therapistWorkProfile?.ar?.title ||
-                        "No title provided"}
-                    </p>
-                  </div>
-                  <div className="mb-4">
-                    <label className="text-md font-bold text-gray-600">
-                      {t("workDescriptionLabelAr")}
-                    </label>
-                    <p className="text-sm text-gray-700">
-                      {therapist.therapistWorkProfile?.ar?.description ||
-                        "No description provided"}
-                    </p>
-                  </div>
+                <div className="mb-6">
+                  <h4 className="text-lg font-semibold mb-2">
+                    {t("workDescriptionLabelEn")}
+                  </h4>
+                  <p className="text-base text-gray-700">
+                    {therapist.therapistWorkProfile?.en?.description ||
+                      "No description provided"}
+                  </p>
+                </div>
+                <div className="flex justify-center">
+                  <Button onClick={() => setIsEditing(true)} className="mb-6">
+                    {t("edit")}
+                  </Button>
                 </div>
               </div>
+              <Separator className="my-6" /> {/* Divider between sections */}
+              {/* Arabic Work Profile */}
+              <div className="w-full">
+                <h3 className="text-2xl font-bold mb-6">
+                  {t("arabicSection")}
+                </h3>
 
-              <Button onClick={() => setIsEditing(true)} className="mt-4">
-                Edit
+                <div className="mb-6">
+                  <h4 className="text-lg font-semibold mb-2">
+                    {t("workTitleLabelAr")}
+                  </h4>
+                  <p className="text-base text-gray-700">
+                    {therapist.therapistWorkProfile?.ar?.title ||
+                      "No title provided"}
+                  </p>
+                </div>
+
+                <div className="mb-6">
+                  <h4 className="text-lg font-semibold mb-2">
+                    {t("workDescriptionLabelAr")}
+                  </h4>
+                  <p className="text-base text-gray-700">
+                    {therapist.therapistWorkProfile?.ar?.description ||
+                      "No description provided"}
+                  </p>
+                </div>
+              </div>
+              {/* Edit Button */}
+              <Button onClick={() => setIsEditing(true)} className="mt-6">
+                {t("edit")}
               </Button>
             </>
           )}
         </div>
       </div>
+
+      {/* Image Upload Dialog */}
       <Dialog open={isImageDialogOpen} onOpenChange={handleCloseDialog}>
         <DialogContent className="w-11/12 sm:max-w-md">
           <DialogHeader>
@@ -156,6 +169,7 @@ const MyProfileInfo = ({ therapistJson }: { therapistJson: any }) => {
           </DialogHeader>
           {uploadSuccess ? (
             <>
+              {/* eslint-disable */}
               <img
                 src={therapist.image}
                 alt="Uploaded profile"

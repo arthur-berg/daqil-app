@@ -12,10 +12,10 @@ import { getTherapistById } from "@/data/user";
 import { getTranslations } from "next-intl/server";
 import { FaUser } from "react-icons/fa";
 
-import BookingCalendar from "@/app/[locale]/(protected)/book-appointment/[therapistId]/booking-calendar";
 import { getCurrentUser } from "@/lib/auth";
 import { getFullName } from "@/utils/formatName";
 import connectToMongoDB from "@/lib/mongoose";
+import BookingCalendar from "./booking-calendar";
 
 const TherapistUserProfile = async ({
   params,

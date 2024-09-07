@@ -12,10 +12,10 @@ import {
 import { redirectUserIfReservationExist } from "./helpers";
 import { MdEvent } from "react-icons/md"; // Import the calendar icon from react-icons/md
 
-import IntroCallStepManager from "@/app/[locale]/(protected)/book-appointment/intro-call-step-manager";
 import AcceptTherapist from "./accept-therapist";
 import { getFullName } from "@/utils/formatName";
 import connectToMongoDB from "@/lib/mongoose";
+import IntroCallStepManager from "./intro-call-step-manager";
 
 const BookAppointmentPage = async ({
   params,

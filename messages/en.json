@@ -169,7 +169,9 @@
     "awaitingApproval": "Do you wish to proceed with this therapist?",
     "browseTherapistsDescriptionOnlyOption": "Browse through our therapists and select the one you'd like to book an appointment with.",
     "introMeetingIsPending": " You already have an introductory meeting booked in. If you wish to choose another time, please cancel your appointment to book a new one.",
-    "seeAppointments": "See Appointments"
+    "seeAppointments": "See Appointments",
+    "readMore": "Read more",
+    "goToProfilePage": "Go to profile page"
   },
   "BookingCalendar": {
     "calendar": "Calendar",
@@ -276,7 +278,18 @@
     "englishSection": "English Language",
     "arabicSection": "Arabic Language",
     "uploadProfileImage": "Upload profile image",
-    "uploadSuccess": "Profile picture was successfully uploaded"
+    "uploadSuccess": "Profile picture was successfully uploaded",
+    "save": "Save",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "errorTherapistNotFound": "Error: Therapist not found",
+    "noDescriptionProvided": "No description provided",
+    "noTitleProvided": "No title provided",
+    "workTitleLabel": "Work Title",
+    "workDescriptionLabel": "Work Description",
+    "contactInfo": "Contact Info",
+    "goBackBrowse": "Go back to browsing therapists",
+    "goBack": "Go back"
   },
   "AppointmentCalendar": {
     "appointmentsCalendar": "Appointment Calendar",
