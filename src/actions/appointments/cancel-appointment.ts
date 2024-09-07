@@ -5,7 +5,6 @@ import { APPOINTMENT_TYPE_ID_INTRO_SESSION } from "@/contants/config";
 import { UserRole } from "@/generalTypes";
 import { getCurrentRole, requireAuth } from "@/lib/auth";
 import { sendAppointmentCancellationEmail } from "@/lib/mail";
-import { cancelAllScheduledJobsForAppointment } from "@/lib/schedule-appointment-jobs";
 import Appointment from "@/models/Appointment";
 import User from "@/models/User";
 import { CancelAppointmentSchema } from "@/schemas";
@@ -117,8 +116,6 @@ export const cancelAppointment = async (
         }
       }
     }
-
-    await cancelAllScheduledJobsForAppointment(appointmentId);
 
     await Appointment.findByIdAndUpdate(appointmentId, {
       status: "canceled",

@@ -23,7 +23,7 @@ const ScheduleAppointmentPage = async ({
   if (!user) return "No user found";
 
   return (
-    <div>
+    <div className="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-6">
       <Link href={`/therapist/clients/${params.clientId}`}>
         <Button variant="secondary">{t("goBackToClient")}</Button>
       </Link>

@@ -50,7 +50,13 @@
     "pastTherapists": "المعالجون السابقون",
     "therapist": "المعالج",
     "period": "الفترة",
-    "appointments": "المواعيد"
+    "appointments": "المواعيد",
+    "firstNameEn": "الاسم الأول (بالإنجليزية)",
+  "lastNameEn": "اسم العائلة (بالإنجليزية)",
+  "addArabicName": "أضف الاسم بالعربية (اختياري)",
+  "hideArabicName": "إزالة الاسم بالعربية",
+  "firstNameAr": "الاسم الأول (بالعربية)",
+  "lastNameAr": "اسم العائلة (بالعربية)"
   },
   "RegisterPage": {
     "emailLabel": "البريد الإلكتروني",
@@ -115,7 +121,9 @@
     "noShowClient": "لم يحضر العميل",
     "noShowBoth": "لم يحضر المعالج ولا العميل",
     "notPaidInTime": "العميل لم يدفع في الوقت المحدد",
-    "warningNoRefund": "تحذير: لن يتم إصدار أي استرداد إذا تم الإلغاء خلال 24 ساعة من الموعد."
+    "warningNoRefund": "تحذير: لن يتم إصدار أي استرداد إذا تم الإلغاء خلال 24 ساعة من الموعد.",
+    "loadingAppointments": "جارٍ تحميل المواعيد...",
+  "yourNextAppointment": "موعدك القادم"
   },
   "SettingsPage": {
     "firstNameLabel": "الاسم الأول",
@@ -226,6 +234,7 @@
     "discountLoading": "جارٍ تطبيق رمز الخصم...",
     "calculatingPrice": "جارٍ حساب السعر...",
     "cancelReservation": "إلغاء الحجز"
+    
   },
   "AvailabilityPage": {
     "recurringAvailableTimes": "أوقات متاحة متكررة",
@@ -253,14 +262,16 @@
     "selectEndTime": "اختر وقت الانتهاء",
     "blockedTimesSaved": "تم حفظ الأوقات المحجوبة بنجاح.",
     "blockTimesFor": "حجب الأوقات لـ",
-    "overview": "نظرة عامة"
+    "overview": "نظرة عامة",
+    "selectView": "اختر العرض"
   },
   "LoadingPages": {
   "loading": "جارٍ التحميل...",
   "loadingAppointments": "جارٍ تحميل المواعيد...",
   "loadingVideoSession": "جارٍ تحميل جلسة الفيديو... يرجى الانتظار",
   "loadingProfile": "جارٍ تحميل الملف الشخصي...",
-  "loadingMyClients": "جارٍ تحميل قائمة العملاء..."
+  "loadingMyClients": "جارٍ تحميل قائمة العملاء...",
+  "loadingAvailability": "جارٍ تحميل مدير التوافر..."
 },
   "TherapistProfilePage": {
     "workTitleLabelEn": "المسمى الوظيفي (EN)",
