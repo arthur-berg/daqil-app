@@ -33,6 +33,7 @@ import { Separator } from "@/components/ui/separator";
 import { useTranslations } from "next-intl";
 import NonRecurringTimes from "./non-recurring-times";
 import { Checkbox } from "@/components/ui/checkbox";
+import { formatInTimeZone } from "date-fns-tz";
 
 const generateTimeIntervals = (intervalMinutes = 15) => {
   const times = [];
@@ -101,8 +102,12 @@ const NonRecurringAvailabilityForm = ({
   };
 
   const onSubmit = (values: any) => {
+    const utcDate = new Date(
+      formatInTimeZone(values.date, "UTC", "yyyy-MM-dd'T'HH:mm:ssXXX")
+    );
+
     const formattedData = {
-      date: values.date, // Use local date
+      date: utcDate,
       timeRanges: values.timeRanges.map(
         ({
           startDate,

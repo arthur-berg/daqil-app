@@ -129,6 +129,7 @@ const BookingCalendar = ({
       });
     } else {
       startTransition(async () => {
+        console.log("combinedDateTime", combinedDateTime);
         const data = await reserveAppointment(
           appointmentType,
           therapistId,
