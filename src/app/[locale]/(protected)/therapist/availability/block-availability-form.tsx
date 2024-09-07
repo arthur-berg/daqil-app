@@ -32,7 +32,7 @@ import { saveBlockedOutTimes } from "@/actions/availability";
 import { Separator } from "@/components/ui/separator";
 import { useTranslations } from "next-intl";
 import BlockedOutTimes from "./blocked-out-times";
-import { formatInTimeZone } from "date-fns-tz";
+import { convertToUtcMidnight } from "@/utils";
 
 const generateTimeIntervals = (intervalMinutes = 15) => {
   const times = [];
@@ -82,20 +82,19 @@ const BlockAvailabilityForm = ({
   });
 
   const onSubmit = (values: any) => {
-    const utcDate = new Date(
-      formatInTimeZone(values.date, "UTC", "yyyy-MM-dd'T'HH:mm:ssXXX")
-    );
+    const utcDate = convertToUtcMidnight(values.date);
+
     const formattedData = {
       date: utcDate,
       timeRanges: values.timeRanges.map(
         ({ startDate, endDate }: { startDate: string; endDate: string }) => ({
-          startDate: set(new Date(date!), {
+          startDate: set(utcDate, {
             hours: parseInt(startDate.split(":")[0], 10),
             minutes: parseInt(startDate.split(":")[1], 10),
             seconds: 0,
             milliseconds: 0,
           }),
-          endDate: set(new Date(date!), {
+          endDate: set(utcDate, {
             hours: parseInt(endDate.split(":")[0], 10),
             minutes: parseInt(endDate.split(":")[1], 10),
             seconds: 0,

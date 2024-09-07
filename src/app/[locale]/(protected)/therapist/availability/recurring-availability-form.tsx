@@ -144,7 +144,6 @@ const RecurringAvailabilityForm = ({
   };
 
   const onSubmitDay = (values: z.infer<typeof RecurringAvailabilitySchema>) => {
-    console.log("values", values);
     startTransition(async () => {
       const data = await saveRecurringAvailableTimes(values);
       responseToast(data);
@@ -176,10 +175,7 @@ const RecurringAvailabilityForm = ({
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmitDay)}
-        onError={() => console.log("here")}
-      >
+      <form onSubmit={form.handleSubmit(onSubmitDay)}>
         <div className="mb-8">
           <div className="flex flex-col space-y-2">
             {timeRangeInputs[day] && timeRangeInputs[day].length > 0 ? (

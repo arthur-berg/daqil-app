@@ -52,9 +52,6 @@ export async function handlePaymentIntentSucceeded(
     appointment.participants[0].userId,
     paymentMethodId
   );
-  console.log(
-    `Appointment ${appointmentId} processed successfully and payment marked as paid.`
-  );
 }
 
 async function findAppointmentById(appointmentId: string) {

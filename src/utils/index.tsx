@@ -12,6 +12,14 @@ export const currencyToSymbol = (currency: "USD" | "AED" | "EUR") => {
   }
 };
 
+export function convertToUtcMidnight(selectedDate: Date): Date {
+  const year = selectedDate.getFullYear();
+  const month = selectedDate.getMonth();
+  const day = selectedDate.getDate();
+
+  return new Date(Date.UTC(year, month, day, 0, 0, 0));
+}
+
 export const capitalizeFirstLetter = (string: string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
 };

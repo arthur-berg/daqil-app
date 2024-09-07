@@ -103,8 +103,6 @@ export const cancelAppointment = async (
           (pi) => pi.metadata && pi.metadata.appointmentId === appointmentId
         );
 
-        console.log("paymentIntent", paymentIntent);
-
         if (paymentIntent) {
           try {
             const refund = await stripe.refunds.create({
@@ -145,8 +143,6 @@ export const cancelAppointment = async (
       refundIssued,
       refundAmount,
     };
-
-    console.log("refundAmount", refundAmount);
 
     if (
       appointment.appointmentTypeId.toString() ===
