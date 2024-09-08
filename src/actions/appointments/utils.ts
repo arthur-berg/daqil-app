@@ -124,6 +124,8 @@ export const checkTherapistAvailability = async (
   const requestedStart = new Date(startDate);
   const requestedEnd = new Date(endDate);
 
+  console.log("validTimeSlots", validTimeSlots);
+
   const isSlotAvailable = validTimeSlots.some((slot) => {
     // Check if the requested slot starts and ends within any valid slot
     return (

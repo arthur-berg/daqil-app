@@ -9,7 +9,8 @@ const scheduledTask = new Schema(
       type: String,
       enum: [
         "statusUpdate",
-        "removeUnpaid",
+        "payBeforePaymentExpiredStatusUpdate",
+        "payAfterPaymentExpiredStatusUpdate",
         "emailReminder",
         "smsReminder",
         "paymentReminder",

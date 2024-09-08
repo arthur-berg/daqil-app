@@ -18,9 +18,9 @@ export const schedulePaymentReminders = async (
   const now = new Date();
 
   const reminderTimes = [
-    subDays(paymentExpiryDate, 24), // 24 hours before
-    subHours(paymentExpiryDate, 6), // 6 hours before
-    subHours(paymentExpiryDate, 2), // 2 hours before
+    subDays(paymentExpiryDate, 24), // 24 hours before payment expires
+    subHours(paymentExpiryDate, 6), // 6 hours before payment expires
+    subHours(paymentExpiryDate, 2), // 2 hours before payment expires
   ];
 
   const validReminderTimes = reminderTimes.filter((reminderTime) =>
@@ -51,7 +51,7 @@ export const schedulePayBeforePaymentExpiredStatusUpdateJobs = async (
   paymentExpiryDate: Date,
   locale: string
 ) => {
-  const removeUnpaidTaskId = await scheduleTask(
+  const taskId = await scheduleTask(
     `${process.env.QSTASH_API_URL}/pay-before-booking/payment-expired-status-update`,
     { appointmentId: appointmentId },
     Math.floor(paymentExpiryDate.getTime() / 1000),
@@ -59,8 +59,8 @@ export const schedulePayBeforePaymentExpiredStatusUpdateJobs = async (
   );
   await ScheduledTask.create({
     appointmentId: appointmentId,
-    type: "removeUnpaid",
-    taskId: removeUnpaidTaskId,
+    type: "payBeforePaymentExpiredStatusUpdate",
+    taskId: taskId,
   });
 };
 
@@ -69,7 +69,8 @@ export const schedulePayAfterPaymentExpiredStatusUpdateJobs = async (
   paymentExpiryDate: Date,
   locale: string
 ) => {
-  const removeUnpaidTaskId = await scheduleTask(
+  console.log("paymentExpiryDate", paymentExpiryDate);
+  const taskId = await scheduleTask(
     `${process.env.QSTASH_API_URL}/pay-after-booking/payment-expired-status-update`,
     { appointmentId: appointmentId },
     Math.floor(paymentExpiryDate.getTime() / 1000),
@@ -77,8 +78,8 @@ export const schedulePayAfterPaymentExpiredStatusUpdateJobs = async (
   );
   await ScheduledTask.create({
     appointmentId: appointmentId,
-    type: "removeUnpaid",
-    taskId: removeUnpaidTaskId,
+    type: "payAfterPaymentExpiredStatusUpdate",
+    taskId: taskId,
   });
 };
 

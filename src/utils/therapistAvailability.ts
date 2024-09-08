@@ -170,7 +170,10 @@ export const getTherapistAvailableTimeSlots = (
     return times;
   };
 
+  console.log("selectedDate", selectedDate);
+
   const dayOfWeek = format(selectedDate, "EEEE").toLowerCase();
+  console.log("dayOfWeek", dayOfWeek);
   let timeRanges = getTimeRangesForDay(dayOfWeek);
 
   const nonRecurringTimeRanges =

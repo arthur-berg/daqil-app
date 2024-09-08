@@ -166,7 +166,7 @@ const BookingCalendar = ({
         <>
           <>
             <div className="flex justify-center">
-              <div className="sm:w-1/3 mb-4">
+              <div className="w-3/4 sm:w-1/3 mb-4  sm:px-0">
                 <Select
                   onValueChange={(value) => {
                     setDate({
