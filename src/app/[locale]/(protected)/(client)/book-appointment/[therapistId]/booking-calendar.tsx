@@ -134,7 +134,7 @@ const BookingCalendar = ({
         const data = await reserveAppointment(
           appointmentType,
           therapistId,
-          utcCombinedDateTime
+          combinedDateTime
         );
         if (data.error) {
           toast({

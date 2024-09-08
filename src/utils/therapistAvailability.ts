@@ -113,6 +113,7 @@ export const getTherapistAvailableTimeSlots = (
 
   const getTimeRangesForDay = (day: string): TimeRange[] => {
     const recurring = recurringAvailableTimes.find((r) => r.day === day);
+    console.log("recurring.timeRanges", recurring?.timeRanges);
     return recurring
       ? filterTimeRangesByAppointmentType(
           recurring.timeRanges,
@@ -134,6 +135,8 @@ export const getTherapistAvailableTimeSlots = (
     const nonRecurring = nonRecurringAvailableTimes.find((s) => {
       return isSameDay(new Date(s.date), date);
     });
+
+    console.log("nonRecurring.timeRanges", nonRecurring?.timeRanges);
 
     return nonRecurring ? nonRecurring.timeRanges : [];
   };
@@ -170,10 +173,7 @@ export const getTherapistAvailableTimeSlots = (
     return times;
   };
 
-  console.log("selectedDate", selectedDate);
-
   const dayOfWeek = format(selectedDate, "EEEE").toLowerCase();
-  console.log("dayOfWeek", dayOfWeek);
   let timeRanges = getTimeRangesForDay(dayOfWeek);
 
   const nonRecurringTimeRanges =
