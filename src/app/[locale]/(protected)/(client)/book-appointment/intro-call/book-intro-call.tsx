@@ -16,7 +16,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { currencyToSymbol } from "@/utils";
+import { convertToUtcWithTime, currencyToSymbol } from "@/utils";
 import { getTherapistAvailableTimeSlots } from "@/utils/therapistAvailability";
 import { bookIntroAppointment } from "@/actions/appointments/book-intro-appointment";
 
@@ -105,11 +105,13 @@ const BookIntroCall = ({
     const selectedTherapist = therapists[randomTherapistIndex];
     const therapistId = selectedTherapist._id;
 
+    const utcCombinedDateTime = convertToUtcWithTime(combinedDateTime);
+
     startTransition(async () => {
       const data = await bookIntroAppointment(
         appointmentType,
         therapistId,
-        combinedDateTime
+        utcCombinedDateTime
       );
       if (data.error) {
         toast({

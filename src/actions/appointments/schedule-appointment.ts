@@ -72,6 +72,10 @@ export const scheduleAppointment = async (
   const session = await mongoose.startSession();
   session.startTransaction();
 
+  const paymentExpiryDate = new Date(startDate);
+
+  paymentExpiryDate.setHours(paymentExpiryDate.getHours() - 1);
+
   try {
     const appointment = await Appointment.create(
       [
@@ -84,6 +88,7 @@ export const scheduleAppointment = async (
           payment: {
             method: "payAfterBooking",
             status: "pending",
+            paymentExpiryDate,
           },
           status: "confirmed",
           participants: [{ userId: clientId, showUp: false }],
@@ -98,9 +103,6 @@ export const scheduleAppointment = async (
     const appointmentId = appointment[0]._id;
 
     const appointmentDate = format(new Date(startDate), "yyyy-MM-dd");
-    const paymentExpiryDate = new Date(appointment[0].startDate);
-
-    paymentExpiryDate.setHours(paymentExpiryDate.getHours() - 1);
 
     await schedulePaymentReminders(appointmentId, paymentExpiryDate, locale);
 
