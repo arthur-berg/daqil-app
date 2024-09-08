@@ -458,7 +458,9 @@
     "discountLoading": "جارٍ تطبيق رمز الخصم...",
     "therapistAccepted": "تم قبول المعالج",
     "therapistRejected": "تم رفض المعالج",
-    "reservationCancelled": "تم إلغاء الحجز"
+    "reservationCancelled": "تم إلغاء الحجز",
+    "blockedDateRemoved": "تمت إزالة التاريخ المحظور",
+    "nonRecurringDateRemoved": "تمت إزالة التاريخ غير المتكرر"
   },
   "AppointmentAction": {
     "therapySessionWith": "جلسة علاجية مع"

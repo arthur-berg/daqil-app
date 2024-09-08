@@ -28,7 +28,10 @@ import {
 } from "@/components/ui/form";
 import { useToast } from "@/components/ui/use-toast";
 import { NonRecurringAvailabilitySchemaFE } from "@/schemas";
-import { saveNonRecurringAvailableTimes } from "@/actions/availability";
+import {
+  removeNonRecurringDate,
+  saveNonRecurringAvailableTimes,
+} from "@/actions/availability";
 import { Separator } from "@/components/ui/separator";
 import { useTranslations } from "next-intl";
 import NonRecurringTimes from "./non-recurring-times";
@@ -185,12 +188,29 @@ const NonRecurringAvailabilityForm = ({
     ];
   };
 
+  const handleRemoveNonRecurringDate = (selectedDate: Date) => {
+    const blocked = nonRecurringAvailableTimes.find((blocked: any) =>
+      isSameDay(blocked.date, selectedDate)
+    );
+    startTransition(async () => {
+      const data = await removeNonRecurringDate(blocked.date);
+      setShowCalendar(false);
+      responseToast(data);
+
+      if (data?.success) {
+        form.reset();
+        setDate(null);
+      }
+    });
+  };
+
   return (
     <div>
       <div className="mb-8">
         <NonRecurringTimes
           appointmentTypes={appointmentTypes}
           nonRecurringAvailableTimes={nonRecurringAvailableTimes}
+          handleRemoveNonRecurringDate={handleRemoveNonRecurringDate}
           t={t}
         />
       </div>

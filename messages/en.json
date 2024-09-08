@@ -455,7 +455,9 @@
     "discountLoading": "Applying discount code...",
     "reservationCancelled": "Reservation cancelled",
     "therapistAccepted": "Therapist accepted",
-    "therapistRejected": "Therapist rejected"
+    "therapistRejected": "Therapist rejected",
+    "blockedDateRemoved": "Blocked date removed",
+    "nonRecurringDateRemoved": "Non recurring date removed"
   },
   "AppointmentAction": {
     "therapySessionWith": "Therapy session with"

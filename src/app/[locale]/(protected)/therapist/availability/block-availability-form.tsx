@@ -28,7 +28,7 @@ import {
 } from "@/components/ui/form";
 import { useToast } from "@/components/ui/use-toast";
 import { BlockAvailabilitySchemaFE } from "@/schemas";
-import { saveBlockedOutTimes } from "@/actions/availability";
+import { removeBlockedDate, saveBlockedOutTimes } from "@/actions/availability";
 import { Separator } from "@/components/ui/separator";
 import { useTranslations } from "next-intl";
 import BlockedOutTimes from "./blocked-out-times";
@@ -149,10 +149,31 @@ const BlockAvailabilityForm = ({
     return [{ startDate: "", endDate: "" }];
   };
 
+  const handleRemoveBlockedDate = (selectedDate: Date) => {
+    const blocked = blockedOutTimes.find((blocked: any) =>
+      isSameDay(blocked.date, selectedDate)
+    );
+    startTransition(async () => {
+      const data = await removeBlockedDate(blocked.date);
+      setShowCalendar(false);
+      responseToast(data);
+
+      if (data?.success) {
+        form.reset();
+        setDate(null);
+      }
+    });
+  };
+
   return (
     <div>
       <div className="mb-8">
-        <BlockedOutTimes blockedOutTimes={blockedOutTimes} t={t} />
+        <BlockedOutTimes
+          handleRemoveBlockedDate={handleRemoveBlockedDate}
+          blockedOutTimes={blockedOutTimes}
+          t={t}
+          overview={false}
+        />
       </div>
       <Separator className="my-4" />
 
