@@ -115,26 +115,21 @@ const NonRecurringAvailabilityForm = ({
           startDate: string;
           endDate: string;
           appointmentTypeIds: string[];
-        }) => {
-          const formattedStartDate = set(values.date, {
+        }) => ({
+          startDate: set(values.date, {
             hours: parseInt(startDate.split(":")[0], 10),
             minutes: parseInt(startDate.split(":")[1], 10),
             seconds: 0,
             milliseconds: 0,
-          });
-          const formattedEndDate = set(values.date, {
+          }),
+          endDate: set(values.date, {
             hours: parseInt(endDate.split(":")[0], 10),
             minutes: parseInt(endDate.split(":")[1], 10),
             seconds: 0,
             milliseconds: 0,
-          });
-
-          return {
-            startDate: convertToUtcWithTime(formattedStartDate),
-            endDate: convertToUtcWithTime(formattedEndDate),
-            appointmentTypeIds,
-          };
-        }
+          }),
+          appointmentTypeIds,
+        })
       ),
     };
 
