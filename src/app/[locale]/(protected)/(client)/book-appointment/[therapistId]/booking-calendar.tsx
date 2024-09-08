@@ -108,8 +108,6 @@ const BookingCalendar = ({
       minutes: date?.dateTime?.getMinutes(),
     });
 
-    const utcCombinedDateTime = convertToUtcWithTime(combinedDateTime);
-
     const isFree = appointmentType._id === APPOINTMENT_TYPE_ID_INTRO_SESSION;
 
     if (isFree) {
@@ -117,7 +115,7 @@ const BookingCalendar = ({
         const data = await bookIntroAppointment(
           appointmentType,
           therapistId,
-          utcCombinedDateTime
+          combinedDateTime
         );
         if (data.error) {
           toast({

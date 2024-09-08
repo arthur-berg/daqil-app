@@ -44,11 +44,11 @@ const timeRangeSchema = new Schema({
 
 const timeRangeStringsSchema = new Schema({
   startTime: {
-    type: String,
+    type: Date,
     required: false,
   },
   endTime: {
-    type: String,
+    type: Date,
     required: false,
   },
   appointmentTypeIds: [

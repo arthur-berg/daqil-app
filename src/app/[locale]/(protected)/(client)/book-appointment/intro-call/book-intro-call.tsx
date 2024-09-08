@@ -105,13 +105,11 @@ const BookIntroCall = ({
     const selectedTherapist = therapists[randomTherapistIndex];
     const therapistId = selectedTherapist._id;
 
-    const utcCombinedDateTime = convertToUtcWithTime(combinedDateTime);
-
     startTransition(async () => {
       const data = await bookIntroAppointment(
         appointmentType,
         therapistId,
-        utcCombinedDateTime
+        combinedDateTime
       );
       if (data.error) {
         toast({

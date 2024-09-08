@@ -123,10 +123,12 @@ const getUserWithAppointments = async (id: string) => {
   try {
     await connectToMongoDB();
 
-    const user = await User.findById(id).populate([
-      "appointments.bookedAppointments",
-      "appointments.temporarilyReservedAppointments",
-    ]);
+    const user = await User.findById(id)
+      .populate([
+        "appointments.bookedAppointments",
+        "appointments.temporarilyReservedAppointments",
+      ])
+      .lean();
 
     if (!user) {
       console.log(`User with id ${id} not found.`);

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { RecurringAvailabilitySchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { addMinutes, isBefore, set } from "date-fns";
+import { addMinutes, format, isBefore, set } from "date-fns";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { useToast } from "@/components/ui/use-toast";
@@ -77,25 +77,21 @@ const RecurringAvailabilityForm = ({
     resolver: zodResolver(RecurringAvailabilitySchema),
     defaultValues: {
       day,
-      timeRanges:
-        timeRangeInputs[day]?.map(
-          ({
-            from,
-            to,
-            appointmentTypeIds,
-          }: {
-            from: any;
-            to: any;
-            appointmentTypeIds: string[];
-          }) => ({
-            startTime: from,
-            endTime: to,
-            appointmentTypeIds:
-              appointmentTypeIds.length > 0
-                ? appointmentTypeIds
-                : appointmentTypes.map((type) => type._id),
-          })
-        ) || [],
+      timeRanges: timeRangeInputs[day]?.map(
+        ({
+          from,
+          to,
+          appointmentTypeIds,
+        }: {
+          from: Date;
+          to: Date;
+          appointmentTypeIds: string[];
+        }) => ({
+          startTime: new Date(from),
+          endTime: new Date(to),
+          appointmentTypeIds: appointmentTypeIds || [],
+        })
+      ),
     },
   });
 
@@ -129,11 +125,12 @@ const RecurringAvailabilityForm = ({
     day: string,
     index: number,
     field: "from" | "to",
-    value: string
+    value: Date
   ) => {
     setTimeRangeInputs((prev: any) => {
       const newRanges = [...(prev[day] || [])];
       newRanges[index][field] = value;
+
       form.setValue(
         `timeRanges.${index}.${field === "from" ? "startTime" : "endTime"}`,
         value
@@ -182,7 +179,6 @@ const RecurringAvailabilityForm = ({
               timeRangeInputs[day].map((range: any, index: any) => (
                 <div key={index} className="flex items-center gap-4 flex-wrap">
                   <div className="flex items-center gap-2 flex-wrap">
-                    {/* Start time input */}
                     <FormField
                       control={form.control}
                       name={`timeRanges.${index}.startTime`}
@@ -191,8 +187,10 @@ const RecurringAvailabilityForm = ({
                           <div className="flex items-center gap-2 ">
                             <FormControl>
                               <Popover
-                                open={startTimePopoverOpen}
-                                onOpenChange={setStartTimePopoverOpen}
+                                open={startTimePopoverOpen === index}
+                                onOpenChange={(isOpen) =>
+                                  setStartTimePopoverOpen(isOpen ? index : null)
+                                }
                               >
                                 <PopoverTrigger asChild>
                                   <Button
@@ -206,7 +204,7 @@ const RecurringAvailabilityForm = ({
                                     }
                                   >
                                     {field.value
-                                      ? field.value
+                                      ? format(new Date(field.value), "HH:mm")
                                       : t("selectTime")}
                                     <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                                   </Button>
@@ -226,15 +224,27 @@ const RecurringAvailabilityForm = ({
                                             value={time}
                                             key={time}
                                             onSelect={() => {
+                                              const timeDate = new Date();
+                                              const [hours, minutes] = time
+                                                .split(":")
+                                                .map(Number);
+                                              timeDate.setHours(
+                                                hours,
+                                                minutes,
+                                                0,
+                                                0
+                                              );
+
                                               form.setValue(
                                                 `timeRanges.${index}.startTime`,
-                                                time
+                                                timeDate
                                               );
+
                                               handleTimeRangeChange(
                                                 day,
                                                 index,
                                                 "from",
-                                                time
+                                                timeDate
                                               );
                                               setStartTimePopoverOpen(false);
                                             }}
@@ -268,8 +278,10 @@ const RecurringAvailabilityForm = ({
                           <div className="flex items-center gap-2">
                             <FormControl>
                               <Popover
-                                open={endTimePopoverOpen}
-                                onOpenChange={setEndTimePopoverOpen}
+                                open={endTimePopoverOpen === index}
+                                onOpenChange={(isOpen) =>
+                                  setEndTimePopoverOpen(isOpen ? index : null)
+                                }
                               >
                                 <PopoverTrigger asChild>
                                   <Button
@@ -281,7 +293,7 @@ const RecurringAvailabilityForm = ({
                                     }
                                   >
                                     {field.value
-                                      ? field.value
+                                      ? format(new Date(field.value), "HH:mm")
                                       : t("selectTime")}
                                     <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                                   </Button>
@@ -301,15 +313,27 @@ const RecurringAvailabilityForm = ({
                                             value={time}
                                             key={time}
                                             onSelect={() => {
+                                              const timeDate = new Date();
+                                              const [hours, minutes] = time
+                                                .split(":")
+                                                .map(Number);
+                                              timeDate.setHours(
+                                                hours,
+                                                minutes,
+                                                0,
+                                                0
+                                              );
+
                                               form.setValue(
                                                 `timeRanges.${index}.endTime`,
-                                                time
+                                                timeDate
                                               );
+
                                               handleTimeRangeChange(
                                                 day,
                                                 index,
                                                 "to",
-                                                time
+                                                timeDate
                                               );
                                               setEndTimePopoverOpen(false);
                                             }}
@@ -334,7 +358,6 @@ const RecurringAvailabilityForm = ({
                         </FormItem>
                       )}
                     />
-                    {/* Trash icon */}
                     {editModes[day] && (
                       <Button
                         variant="outline"
@@ -347,7 +370,6 @@ const RecurringAvailabilityForm = ({
                     )}
                   </div>
 
-                  {/* Appointment type checkboxes */}
                   <FormField
                     control={form.control}
                     name={`timeRanges.${index}.appointmentTypeIds`}
@@ -402,8 +424,6 @@ const RecurringAvailabilityForm = ({
               <p className="text-gray-500">{t("noRecurringSet")}</p>
             )}
           </div>
-          {/* Add appointment type selection UI here */}
-
           {editModes[day] && (
             <div className="mt-4 sm:space-x-4 space-y-4 sm:space-y-0">
               <Button

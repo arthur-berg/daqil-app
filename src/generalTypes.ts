@@ -15,8 +15,8 @@ export type TimeRange = {
 };
 
 export type TimeRangeStrings = {
-  startTime?: string;
-  endTime?: string;
+  startTime: Date;
+  endTime: Date;
   appointmentTypeIds?: any[];
 };
 
