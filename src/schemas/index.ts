@@ -171,6 +171,7 @@ export const BlockAvailabilitySchemaBE = z.object({
       endDate: z.date({
         required_error: "To time is required",
       }),
+      appointmentTypeIds: z.array(z.string()),
     })
   ),
 });

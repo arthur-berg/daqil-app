@@ -102,10 +102,10 @@ export const checkForOverlappingAppointments = (
       (startWithBuffer < appointmentEnd && endWithBuffer > appointmentStart) ||
       (startWithBuffer <= appointmentStart && endWithBuffer >= appointmentEnd)
     ) {
-      return true; // Conflict found
+      return true;
     }
   }
-  return false; // No conflict
+  return false;
 };
 
 export const checkTherapistAvailability = async (
@@ -114,22 +114,17 @@ export const checkTherapistAvailability = async (
   endDate: any,
   appointmentType: any
 ) => {
-  /*  console.log("therapist.availableTimes", therapist.availableTimes);
-  console.log("startDate", startDate); */
   const validTimeSlots = getTherapistAvailableTimeSlots(
     therapist.availableTimes,
     appointmentType,
     startDate,
     therapist.appointments
   );
-  // Check if the given start and end date fall within the valid slots
+
   const requestedStart = new Date(startDate);
   const requestedEnd = new Date(endDate);
 
-  /*  console.log("validTimeSlots", validTimeSlots); */
-
   const isSlotAvailable = validTimeSlots.some((slot) => {
-    // Check if the requested slot starts and ends within any valid slot
     return (
       (isEqual(slot.start, requestedStart) ||
         isBefore(slot.start, requestedStart)) &&

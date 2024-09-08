@@ -13,9 +13,14 @@ type TimeRange = {
   appointmentTypeIds?: string[];
 };
 
-type BlockedTime = {
+type BlockedTimeRange = {
   startDate: string;
   endDate: string;
+};
+
+type BlockedTime = {
+  date: string;
+  timeRanges: BlockedTimeRange[];
 };
 
 type NonRecurringTimeRange = {
@@ -76,7 +81,6 @@ export const getTherapistAvailableTimeSlots = (
 
   const appointmentDate = format(selectedDate, "yyyy-MM-dd");
 
-  // Parse booked appointments for the selected day
   const selectedAppointment = appointments.find(
     (appointment) => appointment.date === appointmentDate
   );
@@ -107,7 +111,6 @@ export const getTherapistAvailableTimeSlots = (
     };
   });
 
-  // Function to retrieve the time ranges for a specific day of the week (recurring availability)
   const getTimeRangesForDay = (day: string): TimeRange[] => {
     const recurring = recurringAvailableTimes.find(
       (r) => r.day.toLowerCase() === day
@@ -116,23 +119,28 @@ export const getTherapistAvailableTimeSlots = (
       ? filterTimeRangesByAppointmentType(
           recurring.timeRanges.map((range) => ({
             ...range,
-            startTime: new Date(range.startTime), // Parse recurring strings to Date objects
-            endTime: new Date(range.endTime), // Parse recurring strings to Date objects
+            startTime: new Date(range.startTime),
+            endTime: new Date(range.endTime),
           })),
           appointmentType._id
         )
       : [];
   };
 
-  // Function to get blocked out times
-  const getBlockedOutTimesForDate = (date: Date): BlockedTime[] => {
+  const getBlockedOutTimesForDate = (date: Date): BlockedTimeRange[] => {
     const blocked = blockedOutTimes.find((b) =>
-      isSameDay(new Date(b.startDate), date)
+      isSameDay(new Date(b.date), date)
     );
-    return blocked ? [blocked] : [];
+
+    const timeRanges = blocked?.timeRanges.map((timeRange) => {
+      return {
+        startDate: timeRange.startDate,
+        endDate: timeRange.endDate,
+      };
+    });
+    return timeRanges ? timeRanges : [];
   };
 
-  // Function to get non-recurring availability for a specific date
   const getNonRecurringAvailableTimesForDate = (
     date: Date
   ): NonRecurringTimeRange[] => {
@@ -142,7 +150,6 @@ export const getTherapistAvailableTimeSlots = (
     return nonRecurring ? nonRecurring.timeRanges : [];
   };
 
-  // Function to generate time intervals between start and end times
   const generateTimeIntervals = (
     start: Date,
     end: Date,
@@ -202,7 +209,6 @@ export const getTherapistAvailableTimeSlots = (
 
   const now = new Date();
 
-  // Generate all available time slots
   const availableTimeSlots = timeRanges.reduce<Date[]>((acc, range) => {
     const intervals = generateTimeIntervals(
       new Date(range.startTime),
@@ -221,12 +227,12 @@ export const getTherapistAvailableTimeSlots = (
     );
 
     const isTimeInPast = isBefore(time, now);
+
     return (
       !isTimeInPast &&
       !blockedTimes.some((blocked) => {
         const blockedStart = new Date(blocked.startDate);
         const blockedEnd = new Date(blocked.endDate);
-
         const startsWithinBlockedRange =
           (isAfter(time, blockedStart) || isEqual(time, blockedStart)) &&
           (isBefore(time, blockedEnd) || isEqual(time, blockedEnd));
@@ -258,7 +264,6 @@ export const getTherapistAvailableTimeSlots = (
     );
   });
 
-  // Transform filtered times into time blocks (start and end time)
   const transformTimes = (
     times: Date[],
     durationInMinutes: number

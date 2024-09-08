@@ -2,7 +2,7 @@
 import * as z from "zod";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
-import { format, set, addMinutes, isBefore } from "date-fns";
+import { format, set, addMinutes, isBefore, isSameDay } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -153,6 +153,38 @@ const NonRecurringAvailabilityForm = ({
     });
   };
 
+  const findNonRecurringTimesForDate = (selectedDate: Date) => {
+    const nonRecurring = nonRecurringAvailableTimes.find((time: any) =>
+      isSameDay(new Date(time.date), selectedDate)
+    );
+
+    if (nonRecurring) {
+      return nonRecurring.timeRanges.map(
+        ({
+          startDate,
+          endDate,
+          appointmentTypeIds,
+        }: {
+          startDate: string;
+          endDate: string;
+          appointmentTypeIds: string[];
+        }) => ({
+          startDate: format(new Date(startDate), "HH:mm"),
+          endDate: format(new Date(endDate), "HH:mm"),
+          appointmentTypeIds: appointmentTypeIds,
+        })
+      );
+    }
+
+    return [
+      {
+        startDate: "",
+        endDate: "",
+        appointmentTypeIds: appointmentTypes.map((type) => type._id),
+      },
+    ];
+  };
+
   return (
     <div>
       <div className="mb-8">
@@ -178,19 +210,14 @@ const NonRecurringAvailabilityForm = ({
             <Calendar
               mode="single"
               selected={date}
-              onSelect={(date) => {
-                setDate(date);
+              onSelect={(selectedDate) => {
+                setDate(selectedDate);
+                const nonRecurringTimes = findNonRecurringTimesForDate(
+                  selectedDate as Date
+                );
                 form.reset({
-                  date: date,
-                  timeRanges: [
-                    {
-                      startDate: "",
-                      endDate: "",
-                      appointmentTypeIds: appointmentTypes.map(
-                        (type) => type._id
-                      ),
-                    },
-                  ],
+                  date: selectedDate,
+                  timeRanges: nonRecurringTimes,
                 });
               }}
               className="rounded-md border h-full w-full flex max-w-2xl"
@@ -213,7 +240,7 @@ const NonRecurringAvailabilityForm = ({
                   <h3 className="text-lg font-semibold">
                     {t("setAvailableTimesFor")} {format(date, "PPPP")}
                   </h3>
-                  {form.watch("timeRanges").map((_: any, index: number) => (
+                  {form.watch("timeRanges").map((_: any, index: any) => (
                     <div key={index} className="flex flex-col gap-4 mt-4">
                       <div className="flex gap-4 flex-wrap">
                         <FormField
@@ -223,8 +250,12 @@ const NonRecurringAvailabilityForm = ({
                             <FormItem>
                               <FormControl>
                                 <Popover
-                                  open={startTimePopoverOpen}
-                                  onOpenChange={setStartTimePopoverOpen}
+                                  open={startTimePopoverOpen === index}
+                                  onOpenChange={(isOpen) =>
+                                    setStartTimePopoverOpen(
+                                      isOpen ? index : null
+                                    )
+                                  }
                                 >
                                   <PopoverTrigger asChild>
                                     <Button
@@ -293,8 +324,10 @@ const NonRecurringAvailabilityForm = ({
                             <FormItem>
                               <FormControl>
                                 <Popover
-                                  open={endTimePopoverOpen}
-                                  onOpenChange={setEndTimePopoverOpen}
+                                  open={endTimePopoverOpen === index}
+                                  onOpenChange={(isOpen) =>
+                                    setEndTimePopoverOpen(isOpen ? index : null)
+                                  }
                                 >
                                   <PopoverTrigger asChild>
                                     <Button
