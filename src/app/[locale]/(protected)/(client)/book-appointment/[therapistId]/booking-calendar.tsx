@@ -5,7 +5,7 @@ import { addDays, format, isAfter, isBefore, set } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { bookIntroAppointment } from "@/actions/appointments/book-intro-appointment";
 import { Link, useRouter } from "@/navigation";
-import { currencyToSymbol } from "@/utils";
+import { convertToUtcWithTime, currencyToSymbol } from "@/utils";
 import { getTherapistAvailableTimeSlots } from "@/utils/therapistAvailability";
 import { useTranslations } from "next-intl";
 import {
@@ -108,6 +108,8 @@ const BookingCalendar = ({
       minutes: date?.dateTime?.getMinutes(),
     });
 
+    const utcCombinedDateTime = convertToUtcWithTime(combinedDateTime);
+
     const isFree = appointmentType._id === APPOINTMENT_TYPE_ID_INTRO_SESSION;
 
     if (isFree) {
@@ -115,7 +117,7 @@ const BookingCalendar = ({
         const data = await bookIntroAppointment(
           appointmentType,
           therapistId,
-          combinedDateTime
+          utcCombinedDateTime
         );
         if (data.error) {
           toast({
@@ -132,7 +134,7 @@ const BookingCalendar = ({
         const data = await reserveAppointment(
           appointmentType,
           therapistId,
-          combinedDateTime
+          utcCombinedDateTime
         );
         if (data.error) {
           toast({

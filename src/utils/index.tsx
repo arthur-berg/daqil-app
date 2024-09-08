@@ -20,6 +20,16 @@ export function convertToUtcMidnight(selectedDate: Date): Date {
   return new Date(Date.UTC(year, month, day, 0, 0, 0));
 }
 
+export function convertToUtcWithTime(selectedDate: Date): Date {
+  const year = selectedDate.getFullYear();
+  const month = selectedDate.getMonth();
+  const day = selectedDate.getDate();
+  const hours = selectedDate.getHours();
+  const minutes = selectedDate.getMinutes();
+
+  return new Date(Date.UTC(year, month, day, hours, minutes, 0));
+}
+
 export const capitalizeFirstLetter = (string: string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
 };
