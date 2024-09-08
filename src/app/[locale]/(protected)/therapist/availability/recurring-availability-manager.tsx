@@ -281,7 +281,7 @@ const DefaultAvailabilityManager = ({
                         <span className="px-2 py-1 text-center">
                           {format(new Date(range.from), "HH:mm")}
                         </span>
-                        <span className="py-1 text-center">{" - "}</span>
+                        <span className="py-1 text-center"> - </span>
                         <span className="px-2 py-1 text-center">
                           {format(new Date(range.to), "HH:mm")}
                         </span>

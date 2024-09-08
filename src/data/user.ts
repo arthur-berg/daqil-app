@@ -135,7 +135,7 @@ const getUserWithAppointments = async (id: string) => {
       return null;
     }
 
-    return user;
+    return user as any;
   } catch (error) {
     console.error(`Error fetching user with id ${id}:`, error);
     return null;
