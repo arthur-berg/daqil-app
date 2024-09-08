@@ -6,6 +6,7 @@
     "signUp": "الاشتراك"
   },
   "AuthPage": {
+    "loggingIn": "جارٍ تسجيل الدخول...",
     "welcomeBack": "Welcome back",
     "emailLabel": "Email",
     "passwordLabel": "Password",

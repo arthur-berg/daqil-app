@@ -26,6 +26,7 @@ import { login } from "@/actions/login";
 
 import { Link } from "@/navigation";
 import { NextIntlClientProvider, useLocale, useTranslations } from "next-intl";
+import { BeatLoader } from "react-spinners";
 
 export const LoginForm = () => {
   const searchParams = useSearchParams();
@@ -81,7 +82,12 @@ export const LoginForm = () => {
     });
   };
 
-  return (
+  return isPending ? (
+    <div className="flex flex-col items-center justify-center h-screen space-y-4">
+      <BeatLoader color="white" />
+      <div className="text-lg font-medium text-white">{t("loggingIn")}</div>
+    </div>
+  ) : (
     <CardWrapper
       headerLabel={t("welcomeBack")}
       backButtonLabel={t("noAccount")}

@@ -6,6 +6,7 @@
     "signUp": "Sign up"
   },
   "AuthPage": {
+    "loggingIn": "Logging in...",
     "welcomeBack": "Welcome back",
     "emailLabel": "Email",
     "passwordLabel": "Password",
