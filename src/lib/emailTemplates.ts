@@ -158,6 +158,10 @@ export const invoicePaidTemplate = (
     amountPaid?: string;
     paymentMethod?: string;
     transactionId?: string;
+    therapistDate?: string;
+    therapistTime?: string;
+    clientDate?: string;
+    clientTime?: string;
   },
   isTherapist: boolean,
   t: any
@@ -199,6 +203,13 @@ export const invoicePaidTemplate = (
     `
     : "";
 
+  const date = isTherapist
+    ? appointmentDetails.therapistDate
+    : appointmentDetails.clientDate;
+  const time = isTherapist
+    ? appointmentDetails.therapistTime
+    : appointmentDetails.clientTime;
+
   return `
     <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
@@ -215,8 +226,8 @@ export const invoicePaidTemplate = (
           <p><strong>${t("clientLabel")}</strong> ${
     appointmentDetails.clientName
   }</p>
-          <p><strong>${t("dateLabel")}</strong> ${appointmentDetails.date}</p>
-          <p><strong>${t("timeLabel")}</strong> ${appointmentDetails.time}</p>
+          <p><strong>${t("dateLabel")}</strong> ${date}</p>
+          <p><strong>${t("timeLabel")}</strong> ${time}</p>
           <p><strong>${t("durationLabel")}</strong> ${
     appointmentDetails.durationInMinutes
   } ${t("minutesLabel")}</p>
@@ -248,6 +259,10 @@ export const paidAppointmentConfirmationTemplate = (
     amountPaid?: string;
     paymentMethod?: string;
     transactionId?: string;
+    clientDate?: string;
+    clientTime?: string;
+    therapistDate?: string;
+    therapistTime?: string;
   },
   isTherapist: boolean,
   t: any
@@ -283,6 +298,13 @@ export const paidAppointmentConfirmationTemplate = (
     `
     : "";
 
+  const date = isTherapist
+    ? appointmentDetails.therapistDate
+    : appointmentDetails.clientDate;
+  const time = isTherapist
+    ? appointmentDetails.therapistTime
+    : appointmentDetails.clientTime;
+
   return `
     <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
@@ -299,8 +321,8 @@ export const paidAppointmentConfirmationTemplate = (
           <p><strong>${t("clientLabel")}</strong> ${
     appointmentDetails.clientName
   }</p>
-          <p><strong>${t("dateLabel")}</strong> ${appointmentDetails.date}</p>
-          <p><strong>${t("timeLabel")}</strong> ${appointmentDetails.time}</p>
+          <p><strong>${t("dateLabel")}</strong> ${date}</p>
+          <p><strong>${t("timeLabel")}</strong> ${time}</p>
           <p><strong>${t("durationLabel")}</strong> ${
     appointmentDetails.durationInMinutes
   } ${t("minutesLabel")}</p>

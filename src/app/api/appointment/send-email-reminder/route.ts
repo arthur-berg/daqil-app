@@ -39,6 +39,10 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
 
     const userTimeZone = user?.settings?.timeZone || "UTC";
 
+    console.log("user", user);
+
+    console.log("userTimeZone", userTimeZone);
+
     const appointmentDate = formatInTimeZone(
       new Date(appointment.startDate),
       userTimeZone,

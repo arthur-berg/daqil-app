@@ -340,6 +340,10 @@ export const sendInvoicePaidEmail = async (
     amountPaid: string;
     paymentMethod: string;
     transactionId: string;
+    clientDate: string;
+    clientTime: string;
+    therapistDate: string;
+    therapistTime: string;
   },
   t: any
 ) => {

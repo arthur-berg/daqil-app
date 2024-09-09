@@ -113,26 +113,34 @@ async function processAppointmentPayment(
   const clientEmail = client.email;
   const therapistEmail = therapist.email;
 
-  const appointmentDate = formatInTimeZone(
+  const therapistAppointmentDate = formatInTimeZone(
+    new Date(appointment.startDate),
+    therapistTimeZone,
+    "yyyy-MM-dd"
+  );
+
+  const therapistAppointmentTime = formatInTimeZone(
+    new Date(appointment.startDate),
+    therapistTimeZone,
+    "HH:mm"
+  );
+
+  const clientAppointmentDate = formatInTimeZone(
     new Date(appointment.startDate),
     clientTimeZone,
     "yyyy-MM-dd"
   );
-  const appointmentTime = formatInTimeZone(
+  const clientAppointmentTime = formatInTimeZone(
     new Date(appointment.startDate),
     clientTimeZone,
     "HH:mm"
   );
 
-  console.log("appointment.startDate", appointment.startDate);
-
-  console.log("clientTimeZone", clientTimeZone);
-  console.log("appointmentDate", appointmentDate);
-  console.log("appointmentTime", appointmentTime);
-
   const appointmentDetails = {
-    date: appointmentDate,
-    time: appointmentTime,
+    clientDate: clientAppointmentDate,
+    clientTime: clientAppointmentTime,
+    therapistDate: therapistAppointmentDate,
+    therapistTime: therapistAppointmentTime,
     therapistName: `${getFullName(
       therapist.firstName,
       therapist.lastName,
