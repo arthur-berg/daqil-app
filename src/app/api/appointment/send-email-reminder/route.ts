@@ -23,8 +23,14 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
     });
 
     const appointment = await Appointment.findById(appointmentId)
-      .populate("participants.userId")
-      .populate("hostUserId");
+      .populate({
+        path: "participants.userId",
+        select: "firstName lastName email settings.timeZone",
+      })
+      .populate({
+        path: "hostUserId",
+        select: "firstName lastName email settings.timeZone",
+      });
 
     if (!appointment) {
       return NextResponse.json(
@@ -34,24 +40,17 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
     }
 
     const clientEmail = appointment.participants[0].userId.email;
-
-    const user = await getCurrentUser();
-
-    const userTimeZone = user?.settings?.timeZone || "UTC";
-
-    console.log("user", user);
-
-    console.log("userTimeZone", userTimeZone);
+    const clientTimeZone = appointment.participants[0].userId.settings.timeZone;
 
     const appointmentDate = formatInTimeZone(
       new Date(appointment.startDate),
-      userTimeZone,
+      clientTimeZone,
       "PPPP"
     );
 
     const appointmentTime = formatInTimeZone(
       new Date(appointment.startDate),
-      userTimeZone,
+      clientTimeZone,
       "HH:mm"
     );
 
