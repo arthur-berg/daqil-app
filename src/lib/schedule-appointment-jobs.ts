@@ -109,7 +109,7 @@ export const scheduleReminderJobs = async (
   /* const oneDayBefore = subDays(new Date(appointment.startDate), 1); */
   const twoHoursBefore = subHours(new Date(appointment.startDate), 2);
   const thirtyMinutesBefore = subMinutes(new Date(appointment.startDate), 30);
-  /*   const tenSecondsAfter = addSeconds(new Date(now), 10); */
+  const tenSecondsAfter = addSeconds(new Date(now), 10);
 
   /*  if (isAfter(oneDayBefore, addMinutes(now, 1))) {
     const emailReminderTaskIdOneDay = await scheduleTask(
@@ -125,6 +125,13 @@ export const scheduleReminderJobs = async (
       taskId: emailReminderTaskIdOneDay,
     });
   } */
+
+  await scheduleTask(
+    `${process.env.QSTASH_API_URL}/send-email-reminder`,
+    { clientEmail: appointment.clientEmail, appointmentId: appointmentId },
+    Math.floor(tenSecondsAfter.getTime() / 1000),
+    locale
+  );
 
   if (isAfter(twoHoursBefore, addMinutes(now, 1))) {
     const emailReminderTaskIdOneHour = await scheduleTask(
