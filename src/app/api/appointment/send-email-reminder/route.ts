@@ -5,8 +5,6 @@ import Appointment from "@/models/Appointment";
 import { getTranslations } from "next-intl/server";
 import connectToMongoDB from "@/lib/mongoose";
 import { getFirstName, getFullName } from "@/utils/nameUtilsForApiRoutes";
-import { format } from "date-fns";
-import { getCurrentUser } from "@/lib/auth";
 import { formatInTimeZone } from "date-fns-tz";
 
 export const POST = verifySignatureAppRouter(async (req: NextRequest) => {

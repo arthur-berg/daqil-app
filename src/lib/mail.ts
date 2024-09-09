@@ -509,8 +509,10 @@ export const sendClientNotPaidInTimeEmail = async (
   clientEmail: string,
   therapistEmail: string,
   appointmentDetails: {
-    date: string;
-    time: string;
+    clientDate: string;
+    clientTime: string;
+    therapistDate: string;
+    therapistTime: string;
     therapistName: string;
     clientName: string;
   },

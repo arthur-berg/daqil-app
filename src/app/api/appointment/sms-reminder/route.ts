@@ -2,13 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { verifySignatureAppRouter } from "@upstash/qstash/nextjs";
 import Appointment from "@/models/Appointment";
 import { sendSmsReminder } from "@/lib/twilio-sms";
-import { format } from "date-fns";
 import { getTranslations } from "next-intl/server";
 import { getFirstName, getLastName } from "@/utils/nameUtilsForApiRoutes";
 import { formatInTimeZone } from "date-fns-tz";
 
 import connectToMongoDB from "@/lib/mongoose";
-import { getCurrentUser } from "@/lib/auth";
 
 export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
   try {
@@ -22,8 +20,14 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
     });
 
     const appointment = await Appointment.findById(appointmentId)
-      .populate("participants.userId")
-      .populate("hostUserId"); // Populate the host user details
+      .populate({
+        path: "participants.userId",
+        select: "firstName lastName personalInfo.phoneNumber settings.timeZone",
+      })
+      .populate({
+        path: "hostUserId",
+        select: "firstName lastName",
+      });
 
     if (!appointment) {
       return NextResponse.json(
@@ -34,12 +38,15 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
 
     const clientPhone =
       appointment.participants[0].userId.personalInfo.phoneNumber;
+
     const hostFirstName = getFirstName(
       appointment.hostUserId.firstName,
       locale
     );
     const hostLastName = getLastName(appointment.hostUserId.lastName, locale);
     const appointmentStartTime = new Date(appointment.startDate);
+
+    const clientTimeZone = appointment.participants[0].userId.settings.timeZone;
 
     if (!clientPhone) {
       return NextResponse.json(
@@ -48,13 +55,9 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
       );
     }
 
-    const user = await getCurrentUser();
-
-    const userTimeZone = user?.settings?.timeZone || "UTC";
-
     const formattedTime = formatInTimeZone(
       appointmentStartTime,
-      userTimeZone,
+      clientTimeZone,
       "HH:mm"
     );
 

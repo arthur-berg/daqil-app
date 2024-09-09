@@ -8,7 +8,6 @@ import { getTranslations } from "next-intl/server";
 import mongoose from "mongoose";
 import { getFullName } from "@/utils/nameUtilsForApiRoutes";
 import connectToMongoDB from "@/lib/mongoose";
-import { getCurrentUser } from "@/lib/auth";
 import { formatInTimeZone } from "date-fns-tz";
 
 export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
@@ -21,8 +20,14 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
     const { appointmentId, locale } = body;
 
     const appointment = await Appointment.findById(appointmentId)
-      .populate("participants.userId")
-      .populate("hostUserId");
+      .populate({
+        path: "participants.userId",
+        select: "firstName lastName email settings.timeZone",
+      })
+      .populate({
+        path: "hostUserId",
+        select: "firstName lastName email settings.timeZone",
+      });
 
     if (!appointment) {
       await session.abortTransaction();
@@ -75,19 +80,33 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
       );
 
       if (appointment.payment.method === "payAfterBooking") {
-        const user = await getCurrentUser();
+        const client = appointment.participants[0].userId;
+        const therapist = appointment.hostUserId;
 
-        const userTimeZone = user?.settings?.timeZone || "UTC";
+        const clientTimeZone = client.settings?.timeZone || "UTC";
+        const therapistTimeZone = therapist.settings?.timeZone || "UTC";
 
-        const appointmentDate = formatInTimeZone(
+        const clientAppointmentDate = formatInTimeZone(
           new Date(appointment.startDate),
-          userTimeZone,
+          clientTimeZone,
           "PPPP"
         );
 
-        const appointmentTime = formatInTimeZone(
+        const clientAppointmentTime = formatInTimeZone(
           new Date(appointment.startDate),
-          userTimeZone,
+          clientTimeZone,
+          "HH:mm"
+        );
+
+        const therapistAppointmentDate = formatInTimeZone(
+          new Date(appointment.startDate),
+          therapistTimeZone,
+          "PPPP"
+        );
+
+        const therapistAppointmentTime = formatInTimeZone(
+          new Date(appointment.startDate),
+          therapistTimeZone,
           "HH:mm"
         );
 
@@ -95,8 +114,10 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
           appointment.participants[0].userId.email,
           appointment.hostUserId.email,
           {
-            date: appointmentDate,
-            time: appointmentTime,
+            clientDate: clientAppointmentDate,
+            clientTime: clientAppointmentTime,
+            therapistDate: therapistAppointmentDate,
+            therapistTime: therapistAppointmentTime,
             therapistName: `${getFullName(
               appointment.hostUserId.firstName,
               appointment.hostUserId.lastName,

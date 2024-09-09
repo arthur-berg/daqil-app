@@ -482,8 +482,10 @@ export const reminderEmailTemplate = (t: any, appointmentDetails: any) => {
 
 export const clientNotPaidInTimeTemplate = (
   appointmentDetails: {
-    date: string;
-    time: string;
+    clientDate: string;
+    clientTime: string;
+    therapistDate: string;
+    therapistTime: string;
     therapistName: string;
     clientName: string;
   },
@@ -505,8 +507,12 @@ export const clientNotPaidInTimeTemplate = (
           <p><strong>${t("clientLabel")}</strong> ${
     appointmentDetails.clientName
   }</p>
-          <p><strong>${t("dateLabel")}</strong> ${appointmentDetails.date}</p>
-          <p><strong>${t("timeLabel")}</strong> ${appointmentDetails.time}</p>
+          <p><strong>${t("dateLabel")}</strong> ${
+    appointmentDetails.clientDate
+  }</p>
+          <p><strong>${t("timeLabel")}</strong> ${
+    appointmentDetails.clientTime
+  }</p>
         </div>
         <div style="margin-top: 20px; font-size: 16px; color: #333333;">
           <p>${t("notPaidInTimeMessageClient")}</p>
@@ -521,8 +527,10 @@ export const clientNotPaidInTimeTemplate = (
 
 export const therapistNotPaidInTimeTemplate = (
   appointmentDetails: {
-    date: string;
-    time: string;
+    clientDate: string;
+    clientTime: string;
+    therapistDate: string;
+    therapistTime: string;
     therapistName: string;
     clientName: string;
   },
@@ -544,8 +552,12 @@ export const therapistNotPaidInTimeTemplate = (
           <p><strong>${t("clientLabel")}</strong> ${
     appointmentDetails.clientName
   }</p>
-          <p><strong>${t("dateLabel")}</strong> ${appointmentDetails.date}</p>
-          <p><strong>${t("timeLabel")}</strong> ${appointmentDetails.time}</p>
+          <p><strong>${t("dateLabel")}</strong> ${
+    appointmentDetails.therapistDate
+  }</p>
+          <p><strong>${t("timeLabel")}</strong> ${
+    appointmentDetails.therapistTime
+  }</p>
         </div>
         <div style="margin-top: 20px; font-size: 16px; color: #333333;">
           <p>${t("notPaidInTimeMessageTherapist")}</p>
