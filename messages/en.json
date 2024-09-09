@@ -373,8 +373,13 @@
     "deletingDiscountCode": "Deleting discount code..."
   },
   "MyClientsPage": {
+    "noClientsFound": "No clients found.",
     "goBackToClients": "Go back to clients overview",
-    "goBackToClient": "Go back to client profile"
+    "goBackToClient": "Go back to client profile",
+    "myClients": "My Clients",
+    "name":"Name",
+    "email": "Email",
+    "totalAppointments":"Total appointments"
   },
   "Breadcrumbs": {
     "myClients": "My Clients",
@@ -598,5 +603,8 @@
     "6692b4919a6b12347d0afac4": "Therapy session - 30 minutes",
     "66cd9d22e83c327cf7e0f57b": "Therapy session - 60 minutes",
     "66cd9e05e83c327cf7e0f57c": "Introduction meeting"
+  },
+  "LogoutButton": {
+    "loggingYouOut": "Logging you out..."
   }
 }

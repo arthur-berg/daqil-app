@@ -4,7 +4,6 @@ import {
   addMinutes,
   addSeconds,
   isAfter,
-  subDays,
   subHours,
   subMinutes,
   subSeconds,
@@ -17,10 +16,16 @@ export const schedulePaymentReminders = async (
 ): Promise<void> => {
   const now = new Date();
 
+  /* const reminderTimes = [
+    subHours(paymentExpiryDate, 24),
+    subHours(paymentExpiryDate, 6),
+    subHours(paymentExpiryDate, 2),
+  ]; */
+
   const reminderTimes = [
-    subDays(paymentExpiryDate, 24), // 24 hours before payment expires
-    subHours(paymentExpiryDate, 6), // 6 hours before payment expires
-    subHours(paymentExpiryDate, 2), // 2 hours before payment expires
+    subHours(paymentExpiryDate, 3),
+    subHours(paymentExpiryDate, 2),
+    subHours(paymentExpiryDate, 1),
   ];
 
   const validReminderTimes = reminderTimes.filter((reminderTime) =>

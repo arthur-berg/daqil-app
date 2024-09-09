@@ -375,8 +375,13 @@
     "deletingDiscountCode": "جارٍ حذف رمز الخصم..."
   },
   "MyClientsPage": {
+    "noClientsFound": "لم يتم العثور على عملاء.",
     "goBackToClients": "العودة إلى نظرة عامة على العملاء",
-    "goBackToClient": "العودة إلى ملف العميل"
+    "goBackToClient": "العودة إلى ملف العميل",
+    "myClients": "عملائي",
+    "name": "الاسم",
+    "email": "البريد الإلكتروني",
+    "totalAppointments": "إجمالي المواعيد"
   },
   "Breadcrumbs": {
     "myClients": "عملائي",
@@ -599,5 +604,8 @@
     "6692b4919a6b12347d0afac4": "جلسة علاجية - 30 دقيقة",
     "66cd9d22e83c327cf7e0f57b": "جلسة علاجية - 60 دقيقة",
     "66cd9e05e83c327cf7e0f57c": "اجتماع تعريفي"
+  },
+  "LogoutButton": {
+    "loggingYouOut": "جاري تسجيل خروجك..."
   }
 }

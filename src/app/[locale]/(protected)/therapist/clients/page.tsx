@@ -11,6 +11,7 @@ import {
 import { Link } from "@/navigation";
 import { getFullName } from "@/utils/formatName";
 import connectToMongoDB from "@/lib/mongoose";
+import { getTranslations } from "next-intl/server";
 
 const MyClientsPage = async () => {
   await connectToMongoDB();
@@ -18,20 +19,22 @@ const MyClientsPage = async () => {
   const user = await getCurrentUser();
   if (!user) return;
 
+  const t = await getTranslations("MyClientsPage");
+
   const clients = await getClients(user.id);
 
   if (!clients || clients.length === 0) {
-    return <div className="text-center p-4">No clients found.</div>;
+    return <div className="text-center p-4">{t("noClientsFound")}</div>;
   }
   return (
     <div className="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-6">
-      <h1 className="text-3xl font-bold text-center mb-6">My Clients</h1>
+      <h1 className="text-3xl font-bold text-center mb-6">{t("myClients")}</h1>
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[200px]">Name</TableHead>
-            <TableHead>Email</TableHead>
-            <TableHead>Total Appointments</TableHead>
+            <TableHead className="w-[200px]">{t("name")}</TableHead>
+            <TableHead>{t("email")}</TableHead>
+            <TableHead>{t("totalAppointments")}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>

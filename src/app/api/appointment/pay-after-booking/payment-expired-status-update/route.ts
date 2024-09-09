@@ -73,6 +73,8 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
         "HH:mm"
       );
 
+      console.log("sending appointment was canceled email");
+
       await sendClientNotPaidInTimeEmail(
         appointment.participants[0].userId.email,
         appointment.hostUserId.email,
