@@ -2,12 +2,11 @@ import authConfig from "@/auth.config";
 import NextAuth from "next-auth";
 import createMiddleware from "next-intl/middleware";
 import { locales } from "@/lib/config";
-/* import { encode } from "next-auth/jwt"; */
 
 const { auth } = NextAuth(authConfig);
 
 import { DEFAULT_LOGIN_REDIRECT, publicRoutes, authRoutes } from "@/routes";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 
 const intlMiddleware = createMiddleware({
   locales,
@@ -17,11 +16,6 @@ const intlMiddleware = createMiddleware({
 const authMiddleware = auth(async (req) => {
   const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
-
-  /*   const cookiesList = req.cookies.getAll();
-  const sessionCookie = process.env.NEXTAUTH_URL?.startsWith("https://")
-    ? "__Secure-next-auth.session-token"
-    : "next-auth.session-token"; */
 
   const pathnameParts = nextUrl.pathname.split("/");
   const locale = (
@@ -36,55 +30,6 @@ const authMiddleware = auth(async (req) => {
   const isAuthRoute = authRoutes.includes(pathWithoutLocale);
 
   const isApiRoute = nextUrl.pathname.startsWith("/api");
-
-  // no session token present, remove all next-auth cookies and redirect to sign-in
-  /* if (!cookiesList.some((cookie) => cookie.name.includes(sessionCookie))) {
-    const response = NextResponse.redirect(
-      new URL(`/${locale}/auth/login`, req.url)
-    );
-
-    req.cookies.getAll().forEach((cookie) => {
-      if (cookie.name.includes("next-auth"))
-        response.cookies.delete(cookie.name);
-    });
-
-    return response;
-  } */
-
-  // session token present, check if it's valid
-  /* const session = await fetch(`${process.env.NEXTAUTH_URL}/api/auth/session`, {
-    headers: {
-      "content-type": "application/json",
-      cookie: req.cookies.toString(),
-    },
-  } satisfies RequestInit);
-  const json = await session.json();
-  const data = Object.keys(json).length > 0 ? json : null; */
-
-  // session token is invalid, remove all next-auth cookies and redirect to sign-in
-  /* if (!session.ok || !data?.user) {
-    const response = NextResponse.redirect(
-      new URL(`/${locale}/auth/login`, req.url)
-    );
-
-    req.cookies.getAll().forEach((cookie) => {
-      if (cookie.name.includes("next-auth"))
-        response.cookies.delete(cookie.name);
-    });
-
-    return response;
-  } */
-
-  // session token is valid so we can continue
-  /* const newAccessToken = await fetch("path/to/custom/backend"); 
-  const response = NextResponse.next();
-  const newSessionToken = await encode({
-    secret: process.env.NEXTAUTH_SECRET,
-    token: {
-      accessToken: newAccessToken,
-    },
-    maxAge: 30 * 24 * 60 * 60, 
-  }); */
 
   if (isApiRoute) {
     // Skip locale handling for API routes
