@@ -79,12 +79,12 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
           {
             date: appointment.startDate,
             time: appointment.startDate,
-            therapistName: `${await getFullName(
+            therapistName: `${getFullName(
               appointment.hostUserId.firstName,
               appointment.hostUserId.lastName,
               locale
             )} `,
-            clientName: `${await getFullName(
+            clientName: `${getFullName(
               appointment.participants[0].userId.firstName,
               appointment.participants[0].userId.lastName,
               locale

@@ -31,7 +31,7 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
     }
 
     const clientEmail = appointment.participants[0].userId.email;
-    const clientFirstName = await getFirstName(
+    const clientFirstName = getFirstName(
       appointment.participants[0].userId.firstName,
       locale
     );
