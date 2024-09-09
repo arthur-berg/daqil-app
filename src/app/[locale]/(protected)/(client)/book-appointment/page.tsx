@@ -26,7 +26,10 @@ const BookAppointmentPage = async ({
 
   const { isTherapist, isAdmin } = await getCurrentRole();
 
+  console.log("isTherapist", isTherapist);
+
   if (isTherapist) {
+    console.log("redirecting therapist");
     redirect("/therapist/appointments");
   }
 
