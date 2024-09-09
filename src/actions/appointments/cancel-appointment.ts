@@ -15,6 +15,7 @@ import Stripe from "stripe";
 import { getFullName } from "@/utils/formatName";
 import connectToMongoDB from "@/lib/mongoose";
 import { cancelAllScheduledJobsForAppointment } from "@/lib/schedule-appointment-jobs";
+import { formatInTimeZone } from "date-fns-tz";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
@@ -48,9 +49,9 @@ export const cancelAppointment = async (
       .populate({
         path: "participants.userId",
         select:
-          "firstName lastName email stripeCustomerId stripePaymentMethodId",
+          "firstName lastName email stripeCustomerId stripePaymentMethodId settings.timeZone",
       })
-      .populate("hostUserId", "email firstName lastName");
+      .populate("hostUserId", "email firstName lastName settings.timeZone");
 
     if (!appointment) {
       return { error: ErrorMessages("appointmentNotExist") };
@@ -126,9 +127,39 @@ export const cancelAppointment = async (
 
     const therapistEmail = appointment.hostUserId.email;
     const clientEmail = appointment.participants[0].userId.email;
+
+    const clientTimeZone = appointment.participants[0].userId.settings.timeZone;
+    const therapistTimeZone = appointment.hostUserId.settings.timeZone;
+
+    const clientAppointmentDate = formatInTimeZone(
+      new Date(appointment.startDate),
+      clientTimeZone,
+      "yyyy-MM-dd"
+    );
+
+    const clientAppointmentTime = formatInTimeZone(
+      new Date(appointment.startDate),
+      clientTimeZone,
+      "HH:mm"
+    );
+
+    const therapistAppointmentDate = formatInTimeZone(
+      new Date(appointment.startDate),
+      therapistTimeZone,
+      "yyyy-MM-dd"
+    );
+
+    const therapistAppointmentTime = formatInTimeZone(
+      new Date(appointment.startDate),
+      therapistTimeZone,
+      "HH:mm"
+    );
+
     const appointmentDetails = {
-      date: format(appointment.startDate, "yyyy-MM-dd"),
-      time: format(appointment.startDate, "HH:mm"),
+      clientDate: clientAppointmentDate,
+      clientTime: clientAppointmentTime,
+      therapistDate: therapistAppointmentDate,
+      therapistTime: therapistAppointmentTime,
       reason,
       therapistName: `${await getFullName(
         appointment.hostUserId.firstName,

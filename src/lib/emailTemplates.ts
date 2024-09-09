@@ -92,8 +92,10 @@ export const passwordResetEmailTemplate = (token: string, t: any) => {
 
 export const appointmentCancellationTemplate = (
   appointmentDetails: {
-    date: string;
-    time: string;
+    clientDate: string;
+    clientTime: string;
+    therapistDate: string;
+    therapistTime: string;
     reason: string;
     therapistName: string;
     clientName: string;
@@ -112,6 +114,13 @@ export const appointmentCancellationTemplate = (
     ? t("therapistButtonText")
     : t("clientButtonText");
 
+  const date = isTherapist
+    ? appointmentDetails.therapistDate
+    : appointmentDetails.clientDate;
+  const time = isTherapist
+    ? appointmentDetails.therapistTime
+    : appointmentDetails.clientTime;
+
   return `
     <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
@@ -128,8 +137,8 @@ export const appointmentCancellationTemplate = (
           <p><strong>${t("clientLabel")}</strong> ${
     appointmentDetails.clientName
   }</p>
-          <p><strong>${t("dateLabel")}</strong> ${appointmentDetails.date}</p>
-          <p><strong>${t("timeLabel")}</strong> ${appointmentDetails.time}</p>
+          <p><strong>${t("dateLabel")}</strong> ${date}</p>
+          <p><strong>${t("timeLabel")}</strong> ${time}</p>
           <p><strong>${t("reasonLabel")}</strong> ${
     appointmentDetails.reason
   }</p>
@@ -150,8 +159,6 @@ export const appointmentCancellationTemplate = (
 
 export const invoicePaidTemplate = (
   appointmentDetails: {
-    date: string;
-    time: string;
     therapistName: string;
     clientName: string;
     durationInMinutes: number;
@@ -251,8 +258,6 @@ export const invoicePaidTemplate = (
 
 export const paidAppointmentConfirmationTemplate = (
   appointmentDetails: {
-    date: string;
-    time: string;
     therapistName: string;
     clientName: string;
     durationInMinutes: number;
@@ -347,6 +352,10 @@ export const paidAppointmentConfirmationTemplate = (
 export const nonPaidAppointmentConfirmationTemplate = (
   appointmentDetails: {
     date: Date;
+    clientDate: string;
+    clientTime: string;
+    therapistDate: string;
+    therapistTime: string;
     therapistName: string;
     clientName: string;
     appointmentId: string;
@@ -362,8 +371,12 @@ export const nonPaidAppointmentConfirmationTemplate = (
     : `${process.env.NEXT_PUBLIC_APP_URL}/appointments`;
 
   const encodedDate = encodeURIComponent(appointmentDetails.date.toString());
-  const formattedDate = format(new Date(appointmentDetails.date), "yyyy-MM-dd");
-  const formattedTime = format(new Date(appointmentDetails.date), "HH:mm");
+  const date = isTherapist
+    ? appointmentDetails.therapistDate
+    : appointmentDetails.clientDate;
+  const time = isTherapist
+    ? appointmentDetails.therapistTime
+    : appointmentDetails;
 
   const paymentLink = `${process.env.NEXT_PUBLIC_APP_URL}/invoices/${appointmentDetails.appointmentId}/checkout?appointmentId=${appointmentDetails.appointmentId}&appointmentTypeId=${appointmentDetails.appointmentTypeId}&date=${encodedDate}`;
 
@@ -401,8 +414,8 @@ export const nonPaidAppointmentConfirmationTemplate = (
           <p><strong>${t("clientLabel")}</strong> ${
     appointmentDetails.clientName
   }</p>
-          <p><strong>${t("dateLabel")}</strong> ${formattedDate}</p>
-          <p><strong>${t("timeLabel")}</strong> ${formattedTime}</p>
+          <p><strong>${t("dateLabel")}</strong> ${date}</p>
+          <p><strong>${t("timeLabel")}</strong> ${time}</p>
         </div>
         <div style="margin-top: 20px; font-size: 16px; color: #333333;">
           <p>${additionalMessage}</p>

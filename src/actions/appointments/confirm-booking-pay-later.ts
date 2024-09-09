@@ -15,6 +15,7 @@ import mongoose from "mongoose";
 import { getLocale, getTranslations } from "next-intl/server";
 import { revalidatePath } from "next/cache";
 import connectToMongoDB from "@/lib/mongoose";
+import { formatInTimeZone } from "date-fns-tz";
 
 export const confirmBookingPayLater = async (
   appointmentId: string,
@@ -112,12 +113,43 @@ export const confirmBookingPayLater = async (
     const therapistEmail = therapist.email;
     const clientEmail = client.email;
 
+    const clientTimeZone = client?.settings?.timeZone || "UTC";
+    const therapistTimeZone = therapist.settings.timeZone;
+
+    const clientAppointmentDate = formatInTimeZone(
+      new Date(appointment.startDate),
+      clientTimeZone,
+      "yyyy-MM-dd"
+    );
+
+    const clientAppointmentTime = formatInTimeZone(
+      new Date(appointment.startDate),
+      clientTimeZone,
+      "HH:mm"
+    );
+
+    const therapistAppointmentDate = formatInTimeZone(
+      new Date(appointment.startDate),
+      therapistTimeZone,
+      "yyyy-MM-dd"
+    );
+
+    const therapistAppointmentTime = formatInTimeZone(
+      new Date(appointment.startDate),
+      therapistTimeZone,
+      "HH:mm"
+    );
+
     const appointmentDetails = {
-      date: appointment.startDate,
+      clientDate: clientAppointmentDate,
+      clientTime: clientAppointmentTime,
+      therapistDate: therapistAppointmentDate,
+      therapistTime: therapistAppointmentTime,
       therapistName: `${await getFullName(
         therapist.firstName,
         therapist.lastName
       )}`,
+      date: new Date(appointment.startDate),
       clientName: `${await getFullName(client.firstName, client.lastName)}`,
       appointmentId: appointmentId,
       appointmentTypeId: appointmentTypeId,

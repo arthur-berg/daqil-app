@@ -219,8 +219,10 @@ export const sendAppointmentCancellationEmail = async (
   therapistEmail: string,
   clientEmail: string,
   appointmentDetails: {
-    date: string;
-    time: string;
+    clientDate: string;
+    clientTime: string;
+    therapistDate: string;
+    therapistTime: string;
     reason: string;
     therapistName: string;
     clientName: string;
@@ -283,6 +285,10 @@ export const sendNonPaidBookingConfirmationEmail = async (
   clientEmail: string,
   appointmentDetails: {
     date: Date;
+    clientDate: string;
+    clientTime: string;
+    therapistDate: string;
+    therapistTime: string;
     therapistName: string;
     clientName: string;
     appointmentId: string;
@@ -332,8 +338,6 @@ export const sendInvoicePaidEmail = async (
   therapistEmail: string,
   clientEmail: string,
   appointmentDetails: {
-    date: string;
-    time: string;
     therapistName: string;
     clientName: string;
     durationInMinutes: number;
@@ -390,8 +394,10 @@ export const sendPaidBookingConfirmationEmail = async (
   therapistEmail: string,
   clientEmail: string,
   appointmentDetails: {
-    date: string;
-    time: string;
+    clientDate: string;
+    clientTime: string;
+    therapistDate: string;
+    therapistTime: string;
     therapistName: string;
     clientName: string;
     durationInMinutes: number;
