@@ -129,8 +129,6 @@ export const SetupForm = () => {
     });
   };
 
-  console.log("form", form.getValues("settings.timeZone"));
-
   return (
     <CardWrapper
       headerLabel={t("finishSettingUpAccount")}

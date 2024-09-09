@@ -147,9 +147,6 @@ export const getTherapistAvailableTimeSlots = (
     const nonRecurring = nonRecurringAvailableTimes.find((s) =>
       isSameDay(new Date(s.date), date)
     );
-    console.log("nonRecurringAvailableTimes", nonRecurringAvailableTimes);
-    
-    console.log("nonRecurring", nonRecurring);
     return nonRecurring ? nonRecurring.timeRanges : [];
   };
 

@@ -5,6 +5,7 @@ import { Link } from "@/navigation";
 import { getTranslations } from "next-intl/server";
 import { FaUser } from "react-icons/fa";
 import { getFullName } from "@/utils/formatName";
+import connectToMongoDB from "@/lib/mongoose";
 
 const TherapistPage = async ({
   params,
@@ -13,6 +14,8 @@ const TherapistPage = async ({
   params: { id: string; locale: string };
   searchParams: { selectedTherapistView?: string };
 }) => {
+  await connectToMongoDB();
+
   const therapistId = params.id;
   const locale = params.locale;
   const selectedTherapistView = searchParams.selectedTherapistView;
