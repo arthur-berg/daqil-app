@@ -1,8 +1,9 @@
 import { getAppointmentById } from "@/data/appointment";
-import { MdCheckCircle } from "react-icons/md"; // Import a suitable icon
-import { format } from "date-fns"; // Assuming you have date-fns installed for date formatting
+import { MdCheckCircle } from "react-icons/md";
 import { getTranslations } from "next-intl/server";
 import connectToMongoDB from "@/lib/mongoose";
+import { formatInTimeZone } from "date-fns-tz";
+import { getCurrentUser } from "@/lib/auth";
 
 const BookingConfirmedPage = async ({
   searchParams: { appointmentId },
@@ -10,13 +11,26 @@ const BookingConfirmedPage = async ({
   searchParams: { appointmentId: string };
 }) => {
   await connectToMongoDB();
+  const user = await getCurrentUser();
+
   const appointment = await getAppointmentById(appointmentId);
-  const formattedStartDate = format(
+
+  const t = await getTranslations("PaymentSuccessPage");
+
+  const userTimeZone = user?.settings?.timeZone || "UTC";
+
+  // Format appointment dates in the user's timezone
+  const formattedStartDate = formatInTimeZone(
     new Date(appointment.startDate),
+    userTimeZone,
     "MMMM dd, yyyy - HH:mm"
   );
-  const formattedEndDate = format(new Date(appointment.endDate), "HH:mm");
-  const t = await getTranslations("PaymentSuccessPage");
+
+  const formattedEndDate = formatInTimeZone(
+    new Date(appointment.endDate),
+    userTimeZone,
+    "HH:mm"
+  );
 
   return (
     <div className="bg-white shadow-lg rounded-lg p-8 max-w-4xl mx-auto text-center mt-12">

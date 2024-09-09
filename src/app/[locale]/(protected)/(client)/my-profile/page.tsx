@@ -4,6 +4,8 @@ import { getCurrentUserFullName, getFullName } from "@/utils/formatName";
 import { getTranslations } from "next-intl/server";
 
 const MyProfileClientPage = async () => {
+  console.log("My profile client");
+
   const user = await getCurrentUser();
   const fullName = await getCurrentUserFullName();
 

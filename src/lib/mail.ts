@@ -296,7 +296,6 @@ export const sendNonPaidBookingConfirmationEmail = async (
   }
 ) => {
   const t = await getTranslations("NonPaidAppointmentConfirmationEmail");
-
   const therapistMessage = {
     from_email: "info@zakina-app.com",
     subject: t("therapistSubject"),
