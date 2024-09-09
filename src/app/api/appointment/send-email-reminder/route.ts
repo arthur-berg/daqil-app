@@ -4,6 +4,8 @@ import { sendReminderEmail } from "@/lib/mail";
 import Appointment from "@/models/Appointment";
 import { getTranslations } from "next-intl/server";
 import connectToMongoDB from "@/lib/mongoose";
+import { getFirstName, getFullName } from "@/utils/nameUtilsForApiRoutes";
+import { format } from "date-fns";
 
 export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
   try {
@@ -12,8 +14,6 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
     const body = await req.json();
 
     const { appointmentId, locale } = body;
-    console.log("body inside send email reminder");
-    console.log("locale inside send email reminder", locale);
 
     const t = await getTranslations({
       locale,
@@ -33,9 +33,21 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
 
     const clientEmail = appointment.participants[0].userId.email;
 
-    console.log("clientEmail", clientEmail);
+    const appointmentDetails = {
+      date: format(new Date(appointment.startDate), "PPPP"),
+      time: format(new Date(appointment.startDate), "HH:mm"),
+      therapistName: `${getFullName(
+        appointment.hostUserId.firstName,
+        appointment.hostUserId.lastName,
+        locale
+      )} `,
+      clientName: `${getFirstName(
+        appointment.participants[0].userId.firstName,
+        locale
+      )}`,
+    };
 
-    await sendReminderEmail(clientEmail, appointment, t);
+    await sendReminderEmail(clientEmail, appointmentDetails, t);
 
     return NextResponse.json({
       message: `Email reminder sent to ${clientEmail} for appointment ${appointmentId}.`,
