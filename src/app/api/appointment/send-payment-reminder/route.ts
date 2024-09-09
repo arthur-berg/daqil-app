@@ -40,9 +40,6 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
       "HH:mm"
     );
 
-    console.log("clientEmail", clientEmail);
-    console.log("clientFirstName", clientFirstName);
-
     await sendPaymentReminderEmail(
       clientEmail,
       clientFirstName,
