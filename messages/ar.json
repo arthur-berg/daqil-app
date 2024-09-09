@@ -6,6 +6,9 @@
     "signUp": "الاشتراك"
   },
   "AuthPage": {
+    "selectTimezone": "اختر المنطقة الزمنية",
+    "noTimezoneFound": "لم يتم العثور على منطقة زمنية",
+    "searchTimezone": "ابحث عن المنطقة الزمنية",
     "loggingIn": "جارٍ تسجيل الدخول...",
     "welcomeBack": "Welcome back",
     "emailLabel": "Email",
@@ -127,6 +130,10 @@
     "yourNextAppointment": "موعدك القادم"
   },
   "SettingsPage": {
+    "timezoneLabel": "المنطقة الزمنية",
+    "selectTimezone": "اختر المنطقة الزمنية",
+    "noTimezoneFound": "لم يتم العثور على منطقة زمنية",
+    "searchTimezone": "ابحث عن المنطقة الزمنية",
     "firstNameLabel": "الاسم الأول",
     "lastNameLabel": "اسم العائلة",
     "emailLabel": "البريد الإلكتروني",
@@ -293,8 +300,7 @@
     "workDescriptionLabel": "وصف العمل",
     "contactInfo": "معلومات الاتصال",
     "goBackBrowse": "العودة إلى تصفح المعالجين",
-"goBack": "العودة"
-
+    "goBack": "العودة"
   },
   "AppointmentCalendar": {
     "appointmentsCalendar": "تقويم المواعيد",

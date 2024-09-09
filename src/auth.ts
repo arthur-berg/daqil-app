@@ -77,6 +77,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           token.stripePaymentMethodId as string;
         session.user.appointments = token.appointments as any;
         session.user.personalInfo = token.personalInfo as any;
+        session.user.settings = token.settings as any;
 
         if (session.user.role === "CLIENT") {
           session.user.selectedTherapist = token.selectedTherapist as any;
@@ -108,12 +109,12 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       token.email = existingUser.email;
       token.role = existingUser.role;
       token.isTwoFactorEnabled = existingUser.isTwoFactorEnabled;
-
       token.image = existingUser.image;
       token.stripeCustomerId = existingUser.stripeCustomerId;
       token.stripePaymentMethodId = existingUser.stripePaymentMethodId;
       token.appointments = existingUser.appointments;
       token.personalInfo = existingUser.personalInfo;
+      token.settings = existingUser.settings;
 
       if (existingUser.role === "CLIENT") {
         token.selectedTherapistHistory = existingUser.selectedTherapistHistory;

@@ -80,6 +80,7 @@ export type ExtendedUser = DefaultSession["user"] & {
   };
   settings?: {
     preferredCurrency?: "USD" | "AED" | "EUR";
+    timeZone?: string;
   };
 };
 

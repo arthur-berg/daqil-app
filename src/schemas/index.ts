@@ -67,6 +67,11 @@ export const SettingsSchema = z
     email: z.optional(z.string().email()),
     password: z.optional(z.string().min(6)),
     newPassword: z.optional(z.string().min(6)),
+    settings: z.object({
+      timeZone: z.string().min(1, {
+        message: "Timezone is required",
+      }),
+    }),
   })
   .refine(
     (data) => {
@@ -287,6 +292,11 @@ export const SetupAccountSchema = z.object({
     sex: z.enum(["MALE", "FEMALE", "OTHER"]),
     dateOfBirth: z.string().regex(/^\d{4}\/\d{2}\/\d{2}$/, {
       message: "Invalid date format. Use YYYY/MM/DD.",
+    }),
+  }),
+  settings: z.object({
+    timeZone: z.string().min(1, {
+      message: "Timezone is required",
     }),
   }),
 });

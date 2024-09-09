@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { SettingsSchema } from "@/schemas";
 import { useTransition, useState } from "react";
 import { useSession } from "next-auth/react";
+import { useTimezoneSelect, allTimezones } from "react-timezone-select";
 
 import { Switch } from "@/components/ui/switch";
 
@@ -26,6 +27,14 @@ import { useCurrentUser } from "@/hooks/use-current-user";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 import { useTranslations } from "next-intl";
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectValue,
+} from "@/components/ui/select";
 
 const SettingsForm = () => {
   const user = useCurrentUser();
@@ -34,6 +43,9 @@ const SettingsForm = () => {
   const [isPending, startTransition] = useTransition();
   const { update } = useSession();
   const t = useTranslations("SettingsPage");
+  const { options: timezoneOptions, parseTimezone } = useTimezoneSelect({
+    timezones: allTimezones,
+  });
 
   const form = useForm<z.infer<typeof SettingsSchema>>({
     resolver: zodResolver(SettingsSchema),
@@ -43,6 +55,11 @@ const SettingsForm = () => {
       email: user?.email || undefined,
       role: user?.role || undefined,
       isTwoFactorEnabled: user?.isTwoFactorEnabled || undefined,
+      settings: {
+        timeZone:
+          user?.settings?.timeZone ||
+          Intl.DateTimeFormat().resolvedOptions().timeZone,
+      },
     },
   });
 
@@ -124,6 +141,41 @@ const SettingsForm = () => {
                   />
                 </>
               )}
+
+              <FormField
+                control={form.control}
+                name="settings.timeZone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("timezoneLabel")}</FormLabel>
+                    <FormControl>
+                      <Select
+                        value={field.value}
+                        onValueChange={(value) => {
+                          field.onChange(parseTimezone(value).value);
+                        }}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder={t("selectTimezone")} />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            {timezoneOptions.map((option) => (
+                              <SelectItem
+                                key={option.value}
+                                value={option.value}
+                              >
+                                {option.label}
+                              </SelectItem>
+                            ))}
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
               {user?.isOAuth === false && (
                 <FormField

@@ -6,6 +6,9 @@
     "signUp": "Sign up"
   },
   "AuthPage": {
+    "selectTimezone": "Select timezone",
+    "noTimezoneFound": "No timezone found",
+    "searchTimezone": "Search timezone",
     "loggingIn": "Logging in...",
     "welcomeBack": "Welcome back",
     "emailLabel": "Email",
@@ -123,6 +126,10 @@
     "myProfile": "My Profile"
   },
   "SettingsPage": {
+    "selectTimezone": "Select timezone",
+    "noTimezoneFound": "No timezone found",
+    "searchTimezone": "Search timezone",
+    "timezoneLabel": "Timezone",
     "firstNameLabel": "First Name",
     "lastNameLabel": "Last Name",
     "emailLabel": "Email",

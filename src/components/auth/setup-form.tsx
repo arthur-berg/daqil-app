@@ -15,6 +15,21 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { useTimezoneSelect, allTimezones } from "react-timezone-select";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@/components/ui/popover";
+import {
+  Command,
+  CommandInput,
+  CommandList,
+  CommandEmpty,
+  CommandGroup,
+  CommandItem,
+} from "@/components/ui/command";
+
 import { CardWrapper } from "@/components/auth/card-wrapper";
 import { Button } from "@/components/ui/button";
 import { FormError } from "@/components/form-error";
@@ -27,19 +42,55 @@ import { cn } from "@/lib/utils";
 import { PhoneInput } from "../ui/phone-input";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Label } from "../ui/label";
+import { CaretSortIcon } from "@radix-ui/react-icons";
+
+const getMappedTimezone = (ianaTimezone: string) => {
+  return allTimezones[ianaTimezone] ? ianaTimezone : "Asia/Dubai";
+};
+
+const getGmtOffset = (timezone: string) => {
+  const now = new Date();
+  const dtf = new Intl.DateTimeFormat("en-US", {
+    timeZone: timezone,
+    hour12: false,
+    weekday: "long",
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    second: "numeric",
+    timeZoneName: "short",
+  });
+
+  const [{ value: timeZoneName }] = dtf
+    .formatToParts(now)
+    .filter(({ type }) => type === "timeZoneName");
+  const offsetHours = -(now.getTimezoneOffset() / 60);
+
+  return `${timeZoneName}`;
+};
 
 export const SetupForm = () => {
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const [currentPasswordRequired, setCurrentPasswordRequired] = useState(false);
   const [isPending, startTransition] = useTransition();
-  const [showArabicNameFields, setShowArabicNameFields] = useState(false); // New state for Arabic fields visibility
+  const [showArabicNameFields, setShowArabicNameFields] = useState(false);
   const searchParams = useSearchParams();
   const locale = useLocale();
   const t = useTranslations("AuthPage");
+  const { options: timezoneOptions } = useTimezoneSelect({
+    timezones: allTimezones,
+  });
+  const [timezonePopoverOpen, setTimezonePopoverOpen] = useState(false);
+  const [timezoneSearch, setTimezoneSearch] = useState("");
 
   const email = searchParams.get("email");
   const token = searchParams.get("token");
+
+  const detectedTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const defaultTimezone = getMappedTimezone(detectedTimezone);
 
   const form = useForm<z.infer<typeof SetupAccountSchema>>({
     resolver: zodResolver(SetupAccountSchema),
@@ -53,6 +104,9 @@ export const SetupForm = () => {
         phoneNumber: "",
         sex: undefined,
         dateOfBirth: undefined,
+      },
+      settings: {
+        timeZone: defaultTimezone,
       },
     },
   });
@@ -74,6 +128,8 @@ export const SetupForm = () => {
       }
     });
   };
+
+  console.log("form", form.getValues("settings.timeZone"));
 
   return (
     <CardWrapper
@@ -252,6 +308,68 @@ export const SetupForm = () => {
                       className={cn("w-[240px]")}
                     />
                   </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="settings.timeZone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t("selectTimezone")}</FormLabel>
+                  <Popover
+                    open={timezonePopoverOpen}
+                    onOpenChange={(isOpen) => setTimezonePopoverOpen(isOpen)}
+                  >
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        className="w-full justify-between"
+                      >
+                        <div className="truncate max-w-[calc(100%-24px)]">
+                          {field.value && allTimezones[field.value]
+                            ? `${getGmtOffset(field.value)} ${
+                                allTimezones[field.value]
+                              }`
+                            : t("selectTimezone")}
+                        </div>
+                        <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-[300px] p-0">
+                      <Command>
+                        <CommandInput
+                          placeholder={t("searchTimezone")}
+                          value={timezoneSearch}
+                          onValueChange={setTimezoneSearch}
+                        />
+                        <CommandList>
+                          <CommandEmpty>{t("noTimezoneFound")}</CommandEmpty>
+                          <CommandGroup>
+                            {timezoneOptions
+                              .filter((option) =>
+                                option.label
+                                  .toLowerCase()
+                                  .includes(timezoneSearch.toLowerCase())
+                              )
+                              .map((option) => (
+                                <CommandItem
+                                  key={option.value}
+                                  onSelect={() => {
+                                    field.onChange(option.value);
+                                    setTimezonePopoverOpen(false);
+                                  }}
+                                >
+                                  {option.label}
+                                </CommandItem>
+                              ))}
+                          </CommandGroup>
+                        </CommandList>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
                   <FormMessage />
                 </FormItem>
               )}

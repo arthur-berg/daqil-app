@@ -69,7 +69,15 @@ export const settings = async (values: z.input<typeof SettingsSchema>) => {
     values.newPassword = undefined;
   }
 
-  await User.findByIdAndUpdate(dbUser.id, { ...values });
+  const updateData: any = {
+    ...values,
+    settings: {
+      ...dbUser.settings,
+      ...values.settings,
+    },
+  };
+
+  await User.findByIdAndUpdate(dbUser.id, updateData);
 
   return { success: SuccessMessages("settingsUpdated") };
 };

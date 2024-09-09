@@ -2,15 +2,15 @@ import { getAppointmentTypesByIDs } from "@/data/appointment-types";
 import SelectedTherapist from "./selected-therapist";
 import { Button } from "@/components/ui/button";
 import { getClientByIdAppointments, getTherapistById } from "@/data/user";
-import { getCurrentRole, getCurrentUser } from "@/lib/auth";
-import { Link, redirect } from "@/navigation";
+import { getCurrentUser } from "@/lib/auth";
+import { Link } from "@/navigation";
 import { getTranslations } from "next-intl/server";
 import {
   APPOINTMENT_TYPE_ID_LONG_SESSION,
   APPOINTMENT_TYPE_ID_SHORT_SESSION,
 } from "@/contants/config";
 import { redirectUserIfReservationExist } from "./helpers";
-import { MdEvent } from "react-icons/md"; 
+import { MdEvent } from "react-icons/md";
 
 import AcceptTherapist from "./accept-therapist";
 import { getFullName } from "@/utils/formatName";

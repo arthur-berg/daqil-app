@@ -89,6 +89,7 @@ export const setupAccount = async (
     lastName,
     currentPassword,
     personalInfo,
+    settings,
   } = validatedFields.data;
 
   const existingUser = await getUserByEmail(email);
@@ -131,12 +132,18 @@ export const setupAccount = async (
     });
   }
 
+  const updatedSettings = {
+    ...existingUser.settings,
+    timeZone: settings.timeZone,
+  };
+
   await User.findByIdAndUpdate(existingUser._id, {
     password: hashedPassword,
     isAccountSetupDone: true,
     firstName,
     lastName,
     personalInfo,
+    settings: updatedSettings,
   });
 
   await VerificationToken.findByIdAndDelete(existingToken._id);

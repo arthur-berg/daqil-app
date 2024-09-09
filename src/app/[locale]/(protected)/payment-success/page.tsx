@@ -1,6 +1,6 @@
 import { getAppointmentById } from "@/data/appointment";
-import { MdCheckCircle } from "react-icons/md"; // Import a suitable icon
-import { format } from "date-fns"; // Assuming you have date-fns installed for date formatting
+import { MdCheckCircle } from "react-icons/md";
+import { format } from "date-fns";
 import { getTranslations } from "next-intl/server";
 import { currencyToSymbol } from "@/utils";
 import connectToMongoDB from "@/lib/mongoose";

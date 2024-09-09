@@ -268,6 +268,11 @@ const userSchema = new Schema(
         required: false,
         default: "USD",
       },
+      timeZone: {
+        type: String,
+        required: false,
+        default: "America/New_York",
+      },
     },
   },
   {

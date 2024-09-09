@@ -10,7 +10,7 @@ export default async function TherapistLayout({
   await connectToMongoDB();
 
   const { isTherapist, isAdmin } = await getCurrentRole();
-  console.log("inside therapist layout", isTherapist);
+
   if (!isTherapist && !isAdmin) {
     redirect("/unauthorized");
   }
