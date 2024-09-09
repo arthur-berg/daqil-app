@@ -2,8 +2,8 @@ import { getAppointmentTypesByIDs } from "@/data/appointment-types";
 import SelectedTherapist from "./selected-therapist";
 import { Button } from "@/components/ui/button";
 import { getClientByIdAppointments, getTherapistById } from "@/data/user";
-import { getCurrentUser } from "@/lib/auth";
-import { Link } from "@/navigation";
+import { getCurrentRole, getCurrentUser } from "@/lib/auth";
+import { Link, redirect } from "@/navigation";
 import { getTranslations } from "next-intl/server";
 import {
   APPOINTMENT_TYPE_ID_LONG_SESSION,
@@ -23,6 +23,17 @@ const BookAppointmentPage = async ({
   params: { locale: string };
 }) => {
   await connectToMongoDB();
+
+  const { isTherapist, isAdmin } = await getCurrentRole();
+
+  if (isTherapist) {
+    redirect("/therapist/appointments");
+  }
+
+  if (isAdmin) {
+    redirect("/admin");
+  }
+
   const ErrorMessages = await getTranslations("ErrorMessages");
   const t = await getTranslations("BookAppointmentPage");
   const user = await getCurrentUser();
