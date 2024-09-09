@@ -4,6 +4,8 @@ import { format } from "date-fns";
 import { getTranslations } from "next-intl/server";
 import { currencyToSymbol } from "@/utils";
 import connectToMongoDB from "@/lib/mongoose";
+import { getCurrentUser } from "@/lib/auth";
+import { formatInTimeZone } from "date-fns-tz";
 
 const PaymentSuccessPage = async ({
   searchParams: { appointmentId, amountPaid },
@@ -11,6 +13,7 @@ const PaymentSuccessPage = async ({
   searchParams: { appointmentId: string; amountPaid: string };
 }) => {
   await connectToMongoDB();
+  const user = await getCurrentUser();
   const appointment = await getAppointmentById(appointmentId);
 
   const t = await getTranslations("PaymentSuccessPage");
@@ -24,12 +27,20 @@ const PaymentSuccessPage = async ({
     );
   }
 
-  const formattedStartDate = format(
+  const userTimeZone = user?.settings?.timeZone || "UTC";
+
+  // Format appointment dates in the user's timezone
+  const formattedStartDate = formatInTimeZone(
     new Date(appointment.startDate),
+    userTimeZone,
     "MMMM dd, yyyy - HH:mm"
   );
 
-  const formattedEndDate = format(new Date(appointment.endDate), "HH:mm");
+  const formattedEndDate = formatInTimeZone(
+    new Date(appointment.endDate),
+    userTimeZone,
+    "HH:mm"
+  );
 
   return (
     <div className="bg-white shadow-lg rounded-lg p-8 max-w-4xl mx-auto text-center lg:mt-12">
