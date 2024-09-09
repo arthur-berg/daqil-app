@@ -10,7 +10,7 @@ import {
   APPOINTMENT_TYPE_ID_SHORT_SESSION,
 } from "@/contants/config";
 import { redirectUserIfReservationExist } from "./helpers";
-import { MdEvent } from "react-icons/md"; // Import the calendar icon from react-icons/md
+import { MdEvent } from "react-icons/md"; 
 
 import AcceptTherapist from "./accept-therapist";
 import { getFullName } from "@/utils/formatName";
@@ -23,19 +23,6 @@ const BookAppointmentPage = async ({
   params: { locale: string };
 }) => {
   await connectToMongoDB();
-
-  const { isTherapist, isAdmin } = await getCurrentRole();
-
-  console.log("isTherapist", isTherapist);
-
-  if (isTherapist) {
-    console.log("redirecting therapist");
-    redirect("/therapist/appointments");
-  }
-
-  if (isAdmin) {
-    redirect("/admin");
-  }
 
   const ErrorMessages = await getTranslations("ErrorMessages");
   const t = await getTranslations("BookAppointmentPage");

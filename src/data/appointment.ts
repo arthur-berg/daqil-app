@@ -17,24 +17,6 @@ const getStructuredParticipantData = (appointment: any) => {
   return transformedParticipants;
 };
 
-export const getAppointmentByIdWithPolling = async (id: string) => {
-  const maxAttempts = 5;
-  const delay = (ms: number) =>
-    new Promise((resolve) => setTimeout(resolve, ms));
-
-  for (let attempt = 0; attempt < maxAttempts; attempt++) {
-    const appointment = (await Appointment.findById(id).lean().exec()) as any;
-
-    if (appointment && appointment.amountPaid) {
-      return appointment;
-    }
-
-    await delay(2000); // Wait 2 seconds before trying again
-  }
-
-  // If it still doesn't have amountPaid, return whatever was last fetched
-  return Appointment.findById(id).lean().exec();
-};
 export const getAppointmentById = async (id: string) => {
   try {
     const appointment = await Appointment.findById(id);
@@ -45,18 +27,16 @@ export const getAppointmentById = async (id: string) => {
   }
 };
 
-export const getAppointments = async () => {
-  const user = await requireAuth([UserRole.THERAPIST, UserRole.CLIENT]);
-  const dbUser = (await User.findById(user.id).lean()) as any;
-  if (!dbUser || !dbUser.appointments || dbUser.appointments.length === 0) {
-    return [];
-  }
+export const getUserWithAppointments = async (userId: string) => {
+  return User.findById(userId, "appointments").lean();
+};
 
-  const appointmentIds = dbUser.appointments
-    .map((appointment: any) => appointment.bookedAppointments)
+export const getSerializedAppointments = async (appointments: any[]) => {
+  const appointmentIds = appointments
+    .map((appointment) => appointment.bookedAppointments)
     .flat();
 
-  const appointments = await Appointment.find({
+  const populatedAppointments = await Appointment.find({
     _id: { $in: appointmentIds },
     status: { $ne: "temporarily-reserved" },
   })
@@ -67,7 +47,7 @@ export const getAppointments = async () => {
     })
     .populate("hostUserId", "firstName lastName email");
 
-  const serializedAppointments = appointments?.map((appointment: any) => ({
+  return populatedAppointments.map((appointment: any) => ({
     ...appointment,
     _id: appointment._id.toString(),
     participants: getStructuredParticipantData(appointment),
@@ -77,7 +57,16 @@ export const getAppointments = async () => {
     },
     createdAt: appointment.createdAt.toISOString(),
     updatedAt: appointment.updatedAt.toISOString(),
-  })) as any;
+  }));
+};
 
-  return serializedAppointments;
+export const getAppointments = async () => {
+  const user = await requireAuth([UserRole.THERAPIST, UserRole.CLIENT]);
+  const dbUser = (await getUserWithAppointments(user.id)) as any;
+
+  if (!dbUser || dbUser.appointments.length === 0) {
+    return [];
+  }
+
+  return await getSerializedAppointments(dbUser.appointments);
 };
