@@ -2,7 +2,7 @@ import authConfig from "@/auth.config";
 import NextAuth from "next-auth";
 import createMiddleware from "next-intl/middleware";
 import { locales } from "@/lib/config";
-import { encode } from "next-auth/jwt";
+/* import { encode } from "next-auth/jwt"; */
 
 const { auth } = NextAuth(authConfig);
 

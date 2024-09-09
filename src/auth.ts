@@ -130,9 +130,6 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     },
   },
   adapter: MongoDBAdapter(clientPromise),
-  session: { strategy: "jwt", maxAge: 30 * 24 * 60 * 60 },
-  jwt: {
-    maxAge: 30 * 24 * 60 * 60, // 30 days
-  },
+  session: { strategy: "jwt" },
   ...authConfig,
 });
