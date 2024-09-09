@@ -148,6 +148,13 @@ export const scheduleReminderJobs = async (
     });
   }
 
+  await scheduleTask(
+    `${process.env.QSTASH_API_URL}/sms-reminder`,
+    { clientPhone: appointment.clientPhone, appointmentId: appointmentId },
+    Math.floor(tenSecondsAfter.getTime() / 1000),
+    locale
+  );
+
   const smsReminderTaskId = await scheduleTask(
     `${process.env.QSTASH_API_URL}/sms-reminder`,
     { clientPhone: appointment.clientPhone, appointmentId: appointmentId },
