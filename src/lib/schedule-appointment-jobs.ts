@@ -16,12 +16,15 @@ export const schedulePaymentReminders = async (
   locale: string
 ): Promise<void> => {
   const now = new Date();
+  const tenSecondsAfter = addSeconds(new Date(now), 10);
 
   const reminderTimes = [
     subDays(paymentExpiryDate, 24), // 24 hours before payment expires
     subHours(paymentExpiryDate, 6), // 6 hours before payment expires
     subHours(paymentExpiryDate, 2), // 2 hours before payment expires
+    tenSecondsAfter,
   ];
+  console.log("reminderTimes", reminderTimes);
 
   const validReminderTimes = reminderTimes.filter((reminderTime) =>
     isAfter(reminderTime, now)
