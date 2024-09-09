@@ -3,9 +3,7 @@ import { getUserById } from "@/data/user";
 import { UserRole } from "@/generalTypes";
 
 export const getCurrentUser = async () => {
-  console.log("before auth");
   const session = await auth();
-
   return session?.user;
 };
 

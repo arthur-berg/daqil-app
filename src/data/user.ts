@@ -25,9 +25,11 @@ export const getUserById = async (id: string) => {
 
 export const getClientById = async (id: string) => {
   try {
+    console.log("getting client by id start");
     if (!Appointment.schema) {
       throw new Error("Appointment schema is not registered.");
     }
+    console.log("schema exists");
     const client = await User.findById(id)
       .select(
         "firstName lastName email selectedTherapist.therapist selectedTherapistHistory appointments"
@@ -48,6 +50,8 @@ export const getClientById = async (id: string) => {
         },
         match: { status: { $ne: "canceled" } },
       });
+
+    console.log("after get client by id query done");
 
     if (!client) {
       return null;

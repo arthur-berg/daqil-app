@@ -2,9 +2,10 @@ import { getClientById } from "@/data/user";
 import { getCurrentUser } from "@/lib/auth";
 import { getCurrentUserFullName, getFullName } from "@/utils/formatName";
 import { getTranslations } from "next-intl/server";
+import connectToMongoDB from "@/lib/mongoose";
 
 const MyProfileClientPage = async () => {
-  console.log("My profile client");
+  await connectToMongoDB();
 
   const user = await getCurrentUser();
   const fullName = await getCurrentUserFullName();
