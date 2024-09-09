@@ -467,9 +467,6 @@ export const clientNotPaidInTimeTemplate = (
   },
   t: any
 ) => {
-  const formattedDate = format(new Date(appointmentDetails.date), "PPPP");
-  const formattedTime = format(new Date(appointmentDetails.time), "HH:mm");
-
   return `
     <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
@@ -486,8 +483,8 @@ export const clientNotPaidInTimeTemplate = (
           <p><strong>${t("clientLabel")}</strong> ${
     appointmentDetails.clientName
   }</p>
-          <p><strong>${t("dateLabel")}</strong> ${formattedDate}</p>
-          <p><strong>${t("timeLabel")}</strong> ${formattedTime}</p>
+          <p><strong>${t("dateLabel")}</strong> ${appointmentDetails.date}</p>
+          <p><strong>${t("timeLabel")}</strong> ${appointmentDetails.time}</p>
         </div>
         <div style="margin-top: 20px; font-size: 16px; color: #333333;">
           <p>${t("notPaidInTimeMessageClient")}</p>
@@ -509,9 +506,6 @@ export const therapistNotPaidInTimeTemplate = (
   },
   t: any
 ) => {
-  const formattedDate = format(new Date(appointmentDetails.date), "PPPP");
-  const formattedTime = format(new Date(appointmentDetails.time), "HH:mm");
-
   return `
     <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
@@ -528,8 +522,8 @@ export const therapistNotPaidInTimeTemplate = (
           <p><strong>${t("clientLabel")}</strong> ${
     appointmentDetails.clientName
   }</p>
-          <p><strong>${t("dateLabel")}</strong> ${formattedDate}</p>
-          <p><strong>${t("timeLabel")}</strong> ${formattedTime}</p>
+          <p><strong>${t("dateLabel")}</strong> ${appointmentDetails.date}</p>
+          <p><strong>${t("timeLabel")}</strong> ${appointmentDetails.time}</p>
         </div>
         <div style="margin-top: 20px; font-size: 16px; color: #333333;">
           <p>${t("notPaidInTimeMessageTherapist")}</p>

@@ -6,6 +6,8 @@ import { format } from "date-fns";
 import { getTranslations } from "next-intl/server";
 import { getFirstName } from "@/utils/nameUtilsForApiRoutes";
 import connectToMongoDB from "@/lib/mongoose";
+import { formatInTimeZone } from "date-fns-tz";
+import { getCurrentUser } from "@/lib/auth";
 
 export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
   try {
@@ -35,8 +37,14 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
       appointment.participants[0].userId.firstName,
       locale
     );
-    const appointmentStartTime = format(
+
+    const user = await getCurrentUser();
+
+    const userTimeZone = user?.settings?.timeZone || "UTC";
+
+    const appointmentStartTime = formatInTimeZone(
       new Date(appointment.startDate),
+      userTimeZone,
       "HH:mm"
     );
 

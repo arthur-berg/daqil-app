@@ -2,10 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { verifySignatureAppRouter } from "@upstash/qstash/nextjs";
 import Appointment from "@/models/Appointment";
 import { sendSmsReminder } from "@/lib/twilio-sms";
-import { format } from "date-fns"; // Import format from date-fns
+import { format } from "date-fns";
 import { getTranslations } from "next-intl/server";
 import { getFirstName, getLastName } from "@/utils/nameUtilsForApiRoutes";
+import { formatInTimeZone } from "date-fns-tz";
+
 import connectToMongoDB from "@/lib/mongoose";
+import { getCurrentUser } from "@/lib/auth";
 
 export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
   try {
@@ -45,7 +48,15 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
       );
     }
 
-    const formattedTime = format(appointmentStartTime, "HH:mm");
+    const user = await getCurrentUser();
+
+    const userTimeZone = user?.settings?.timeZone || "UTC";
+
+    const formattedTime = formatInTimeZone(
+      appointmentStartTime,
+      userTimeZone,
+      "HH:mm"
+    );
 
     await sendSmsReminder(
       clientPhone,

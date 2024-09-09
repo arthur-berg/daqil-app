@@ -6,6 +6,8 @@ import { sendClientNotPaidInTimeEmail } from "@/lib/mail";
 import { getTranslations } from "next-intl/server";
 import { getFullName } from "@/utils/nameUtilsForApiRoutes";
 import connectToMongoDB from "@/lib/mongoose";
+import { getCurrentUser } from "@/lib/auth";
+import { formatInTimeZone } from "date-fns-tz";
 
 export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
   await connectToMongoDB();
@@ -36,12 +38,28 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
         cancellationReason: "not-paid-in-time",
       });
 
+      const user = await getCurrentUser();
+
+      const userTimeZone = user?.settings?.timeZone || "UTC";
+
+      const appointmentDate = formatInTimeZone(
+        new Date(appointment.startDate),
+        userTimeZone,
+        "PPPP"
+      );
+
+      const appointmentTime = formatInTimeZone(
+        new Date(appointment.startDate),
+        userTimeZone,
+        "HH:mm"
+      );
+
       await sendClientNotPaidInTimeEmail(
         appointment.participants[0].userId.email,
         appointment.hostUserId.email,
         {
-          date: appointment.startDate,
-          time: appointment.startDate,
+          date: appointmentDate,
+          time: appointmentTime,
           therapistName: `${getFullName(
             appointment.hostUserId.firstName,
             appointment.hostUserId.lastName,
