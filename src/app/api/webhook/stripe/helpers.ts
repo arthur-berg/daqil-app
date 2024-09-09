@@ -52,9 +52,6 @@ export async function handlePaymentIntentSucceeded(
     appointment.participants[0].userId,
     paymentMethodId
   );
-  console.log(
-    `Appointment ${appointmentId} processed successfully and payment marked as paid.`
-  );
 }
 
 async function findAppointmentById(appointmentId: string) {
@@ -110,6 +107,9 @@ async function processAppointmentPayment(
   const client = appointment.participants[0].userId;
   const therapist = appointment.hostUserId;
 
+  const clientEmail = client.email;
+  const therapistEmail = therapist.email;
+
   const appointmentDetails = {
     date: format(new Date(appointment.startDate), "yyyy-MM-dd"),
     time: format(new Date(appointment.startDate), "HH:mm"),
@@ -132,16 +132,30 @@ async function processAppointmentPayment(
   await cancelPaymentRelatedJobsForAppointment(appointment._id);
 
   if (appointment.payment.method === "payBeforeBooking") {
-    await handlePayBeforeBooking(appointment, appointmentDetails, locale);
+    await handlePayBeforeBooking(
+      appointment,
+      appointmentDetails,
+      locale,
+      therapistEmail,
+      clientEmail
+    );
   } else if (appointment.payment.method === "payAfterBooking") {
-    await handlePayAfterBooking(appointment, appointmentDetails, locale);
+    await handlePayAfterBooking(
+      appointment,
+      appointmentDetails,
+      locale,
+      therapistEmail,
+      clientEmail
+    );
   }
 }
 
 async function handlePayBeforeBooking(
   appointment: any,
   appointmentDetails: any,
-  locale: string
+  locale: string,
+  therapistEmail: string,
+  clientEmail: string
 ) {
   const appointmentDate = format(new Date(appointment.startDate), "yyyy-MM-dd");
   await updateAppointments(appointment, appointmentDate);
@@ -163,8 +177,8 @@ async function handlePayBeforeBooking(
   });
 
   await sendPaidBookingConfirmationEmail(
-    appointmentDetails.therapistName,
-    appointmentDetails.clientName,
+    therapistEmail,
+    clientEmail,
     appointmentDetails,
     t
   );
@@ -176,7 +190,9 @@ async function handlePayBeforeBooking(
 async function handlePayAfterBooking(
   appointment: any,
   appointmentDetails: any,
-  locale: string
+  locale: string,
+  therapistEmail: string,
+  clientEmail: string
 ) {
   await Appointment.findByIdAndUpdate(appointment._id, {
     "payment.status": "paid",
@@ -190,8 +206,8 @@ async function handlePayAfterBooking(
   });
 
   await sendInvoicePaidEmail(
-    appointmentDetails.therapistName,
-    appointmentDetails.clientName,
+    therapistEmail,
+    clientEmail,
     appointmentDetails,
     t
   );

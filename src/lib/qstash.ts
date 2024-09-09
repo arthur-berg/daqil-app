@@ -18,9 +18,9 @@ export const scheduleTask = async (
       method: "POST",
       notBefore: unixTimestampInSeconds,
     });
-    console.log(
-      `Scheduled task to ${url} with absolute time ${unixTimestampInSeconds}.`
-    );
+    const date = new Date(unixTimestampInSeconds * 1000);
+    const dateString = date.toISOString();
+    console.log(`Scheduled task to ${url} with date: ${dateString}.`);
     return response.messageId; // Correct usage: Return 'messageId'
   } catch (error) {
     console.error("Error scheduling task with QStash:", error);

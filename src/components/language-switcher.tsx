@@ -6,7 +6,13 @@ import { useLocale } from "next-intl";
 import { GlobeIcon } from "@radix-ui/react-icons";
 import { cn } from "@/lib/utils";
 
-const LanguageSwitcher = ({ isOpen }: { isOpen?: boolean }) => {
+const LanguageSwitcher = ({
+  isOpen,
+  primaryBtn,
+}: {
+  isOpen?: boolean;
+  primaryBtn?: boolean;
+}) => {
   const router = useRouter();
   const locale = useLocale();
   const pathname = usePathname();
@@ -20,8 +26,8 @@ const LanguageSwitcher = ({ isOpen }: { isOpen?: boolean }) => {
 
   return (
     <Button
-      variant="ghost"
-      className="justify-end lg:justify-start h-10  mb-1"
+      variant={primaryBtn ? undefined : "ghost"}
+      className={"justify-end lg:justify-start h-10  mb-1"}
       onClick={() => handleLocaleChange(selectedLocale === "en" ? "ar" : "en")}
     >
       <span className={cn(isOpen === false ? "" : "mr-4 rtl:mr-0 rtl:ml-4")}>

@@ -12,7 +12,11 @@ export default async function ProtectedLayout({
   const session = await auth();
   const messages = await getMessages();
   return (
-    <SessionProvider session={session}>
+    <SessionProvider
+      session={session}
+      refetchOnWindowFocus={false}
+      refetchInterval={0}
+    >
       <NextIntlClientProvider messages={messages}>
         <MainLayoutWrapper>{children}</MainLayoutWrapper>
       </NextIntlClientProvider>

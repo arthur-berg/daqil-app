@@ -18,14 +18,7 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
     const body = await req.json();
     const { appointmentId, locale } = body;
 
-    const appointment = await Appointment.findByIdAndUpdate(
-      appointmentId,
-      {
-        status: "canceled",
-        cancellationReason: "not-paid-in-time",
-      },
-      { session }
-    )
+    const appointment = await Appointment.findById(appointmentId)
       .populate("participants.userId")
       .populate("hostUserId");
 
@@ -44,6 +37,15 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
     });
 
     if (appointment.payment.status === "pending") {
+      await Appointment.findByIdAndUpdate(
+        appointmentId,
+        {
+          status: "canceled",
+          cancellationReason: "not-paid-in-time",
+        },
+        { session }
+      );
+
       await User.updateOne(
         {
           _id: appointment.participants[0].userId,
@@ -77,12 +79,12 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
           {
             date: appointment.startDate,
             time: appointment.startDate,
-            therapistName: `${await getFullName(
+            therapistName: `${getFullName(
               appointment.hostUserId.firstName,
               appointment.hostUserId.lastName,
               locale
             )} `,
-            clientName: `${await getFullName(
+            clientName: `${getFullName(
               appointment.participants[0].userId.firstName,
               appointment.participants[0].userId.lastName,
               locale

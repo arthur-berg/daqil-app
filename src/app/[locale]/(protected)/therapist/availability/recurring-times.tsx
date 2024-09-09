@@ -1,4 +1,5 @@
 import { DayTimes, TimeRangeStrings } from "@/generalTypes";
+import { format } from "date-fns";
 import { FaClock } from "react-icons/fa";
 
 const RecurringTimes = ({
@@ -47,11 +48,12 @@ const RecurringTimes = ({
                 <div className="space-y-2">
                   {dayTime.timeRanges.map((timeRange: TimeRangeStrings) => (
                     <div
-                      key={timeRange.startTime}
+                      key={timeRange.startTime?.toString()}
                       className="bg-blue-200 p-2 rounded-md text-blue-900 inline-flex flex-col mr-2"
                     >
                       <div>
-                        {timeRange.startTime} - {timeRange.endTime}
+                        {format(new Date(timeRange.startTime), "HH:mm")} -{" "}
+                        {format(new Date(timeRange.endTime), "HH:mm")}
                       </div>
                       {/* Display appointment type names as a bullet list */}
                       <ul className="text-sm text-blue-700 mt-1 list-disc pl-4">

@@ -1,4 +1,4 @@
-import { qstashClient, scheduleTask } from "@/lib/qstash"; // Import necessary functions
+import { qstashClient, scheduleTask } from "@/lib/qstash";
 import ScheduledTask from "@/models/ScheduledTask";
 import {
   addMinutes,
@@ -18,9 +18,9 @@ export const schedulePaymentReminders = async (
   const now = new Date();
 
   const reminderTimes = [
-    subDays(paymentExpiryDate, 24), // 24 hours before
-    subHours(paymentExpiryDate, 6), // 6 hours before
-    subHours(paymentExpiryDate, 2), // 2 hours before
+    subDays(paymentExpiryDate, 24), // 24 hours before payment expires
+    subHours(paymentExpiryDate, 6), // 6 hours before payment expires
+    subHours(paymentExpiryDate, 2), // 2 hours before payment expires
   ];
 
   const validReminderTimes = reminderTimes.filter((reminderTime) =>
@@ -46,21 +46,39 @@ export const schedulePaymentReminders = async (
   await Promise.all(taskPromises);
 };
 
-export const scheduleRemoveUnpaidJobs = async (
+export const schedulePayBeforePaymentExpiredStatusUpdateJobs = async (
   appointmentId: string,
   paymentExpiryDate: Date,
   locale: string
 ) => {
-  const removeUnpaidTaskId = await scheduleTask(
-    `${process.env.QSTASH_API_URL}/remove-unpaid-appointment`,
+  const taskId = await scheduleTask(
+    `${process.env.QSTASH_API_URL}/pay-before-booking/payment-expired-status-update`,
     { appointmentId: appointmentId },
     Math.floor(paymentExpiryDate.getTime() / 1000),
     locale
   );
   await ScheduledTask.create({
     appointmentId: appointmentId,
-    type: "removeUnpaid",
-    taskId: removeUnpaidTaskId,
+    type: "payBeforePaymentExpiredStatusUpdate",
+    taskId: taskId,
+  });
+};
+
+export const schedulePayAfterPaymentExpiredStatusUpdateJobs = async (
+  appointmentId: string,
+  paymentExpiryDate: Date,
+  locale: string
+) => {
+  const taskId = await scheduleTask(
+    `${process.env.QSTASH_API_URL}/pay-after-booking/payment-expired-status-update`,
+    { appointmentId: appointmentId },
+    Math.floor(paymentExpiryDate.getTime() / 1000),
+    locale
+  );
+  await ScheduledTask.create({
+    appointmentId: appointmentId,
+    type: "payAfterPaymentExpiredStatusUpdate",
+    taskId: taskId,
   });
 };
 
@@ -166,7 +184,13 @@ export const cancelPaymentRelatedJobsForAppointment = async (
   try {
     const tasks = await ScheduledTask.find({
       appointmentId,
-      type: { $in: ["removeUnpaid", "paymentReminder"] },
+      type: {
+        $in: [
+          "payBeforePaymentExpiredStatusUpdate",
+          "payAfterPaymentExpiredStatusUpdate",
+          "paymentReminder",
+        ],
+      },
     });
 
     if (tasks.length === 0) {

@@ -5,8 +5,8 @@ import { UserRole } from "@/generalTypes";
 import { requireAuth } from "@/lib/auth";
 import { sendNonPaidBookingConfirmationEmail } from "@/lib/mail";
 import {
+  schedulePayAfterPaymentExpiredStatusUpdateJobs,
   schedulePaymentReminders,
-  scheduleRemoveUnpaidJobs,
 } from "@/lib/schedule-appointment-jobs";
 import Appointment from "@/models/Appointment";
 import User from "@/models/User";
@@ -130,7 +130,12 @@ export const confirmBookingPayLater = async (
     );
 
     await schedulePaymentReminders(appointmentId, paymentExpiryDate, locale);
-    await scheduleRemoveUnpaidJobs(appointmentId, paymentExpiryDate, locale);
+
+    await schedulePayAfterPaymentExpiredStatusUpdateJobs(
+      appointmentId,
+      paymentExpiryDate,
+      locale
+    );
 
     revalidatePath("/book-appointment");
 

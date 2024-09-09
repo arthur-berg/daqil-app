@@ -17,7 +17,7 @@ export const getAppointmentTypesByIDs = async (ids: string[]) => {
     return appointmentTypes.map((appointmentType) => ({
       ...appointmentType,
       _id: appointmentType._id.toString(),
-    }));
+    })) as any;
   } catch (error) {
     return null;
   }

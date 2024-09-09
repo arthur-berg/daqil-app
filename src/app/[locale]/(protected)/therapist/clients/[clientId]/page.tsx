@@ -22,7 +22,7 @@ const ClientPage = async ({ params }: { params: { clientId: string } }) => {
   );
 
   return (
-    <div>
+    <div className="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-6">
       <div className="mb-4 flex items-center flex-col sm:items-start">
         <Link href={`/therapist/clients`}>
           <Button variant="secondary">{t("goBackToClients")}</Button>

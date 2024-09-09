@@ -2,7 +2,7 @@
 import * as z from "zod";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
-import { format, set, addMinutes, isBefore } from "date-fns";
+import { format, set, addMinutes, isBefore, isSameDay } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -28,10 +28,11 @@ import {
 } from "@/components/ui/form";
 import { useToast } from "@/components/ui/use-toast";
 import { BlockAvailabilitySchemaFE } from "@/schemas";
-import { saveBlockedOutTimes } from "@/actions/availability";
+import { removeBlockedDate, saveBlockedOutTimes } from "@/actions/availability";
 import { Separator } from "@/components/ui/separator";
 import { useTranslations } from "next-intl";
 import BlockedOutTimes from "./blocked-out-times";
+import { convertToUtcMidnight } from "@/utils";
 
 const generateTimeIntervals = (intervalMinutes = 15) => {
   const times = [];
@@ -81,22 +82,27 @@ const BlockAvailabilityForm = ({
   });
 
   const onSubmit = (values: any) => {
+    const utcDate = convertToUtcMidnight(values.date);
+
     const formattedData = {
-      date: values.date,
+      date: utcDate,
       timeRanges: values.timeRanges.map(
         ({ startDate, endDate }: { startDate: string; endDate: string }) => ({
-          startDate: set(new Date(date!), {
+          startDate: set(values.date, {
             hours: parseInt(startDate.split(":")[0], 10),
             minutes: parseInt(startDate.split(":")[1], 10),
             seconds: 0,
             milliseconds: 0,
           }),
-          endDate: set(new Date(date!), {
+          endDate: set(values.date, {
             hours: parseInt(endDate.split(":")[0], 10),
             minutes: parseInt(endDate.split(":")[1], 10),
             seconds: 0,
             milliseconds: 0,
           }),
+          appointmentTypeIds: appointmentTypes.map(
+            (appointmentType) => appointmentType._id
+          ),
         })
       ),
     };
@@ -126,10 +132,48 @@ const BlockAvailabilityForm = ({
     }
   };
 
+  const findBlockedTimesForDate = (selectedDate: Date) => {
+    const blocked = blockedOutTimes.find((blocked: any) =>
+      isSameDay(new Date(blocked.date), selectedDate)
+    );
+
+    if (blocked) {
+      return blocked.timeRanges.map(
+        ({ startDate, endDate }: { startDate: string; endDate: string }) => ({
+          startDate: format(new Date(startDate), "HH:mm"),
+          endDate: format(new Date(endDate), "HH:mm"),
+        })
+      );
+    }
+
+    return [{ startDate: "", endDate: "" }];
+  };
+
+  const handleRemoveBlockedDate = (selectedDate: Date) => {
+    const blocked = blockedOutTimes.find((blocked: any) =>
+      isSameDay(blocked.date, selectedDate)
+    );
+    startTransition(async () => {
+      const data = await removeBlockedDate(blocked.date);
+      setShowCalendar(false);
+      responseToast(data);
+
+      if (data?.success) {
+        form.reset();
+        setDate(null);
+      }
+    });
+  };
+
   return (
     <div>
       <div className="mb-8">
-        <BlockedOutTimes blockedOutTimes={blockedOutTimes} t={t} />
+        <BlockedOutTimes
+          handleRemoveBlockedDate={handleRemoveBlockedDate}
+          blockedOutTimes={blockedOutTimes}
+          t={t}
+          overview={false}
+        />
       </div>
       <Separator className="my-4" />
 
@@ -143,15 +187,16 @@ const BlockAvailabilityForm = ({
       </Button>
       {showCalendar && (
         <>
-          <div className="flex justify-center w-full">
+          <div className="flex w-full">
             <Calendar
               mode="single"
               selected={date}
               onSelect={(date) => {
                 setDate(date);
+                const blockedTimes = findBlockedTimesForDate(date as Date);
                 form.reset({
                   date: date,
-                  timeRanges: [{ startDate: "", endDate: "" }],
+                  timeRanges: blockedTimes,
                 });
               }}
               className="rounded-md border h-full w-full flex max-w-2xl"
@@ -174,7 +219,7 @@ const BlockAvailabilityForm = ({
                   <h3 className="text-lg font-semibold">
                     {t("blockTimesFor")} {format(date, "PPPP")}
                   </h3>
-                  {form.watch("timeRanges").map((_: any, index: number) => (
+                  {form.watch("timeRanges").map((_: any, index: any) => (
                     <div key={index} className="flex gap-4 mt-4 flex-wrap">
                       <FormField
                         control={form.control}
@@ -183,8 +228,10 @@ const BlockAvailabilityForm = ({
                           <FormItem>
                             <FormControl>
                               <Popover
-                                open={startTimePopoverOpen}
-                                onOpenChange={setStartTimePopoverOpen}
+                                open={startTimePopoverOpen === index}
+                                onOpenChange={(isOpen) =>
+                                  setStartTimePopoverOpen(isOpen ? index : null)
+                                }
                               >
                                 <PopoverTrigger asChild>
                                   <Button
@@ -252,8 +299,10 @@ const BlockAvailabilityForm = ({
                           <FormItem>
                             <FormControl>
                               <Popover
-                                open={endTimePopoverOpen}
-                                onOpenChange={setEndTimePopoverOpen}
+                                open={endTimePopoverOpen === index}
+                                onOpenChange={(isOpen) =>
+                                  setEndTimePopoverOpen(isOpen ? index : null)
+                                }
                               >
                                 <PopoverTrigger asChild>
                                   <Button

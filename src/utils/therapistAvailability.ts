@@ -5,24 +5,28 @@ import {
   isBefore,
   isEqual,
   isSameDay,
-  set,
 } from "date-fns";
 import { toZonedTime, formatInTimeZone } from "date-fns-tz";
 
 type TimeRange = {
-  startTime: string;
-  endTime: string;
+  startTime: string | Date;
+  endTime: string | Date;
   appointmentTypeIds?: string[];
 };
 
-type BlockedTime = {
+type BlockedTimeRange = {
   startDate: string;
   endDate: string;
 };
 
+type BlockedTime = {
+  date: string;
+  timeRanges: BlockedTimeRange[];
+};
+
 type NonRecurringTimeRange = {
-  startDate: Date;
-  endDate: Date;
+  startDate: string | Date;
+  endDate: string | Date;
 };
 
 type AvailableTimes = {
@@ -51,9 +55,11 @@ const filterTimeRangesByAppointmentType = (
   timeRanges: TimeRange[],
   appointmentTypeId: string
 ) => {
-  return timeRanges.filter((range) =>
-    range.appointmentTypeIds?.includes(appointmentTypeId)
-  );
+  return timeRanges.filter((range) => {
+    return range.appointmentTypeIds
+      ?.map(String)
+      .includes(String(appointmentTypeId));
+  });
 };
 
 function safeFormat(date: Date, dateFormat: string) {
@@ -72,7 +78,6 @@ export const getTherapistAvailableTimeSlots = (
     nonRecurringAvailableTimes,
     recurringAvailableTimes,
   } = availableTimes;
-
   const { interval } = settings;
 
   const appointmentDate = format(selectedDate, "yyyy-MM-dd");
@@ -80,23 +85,18 @@ export const getTherapistAvailableTimeSlots = (
   const selectedAppointment = appointments.find(
     (appointment) => appointment.date === appointmentDate
   );
-
-  // Filter booked appointments that are not canceled
   const bookedAppointments = selectedAppointment
     ? selectedAppointment.bookedAppointments.filter(
         (appointment: any) => appointment.status !== "canceled"
       )
     : [];
 
-  // Include only valid temporarily reserved appointments (not expired)
   const validTemporarilyReservedAppointments = selectedAppointment
     ? selectedAppointment.temporarilyReservedAppointments.filter(
         (appointment: any) =>
           new Date(appointment.payment.paymentExpiryDate) > new Date()
       )
     : [];
-
-  // Combine both booked and valid temporarily reserved appointments
   const allAppointmentsForDate = [
     ...bookedAppointments,
     ...validTemporarilyReservedAppointments,
@@ -113,20 +113,33 @@ export const getTherapistAvailableTimeSlots = (
   });
 
   const getTimeRangesForDay = (day: string): TimeRange[] => {
-    const recurring = recurringAvailableTimes.find((r) => r.day === day);
+    const recurring = recurringAvailableTimes.find(
+      (r) => r.day.toLowerCase() === day
+    );
     return recurring
       ? filterTimeRangesByAppointmentType(
-          recurring.timeRanges,
+          recurring.timeRanges.map((range) => ({
+            ...range,
+            startTime: new Date(range.startTime),
+            endTime: new Date(range.endTime),
+          })),
           appointmentType._id
         )
       : [];
   };
 
-  const getBlockedOutTimesForDate = (date: Date): BlockedTime[] => {
+  const getBlockedOutTimesForDate = (date: Date): BlockedTimeRange[] => {
     const blocked = blockedOutTimes.find((b) =>
-      isSameDay(new Date(b.startDate), date)
+      isSameDay(new Date(b.date), date)
     );
-    return blocked ? [blocked] : [];
+
+    const timeRanges = blocked?.timeRanges.map((timeRange) => {
+      return {
+        startDate: timeRange.startDate,
+        endDate: timeRange.endDate,
+      };
+    });
+    return timeRanges ? timeRanges : [];
   };
 
   const getNonRecurringAvailableTimesForDate = (
@@ -142,31 +155,31 @@ export const getTherapistAvailableTimeSlots = (
   };
 
   const generateTimeIntervals = (
-    start: string,
-    end: string,
+    start: Date,
+    end: Date,
     interval: number,
-    date: Date
+    selectedDate: Date
   ): Date[] => {
-    if (!start || !end) return [];
-
-    const [startHour, startMinute] = start.split(":").map(Number);
-    const [endHour, endMinute] = end.split(":").map(Number);
-    const startTime = set(new Date(date), {
-      hours: startHour,
-      minutes: startMinute,
-      seconds: 0,
-      milliseconds: 0,
-    });
-    const endTime = set(new Date(date), {
-      hours: endHour,
-      minutes: endMinute,
-      seconds: 0,
-      milliseconds: 0,
-    });
-
     const times: Date[] = [];
-    let current = startTime;
-    while (isBefore(current, endTime)) {
+    let current = new Date(
+      selectedDate.getFullYear(),
+      selectedDate.getMonth(),
+      selectedDate.getDate(),
+      start.getHours(),
+      start.getMinutes(),
+      0
+    );
+
+    const endDate = new Date(
+      selectedDate.getFullYear(),
+      selectedDate.getMonth(),
+      selectedDate.getDate(),
+      end.getHours(),
+      end.getMinutes(),
+      0
+    );
+
+    while (isBefore(current, endDate)) {
       times.push(current);
       current = addMinutes(current, interval);
     }
@@ -174,22 +187,20 @@ export const getTherapistAvailableTimeSlots = (
   };
 
   const dayOfWeek = format(selectedDate, "EEEE").toLowerCase();
+
   let timeRanges = getTimeRangesForDay(dayOfWeek);
 
   const nonRecurringTimeRanges =
     getNonRecurringAvailableTimesForDate(selectedDate);
-
   const formattedNonRecurringTimeRanges = nonRecurringTimeRanges.map(
     (range) => ({
-      startTime: format(new Date(range.startDate), "HH:mm"),
-      endTime: format(new Date(range.endDate), "HH:mm"),
+      startTime: new Date(range.startDate),
+      endTime: new Date(range.endDate),
     })
   );
 
   timeRanges = [...timeRanges, ...formattedNonRecurringTimeRanges].sort(
-    (a, b) =>
-      new Date(`1970-01-01T${a.startTime}:00Z`).getTime() -
-      new Date(`1970-01-01T${b.startTime}:00Z`).getTime()
+    (a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime()
   );
 
   const blockedTimes = [
@@ -204,8 +215,8 @@ export const getTherapistAvailableTimeSlots = (
 
   const availableTimeSlots = timeRanges.reduce<Date[]>((acc, range) => {
     const intervals = generateTimeIntervals(
-      range.startTime,
-      range.endTime,
+      new Date(range.startTime),
+      new Date(range.endTime),
       interval,
       selectedDate
     );
@@ -226,7 +237,6 @@ export const getTherapistAvailableTimeSlots = (
       !blockedTimes.some((blocked) => {
         const blockedStart = new Date(blocked.startDate);
         const blockedEnd = new Date(blocked.endDate);
-
         const startsWithinBlockedRange =
           (isAfter(time, blockedStart) || isEqual(time, blockedStart)) &&
           (isBefore(time, blockedEnd) || isEqual(time, blockedEnd));
@@ -248,13 +258,12 @@ export const getTherapistAvailableTimeSlots = (
           (isBefore(intervalEndAdjusted, blockedEnd) ||
             isEqual(intervalEndAdjusted, blockedEnd));
 
-        const overlaps =
+        return (
           startsWithinBlockedRange ||
           endsWithinBlockedRange ||
           spansBlockedRange ||
-          endAdjustedWithinBlockedRange;
-
-        return overlaps;
+          endAdjustedWithinBlockedRange
+        );
       })
     );
   });

@@ -5,7 +5,7 @@ import { addDays, format, isAfter, isBefore, set } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { bookIntroAppointment } from "@/actions/appointments/book-intro-appointment";
 import { Link, useRouter } from "@/navigation";
-import { currencyToSymbol } from "@/utils";
+import { convertToUtcWithTime, currencyToSymbol } from "@/utils";
 import { getTherapistAvailableTimeSlots } from "@/utils/therapistAvailability";
 import { useTranslations } from "next-intl";
 import {
@@ -166,7 +166,7 @@ const BookingCalendar = ({
         <>
           <>
             <div className="flex justify-center">
-              <div className="sm:w-1/3 mb-4">
+              <div className="w-3/4 sm:w-1/3 mb-4  sm:px-0">
                 <Select
                   onValueChange={(value) => {
                     setDate({

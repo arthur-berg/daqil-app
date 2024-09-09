@@ -24,8 +24,20 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
   },
   callbacks: {
     async signIn({ user, account }) {
-      // Allow OAuth without email verification
-      if (account?.provider !== "credentials") return true;
+      if (account?.provider !== "credentials") {
+        // For OAuth, handle name splitting and populate firstName/lastName with 'en' property
+        if (user.name) {
+          const [firstName, ...lastNameParts] = user.name.split(" ");
+          (user as any).firstName = { en: firstName || "", ar: "" };
+          (user as any).lastName = {
+            en: lastNameParts.join(" ") || "",
+            ar: "",
+          };
+          delete user.name;
+        }
+        // For OAuth, let user sign in without email verification
+        return true;
+      }
 
       const existingUser = await getUserById((user as any)?._id);
 

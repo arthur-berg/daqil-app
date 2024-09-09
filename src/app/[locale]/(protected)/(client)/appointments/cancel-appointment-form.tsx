@@ -33,12 +33,14 @@ const CancelAppontmentForm = ({
   startTransition,
   setIsCancelDialogOpen,
   isCancelDialogOpen,
+  setSelectedAppointment,
 }: {
   selectedAppointment: any;
   isPending: any;
   startTransition: any;
   isCancelDialogOpen: any;
   setIsCancelDialogOpen: any;
+  setSelectedAppointment: any;
 }) => {
   const t = useTranslations("AppointmentList");
   const { responseToast } = useToast();
@@ -65,7 +67,7 @@ const CancelAppontmentForm = ({
         const data = await cancelAppointment(values);
 
         responseToast(data);
-
+        setSelectedAppointment(null);
         form.reset();
       } catch {
         console.error("Error canceling appointment");

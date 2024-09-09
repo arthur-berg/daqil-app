@@ -2,8 +2,8 @@ import { getAppointmentTypesByIDs } from "@/data/appointment-types";
 import SelectedTherapist from "./selected-therapist";
 import { Button } from "@/components/ui/button";
 import { getClientByIdAppointments, getTherapistById } from "@/data/user";
-import { getCurrentUser } from "@/lib/auth";
-import { Link } from "@/navigation";
+import { getCurrentRole, getCurrentUser } from "@/lib/auth";
+import { Link, redirect } from "@/navigation";
 import { getTranslations } from "next-intl/server";
 import {
   APPOINTMENT_TYPE_ID_LONG_SESSION,
@@ -12,10 +12,10 @@ import {
 import { redirectUserIfReservationExist } from "./helpers";
 import { MdEvent } from "react-icons/md"; // Import the calendar icon from react-icons/md
 
-import IntroCallStepManager from "@/app/[locale]/(protected)/book-appointment/intro-call-step-manager";
 import AcceptTherapist from "./accept-therapist";
 import { getFullName } from "@/utils/formatName";
 import connectToMongoDB from "@/lib/mongoose";
+import IntroCallStepManager from "./intro-call-step-manager";
 
 const BookAppointmentPage = async ({
   params,
@@ -23,6 +23,20 @@ const BookAppointmentPage = async ({
   params: { locale: string };
 }) => {
   await connectToMongoDB();
+
+  const { isTherapist, isAdmin } = await getCurrentRole();
+
+  console.log("isTherapist", isTherapist);
+
+  if (isTherapist) {
+    console.log("redirecting therapist");
+    redirect("/therapist/appointments");
+  }
+
+  if (isAdmin) {
+    redirect("/admin");
+  }
+
   const ErrorMessages = await getTranslations("ErrorMessages");
   const t = await getTranslations("BookAppointmentPage");
   const user = await getCurrentUser();

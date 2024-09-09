@@ -31,14 +31,11 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
 
     const clientPhone =
       appointment.participants[0].userId.personalInfo.phoneNumber;
-    const hostFirstName = await getFirstName(
+    const hostFirstName = getFirstName(
       appointment.hostUserId.firstName,
       locale
     );
-    const hostLastName = await getLastName(
-      appointment.hostUserId.lastName,
-      locale
-    );
+    const hostLastName = getLastName(appointment.hostUserId.lastName, locale);
     const appointmentStartTime = new Date(appointment.startDate);
 
     if (!clientPhone) {

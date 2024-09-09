@@ -119,8 +119,8 @@ export const RecurringAvailabilitySchema = z.object({
   day: z.string(),
   timeRanges: z.array(
     z.object({
-      startTime: timeStringOrDateSchema,
-      endTime: timeStringOrDateSchema,
+      startTime: z.date(),
+      endTime: z.date(),
       appointmentTypeIds: z.array(z.string()),
     })
   ),
@@ -171,6 +171,7 @@ export const BlockAvailabilitySchemaBE = z.object({
       endDate: z.date({
         required_error: "To time is required",
       }),
+      appointmentTypeIds: z.array(z.string()),
     })
   ),
 });

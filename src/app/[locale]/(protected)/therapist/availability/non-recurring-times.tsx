@@ -1,16 +1,20 @@
 import { DateTimes, TimeRange } from "@/generalTypes";
 import { formatDateTime } from "@/utils";
 import { format } from "date-fns";
-import { FaCalendarAlt } from "react-icons/fa";
+import { FaCalendarAlt, FaTrash } from "react-icons/fa";
 
 const NonRecurringTimes = ({
   nonRecurringAvailableTimes,
   appointmentTypes,
   t,
+  overview,
+  handleRemoveNonRecurringDate,
 }: {
   nonRecurringAvailableTimes: DateTimes[];
   appointmentTypes: any[];
   t: any;
+  overview?: boolean;
+  handleRemoveNonRecurringDate?: any;
 }) => {
   // Helper function to get appointment type names
   const getAppointmentTypeNames = (ids: string[]) => {
@@ -24,7 +28,7 @@ const NonRecurringTimes = ({
       <h2 className="text-xl md:text-2xl font-bold text-green-600 flex items-center mb-4">
         <FaCalendarAlt className="mr-2" /> {t("nonRecurringAvailableTimes")}
       </h2>
-      <div className="space-y-4 md:flex md:space-y-0 md:space-x-4">
+      <div className="space-y-4 md:inline-flex md:space-y-0 md:space-x-4">
         {nonRecurringAvailableTimes.length === 0 ? (
           <p className="text-green-800">{t("noTimeSlotsFound")}</p>
         ) : (
@@ -33,9 +37,22 @@ const NonRecurringTimes = ({
               key={dateTime.date?.toString()}
               className="bg-green-100 shadow-md rounded-lg p-4 flex-1"
             >
-              <h3 className="text-lg font-semibold text-green-800 mb-2">
-                {format(new Date(dateTime.date!), "yyyy-MM-dd")}
-              </h3>
+              <div className="flex justify-between items-start">
+                <h3 className="text-lg font-semibold text-green-800 mb-2">
+                  {format(new Date(dateTime.date!), "yyyy-MM-dd")}
+                </h3>
+                {!overview && (
+                  <button
+                    className="text-red-600 hover:text-red-800 ml-8"
+                    onClick={() =>
+                      handleRemoveNonRecurringDate(new Date(dateTime.date!))
+                    }
+                  >
+                    <FaTrash className="w-5 h-5" />
+                  </button>
+                )}
+              </div>
+
               <div className="space-y-2">
                 {dateTime.timeRanges.map((timeRange: TimeRange) => (
                   <div

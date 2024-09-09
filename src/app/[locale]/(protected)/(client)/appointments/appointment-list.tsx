@@ -452,6 +452,7 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
           startTransition={startTransition}
           isCancelDialogOpen={isCancelDialogOpen}
           setIsCancelDialogOpen={setIsCancelDialogOpen}
+          setSelectedAppointment={setSelectedAppointment}
         />
       )}
 

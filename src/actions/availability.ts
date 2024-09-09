@@ -15,6 +15,72 @@ import { isSameDay } from "date-fns";
 import { revalidatePath } from "next/cache";
 import connectToMongoDB from "@/lib/mongoose";
 
+export const removeNonRecurringDate = async (selectedDate: Date) => {
+  await connectToMongoDB();
+
+  const [SuccessMessages, ErrorMessages] = await Promise.all([
+    getTranslations("SuccessMessages"),
+    getTranslations("ErrorMessages"),
+  ]);
+
+  try {
+    const user = (await requireAuth([
+      UserRole.THERAPIST,
+      UserRole.ADMIN,
+    ])) as any;
+
+    const filteredAvailableTimes =
+      user.availableTimes.nonRecurringAvailableTimes?.filter(
+        (nonRecurringTime: any) =>
+          !isSameDay(new Date(nonRecurringTime.date), new Date(selectedDate))
+      ) ?? [];
+
+    await User.findByIdAndUpdate(user.id, {
+      "availableTimes.nonRecurringAvailableTimes": filteredAvailableTimes,
+    });
+
+    revalidatePath("/therapist/availability");
+
+    return { success: SuccessMessages("nonRecurringDateRemoved") };
+  } catch (error) {
+    console.error("Error removing non-recurring date", error);
+    return { error: ErrorMessages("failedToRemoveNonRecurringDate") };
+  }
+};
+
+export const removeBlockedDate = async (selectedDate: Date) => {
+  await connectToMongoDB();
+
+  const [SuccessMessages, ErrorMessages] = await Promise.all([
+    getTranslations("SuccessMessages"),
+    getTranslations("ErrorMessages"),
+  ]);
+
+  try {
+    const user = (await requireAuth([
+      UserRole.THERAPIST,
+      UserRole.ADMIN,
+    ])) as any;
+
+    const filteredBlockedOutTimes =
+      user.availableTimes.blockedOutTimes?.filter(
+        (blockedOutTime: any) =>
+          !isSameDay(new Date(blockedOutTime.date), new Date(selectedDate))
+      ) ?? [];
+
+    await User.findByIdAndUpdate(user.id, {
+      "availableTimes.blockedOutTimes": filteredBlockedOutTimes,
+    });
+
+    revalidatePath("/therapist/availability");
+
+    return { success: SuccessMessages("blockedDateRemoved") };
+  } catch (error) {
+    console.error("Error removing blocked date", error);
+    return { error: ErrorMessages("failedToRemoveBlockedDate") };
+  }
+};
+
 export const saveBlockedOutTimes = async (
   values: z.infer<typeof BlockAvailabilitySchemaBE>
 ) => {

@@ -25,27 +25,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { UserRole } from "@/generalTypes";
 import { useTranslations } from "next-intl";
-
-function getRole(role: string | undefined) {
-  if (!role) return "";
-
-  if (role === "CLIENT") {
-    return "Client";
-  }
-
-  // Convert the role to lowercase and capitalize the first letter
-  const lowercaseRole = role.toLowerCase();
-  return lowercaseRole.charAt(0).toUpperCase() + lowercaseRole.slice(1);
-}
 
 const SettingsForm = () => {
   const user = useCurrentUser();

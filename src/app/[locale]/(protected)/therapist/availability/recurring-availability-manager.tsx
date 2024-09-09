@@ -279,10 +279,11 @@ const DefaultAvailabilityManager = ({
                     >
                       <div className="flex">
                         <span className="px-2 py-1 text-center">
-                          {range.from}
+                          {format(new Date(range.from), "HH:mm")}
                         </span>
+                        <span className="py-1 text-center"> - </span>
                         <span className="px-2 py-1 text-center">
-                          {range.to}
+                          {format(new Date(range.to), "HH:mm")}
                         </span>
                       </div>
                       <ul className="list-disc md:ml-4 flex flex-col">

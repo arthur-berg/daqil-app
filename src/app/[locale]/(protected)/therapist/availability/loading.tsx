@@ -6,7 +6,9 @@ const Loading = async () => {
   return (
     <div className="flex flex-col items-center justify-center h-screen space-y-4">
       <BeatLoader color="white" />
-      <div className="text-lg font-medium text-white">{t("loading")}</div>
+      <div className="text-lg font-medium text-white">
+        {t("loadingAvailability")}
+      </div>
     </div>
   );
 };

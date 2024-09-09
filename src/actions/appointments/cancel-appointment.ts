@@ -5,7 +5,6 @@ import { APPOINTMENT_TYPE_ID_INTRO_SESSION } from "@/contants/config";
 import { UserRole } from "@/generalTypes";
 import { getCurrentRole, requireAuth } from "@/lib/auth";
 import { sendAppointmentCancellationEmail } from "@/lib/mail";
-import { cancelAllScheduledJobsForAppointment } from "@/lib/schedule-appointment-jobs";
 import Appointment from "@/models/Appointment";
 import User from "@/models/User";
 import { CancelAppointmentSchema } from "@/schemas";
@@ -15,6 +14,7 @@ import { revalidatePath } from "next/cache";
 import Stripe from "stripe";
 import { getFullName } from "@/utils/formatName";
 import connectToMongoDB from "@/lib/mongoose";
+import { cancelAllScheduledJobsForAppointment } from "@/lib/schedule-appointment-jobs";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
@@ -103,8 +103,6 @@ export const cancelAppointment = async (
           (pi) => pi.metadata && pi.metadata.appointmentId === appointmentId
         );
 
-        console.log("paymentIntent", paymentIntent);
-
         if (paymentIntent) {
           try {
             const refund = await stripe.refunds.create({
@@ -119,8 +117,6 @@ export const cancelAppointment = async (
         }
       }
     }
-
-    await cancelAllScheduledJobsForAppointment(appointmentId);
 
     await Appointment.findByIdAndUpdate(appointmentId, {
       status: "canceled",
@@ -146,8 +142,6 @@ export const cancelAppointment = async (
       refundAmount,
     };
 
-    console.log("refundAmount", refundAmount);
-
     if (
       appointment.appointmentTypeId.toString() ===
       APPOINTMENT_TYPE_ID_INTRO_SESSION
@@ -158,6 +152,8 @@ export const cancelAppointment = async (
         },
       });
     }
+
+    await cancelAllScheduledJobsForAppointment(appointmentId);
 
     await sendAppointmentCancellationEmail(
       therapistEmail,

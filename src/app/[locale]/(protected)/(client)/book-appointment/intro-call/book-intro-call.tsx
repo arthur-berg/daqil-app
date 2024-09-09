@@ -16,7 +16,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { currencyToSymbol } from "@/utils";
+import { convertToUtcWithTime, currencyToSymbol } from "@/utils";
 import { getTherapistAvailableTimeSlots } from "@/utils/therapistAvailability";
 import { bookIntroAppointment } from "@/actions/appointments/book-intro-appointment";
 

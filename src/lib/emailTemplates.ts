@@ -490,7 +490,7 @@ export const clientNotPaidInTimeTemplate = (
           <p><strong>${t("timeLabel")}</strong> ${formattedTime}</p>
         </div>
         <div style="margin-top: 20px; font-size: 16px; color: #333333;">
-          <p>${t("notPaidInTimeMessage")}</p>
+          <p>${t("notPaidInTimeMessageClient")}</p>
         </div>
         <div style="margin-top: 20px; font-size: 12px; color: #888888; text-align: center;">
           ${t("thankYouMessage")}

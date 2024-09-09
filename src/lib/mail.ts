@@ -469,22 +469,15 @@ export const sendPaymentReminderEmail = async (
 
 export const sendReminderEmail = async (
   clientEmail: string,
-  appointment: any,
+  appointmentDetails: {
+    date: string;
+    time: string;
+    therapistName: string;
+    clientName: string;
+  },
   t: any
 ) => {
   try {
-    const appointmentDetails = {
-      date: format(new Date(appointment.startDate), "PPPP"),
-      time: format(new Date(appointment.startDate), "HH:mm"),
-      therapistName: `${await getFullName(
-        appointment.hostUserId.firstName,
-        appointment.hostUserId.lastName
-      )} `,
-      clientName: `${await getFirstName(
-        appointment.participants[0].userId.firstName
-      )}`,
-    };
-
     const subject = t("subject");
     const html = reminderEmailTemplate(t, appointmentDetails);
 
@@ -504,10 +497,7 @@ export const sendReminderEmail = async (
       message: message as any,
     });
   } catch (error) {
-    console.error(
-      `Error sending email reminder for appointment ${appointment._id}:`,
-      error
-    );
+    console.error(`Error sending email reminder:`, error);
   }
 };
 

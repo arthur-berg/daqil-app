@@ -34,8 +34,13 @@ const Overview = ({
         appointmentTypes={appointmentTypes} // Pass appointmentTypes here
         nonRecurringAvailableTimes={availableTimes.nonRecurringAvailableTimes}
         t={t}
+        overview
       />
-      <BlockedOutTimes blockedOutTimes={availableTimes.blockedOutTimes} t={t} />
+      <BlockedOutTimes
+        blockedOutTimes={availableTimes.blockedOutTimes}
+        t={t}
+        overview
+      />
     </div>
   );
 };

@@ -12,10 +12,12 @@ import { getTherapistById } from "@/data/user";
 import { getTranslations } from "next-intl/server";
 import { FaUser } from "react-icons/fa";
 
-import BookingCalendar from "@/app/[locale]/(protected)/book-appointment/[therapistId]/booking-calendar";
 import { getCurrentUser } from "@/lib/auth";
 import { getFullName } from "@/utils/formatName";
 import connectToMongoDB from "@/lib/mongoose";
+import BookingCalendar from "./booking-calendar";
+import { Button } from "@/components/ui/button";
+import { Link } from "@/navigation";
 
 const TherapistUserProfile = async ({
   params,
@@ -24,6 +26,7 @@ const TherapistUserProfile = async ({
 }) => {
   await connectToMongoDB();
   const ErrorMessages = await getTranslations("ErrorMessages");
+  const t = await getTranslations("TherapistProfilePage");
   const therapistId = params.therapistId;
   const user = await getCurrentUser();
   const therapist = (await getTherapistById(therapistId)) as any;
@@ -51,8 +54,13 @@ const TherapistUserProfile = async ({
   }
 
   return (
-    <div className="p-4 max-w-4xl mx-auto">
-      <div className="flex flex-col items-center bg-white shadow-md justify-center rounded-lg p-6">
+    <div className="p-4 max-w-4xl mx-auto bg-white shadow-md rounded-lg">
+      <div className="flex justify-start">
+        <Link href="/book-appointment/browse-therapists">
+          <Button variant="outline">{t("goBack")}</Button>
+        </Link>
+      </div>
+      <div className="flex flex-col items-center justify-center">
         <div className="flex flex-col items-center">
           {/* Therapist Image or Placeholder */}
           {therapist.image ? (
@@ -73,12 +81,9 @@ const TherapistUserProfile = async ({
           <p className="text-gray-600 mb-2">
             {therapist.therapistWorkProfile[locale].title}
           </p>
-          <p className="text-sm text-gray-700">
-            {therapist.therapistWorkProfile[locale].description}
-          </p>
         </div>
 
-        <div className="mt-6 rounded-lg p-6 w-full">
+        <div className="mt-6 rounded-lg md:p-6 w-full">
           <BookingCalendar
             appointmentTypes={appointmentTypes}
             showOnlyIntroCalls={showOnlyIntroCalls}
