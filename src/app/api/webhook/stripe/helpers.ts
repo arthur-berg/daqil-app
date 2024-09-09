@@ -14,6 +14,7 @@ import {
 } from "@/lib/schedule-appointment-jobs";
 import { getTranslations } from "next-intl/server";
 import { getFullName } from "@/utils/nameUtilsForApiRoutes";
+import { formatInTimeZone } from "date-fns-tz";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
@@ -59,11 +60,11 @@ async function findAppointmentById(appointmentId: string) {
     return await Appointment.findById(appointmentId)
       .populate({
         path: "participants.userId",
-        select: "firstName lastName email",
+        select: "firstName lastName email settings.timeZone",
       })
       .populate({
         path: "hostUserId",
-        select: "firstName lastName email",
+        select: "firstName lastName email settings.timeZone",
       });
   } catch (error) {
     console.error(`Error fetching appointment ${appointmentId}:`, error);
@@ -106,23 +107,38 @@ async function processAppointmentPayment(
   const { amountPaid, paymentMethod, transactionId } = paymentDetails;
   const client = appointment.participants[0].userId;
   const therapist = appointment.hostUserId;
+  const clientTimeZone = client.settings.timeZone || "UTC";
+  const therapistTimeZone = therapist.settings.timeZone || "UTC";
 
   const clientEmail = client.email;
   const therapistEmail = therapist.email;
 
+  const appointmentDate = formatInTimeZone(
+    new Date(appointment.startDate),
+    clientTimeZone,
+    "yyyy-MM-dd"
+  );
+  const appointmentTime = formatInTimeZone(
+    new Date(appointment.startDate),
+    clientTimeZone,
+    "HH:mm"
+  );
+
+  console.log("appointment.startDate", appointment.startDate);
+
+  console.log("clientTimeZone", clientTimeZone);
+  console.log("appointmentDate", appointmentDate);
+  console.log("appointmentTime", appointmentTime);
+
   const appointmentDetails = {
-    date: format(new Date(appointment.startDate), "yyyy-MM-dd"),
-    time: format(new Date(appointment.startDate), "HH:mm"),
-    therapistName: `${await getFullName(
+    date: appointmentDate,
+    time: appointmentTime,
+    therapistName: `${getFullName(
       therapist.firstName,
       therapist.lastName,
       locale
     )}`,
-    clientName: `${await getFullName(
-      client.firstName,
-      client.lastName,
-      locale
-    )}`,
+    clientName: `${getFullName(client.firstName, client.lastName, locale)}`,
     durationInMinutes: appointment.durationInMinutes,
     amountPaid: `$${amountPaid}`,
     paymentMethod,
