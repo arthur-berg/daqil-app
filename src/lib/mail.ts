@@ -485,6 +485,8 @@ export const sendReminderEmail = async (
       )}`,
     };
 
+    console.log("appointmentDetails", appointmentDetails);
+
     const subject = t("subject");
     const html = reminderEmailTemplate(t, appointmentDetails);
 

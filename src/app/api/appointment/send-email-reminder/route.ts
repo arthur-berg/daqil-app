@@ -10,7 +10,10 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
     await connectToMongoDB();
 
     const body = await req.json();
+
     const { appointmentId, locale } = body;
+    console.log("body inside send email reminder");
+    console.log("locale inside send email reminder", locale);
 
     const t = await getTranslations({
       locale,
@@ -29,6 +32,8 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
     }
 
     const clientEmail = appointment.participants[0].userId.email;
+
+    console.log("clientEmail", clientEmail);
 
     await sendReminderEmail(clientEmail, appointment, t);
 

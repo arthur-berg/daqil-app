@@ -13,6 +13,8 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
     const body = await req.json();
     const { appointmentId, locale } = body;
 
+    console.log("locale inside sms reminder", locale);
+
     const t = await getTranslations({
       locale,
       namespace: "SmsReminder",

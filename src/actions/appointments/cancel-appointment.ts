@@ -14,6 +14,7 @@ import { revalidatePath } from "next/cache";
 import Stripe from "stripe";
 import { getFullName } from "@/utils/formatName";
 import connectToMongoDB from "@/lib/mongoose";
+import { cancelAllScheduledJobsForAppointment } from "@/lib/schedule-appointment-jobs";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
@@ -151,6 +152,8 @@ export const cancelAppointment = async (
         },
       });
     }
+
+    await cancelAllScheduledJobsForAppointment(appointmentId);
 
     await sendAppointmentCancellationEmail(
       therapistEmail,
