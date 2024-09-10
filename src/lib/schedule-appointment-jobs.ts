@@ -16,16 +16,10 @@ export const schedulePaymentReminders = async (
 ): Promise<void> => {
   const now = new Date();
 
-  /* const reminderTimes = [
+  const reminderTimes = [
     subHours(paymentExpiryDate, 24),
     subHours(paymentExpiryDate, 6),
     subHours(paymentExpiryDate, 2),
-  ]; */
-
-  const reminderTimes = [
-    subHours(paymentExpiryDate, 3),
-    subHours(paymentExpiryDate, 2),
-    subHours(paymentExpiryDate, 1),
   ];
 
   const validReminderTimes = reminderTimes.filter((reminderTime) =>
@@ -51,6 +45,36 @@ export const schedulePaymentReminders = async (
   await Promise.all(taskPromises);
 };
 
+export const cancelPayBeforeExpiredJobForAppointment = async (
+  appointmentId: string
+): Promise<void> => {
+  try {
+    const task = await ScheduledTask.findOne({
+      appointmentId,
+      type: "payBeforePaymentExpiredStatusUpdate",
+    });
+
+    if (!task) {
+      console.log(
+        `No 'payBeforePaymentExpiredStatusUpdate' job found for appointment ${appointmentId}.`
+      );
+      return;
+    }
+
+    await qstashClient.messages.delete(task.taskId);
+    await ScheduledTask.deleteOne({ taskId: task.taskId });
+
+    console.log(
+      `'payBeforePaymentExpiredStatusUpdate' job cancelled for appointment ${appointmentId}.`
+    );
+  } catch (error) {
+    console.error(
+      `Error cancelling 'payBeforePaymentExpiredStatusUpdate' job for appointment ${appointmentId}:`,
+      error
+    );
+  }
+};
+
 export const schedulePayBeforePaymentExpiredStatusUpdateJobs = async (
   appointmentId: string,
   paymentExpiryDate: Date,
@@ -74,6 +98,7 @@ export const schedulePayAfterPaymentExpiredStatusUpdateJobs = async (
   paymentExpiryDate: Date,
   locale: string
 ) => {
+  console.log("paymentExpiryDate", paymentExpiryDate);
   const taskId = await scheduleTask(
     `${process.env.QSTASH_API_URL}/pay-after-booking/payment-expired-status-update`,
     { appointmentId: appointmentId },

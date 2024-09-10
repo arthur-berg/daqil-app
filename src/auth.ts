@@ -35,6 +35,8 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           };
           delete user.name;
         }
+        // TODO, should check somehow if it's the first time user logs in , maybe user.name is enough,
+        // and in that case create all properties that are also created in register action
         // For OAuth, let user sign in without email verification
         return true;
       }

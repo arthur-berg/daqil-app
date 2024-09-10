@@ -5,6 +5,7 @@ import { UserRole } from "@/generalTypes";
 import { requireAuth } from "@/lib/auth";
 import { sendNonPaidBookingConfirmationEmail } from "@/lib/mail";
 import {
+  cancelPayBeforeExpiredJobForAppointment,
   schedulePayAfterPaymentExpiredStatusUpdateJobs,
   schedulePaymentReminders,
 } from "@/lib/schedule-appointment-jobs";
@@ -162,7 +163,7 @@ export const confirmBookingPayLater = async (
     );
 
     await schedulePaymentReminders(appointmentId, paymentExpiryDate, locale);
-
+    await cancelPayBeforeExpiredJobForAppointment(appointmentId);
     await schedulePayAfterPaymentExpiredStatusUpdateJobs(
       appointmentId,
       paymentExpiryDate,

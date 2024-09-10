@@ -19,8 +19,6 @@ import { createPaymentIntent } from "@/actions/stripe";
 import { cancelTempReservation } from "@/actions/appointments/cancel-temp-reservation";
 import { confirmBookingPayLater } from "@/actions/appointments/confirm-booking-pay-later";
 import { useCurrentUser } from "@/hooks/use-current-user";
-import { getClientById } from "@/data/user";
-import { APPOINTMENT_TYPE_ID_INTRO_SESSION } from "@/contants/config";
 
 if (process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY === undefined) {
   throw new Error("NEXT_PUBLIC_STRIPE_PUBLIC_KEY is not defined");
