@@ -6,6 +6,7 @@
     "signUp": "Sign up"
   },
   "AuthPage": {
+    "settingUpAccount": "Setting up your account...",
     "selectTimezone": "Select timezone",
     "noTimezoneFound": "No timezone found",
     "searchTimezone": "Search timezone",

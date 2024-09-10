@@ -56,7 +56,7 @@ export default function AdminPanelLayout({
       <Sidebar setIsOpen={setIsOpen} isOpen={isOpen} ref={sidebarMenuRef} />
       <div
         className={cn(
-          "min-h-screen pt-[40px] lg:pt-[74px] pb-20 dark:bg-zinc-900 transition-[margin-left] ease-in-out duration-300",
+          "min-h-[calc(100vh-76px)] lg:min-h-screen pt-[40px] lg:pt-[74px] pb-20 dark:bg-zinc-900 transition-[margin-left] ease-in-out duration-300",
           isOpen
             ? "lg:ml-[256px] rtl:lg:mr-[256px] rtl:lg:ml-[0px]"
             : "lg:ml-[90px] rtl:lg:mr-[90px] rtl:lg:ml-[0px]"

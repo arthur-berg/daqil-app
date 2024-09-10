@@ -7,12 +7,13 @@ import { BeatLoader } from "react-spinners";
 
 type LogoutButtonProps = {
   children?: React.ReactNode;
+  isOpen?: boolean;
 };
 
 export const LogoutButton = React.forwardRef<
   HTMLSpanElement,
   LogoutButtonProps
->(({ children }, ref) => {
+>(({ children, isOpen }, ref) => {
   const [isPending, startTransition] = useTransition();
   const onClick = () => {
     startTransition(() => {
@@ -24,7 +25,7 @@ export const LogoutButton = React.forwardRef<
   return isPending ? (
     <div className="flex items-center flex-col space-x-2">
       <BeatLoader size={8} color="#36D7B7" />
-      <div>{t("loggingYouOut")}</div>
+      {isOpen && <div>{t("loggingYouOut")}</div>}
     </div>
   ) : (
     <span onClick={onClick} ref={ref} className="cursor-pointer">

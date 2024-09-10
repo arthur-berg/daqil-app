@@ -179,7 +179,7 @@ export function Menu({ isOpen, setIsOpen }: MenuProps) {
           <TooltipProvider disableHoverableContent>
             <Tooltip delayDuration={100}>
               <TooltipTrigger asChild>
-                <LogoutButton>
+                <LogoutButton isOpen={isOpen}>
                   <Button
                     onClick={() => {}}
                     variant="ghost"

@@ -43,6 +43,7 @@ import { PhoneInput } from "../ui/phone-input";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Label } from "../ui/label";
 import { CaretSortIcon } from "@radix-ui/react-icons";
+import { BeatLoader } from "react-spinners";
 
 const getMappedTimezone = (ianaTimezone: string) => {
   return allTimezones[ianaTimezone] ? ianaTimezone : "Asia/Dubai";
@@ -129,257 +130,289 @@ export const SetupForm = () => {
     });
   };
 
-  return (
-    <CardWrapper
-      headerLabel={t("finishSettingUpAccount")}
-      backButtonLabel={t("alreadyHaveAccount")}
-      backButtonHref="/auth/login"
-    >
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <div className="space-y-4">
-            {!token && <FormError message={""} />}
-            {/* Existing Fields */}
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("emailLabel")}</FormLabel>
-                  <FormControl>
-                    <Input
-                      readOnly={!!email}
-                      disabled={isPending}
-                      {...field}
-                      type="email"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="firstName.en"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("firstNameEn")}</FormLabel>{" "}
-                  {/* Updated Label */}
-                  <FormControl>
-                    <Input disabled={isPending} {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="lastName.en"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("lastNameEn")}</FormLabel> {/* Updated Label */}
-                  <FormControl>
-                    <Input disabled={isPending} {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Toggle Arabic Name Fields */}
-            <Button
-              type="button"
-              variant={showArabicNameFields ? "destructive" : "outline"}
-              onClick={() => setShowArabicNameFields(!showArabicNameFields)}
-              className="mt-2"
-            >
-              {showArabicNameFields ? t("hideArabicName") : t("addArabicName")}
-            </Button>
-
-            {/* Conditional Arabic Fields */}
-            {showArabicNameFields && (
-              <>
-                <FormField
-                  control={form.control}
-                  name="firstName.ar"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t("firstNameAr")}</FormLabel>{" "}
-                      {/* Arabic First Name Label */}
-                      <FormControl>
-                        <Input disabled={isPending} {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="lastName.ar"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t("lastNameAr")}</FormLabel>{" "}
-                      {/* Arabic Last Name Label */}
-                      <FormControl>
-                        <Input disabled={isPending} {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </>
-            )}
-
-            {/* New Fields for personalInfo */}
-            <FormField
-              control={form.control}
-              name="personalInfo.phoneNumber"
-              render={({ field }) => (
-                <FormItem className="flex flex-col items-start">
-                  <FormLabel className="text-left">Phone Number</FormLabel>
-                  <FormControl className="w-full">
-                    <PhoneInput placeholder="Enter a phone number" {...field} />
-                  </FormControl>
-                  <FormDescription className="text-left">
-                    Enter a phone number
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="personalInfo.sex"
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel>{t("sex")}</FormLabel>
-
-                  <FormControl>
-                    <RadioGroup
-                      value={field.value}
-                      onValueChange={field.onChange}
-                      className="flex flex-col space-y-2"
-                    >
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="MALE" id="male" />
-                        <Label htmlFor="male">{t("male")}</Label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="FEMALE" id="female" />
-                        <Label htmlFor="female">{t("female")}</Label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="OTHER" id="other" />
-                        <Label htmlFor="other">{t("other")}</Label>
-                      </div>
-                    </RadioGroup>
-                  </FormControl>
-
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="personalInfo.dateOfBirth"
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel>{t("dateOfBirth")}</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="text"
-                      placeholder="YYYY/MM/DD"
-                      value={field.value}
-                      onChange={(e) => {
-                        let input = e.target.value.replace(/\D/g, "");
-                        if (input.length > 8) input = input.slice(0, 8);
-                        if (input.length >= 4) {
-                          input = input.slice(0, 4) + "/" + input.slice(4);
-                        }
-                        if (input.length >= 7) {
-                          input = input.slice(0, 7) + "/" + input.slice(7);
-                        }
-                        field.onChange(input);
-                      }}
-                      disabled={isPending}
-                      className={cn("w-[240px]")}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="settings.timeZone"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("selectTimezone")}</FormLabel>
-                  <Popover
-                    open={timezonePopoverOpen}
-                    onOpenChange={(isOpen) => setTimezonePopoverOpen(isOpen)}
-                  >
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        role="combobox"
-                        className="w-full justify-between"
-                      >
-                        <div className="truncate max-w-[calc(100%-24px)]">
-                          {field.value && allTimezones[field.value]
-                            ? `${getGmtOffset(field.value)} ${
-                                allTimezones[field.value]
-                              }`
-                            : t("selectTimezone")}
-                        </div>
-                        <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-[300px] p-0">
-                      <Command>
-                        <CommandInput
-                          placeholder={t("searchTimezone")}
-                          value={timezoneSearch}
-                          onValueChange={setTimezoneSearch}
-                        />
-                        <CommandList>
-                          <CommandEmpty>{t("noTimezoneFound")}</CommandEmpty>
-                          <CommandGroup>
-                            {timezoneOptions
-                              .filter((option) =>
-                                option.label
-                                  .toLowerCase()
-                                  .includes(timezoneSearch.toLowerCase())
-                              )
-                              .map((option) => (
-                                <CommandItem
-                                  key={option.value}
-                                  onSelect={() => {
-                                    field.onChange(option.value);
-                                    setTimezonePopoverOpen(false);
-                                  }}
-                                >
-                                  {option.label}
-                                </CommandItem>
-                              ))}
-                          </CommandGroup>
-                        </CommandList>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            {/* Existing Password Fields */}
-            {(!token || currentPasswordRequired) && (
+  return isPending ? (
+    <div className="flex flex-col items-center justify-center h-screen space-y-4">
+      <BeatLoader color="white" />
+      <div className="text-lg font-medium text-white">
+        {t("settingUpAccount")}
+      </div>
+    </div>
+  ) : (
+    <div className="py-4 container flex justify-center">
+      <CardWrapper
+        headerLabel={t("finishSettingUpAccount")}
+        backButtonLabel={t("alreadyHaveAccount")}
+        backButtonHref="/auth/login"
+      >
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <div className="space-y-4">
+              {!token && <FormError message={""} />}
+              {/* Existing Fields */}
               <FormField
                 control={form.control}
-                name="currentPassword"
+                name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t("currentPassword")}</FormLabel>
+                    <FormLabel>{t("emailLabel")}</FormLabel>
+                    <FormControl>
+                      <Input
+                        readOnly={!!email}
+                        disabled={isPending}
+                        {...field}
+                        type="email"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="firstName.en"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("firstNameEn")}</FormLabel>{" "}
+                    {/* Updated Label */}
+                    <FormControl>
+                      <Input disabled={isPending} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="lastName.en"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("lastNameEn")}</FormLabel>{" "}
+                    {/* Updated Label */}
+                    <FormControl>
+                      <Input disabled={isPending} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Toggle Arabic Name Fields */}
+              <Button
+                type="button"
+                variant={showArabicNameFields ? "destructive" : "outline"}
+                onClick={() => setShowArabicNameFields(!showArabicNameFields)}
+                className="mt-2"
+              >
+                {showArabicNameFields
+                  ? t("hideArabicName")
+                  : t("addArabicName")}
+              </Button>
+
+              {/* Conditional Arabic Fields */}
+              {showArabicNameFields && (
+                <>
+                  <FormField
+                    control={form.control}
+                    name="firstName.ar"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t("firstNameAr")}</FormLabel>{" "}
+                        {/* Arabic First Name Label */}
+                        <FormControl>
+                          <Input disabled={isPending} {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="lastName.ar"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t("lastNameAr")}</FormLabel>{" "}
+                        {/* Arabic Last Name Label */}
+                        <FormControl>
+                          <Input disabled={isPending} {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </>
+              )}
+
+              {/* New Fields for personalInfo */}
+              <FormField
+                control={form.control}
+                name="personalInfo.phoneNumber"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col items-start">
+                    <FormLabel className="text-left">Phone Number</FormLabel>
+                    <FormControl className="w-full">
+                      <PhoneInput
+                        placeholder="Enter a phone number"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription className="text-left">
+                      Enter a phone number
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="personalInfo.sex"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>{t("sex")}</FormLabel>
+
+                    <FormControl>
+                      <RadioGroup
+                        value={field.value}
+                        onValueChange={field.onChange}
+                        className="flex flex-col space-y-2"
+                      >
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="MALE" id="male" />
+                          <Label htmlFor="male">{t("male")}</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="FEMALE" id="female" />
+                          <Label htmlFor="female">{t("female")}</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="OTHER" id="other" />
+                          <Label htmlFor="other">{t("other")}</Label>
+                        </div>
+                      </RadioGroup>
+                    </FormControl>
+
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="personalInfo.dateOfBirth"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>{t("dateOfBirth")}</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="text"
+                        placeholder="YYYY/MM/DD"
+                        value={field.value}
+                        onChange={(e) => {
+                          let input = e.target.value.replace(/\D/g, "");
+                          if (input.length > 8) input = input.slice(0, 8);
+                          if (input.length >= 4) {
+                            input = input.slice(0, 4) + "/" + input.slice(4);
+                          }
+                          if (input.length >= 7) {
+                            input = input.slice(0, 7) + "/" + input.slice(7);
+                          }
+                          field.onChange(input);
+                        }}
+                        disabled={isPending}
+                        className={cn("w-[240px]")}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="settings.timeZone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("selectTimezone")}</FormLabel>
+                    <Popover
+                      open={timezonePopoverOpen}
+                      onOpenChange={(isOpen) => setTimezonePopoverOpen(isOpen)}
+                    >
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          role="combobox"
+                          className="justify-between w-[300px] sm:w-full"
+                        >
+                          <div className="truncate max-w-[calc(100%-24px)]">
+                            {field.value && allTimezones[field.value]
+                              ? `${getGmtOffset(field.value)} ${
+                                  allTimezones[field.value]
+                                }`
+                              : t("selectTimezone")}
+                          </div>
+                          <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-[280px] p-0">
+                        <Command>
+                          <CommandInput
+                            placeholder={t("searchTimezone")}
+                            value={timezoneSearch}
+                            onValueChange={setTimezoneSearch}
+                          />
+                          <CommandList>
+                            <CommandEmpty>{t("noTimezoneFound")}</CommandEmpty>
+                            <CommandGroup>
+                              {timezoneOptions
+                                .filter((option) =>
+                                  option.label
+                                    .toLowerCase()
+                                    .includes(timezoneSearch.toLowerCase())
+                                )
+                                .map((option) => (
+                                  <CommandItem
+                                    key={option.value}
+                                    onSelect={() => {
+                                      field.onChange(option.value);
+                                      setTimezonePopoverOpen(false);
+                                    }}
+                                  >
+                                    {option.label}
+                                  </CommandItem>
+                                ))}
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              {/* Existing Password Fields */}
+              {(!token || currentPasswordRequired) && (
+                <FormField
+                  control={form.control}
+                  name="currentPassword"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t("currentPassword")}</FormLabel>
+                      <FormControl>
+                        <Input
+                          disabled={isPending}
+                          {...field}
+                          type="password"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("newPassword")}</FormLabel>
                     <FormControl>
                       <Input disabled={isPending} {...field} type="password" />
                     </FormControl>
@@ -387,29 +420,16 @@ export const SetupForm = () => {
                   </FormItem>
                 )}
               />
-            )}
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("newPassword")}</FormLabel>
-                  <FormControl>
-                    <Input disabled={isPending} {...field} type="password" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-          {/* Existing Error and Success Messages */}
-          <FormError message={error} />
-          <FormSuccess message={success} />
-          <Button type="submit" className="w-full" disabled={isPending}>
-            {t("createAccount")}
-          </Button>
-        </form>
-      </Form>
-    </CardWrapper>
+            </div>
+            {/* Existing Error and Success Messages */}
+            <FormError message={error} />
+            <FormSuccess message={success} />
+            <Button type="submit" className="w-full" disabled={isPending}>
+              {t("createAccount")}
+            </Button>
+          </form>
+        </Form>
+      </CardWrapper>
+    </div>
   );
 };
