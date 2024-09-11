@@ -125,11 +125,13 @@ export const login = async (
   }
 
   try {
+    console.log("before signin in login action");
     await signIn("credentials", {
       email,
       password,
       redirectTo: callbackUrl || `/${locale}/${DEFAULT_LOGIN_REDIRECT}`,
     });
+    console.log("after signin in login action");
   } catch (error) {
     if (error instanceof AuthError) {
       // Hack to make broken CredentialsSignin work

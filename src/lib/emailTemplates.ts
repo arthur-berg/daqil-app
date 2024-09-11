@@ -1,5 +1,3 @@
-import { format } from "date-fns";
-
 const primaryColor = "#0d1a36"; // Hex color converted from HSL
 const secondaryColor = "#e1eef7";
 
@@ -313,10 +311,11 @@ export const paidAppointmentConfirmationTemplate = (
   return `
     <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
-        <div style="text-align: center; margin-bottom: 20px;">
-          <h1 style="color: ${primaryColor}; font-size: 24px; margin: 0;">${t(
-    "daqil"
-  )}</h1>
+         <div style="text-align: center; margin-bottom: 20px;">
+          <img src="${
+            process.env.NEXT_PUBLIC_APP_URL
+          }/daqil-logo.png" alt="daqil" style="width: 60%; max-width: 100%; height: auto;" />
+        </div>
         </div>
         <div style="margin-top: 20px;">
           <p>${subject}</p>
