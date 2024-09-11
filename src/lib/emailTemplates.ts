@@ -1,13 +1,14 @@
 const primaryColor = "#0d1a36"; // Hex color converted from HSL
 const secondaryColor = "#e1eef7";
 
+const daqilLogoUrl =
+  "https://zakina-images.s3.eu-north-1.amazonaws.com/daqil-logo.png";
+
 export const twoFactorTokenTemplate = (token: string, t: any) => `
   <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
     <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
       <div style="text-align: center; margin-bottom: 20px;">
-        <h1 style="color: ${primaryColor}; font-size: 24px; margin: 0;">${t(
-  "daqil"
-)}</h1>
+        <img src="${daqilLogoUrl}" alt="daqil" style="width: 50%; max-width: 100%; height: auto;" />
       </div>
       <div style="margin-top: 20px;">
         <p>${t("message")}</p>
@@ -40,9 +41,7 @@ export const verificationEmailTemplate = (
     <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
         <div style="text-align: center; margin-bottom: 20px;">
-          <h1 style="color: ${primaryColor}; font-size: 24px; margin: 0;">${t(
-    "daqil"
-  )}</h1>
+          <img src="${daqilLogoUrl}" alt="daqil" style="width: 50%; max-width: 100%; height: auto;" />
         </div>
         <div style="margin-top: 20px;">
           <p>${t("welcomeMessage")}</p>
@@ -70,9 +69,7 @@ export const passwordResetEmailTemplate = (token: string, t: any) => {
     <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
         <div style="text-align: center; margin-bottom: 20px;">
-          <h1 style="color: ${primaryColor}; font-size: 24px; margin: 0;">${t(
-    "daqil"
-  )}</h1>
+          <img src="${daqilLogoUrl}" alt="daqil" style="width: 50%; max-width: 100%; height: auto;" />
         </div>
         <div style="margin-top: 20px;">
           <p>${t("resetMessage")}</p>
@@ -123,9 +120,7 @@ export const appointmentCancellationTemplate = (
     <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
         <div style="text-align: center; margin-bottom: 20px;">
-          <h1 style="color: ${primaryColor}; font-size: 24px; margin: 0;">${t(
-    "daqil"
-  )}</h1>
+          <img src="${daqilLogoUrl}" alt="daqil" style="width: 50%; max-width: 100%; height: auto;" />
         </div>
         <div style="margin-top: 20px;">
           <p>${subject}</p>
@@ -219,9 +214,7 @@ export const invoicePaidTemplate = (
     <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
         <div style="text-align: center; margin-bottom: 20px;">
-          <h1 style="color: ${primaryColor}; font-size: 24px; margin: 0;">${t(
-    "daqil"
-  )}</h1>
+          <img src="${daqilLogoUrl}" alt="daqil" style="width: 50%; max-width: 100%; height: auto;" />
         </div>
         <div style="margin-top: 20px;">
           <p>${subject}</p>
@@ -312,11 +305,9 @@ export const paidAppointmentConfirmationTemplate = (
     <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
          <div style="text-align: center; margin-bottom: 20px;">
-          <img src="${
-            process.env.NEXT_PUBLIC_APP_URL
-          }/daqil-logo.png" alt="daqil" style="width: 60%; max-width: 100%; height: auto;" />
+          <img src="${daqilLogoUrl}" alt="daqil" style="width: 50%; max-width: 100%; height: auto;" />
         </div>
-        </div>
+       
         <div style="margin-top: 20px;">
           <p>${subject}</p>
           <p><strong>${t("therapistLabel")}</strong> ${
@@ -344,6 +335,7 @@ export const paidAppointmentConfirmationTemplate = (
           ${t("thankYouMessage")}
         </div>
       </div>
+       </div>
     </div>
   `;
 };
@@ -401,9 +393,7 @@ export const nonPaidAppointmentConfirmationTemplate = (
     <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
         <div style="text-align: center; margin-bottom: 20px;">
-          <h1 style="color: ${primaryColor}; font-size: 24px; margin: 0;">${t(
-    "daqil"
-  )}</h1>
+            <img src="${daqilLogoUrl}" alt="daqil" style="width: 50%; max-width: 100%; height: auto;" />
         </div>
         <div style="margin-top: 20px;">
           <p>${subject}</p>
@@ -445,9 +435,7 @@ export const paymentReminderTemplate = (
     <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
         <div style="text-align: center; margin-bottom: 20px;">
-          <h1 style="color: ${primaryColor}; font-size: 24px; margin: 0;">${t(
-    "companyName"
-  )}</h1>
+          <img src="${daqilLogoUrl}" alt="daqil" style="width: 50%; max-width: 100%; height: auto;" />
         </div>
         <div style="margin-top: 20px;">
           <p>${t("greeting", { clientFirstName })}</p>
@@ -472,9 +460,7 @@ export const reminderEmailTemplate = (t: any, appointmentDetails: any) => {
     <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
         <div style="text-align: center; margin-bottom: 20px;">
-          <h1 style="color: #0073e6; font-size: 24px; margin: 0;">${t(
-            "daqil"
-          )}</h1>
+          <img src="${daqilLogoUrl}" alt="daqil" style="width: 50%; max-width: 100%; height: auto;" />
         </div>
         <div style="margin-top: 20px;">
           <p>${t("greeting", { name: appointmentDetails.clientName })}</p>
@@ -507,9 +493,7 @@ export const clientNotPaidInTimeTemplate = (
     <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
         <div style="text-align: center; margin-bottom: 20px;">
-          <h1 style="color: ${primaryColor}; font-size: 24px; margin: 0;">${t(
-    "daqil"
-  )}</h1>
+          <img src="${daqilLogoUrl}" alt="daqil" style="width: 50%; max-width: 100%; height: auto;" />
         </div>
         <div style="margin-top: 20px;">
           <p>${t("clientSubject")}</p>
@@ -552,9 +536,7 @@ export const therapistNotPaidInTimeTemplate = (
     <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
         <div style="text-align: center; margin-bottom: 20px;">
-          <h1 style="color: ${primaryColor}; font-size: 24px; margin: 0;">${t(
-    "daqil"
-  )}</h1>
+          <img src="${daqilLogoUrl}" alt="daqil" style="width: 50%; max-width: 100%; height: auto;" />
         </div>
         <div style="margin-top: 20px;">
           <p>${t("therapistSubject")}</p>
