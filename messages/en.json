@@ -277,7 +277,8 @@
     "loadingVideoSession": "Loading video session... Please wait",
     "loadingProfile": "Loading profile...",
     "loadingMyClients": "Loading my clients...",
-    "loadingAvailability": "Loading availability manager..."
+    "loadingAvailability": "Loading availability manager...",
+    "loadingLoginForm": "Loading login form..."
   },
   "TherapistProfilePage": {
     "workTitleLabelEn": "Work Title (EN)",

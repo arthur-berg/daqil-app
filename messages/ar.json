@@ -280,7 +280,8 @@
     "loadingVideoSession": "جارٍ تحميل جلسة الفيديو... يرجى الانتظار",
     "loadingProfile": "جارٍ تحميل الملف الشخصي...",
     "loadingMyClients": "جارٍ تحميل قائمة العملاء...",
-    "loadingAvailability": "جارٍ تحميل مدير التوافر..."
+    "loadingAvailability": "جارٍ تحميل مدير التوافر...",
+    "loadingLoginForm": "جاري تحميل نموذج تسجيل الدخول..."
   },
   "TherapistProfilePage": {
     "workTitleLabelEn": "المسمى الوظيفي (EN)",
