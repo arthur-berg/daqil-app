@@ -7,7 +7,7 @@ const EndedAppointmentPage = async () => {
   await connectToMongoDB();
   const { isTherapist } = await getCurrentRole();
   return (
-    <div className="w-full h-screen flex flex-col items-center justify-center text-white">
+    <div className="w-full h-[calc(100vh-196px)] lg:h-[calc(100vh-154px)] flex flex-col items-center justify-center text-white">
       <h1 className="mb-4 text-3xl">Call Ended</h1>
       <Link href={isTherapist ? `/therapist/appointments` : "/appointments"}>
         <Button variant="secondary">Go to my appointments page</Button>

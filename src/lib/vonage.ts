@@ -16,10 +16,7 @@ const credentials = new Auth({
   apiKey: apiKey,
   apiSecret: apiSecret,
   applicationId: appId,
-  privateKey:
-    process.env.NODE_ENV === "development"
-      ? privateKey
-      : Buffer.from(privateKey, "base64"),
+  privateKey: Buffer.from(privateKey, "base64"),
 });
 
 const options = {};
