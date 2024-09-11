@@ -42,14 +42,14 @@ export const getSessionData = async (appointmentId: string) => {
     const timeBeforeStart = subMinutes(startDate, 20);
     const timeAfterEnd = addMinutes(endDate, 15);
 
-    /*  if (
+    if (
       isBefore(currentTime, timeBeforeStart) ||
       isAfter(currentTime, timeAfterEnd)
     ) {
       return {
         error: ErrorMessages("videoMeetingOnlyAvailable"),
       };
-    } */
+    }
 
     let updatePayload: Record<string, unknown> = {};
     const updateOptions: Record<string, unknown> = { new: true };
