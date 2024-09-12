@@ -7,7 +7,6 @@ import connectToMongoDB from "@/lib/mongoose";
 
 const ClientPage = async ({ params }: { params: { clientId: string } }) => {
   await connectToMongoDB();
-
   const clientId = params.clientId;
   const client = await getClientById(clientId);
   const t = await getTranslations("MyClientsPage");

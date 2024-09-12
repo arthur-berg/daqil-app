@@ -18,14 +18,7 @@ import {
   AccordionTrigger,
   AccordionContent,
 } from "@/components/ui/accordion";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 import { FaCheck, FaTimes, FaClock, FaQuestion } from "react-icons/fa";
 import { useTranslations } from "next-intl";
 import BeatLoader from "react-spinners/BeatLoader";
@@ -193,12 +186,12 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
   };
 
   return (
-    <Card className="md:w-8/12">
+    <Card className="w-full xl:w-9/12">
       <CardContent>
         <div className="flex justify-center py-8">
           <div className="space-y-8 w-full max-w-4xl">
             <div className="flex justify-center">
-              <div className="flex justify-center items-center flex-col whitespace-nowrap">
+              <div className="flex justify-center items-center flex-col whitespace-nowrap w-2/3">
                 {nextAppointment && renderNextAppointment()}
                 <div className="mr-4 rtl:mr-0 rtl:ml-4">
                   {t("appointmentStatus")}:{" "}
@@ -206,7 +199,6 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
                 <MultiSelector
                   values={filters as string[]}
                   onValuesChange={setFilters}
-                  className="w-2/3 sm:w-full"
                 >
                   <MultiSelectorTrigger
                     className="flex-col items-start  sm:flex-row sm:items-center"

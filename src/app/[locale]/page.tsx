@@ -1,4 +1,3 @@
-import { LoginButton } from "@/components/auth/login-button";
 import LanguageSwitcher from "@/components/language-switcher";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/navigation";
@@ -17,11 +16,11 @@ export default async function Home() {
           {t("getStarted")}
         </h2>
         <div className="flex rtl:space-x-reverse space-x-4">
-          <LoginButton>
+          <Link href="/auth/login">
             <Button variant="secondary" size="lg">
               {t("login")}
             </Button>
-          </LoginButton>
+          </Link>
           <Link href="/auth/register">
             <Button variant="secondary" size="lg">
               {t("signUp")}

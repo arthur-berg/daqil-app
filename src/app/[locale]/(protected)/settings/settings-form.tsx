@@ -112,7 +112,7 @@ const SettingsForm = () => {
   };
 
   return (
-    <Card className="sm:w-[500px]">
+    <Card className="sm:w-[500px] w-full">
       <CardHeader>
         <p className="text-2xl font-semibold text-center">{t("settings")}</p>
       </CardHeader>
