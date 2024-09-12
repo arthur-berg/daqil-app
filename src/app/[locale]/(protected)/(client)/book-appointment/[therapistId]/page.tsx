@@ -25,6 +25,7 @@ const TherapistUserProfile = async ({
   params: { therapistId: string; locale: string };
 }) => {
   await connectToMongoDB();
+
   const ErrorMessages = await getTranslations("ErrorMessages");
   const t = await getTranslations("TherapistProfilePage");
   const therapistId = params.therapistId;

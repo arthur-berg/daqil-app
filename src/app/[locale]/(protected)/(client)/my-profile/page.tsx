@@ -3,7 +3,6 @@ import { getCurrentUser } from "@/lib/auth";
 import { getCurrentUserFullName, getFullName } from "@/utils/formatName";
 import { getTranslations } from "next-intl/server";
 import connectToMongoDB from "@/lib/mongoose";
-import { BeatLoader } from "react-spinners";
 
 const MyProfileClientPage = async () => {
   await connectToMongoDB();

@@ -11,6 +11,7 @@ const BrowseTherapistsPage = async ({
   params: { locale: string };
 }) => {
   await connectToMongoDB();
+
   const locale = params.locale;
   const therapists = await getTherapists();
   const t = await getTranslations("BookAppointmentPage");
