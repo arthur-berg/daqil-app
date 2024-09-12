@@ -7,12 +7,10 @@ const RedirectCheck = async () => {
 
   const session = await auth();
 
-  console.log("session", session);
-
   if (!!session) {
     redirect("/book-appointment");
   }
-  return <div>RedirectCheck</div>;
+  return null;
 };
 
 export default RedirectCheck;

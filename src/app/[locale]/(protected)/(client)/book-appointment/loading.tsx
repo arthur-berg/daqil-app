@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 
 const Loading = async () => {
   const t = await getTranslations("LoadingPages");
-  return <LoadingPageSpinner tValue={t("loading")} />;
+  return <LoadingPageSpinner tValue={t("loadingBookAppointment")} />;
 };
 
 export default Loading;

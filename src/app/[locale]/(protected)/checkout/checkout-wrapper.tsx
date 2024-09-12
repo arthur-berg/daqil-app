@@ -288,8 +288,6 @@ const CheckoutWrapper = ({
             >
               <Checkout
                 clientSecret={clientSecret}
-                setClientSecret={setClientSecret}
-                setCustomerSessionClientSecret={setCustomerSessionClientSecret}
                 amount={appointmentType.price}
                 appointmentId={appointmentId}
               />
@@ -335,10 +333,6 @@ const CheckoutWrapper = ({
                 >
                   <Checkout
                     clientSecret={clientSecret}
-                    setClientSecret={setClientSecret}
-                    setCustomerSessionClientSecret={
-                      setCustomerSessionClientSecret
-                    }
                     amount={finalAmount}
                     appointmentId={appointmentId}
                   />

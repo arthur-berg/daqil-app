@@ -203,7 +203,7 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
                 <MultiSelector
                   values={filters as string[]}
                   onValuesChange={setFilters}
-                  className="w-2/3 sm:w-full"
+                  className="w-full"
                 >
                   <MultiSelectorTrigger
                     className="flex-col items-start  sm:flex-row sm:items-center"

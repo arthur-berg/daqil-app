@@ -211,6 +211,7 @@
     "selectAppointmentType": "اختر نوع الموعد"
   },
   "Checkout": {
+    "pay": "ادفع ${amount}",
     "appointmentDetails": "تفاصيل الموعد",
     "day": "اليوم",
     "time": "الوقت",
@@ -281,7 +282,8 @@
     "loadingProfile": "جارٍ تحميل الملف الشخصي...",
     "loadingMyClients": "جارٍ تحميل قائمة العملاء...",
     "loadingAvailability": "جارٍ تحميل مدير التوافر...",
-    "loadingLoginForm": "جاري تحميل نموذج تسجيل الدخول..."
+    "loadingLoginForm": "جاري تحميل نموذج تسجيل الدخول...",
+    "loadingBookAppointment": "جارٍ تحميل صفحة الحجز..."
   },
   "TherapistProfilePage": {
     "workTitleLabelEn": "المسمى الوظيفي (EN)",

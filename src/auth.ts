@@ -4,6 +4,7 @@ import { getUserById } from "@/data/user";
 import User from "@/models/User";
 import clientPromise from "@/lib/mongodb";
 import authConfig from "@/auth.config";
+import connectToMongoDB from "@/lib/mongoose";
 
 import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation";
 import TwoFactorConfirmation from "@/models/TwoFactorConfirmation";
@@ -40,6 +41,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         // For OAuth, let user sign in without email verification
         return true;
       }
+      await connectToMongoDB();
 
       const existingUser = await getUserById((user as any)?._id);
 
@@ -98,6 +100,8 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     },
     async jwt({ token }) {
       if (!token.sub) return token;
+      await connectToMongoDB();
+
       const existingUser = await getUserById(token.sub);
 
       if (!existingUser) return token;
