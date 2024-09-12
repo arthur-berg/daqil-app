@@ -180,7 +180,8 @@
     "introMeetingIsPending": " You already have an introductory meeting booked in. If you wish to choose another time, please cancel your appointment to book a new one.",
     "seeAppointments": "See Appointments",
     "readMore": "Read more",
-    "goToProfilePage": "Go to profile page"
+    "goToProfilePage": "Go to profile page",
+    "noImage": "No image"
   },
   "BookingCalendar": {
     "calendar": "Calendar",
@@ -301,7 +302,9 @@
     "workDescriptionLabel": "Work Description",
     "contactInfo": "Contact Info",
     "goBackBrowse": "Go back to browsing therapists",
-    "goBack": "Go back"
+    "goBack": "Go back",
+    "close": "Close",
+    "noImage": "No image"
   },
   "AppointmentCalendar": {
     "appointmentsCalendar": "Appointment Calendar",
@@ -405,6 +408,7 @@
     "loadingAmountPaid": "Loading amount paid..."
   },
   "ErrorMessages": {
+    "noImage": "No image",
     "invalidFields": "Invalid fields!",
     "invalidCredentials": "Invalid credentials!",
     "invalidCode": "Invalid code!",

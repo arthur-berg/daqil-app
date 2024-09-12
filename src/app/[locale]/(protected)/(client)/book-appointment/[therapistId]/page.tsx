@@ -72,7 +72,7 @@ const TherapistUserProfile = async ({
             </Avatar>
           ) : (
             <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center mb-4">
-              <span className="text-gray-500">No image</span>
+              <span className="text-gray-500">{ErrorMessages("noImage")}</span>
             </div>
           )}
           <h2 className="text-xl font-bold mb-2">

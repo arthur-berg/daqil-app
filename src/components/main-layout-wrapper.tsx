@@ -37,20 +37,13 @@ export default function AdminPanelLayout({
 
   useEffect(() => {
     if (isMobile) {
-      if (isOpen) {
-        disableBodyScroll(sidebarMenuRef.current);
-      } else {
+      if (!isOpen) {
         clearAllBodyScrollLocks();
+      } else {
+        disableBodyScroll(sidebarMenuRef.current);
       }
     } else {
       clearAllBodyScrollLocks();
-    }
-
-    // Fix the issue by forcing reflow after changing the sidebar state
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
     }
   }, [isOpen, isMobile]);
 

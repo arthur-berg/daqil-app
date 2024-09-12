@@ -74,7 +74,7 @@ const MyProfileInfo = ({ therapistJson }: { therapistJson: any }) => {
               />
             ) : (
               <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center">
-                <span className="text-gray-500">No image</span>
+                <span className="text-gray-500">{t("noImage")}</span>
               </div>
             )}
             {/* Edit Icon */}
@@ -138,7 +138,7 @@ const MyProfileInfo = ({ therapistJson }: { therapistJson: any }) => {
                   </h4>
                   <p className="text-base text-gray-700">
                     {therapist.therapistWorkProfile?.ar?.title ||
-                      "No title provided"}
+                      t("noTitleProvided")}
                   </p>
                 </div>
 
@@ -148,7 +148,7 @@ const MyProfileInfo = ({ therapistJson }: { therapistJson: any }) => {
                   </h4>
                   <p className="text-base text-gray-700">
                     {therapist.therapistWorkProfile?.ar?.description ||
-                      "No description provided"}
+                      t("noDescriptionProvided")}
                   </p>
                 </div>
               </div>
@@ -180,7 +180,7 @@ const MyProfileInfo = ({ therapistJson }: { therapistJson: any }) => {
                   <MdCheckCircle className="mr-2 text-2xl" />
                   <span>{t("uploadSuccess")}</span>
                 </div>
-                <Button onClick={handleCloseDialog}>Close</Button>
+                <Button onClick={handleCloseDialog}>{t("close")}</Button>
               </div>
             </>
           ) : (

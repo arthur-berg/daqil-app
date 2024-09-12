@@ -173,7 +173,7 @@ export function Menu({ isOpen, setIsOpen }: MenuProps) {
             </ul>
           </nav>
         </ScrollArea>
-        <div className="w-full px-2 mb-28">
+        <div className="w-full px-2 mb-28 sm:mb-10">
           <TooltipProvider disableHoverableContent>
             <Tooltip delayDuration={100}>
               <TooltipTrigger asChild>

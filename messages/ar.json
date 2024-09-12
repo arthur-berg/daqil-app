@@ -150,6 +150,7 @@
     "heading": "اختر بين الاشتراكات أو شراء جلسة واحدة"
   },
   "BookAppointmentPage": {
+    "noImage": "لا توجد صورة",
     "therapists": "المعالجون",
     "bookSession": "احجز جلسة",
     "introCallTitle": "احجز مكالمة تعريفية لمدة 15 دقيقة",
@@ -304,7 +305,9 @@
     "workDescriptionLabel": "وصف العمل",
     "contactInfo": "معلومات الاتصال",
     "goBackBrowse": "العودة إلى تصفح المعالجين",
-    "goBack": "العودة"
+    "goBack": "العودة",
+    "close": "إغلاق",
+    "noImage": "لا توجد صورة"
   },
   "AppointmentCalendar": {
     "appointmentsCalendar": "تقويم المواعيد",
@@ -407,6 +410,7 @@
     "amountToBePaid": "المبلغ المطلوب دفعه"
   },
   "ErrorMessages": {
+    "noImage": "لا توجد صورة",
     "invalidFields": "حقول غير صالحة!",
     "invalidCredentials": "بيانات الاعتماد غير صالحة!",
     "invalidCode": "رمز غير صالح!",
