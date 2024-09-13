@@ -379,7 +379,8 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
                                           )}
                                           <p>
                                             <strong>{t("paid")}:</strong>{" "}
-                                            {appointment.paid
+                                            {appointment.payment.status ===
+                                            "paid"
                                               ? t("yes")
                                               : t("no")}
                                           </p>
