@@ -151,7 +151,6 @@
     "introCallTitle": "Book a 15-Minute Intro Call",
     "introCallDescription": "Book a 15-minute intro call to get started.",
     "bookIntroCall": "Book Intro Call",
-    "recommendedForNewClients": "Recommended for new clients.",
     "browseTherapistsTitle": "Browse Therapists",
     "browseTherapistsDescription": "If you prefer to browse therapists on your own, click here.",
     "browseTherapistsButton": "Browse Therapists",
@@ -180,7 +179,8 @@
     "introMeetingIsPending": " You already have an introductory meeting booked in. If you wish to choose another time, please cancel your appointment to book a new one.",
     "seeAppointments": "See Appointments",
     "readMore": "Read more",
-    "goToProfilePage": "Go to profile page"
+    "goToProfilePage": "Go to profile page",
+    "noImage": "No image"
   },
   "BookingCalendar": {
     "calendar": "Calendar",
@@ -208,6 +208,7 @@
     "selectAppointmentType": "Select type of appointment"
   },
   "Checkout": {
+    "pay": "Pay ${amount}",
     "appointmentDetails": "Appointment Details",
     "day": "Day",
     "time": "Time",
@@ -277,7 +278,9 @@
     "loadingVideoSession": "Loading video session... Please wait",
     "loadingProfile": "Loading profile...",
     "loadingMyClients": "Loading my clients...",
-    "loadingAvailability": "Loading availability manager..."
+    "loadingAvailability": "Loading availability manager...",
+    "loadingLoginForm": "Loading login form...",
+    "loadingBookAppointment": "Loading booking page..."
   },
   "TherapistProfilePage": {
     "workTitleLabelEn": "Work Title (EN)",
@@ -298,7 +301,9 @@
     "workDescriptionLabel": "Work Description",
     "contactInfo": "Contact Info",
     "goBackBrowse": "Go back to browsing therapists",
-    "goBack": "Go back"
+    "goBack": "Go back",
+    "close": "Close",
+    "noImage": "No image"
   },
   "AppointmentCalendar": {
     "appointmentsCalendar": "Appointment Calendar",
@@ -402,6 +407,7 @@
     "loadingAmountPaid": "Loading amount paid..."
   },
   "ErrorMessages": {
+    "noImage": "No image",
     "invalidFields": "Invalid fields!",
     "invalidCredentials": "Invalid credentials!",
     "invalidCode": "Invalid code!",
@@ -480,7 +486,7 @@
     "subject": "Upcoming Appointment Reminder",
     "greeting": "Dear {name},",
     "message": "This is a friendly reminder that you have an upcoming appointment with {therapistName} on {date} at {time}. Please ensure that you are prepared and that your microphone and camera are functioning properly.",
-    "footer": "Thank you for choosing Zakina."
+    "footer": "Thank you for using Daqil."
   },
   "PaymentReminderEmail": {
     "daqil": "Daqil",
@@ -490,7 +496,7 @@
     "reminderText": "This is a friendly reminder that payment for your upcoming appointment at {appointmentStartTime} is due.",
     "paymentInstructions": "Please ensure that your payment is completed at least 1 hour before the scheduled time.",
     "payNowButton": "Pay Now",
-    "footerText": "Thank you for using Zakina."
+    "footerText": "Thank you for using Daqil."
   },
   "SmsReminder": {
     "reminderMessage": "Reminder: Your appointment with {hostFirstName} {hostLastName} starts in 30 minutes at {appointmentTime}. Please be ready and ensure your microphone and video are working properly."
@@ -504,8 +510,8 @@
   "VerificationEmail": {
     "daqil": "Daqil",
     "subject": "Confirm Your Email Address",
-    "welcomeMessage": "Welcome to Zakina!",
-    "therapistMessage": "You have been invited to Zakina as a therapist.",
+    "welcomeMessage": "Welcome to Daqil!",
+    "therapistMessage": "You have been invited to Daqil as a therapist.",
     "temporaryPasswordMessage": "Here is your temporary password: {password}",
     "confirmEmailMessage": "Please confirm your email address to complete the registration process.",
     "confirmEmailButton": "Confirm Email",
@@ -529,7 +535,7 @@
     "dateLabel": "Date:",
     "timeLabel": "Time:",
     "reasonLabel": "Reason:",
-    "thankYouMessage": "Thank you for using Zakina.",
+    "thankYouMessage": "Thank you for using Daqil.",
     "refundLabel": "Refund",
     "refundIssuedMessage": "A refund of {{refundAmount}} has been issued to your account."
   },
@@ -542,7 +548,7 @@
     "therapistAdditionalMessage": "To join the session and manage all your appointments, please visit your appointments page.",
     "clientAdditionalMessage": "Please note that this appointment needs to be paid for at least 1 hour before the meeting starts. You can make the payment using the link below. You can also join your upcoming session and see an overview of all your appointments on your appointments page.",
     "payNowButtonText": "Pay Now",
-    "thankYouMessage": "Thank you for using Zakina.",
+    "thankYouMessage": "Thank you for using Daqil.",
     "therapistLabel": "Therapist:",
     "clientLabel": "Client:",
     "dateLabel": "Date:",
@@ -566,7 +572,7 @@
     "timeLabel": "Time:",
     "durationLabel": "Duration:",
     "minutesLabel": "minutes",
-    "thankYouMessage": "Thank you for using Zakina."
+    "thankYouMessage": "Thank you for using Daqil."
   },
   "PaidBookingConfirmationEmail": {
     "daqil": "Daqil",
@@ -586,7 +592,7 @@
     "timeLabel": "Time:",
     "durationLabel": "Duration:",
     "minutesLabel": "minutes",
-    "thankYouMessage": "Thank you for using Zakina."
+    "thankYouMessage": "Thank you for using Daqil."
   },
   "ClientNotPaidInTimeEmail": {
     "clientSubject": "Your Appointment Was Canceled Because Payment Was Not Made on Time",
@@ -598,7 +604,7 @@
     "timeLabel": "Time:",
     "notPaidInTimeMessageClient": "Unfortunately, your appointment was canceled because you did not pay on time. Please make sure to pay in advance for future bookings.",
     "notPaidInTimeMessageTherapist": "The appointment with your client was canceled because the client did not pay on time. Please check your upcoming appointments.",
-    "thankYouMessage": "Thank you for using Zakina."
+    "thankYouMessage": "Thank you for using Daqil."
   },
   "AppointmentTypes": {
     "6692b4919a6b12347d0afac4": "Therapy session - 30 minutes",

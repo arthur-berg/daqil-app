@@ -16,7 +16,7 @@ const credentials = new Auth({
   apiKey: apiKey,
   apiSecret: apiSecret,
   applicationId: appId,
-  privateKey: privateKey,
+  privateKey: Buffer.from(privateKey, "base64"),
 });
 
 const options = {};

@@ -67,7 +67,6 @@ const getGmtOffset = (timezone: string) => {
   const [{ value: timeZoneName }] = dtf
     .formatToParts(now)
     .filter(({ type }) => type === "timeZoneName");
-  const offsetHours = -(now.getTimezoneOffset() / 60);
 
   return `${timeZoneName}`;
 };

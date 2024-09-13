@@ -263,7 +263,7 @@ const AppointmentCalendar = ({ appointments }: { appointments: any }) => {
   };
 
   return (
-    <div className="p-4 space-y-6 bg-white w-full lg:w-9/12">
+    <div className="p-4 space-y-6 bg-white w-full xl:w-9/12">
       <h2 className="text-xl md:text-2xl font-bold text-primary mb-4 text-center sm:text-left">
         {t("appointmentsCalendar")}
       </h2>

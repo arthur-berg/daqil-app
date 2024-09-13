@@ -32,7 +32,7 @@ const RecurringTimes = ({
       <h2 className="text-xl md:text-2xl font-bold text-blue-600 flex items-center mb-4">
         <FaClock className="mr-2" /> {t("recurringAvailableTimes")}
       </h2>
-      <div className="space-y-4 md:flex md:space-y-0 md:space-x-4">
+      <div className="space-y-4 lg:flex lg:space-y-0 lg:space-x-4">
         {sortedRecurringAvailableTimes.length === 0 ? (
           <p className="text-blue-800">{t("noTimeSlotsFound")}</p>
         ) : (

@@ -4,8 +4,7 @@ import {
   useStripe,
   PaymentElement,
 } from "@stripe/react-stripe-js";
-import { FormEvent, useEffect, useState } from "react";
-import { convertToSubcurrency } from "@/utils";
+import { FormEvent, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { BeatLoader } from "react-spinners";
 import { useTranslations } from "next-intl";
@@ -13,14 +12,10 @@ import { useTranslations } from "next-intl";
 const Checkout = ({
   amount,
   appointmentId,
-  setCustomerSessionClientSecret,
-  setClientSecret,
   clientSecret,
 }: {
   amount: number;
   appointmentId: any;
-  setCustomerSessionClientSecret: any;
-  setClientSecret: any;
   clientSecret: any;
 }) => {
   const stripe = useStripe();
@@ -85,7 +80,7 @@ const Checkout = ({
 
       <div className="w-32 mx-auto">
         <Button disabled={!stripe || loading} className="mt-4 w-full">
-          {!loading ? `Pay $${amount}` : t("processing")}
+          {!loading ? t("pay", { amount }) : t("processing")}
         </Button>
       </div>
     </form>

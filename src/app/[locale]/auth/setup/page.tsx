@@ -1,6 +1,7 @@
+"use client";
 import { SetupForm } from "@/components/auth/setup-form";
 
-const SetupPage = async () => {
+const SetupPage = () => {
   return <SetupForm />;
 };
 

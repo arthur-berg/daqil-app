@@ -17,9 +17,6 @@ const IntroCallStepManager = () => {
         <Button className="w-full py-4 text-lg" onClick={() => setStep(2)}>
           {t("bookIntroCall")}
         </Button>
-        <p className="text-sm text-gray-500 mt-2">
-          {t("recommendedForNewClients")}
-        </p>
       </div>
     </div>
   ) : (

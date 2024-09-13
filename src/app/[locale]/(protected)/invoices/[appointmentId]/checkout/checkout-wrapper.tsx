@@ -4,7 +4,7 @@ import { useTranslations } from "next-intl";
 import { format } from "date-fns";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import { convertToSubcurrency, currencyToSymbol } from "@/utils";
+import { currencyToSymbol } from "@/utils";
 import Checkout from "@/components/checkout";
 import { useEffect, useState, useTransition } from "react";
 import { BeatLoader } from "react-spinners";
@@ -171,8 +171,6 @@ const CheckoutWrapper = ({
             >
               <Checkout
                 clientSecret={clientSecret}
-                setClientSecret={setClientSecret}
-                setCustomerSessionClientSecret={setCustomerSessionClientSecret}
                 amount={finalAmount}
                 appointmentId={appointmentId}
               />

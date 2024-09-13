@@ -11,6 +11,7 @@ const BrowseTherapistsPage = async ({
   params: { locale: string };
 }) => {
   await connectToMongoDB();
+
   const locale = params.locale;
   const therapists = await getTherapists();
   const t = await getTranslations("BookAppointmentPage");
@@ -39,7 +40,7 @@ const BrowseTherapistsPage = async ({
                   />
                 ) : (
                   <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gray-200 flex items-center justify-center">
-                    <span className="text-gray-500">No image</span>
+                    <span className="text-gray-500">{t("noImage")}</span>
                   </div>
                 )}
               </div>

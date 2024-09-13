@@ -14,6 +14,7 @@ export default async function ProtectedLayout({
 
   const session = await auth();
   const messages = await getMessages();
+
   return (
     <SessionProvider
       session={session}

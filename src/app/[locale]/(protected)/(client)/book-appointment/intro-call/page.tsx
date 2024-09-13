@@ -6,6 +6,7 @@ import connectToMongoDB from "@/lib/mongoose";
 
 const IntroCallPage = async () => {
   await connectToMongoDB();
+
   const appointmentType = await getAppointmentTypeById(
     APPOINTMENT_TYPE_ID_INTRO_SESSION
   );

@@ -150,12 +150,12 @@
     "heading": "اختر بين الاشتراكات أو شراء جلسة واحدة"
   },
   "BookAppointmentPage": {
+    "noImage": "لا توجد صورة",
     "therapists": "المعالجون",
     "bookSession": "احجز جلسة",
     "introCallTitle": "احجز مكالمة تعريفية لمدة 15 دقيقة",
     "introCallDescription": "احجز مكالمة تعريفية لمدة 15 دقيقة للبدء.",
     "bookIntroCall": "احجز مكالمة تعريفية",
-    "recommendedForNewClients": "موصى به للعملاء الجدد.",
     "browseTherapistsTitle": "تصفح المعالجين",
     "browseTherapistsDescription": "إذا كنت تفضل تصفح المعالجين بنفسك، انقر هنا.",
     "browseTherapistsButton": "تصفح المعالجين",
@@ -211,6 +211,7 @@
     "selectAppointmentType": "اختر نوع الموعد"
   },
   "Checkout": {
+    "pay": "ادفع ${amount}",
     "appointmentDetails": "تفاصيل الموعد",
     "day": "اليوم",
     "time": "الوقت",
@@ -280,7 +281,9 @@
     "loadingVideoSession": "جارٍ تحميل جلسة الفيديو... يرجى الانتظار",
     "loadingProfile": "جارٍ تحميل الملف الشخصي...",
     "loadingMyClients": "جارٍ تحميل قائمة العملاء...",
-    "loadingAvailability": "جارٍ تحميل مدير التوافر..."
+    "loadingAvailability": "جارٍ تحميل مدير التوافر...",
+    "loadingLoginForm": "جاري تحميل نموذج تسجيل الدخول...",
+    "loadingBookAppointment": "جارٍ تحميل صفحة الحجز..."
   },
   "TherapistProfilePage": {
     "workTitleLabelEn": "المسمى الوظيفي (EN)",
@@ -301,7 +304,9 @@
     "workDescriptionLabel": "وصف العمل",
     "contactInfo": "معلومات الاتصال",
     "goBackBrowse": "العودة إلى تصفح المعالجين",
-    "goBack": "العودة"
+    "goBack": "العودة",
+    "close": "إغلاق",
+    "noImage": "لا توجد صورة"
   },
   "AppointmentCalendar": {
     "appointmentsCalendar": "تقويم المواعيد",
@@ -404,6 +409,7 @@
     "amountToBePaid": "المبلغ المطلوب دفعه"
   },
   "ErrorMessages": {
+    "noImage": "لا توجد صورة",
     "invalidFields": "حقول غير صالحة!",
     "invalidCredentials": "بيانات الاعتماد غير صالحة!",
     "invalidCode": "رمز غير صالح!",

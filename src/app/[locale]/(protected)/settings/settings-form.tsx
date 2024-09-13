@@ -28,13 +28,41 @@ import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 import { useTranslations } from "next-intl";
 import {
-  Select,
-  SelectTrigger,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectValue,
-} from "@/components/ui/select";
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@/components/ui/popover";
+import {
+  Command,
+  CommandInput,
+  CommandList,
+  CommandEmpty,
+  CommandGroup,
+  CommandItem,
+} from "@/components/ui/command";
+import { CaretSortIcon } from "@radix-ui/react-icons";
+
+const getGmtOffset = (timezone: string) => {
+  const now = new Date();
+  const dtf = new Intl.DateTimeFormat("en-US", {
+    timeZone: timezone,
+    hour12: false,
+    weekday: "long",
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    second: "numeric",
+    timeZoneName: "short",
+  });
+
+  const [{ value: timeZoneName }] = dtf
+    .formatToParts(now)
+    .filter(({ type }) => type === "timeZoneName");
+
+  return `${timeZoneName}`;
+};
 
 const SettingsForm = () => {
   const user = useCurrentUser();
@@ -46,6 +74,8 @@ const SettingsForm = () => {
   const { options: timezoneOptions, parseTimezone } = useTimezoneSelect({
     timezones: allTimezones,
   });
+  const [timezonePopoverOpen, setTimezonePopoverOpen] = useState(false);
+  const [timezoneSearch, setTimezoneSearch] = useState("");
 
   const form = useForm<z.infer<typeof SettingsSchema>>({
     resolver: zodResolver(SettingsSchema),
@@ -82,7 +112,7 @@ const SettingsForm = () => {
   };
 
   return (
-    <Card className="md:w-[600px]">
+    <Card className="sm:w-[500px] w-full">
       <CardHeader>
         <p className="text-2xl font-semibold text-center">{t("settings")}</p>
       </CardHeader>
@@ -147,31 +177,64 @@ const SettingsForm = () => {
                 name="settings.timeZone"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t("timezoneLabel")}</FormLabel>
-                    <FormControl>
-                      <Select
-                        value={field.value}
-                        onValueChange={(value) => {
-                          field.onChange(parseTimezone(value).value);
-                        }}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder={t("selectTimezone")} />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectGroup>
-                            {timezoneOptions.map((option) => (
-                              <SelectItem
-                                key={option.value}
-                                value={option.value}
-                              >
-                                {option.label}
-                              </SelectItem>
-                            ))}
-                          </SelectGroup>
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
+                    <FormLabel className="block">
+                      {t("timezoneLabel")}
+                    </FormLabel>
+                    <Popover
+                      open={timezonePopoverOpen}
+                      onOpenChange={(isOpen) => setTimezonePopoverOpen(isOpen)}
+                    >
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          role="combobox"
+                          className="justify-between w-[300px] sm:w-full"
+                        >
+                          <div className="truncate max-w-[calc(100%-24px)]">
+                            {field.value && allTimezones[field.value]
+                              ? `${getGmtOffset(field.value)} ${
+                                  allTimezones[field.value]
+                                }`
+                              : t("selectTimezone")}
+                          </div>
+                          <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-[280px] p-0">
+                        <Command>
+                          <CommandInput
+                            placeholder={t("searchTimezone")}
+                            value={timezoneSearch}
+                            onValueChange={setTimezoneSearch}
+                          />
+                          <CommandList>
+                            <CommandEmpty>{t("noTimezoneFound")}</CommandEmpty>
+                            <CommandGroup>
+                              {timezoneOptions
+                                .filter((option) =>
+                                  option.label
+                                    .toLowerCase()
+                                    .includes(timezoneSearch.toLowerCase())
+                                )
+                                .map((option) => (
+                                  <CommandItem
+                                    key={option.value}
+                                    onSelect={() => {
+                                      const parsedTimezone = parseTimezone(
+                                        option.value
+                                      ).value;
+                                      field.onChange(parsedTimezone);
+                                      setTimezonePopoverOpen(false);
+                                    }}
+                                  >
+                                    {option.label}
+                                  </CommandItem>
+                                ))}
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
                     <FormMessage />
                   </FormItem>
                 )}

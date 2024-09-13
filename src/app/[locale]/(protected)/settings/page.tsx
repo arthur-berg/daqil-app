@@ -1,6 +1,6 @@
 import SettingsForm from "./settings-form";
 
-const SettingsPage = () => {
+const SettingsPage = async () => {
   return (
     <div className="flex justify-center">
       <SettingsForm />

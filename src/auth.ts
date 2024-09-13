@@ -4,6 +4,7 @@ import { getUserById } from "@/data/user";
 import User from "@/models/User";
 import clientPromise from "@/lib/mongodb";
 import authConfig from "@/auth.config";
+import connectToMongoDB from "@/lib/mongoose";
 
 import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation";
 import TwoFactorConfirmation from "@/models/TwoFactorConfirmation";
@@ -16,7 +17,11 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     error: "/auth/error",
   },
   events: {
+    async signOut(message) {
+      console.log("message in signout");
+    },
     async linkAccount({ user }) {
+      await connectToMongoDB();
       await User.findByIdAndUpdate((user as any)?._id, {
         emailVerified: new Date(),
       });
@@ -26,20 +31,33 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     async signIn({ user, account }) {
       if (account?.provider !== "credentials") {
         // For OAuth, handle name splitting and populate firstName/lastName with 'en' property
-        if (user.name) {
-          const [firstName, ...lastNameParts] = user.name.split(" ");
-          (user as any).firstName = { en: firstName || "", ar: "" };
-          (user as any).lastName = {
+        const firstTimeLogin = !!user.name;
+        if (firstTimeLogin) {
+          const userToSaveInDB = user as any;
+          const [firstName, ...lastNameParts] = userToSaveInDB.name.split(" ");
+          (userToSaveInDB as any).firstName = { en: firstName || "", ar: "" };
+          (userToSaveInDB as any).lastName = {
             en: lastNameParts.join(" ") || "",
             ar: "",
           };
-          delete user.name;
+          delete userToSaveInDB.name;
+
+          userToSaveInDB.role = UserRole.CLIENT;
+          userToSaveInDB.clientBalance = { amount: 0, currency: "USD" };
+          userToSaveInDB.selectedTherapist = {
+            therapist: null,
+            clientIntroTherapistSelectionStatus: "PENDING",
+            introCallDone: false,
+          };
+          userToSaveInDB.appointments = [];
+          userToSaveInDB.selectedTherapistHistory = [];
         }
         // TODO, should check somehow if it's the first time user logs in , maybe user.name is enough,
         // and in that case create all properties that are also created in register action
         // For OAuth, let user sign in without email verification
         return true;
       }
+      await connectToMongoDB();
 
       const existingUser = await getUserById((user as any)?._id);
 
@@ -98,6 +116,8 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     },
     async jwt({ token }) {
       if (!token.sub) return token;
+      await connectToMongoDB();
+
       const existingUser = await getUserById(token.sub);
 
       if (!existingUser) return token;

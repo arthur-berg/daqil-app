@@ -1,14 +1,28 @@
-import { getTranslations } from "next-intl/server";
-import { BeatLoader } from "react-spinners";
+import { Skeleton } from "@/components/ui/skeleton";
 
-const Loading = async () => {
-  const t = await getTranslations("LoadingPages");
+const Loading = () => {
   return (
-    <div className="flex flex-col items-center justify-center h-screen space-y-4">
-      <BeatLoader color="white" />
-      <div className="text-lg font-medium text-white">
-        {t("loadingMyClients")}
+    <div className="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-6">
+      {/* Title Skeleton */}
+      <div className="text-center mb-6">
+        <Skeleton className="w-48 h-8 mx-auto" />
       </div>
+
+      {/* Table Header Skeleton */}
+      <div className="grid grid-cols-3 gap-4 mb-2">
+        <Skeleton className="w-full h-6" />
+        <Skeleton className="w-full h-6" />
+        <Skeleton className="w-full h-6" />
+      </div>
+
+      {/* Table Rows Skeleton */}
+      {[...Array(5)].map((_, i) => (
+        <div key={i} className="grid grid-cols-3 gap-4 mb-2">
+          <Skeleton className="w-full h-6" />
+          <Skeleton className="w-full h-6" />
+          <Skeleton className="w-full h-6" />
+        </div>
+      ))}
     </div>
   );
 };

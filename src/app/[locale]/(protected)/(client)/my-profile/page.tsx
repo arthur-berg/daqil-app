@@ -41,7 +41,7 @@ const MyProfileClientPage = async () => {
         <h2 className="text-xl font-bold mb-4 text-gray-700">
           {t("personalInformation")}
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="w-full">
           <div className="bg-gray-100 p-4 rounded-lg shadow-sm">
             <p className="text-gray-800">
               <span className="font-semibold">{t("name")}:</span> {fullName}
@@ -55,21 +55,25 @@ const MyProfileClientPage = async () => {
               <span className="font-semibold">{t("phoneNumber")}:</span>{" "}
               {user.personalInfo.phoneNumber}
             </p>
-          </div>
-          <div className="bg-gray-100 p-4 rounded-lg shadow-sm">
-            <p className="text-gray-800">
-              <span className="font-semibold">{t("sex")}:</span>{" "}
-              {user.personalInfo.sex}
-            </p>
             <p className="text-gray-800">
               <span className="font-semibold">{t("dateOfBirth")}:</span>{" "}
               {new Date(user.personalInfo.dateOfBirth).toLocaleDateString()}
             </p>
+          </div>
+          {/*   <div className="bg-gray-100 p-4 rounded-lg shadow-sm">
+              <p className="text-gray-800">
+              <span className="font-semibold">{t("sex")}:</span>{" "}
+              {user.personalInfo.sex === "MALE" ? t("male") : t("female")}
+            </p> 
+            <p className="text-gray-800">
+              <span className="font-semibold">{t("dateOfBirth")}:</span>{" "}
+              {new Date(user.personalInfo.dateOfBirth).toLocaleDateString()}
+            </p> 
             <p className="text-gray-800">
               <span className="font-semibold">Two-Factor Enabled:</span>{" "}
               {user.isTwoFactorEnabled ? "Yes" : "No"}
-            </p>
-          </div>
+            </p> 
+          </div> */}
         </div>
       </section>
 

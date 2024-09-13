@@ -15,7 +15,6 @@ import { getTranslations } from "next-intl/server";
 
 const MyClientsPage = async () => {
   await connectToMongoDB();
-
   const user = await getCurrentUser();
   if (!user) return;
 

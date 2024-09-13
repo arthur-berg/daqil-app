@@ -25,7 +25,7 @@ import { FormSuccess } from "@/components/form-success";
 import { login } from "@/actions/login";
 
 import { Link } from "@/navigation";
-import { NextIntlClientProvider, useLocale, useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { BeatLoader } from "react-spinners";
 
 export const LoginForm = () => {

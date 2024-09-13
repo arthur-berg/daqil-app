@@ -190,12 +190,12 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
   };
 
   return (
-    <Card className="md:w-8/12">
+    <Card className="w-full xl:w-9/12">
       <CardContent>
         <div className="flex justify-center py-8">
           <div className="space-y-8 w-full max-w-4xl">
             <div className="flex justify-center">
-              <div className="flex justify-center items-center flex-col">
+              <div className="flex justify-center items-center flex-col w-2/3">
                 {nextAppointment && renderNextAppointment()}
                 <div className="mr-4 rtl:mr-0 rtl:ml-4">
                   {t("appointmentStatus")}:{" "}
@@ -203,7 +203,6 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
                 <MultiSelector
                   values={filters as string[]}
                   onValuesChange={setFilters}
-                  className="w-2/3 sm:w-full"
                 >
                   <MultiSelectorTrigger
                     className="flex-col items-start  sm:flex-row sm:items-center"
@@ -358,7 +357,9 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
                                         )}
                                         <p>
                                           <strong>{t("paid")}:</strong>{" "}
-                                          {appointment.paid ? "Yes" : "No"}
+                                          {appointment.payment.status === "paid"
+                                            ? t("yes")
+                                            : t("no")}
                                         </p>
                                       </div>
                                       {(appointment.status === "pending" ||

@@ -15,7 +15,6 @@ import {
   clientNotPaidInTimeTemplate,
   therapistNotPaidInTimeTemplate,
 } from "./emailTemplates";
-import { format } from "date-fns";
 import { getTranslations } from "next-intl/server";
 
 mailchimpMarketing.setConfig({
@@ -90,7 +89,21 @@ export const addUserToSubscriberList = async (
           }
         );
         return { success: "User added to the subscriber list" };
-      } catch (addError) {
+      } catch (addError: any) {
+        // Check for permanent deletion error
+        if (
+          addError?.response?.body?.detail?.includes("was permanently deleted")
+        ) {
+          console.error(
+            "User was permanently deleted and cannot be re-imported",
+            addError
+          );
+          return {
+            error:
+              "User was permanently deleted and must re-subscribe manually.",
+          };
+        }
+
         console.error("Error adding user to subscriber list", addError);
         return { error: "Failed to add user to the subscriber list" };
       }
