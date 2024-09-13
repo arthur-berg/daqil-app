@@ -16,6 +16,7 @@ export type ExtendedUser = DefaultSession["user"] & {
     ar: string;
   };
   isOnboardingDone: boolean;
+  isAccountSetupDone: boolean;
   appointments: {
     date: Date;
     bookedAppointments: string[];

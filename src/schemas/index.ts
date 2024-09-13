@@ -301,6 +301,33 @@ export const SetupAccountSchema = z.object({
   }),
 });
 
+export const OAuthAccountSetupSchema = z.object({
+  firstName: z.object({
+    en: z.string().min(1, {
+      message: "First name (English) is required",
+    }),
+    ar: z.string().optional(),
+  }),
+  lastName: z.object({
+    en: z.string().min(1, {
+      message: "Last name (English) is required",
+    }),
+    ar: z.string().optional(),
+  }),
+  personalInfo: z.object({
+    phoneNumber: z.string(),
+    sex: z.enum(["MALE", "FEMALE", "OTHER"]),
+    dateOfBirth: z.string().regex(/^\d{4}\/\d{2}\/\d{2}$/, {
+      message: "Invalid date format. Use YYYY/MM/DD.",
+    }),
+  }),
+  settings: z.object({
+    timeZone: z.string().min(1, {
+      message: "Timezone is required",
+    }),
+  }),
+});
+
 export const RegisterSchema = z.object({
   email: z.string().email({ message: "Email is required" }),
 });

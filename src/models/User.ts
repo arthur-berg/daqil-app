@@ -154,10 +154,6 @@ const userSchema = new Schema(
         },
       },
     },
-    hasAccess: {
-      type: Boolean,
-      default: false,
-    },
     priceId: {
       type: String,
       required: false,

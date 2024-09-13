@@ -29,6 +29,8 @@ const BookAppointmentPage = async ({
   const t = await getTranslations("BookAppointmentPage");
   const user = await getCurrentUser();
 
+  const OAuthAccountNotFinished = !!user?.isOAuth && !user?.isAccountSetupDone;
+  console.log("user", user);
   if (!user) {
     return ErrorMessages("userNotFound");
   }
@@ -78,7 +80,19 @@ const BookAppointmentPage = async ({
               }
             />
 
-            {introMeetingIsBookedButNotFinished ? (
+            {OAuthAccountNotFinished ? (
+              <div className="bg-white p-4 rounded-md mb-6 flex items-center flex-col text-center">
+                <MdEvent className="mr-2 text-destructive mb-4" size={48} />
+                <p className="text-lg mb-4 flex items-center justify-center">
+                  {t("oauthAccountNotFinishedMessage")}
+                </p>
+                <Link href="/oauth-account-setup">
+                  <Button className="py-2 text-lg mt-2">
+                    {t("finishAccountSetupButton")}
+                  </Button>
+                </Link>
+              </div>
+            ) : introMeetingIsBookedButNotFinished ? (
               <div className="bg-white p-4 rounded-md mb-6 flex items-center flex-col text-center">
                 <MdEvent className="mr-2 text-destructive mb-4" size={48} />
                 <p className="text-lg mb-4 flex items-center justify-center">

@@ -85,6 +85,11 @@
     "myProfile": "ملفي الشخصي"
   },
   "AppointmentList": {
+    "appointmentReminder": "لديك موعد غير مدفوع يبدأ في {day}، {date} الساعة {startTime}.",
+    "paymentWarning": "يجب إتمام الدفع قبل ساعة واحدة على الأقل من بدء الاجتماع، وإلا سيتم إلغاء الموعد.",
+    "actionRequired": "مطلوب اتخاذ إجراء",
+    "appointmentNeedsPayment": "يجب دفع الموعد بحلول {expiryDate} على أبعد تقدير.",
+    "completePayment": "أكمل الدفع",
     "title": "العنوان",
     "all": "الكل",
     "confirmed": "مؤكد",
@@ -150,6 +155,8 @@
     "heading": "اختر بين الاشتراكات أو شراء جلسة واحدة"
   },
   "BookAppointmentPage": {
+     "oauthAccountNotFinishedMessage": "تحتاج إلى إكمال إعداد حسابك قبل المتابعة.",
+  "finishAccountSetupButton": "أكمل إعداد الحساب",
     "noImage": "لا توجد صورة",
     "therapists": "المعالجون",
     "bookSession": "احجز جلسة",
@@ -450,6 +457,7 @@
     "appointmentNotConfirmed": "لم يتم تأكيد الموعد."
   },
   "SuccessMessages": {
+"accountSetupComplete": "اكتمل إعداد الحساب",
     "activateLinkSent": "تم إرسال رابط لتفعيل حسابك إلى البريد الإلكتروني المقدم",
     "therapistInvited": "تم دعوة المعالج بنجاح",
     "appointmentBooked": "تم حجز الموعد بنجاح",

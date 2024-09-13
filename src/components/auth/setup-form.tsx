@@ -247,16 +247,15 @@ export const SetupForm = () => {
                 name="personalInfo.phoneNumber"
                 render={({ field }) => (
                   <FormItem className="flex flex-col items-start">
-                    <FormLabel className="text-left">Phone Number</FormLabel>
+                    <FormLabel className="text-left">
+                      {t("phoneNumber")}
+                    </FormLabel>
                     <FormControl className="w-full">
                       <PhoneInput
-                        placeholder="Enter a phone number"
+                        placeholder={t("phoneNumberPlaceholder")}
                         {...field}
                       />
                     </FormControl>
-                    <FormDescription className="text-left">
-                      Enter a phone number
-                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}

@@ -59,7 +59,8 @@
     "addArabicName": "Add Arabic name (optional)",
     "hideArabicName": "Remove Arabic name",
     "firstNameAr": "First name (Arabic)",
-    "lastNameAr": "Last name (Arabic)"
+    "lastNameAr": "Last name (Arabic)",
+    "finishAccountSetup": "Finish account setup"
   },
   "AppointmentList": {
     "appointmentReminder": "You have an unpaid appointment starting on {day}, {date} at {startTime}.",
@@ -151,6 +152,8 @@
     "heading": "Choose between subscriptions or buy a single session"
   },
   "BookAppointmentPage": {
+      "oauthAccountNotFinishedMessage": "You need to finish setting up your account before proceeding.",
+  "finishAccountSetupButton": "Finish Account Setup",
     "therapists": "Therapists",
     "bookSession": "Book a Session",
     "introCallTitle": "Book a 15-Minute Intro Call",
@@ -453,6 +456,7 @@
     "appointmentNotConfirmed": "The appointment is not confirmed."
   },
   "SuccessMessages": {
+    "accountSetupComplete": "Account setup completed",
     "activateLinkSent": "A link to activate your account has been emailed to the address provided",
     "therapistInvited": "Therapist was invited successfully",
     "appointmentBooked": "Appointment successfully booked",

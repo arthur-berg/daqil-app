@@ -32,6 +32,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       if (account?.provider !== "credentials") {
         // For OAuth, handle name splitting and populate firstName/lastName with 'en' property
         const firstTimeLogin = !!user.name;
+
         if (firstTimeLogin) {
           const userToSaveInDB = user as any;
           const [firstName, ...lastNameParts] = userToSaveInDB.name.split(" ");
@@ -42,6 +43,10 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           };
           delete userToSaveInDB.name;
 
+          userToSaveInDB.isAccountSetupDone = false;
+          userToSaveInDB.isOnboardingDone = false;
+
+          userToSaveInDB.isTwoFactorEnabled = false;
           userToSaveInDB.role = UserRole.CLIENT;
           userToSaveInDB.clientBalance = { amount: 0, currency: "USD" };
           userToSaveInDB.selectedTherapist = {
@@ -99,6 +104,8 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         session.user.personalInfo = token.personalInfo as any;
         session.user.settings = token.settings as any;
 
+        session.user.isAccountSetupDone = token.isAccountSetupDone as any;
+
         if (session.user.role === "CLIENT") {
           session.user.selectedTherapist = token.selectedTherapist as any;
           session.user.selectedTherapistHistory =
@@ -124,6 +131,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 
       const existingAccount = await getAccountByUserId(existingUser.id);
 
+      token.isAccountSetupDone = existingUser.isAccountSetupDone;
       token.isOnboardingDone = existingUser.isOnboardingDone;
       token.isOAuth = !!existingAccount;
       token.firstName = existingUser.firstName;
