@@ -126,6 +126,14 @@ export const inviteTherapist = async (
       email,
       password: hashedPassword,
       role: UserRole.THERAPIST,
+      firstName: {
+        en: "",
+        ar: "",
+      },
+      lastName: {
+        en: "",
+        ar: "",
+      },
       therapistWorkProfile: {
         en: { title: "", description: "" },
         ar: { title: "", description: "" },
@@ -161,6 +169,8 @@ export const inviteTherapist = async (
     if (response?.error) {
       console.error(response.error);
     }
+
+    revalidatePath("/admin/therapists");
 
     return { success: SuccessMessages("therapistInvited") };
   } catch (error) {

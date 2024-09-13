@@ -50,6 +50,14 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
 
   const appointments = JSON.parse(appointmentsJson);
 
+  const pendingPaymentAppointments = useMemo(() => {
+    return appointments?.filter(
+      (appointment: any) =>
+        appointment.payment?.status === "pending" ||
+        appointment.payment?.status === "payAfterBooking"
+    );
+  }, [appointments]);
+
   const nextAppointment = useMemo(() => {
     const futureAppointments = appointments
       .filter(
@@ -189,11 +197,37 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
     );
   };
 
+  const renderPendingPayments = () => {
+    if (pendingPaymentAppointments.length === 0) return null;
+
+    return (
+      <div className="mb-6 p-4 w-full bg-red-100 border-l-4 border-red-500">
+        <h2 className="text-2xl font-bold text-red-800 mb-2">
+          {t("actionRequired")}
+        </h2>
+        {pendingPaymentAppointments.map((appointment: any) => (
+          <div key={appointment._id} className="mb-4">
+            <p>
+              {t("appointmentNeedsPayment", {
+                expiryDate: format(
+                  new Date(appointment.payment.paymentExpiryDate),
+                  "P HH:mm"
+                ),
+              })}
+            </p>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
   return (
     <Card className="w-full xl:w-9/12">
       <CardContent>
         <div className="flex justify-center py-8">
           <div className="space-y-8 w-full max-w-4xl">
+            {renderPendingPayments()}
+
             <div className="flex justify-center">
               <div className="flex justify-center items-center flex-col w-2/3">
                 {nextAppointment && renderNextAppointment()}

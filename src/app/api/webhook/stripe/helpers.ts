@@ -222,6 +222,7 @@ async function handlePayAfterBooking(
     "payment.status": "paid",
   });
 
+  await scheduleReminderJobs(appointment, locale);
   await scheduleStatusUpdateJob(appointment);
 
   const t = await getTranslations({

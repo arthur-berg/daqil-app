@@ -377,7 +377,7 @@ export const nonPaidAppointmentConfirmationTemplate = (
     ? appointmentDetails.therapistTime
     : appointmentDetails.clientTime;
 
-  const paymentLink = `${process.env.NEXT_PUBLIC_APP_URL}/invoices/${appointmentDetails.appointmentId}/checkout?appointmentId=${appointmentDetails.appointmentId}&appointmentTypeId=${appointmentDetails.appointmentTypeId}&date=${encodedDate}`;
+  const paymentLink = `${process.env.NEXT_PUBLIC_APP_URL}/invoices/${appointmentDetails.appointmentId}/checkout?appointmentTypeId=${appointmentDetails.appointmentTypeId}&date=${encodedDate}`;
 
   const buttonText = isTherapist
     ? t("therapistButtonText")
