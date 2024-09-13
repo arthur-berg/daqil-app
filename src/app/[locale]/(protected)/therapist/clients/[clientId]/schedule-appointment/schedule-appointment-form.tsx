@@ -21,7 +21,7 @@ import { useCurrentUser } from "@/hooks/use-current-user";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 import { useToast } from "@/components/ui/use-toast";
-import { Link } from "@/navigation";
+import { Link, useRouter } from "@/navigation";
 import { useTranslations } from "next-intl";
 import { scheduleAppointment } from "@/actions/appointments/schedule-appointment";
 import { useUserName } from "@/hooks/use-user-name";
@@ -40,6 +40,7 @@ const ScheduleAppointmentForm = ({
   const [isPending, startTransition] = useTransition();
   const { responseToast } = useToast();
   const user = useCurrentUser();
+  const router = useRouter();
   const { firstName, getFullName } = useUserName();
   const t = useTranslations("ScheduleAppointmentPage");
 
@@ -69,27 +70,15 @@ const ScheduleAppointmentForm = ({
         }
         if (data.success) {
           setError(undefined);
-          setSuccess(data.success);
           form.reset();
+
+          router.push(`/therapist/clients/${values.clientId}`);
         }
       } catch {
         setError("Something went wrong!");
       }
     });
   };
-
-  if (success) {
-    return (
-      <div className="flex flex-col items-center space-y-4 min-h-52 justify-center">
-        <FormSuccess message={success} />
-        <div className="flex sm:space-x-4 space-y-4 sm:space-y-0 flex-col sm:flex-row items-center sm:items-left">
-          <Link href="/therapist/appointments">
-            <Button>{t("goToAppointmentsOverview")}</Button>
-          </Link>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="flex justify-center">

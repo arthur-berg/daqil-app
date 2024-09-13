@@ -1,28 +1,34 @@
 import { Skeleton } from "@/components/ui/skeleton";
 
-const Loading = () => {
+const Loading = async () => {
   return (
-    <div className="bg-white max-w-3xl mx-auto p-6 rounded-lg shadow-lg">
-      <Skeleton className="h-8 w-3/4 mb-8" />
+    <>
+      <div className="bg-secondary p-4 rounded-md mb-6 max-w-3xl mx-auto">
+        {/* Skeleton for the H1 heading */}
+        <Skeleton className="h-10 w-1/2 mx-auto mb-4" />
+      </div>
+      <div className="bg-white max-w-3xl mx-auto p-6 rounded-lg shadow-lg">
+        <Skeleton className="h-8 w-3/4 mb-8" />
 
-      <section className="mb-8">
-        <Skeleton className="h-6 w-1/2 mb-4" />
-        <div className="w-full bg-gray-100 p-4 rounded-lg shadow-sm">
-          <Skeleton className="h-5 w-full mb-4" />
-          <Skeleton className="h-5 w-full mb-4" />
-          <Skeleton className="h-5 w-full mb-4" />
-          <Skeleton className="h-5 w-full mb-4" />
-        </div>
-      </section>
+        <section className="mb-8">
+          <Skeleton className="h-6 w-1/2 mb-4" />
+          <div className="w-full bg-gray-100 p-4 rounded-lg shadow-sm">
+            <Skeleton className="h-5 w-full mb-4" />
+            <Skeleton className="h-5 w-full mb-4" />
+            <Skeleton className="h-5 w-full mb-4" />
+            <Skeleton className="h-5 w-full mb-4" />
+          </div>
+        </section>
 
-      <section className="mb-8">
-        <Skeleton className="h-6 w-1/2 mb-4" />
-        <div className="bg-gray-100 p-4 rounded-lg shadow-sm">
-          <Skeleton className="h-5 w-full mb-4" />
-          <Skeleton className="h-5 w-full mb-4" />
-        </div>
-      </section>
-    </div>
+        <section className="mb-8">
+          <Skeleton className="h-6 w-1/2 mb-4" />
+          <div className="bg-gray-100 p-4 rounded-lg shadow-sm">
+            <Skeleton className="h-5 w-full mb-4" />
+            <Skeleton className="h-5 w-full mb-4" />
+          </div>
+        </section>
+      </div>
+    </>
   );
 };
 

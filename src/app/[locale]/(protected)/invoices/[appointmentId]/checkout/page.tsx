@@ -17,10 +17,8 @@ const InvoiceCheckoutPage = async ({
   };
 }) => {
   await connectToMongoDB();
-  console.log("date", date);
-  console.log("appointmentTypeId", appointmentTypeId);
-  console.log("appointmentId", appointmentId);
   const appointmentType = await getAppointmentTypeById(appointmentTypeId);
+  console.log("appointmentType", appointmentType);
   const dateObject = new Date(decodeURIComponent(date));
   const appointment = await getAppointmentById(appointmentId);
   const t = await getTranslations("Checkout");

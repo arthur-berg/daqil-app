@@ -7,11 +7,7 @@ const ClientAppointmentPage = async () => {
 
   const appointments = await getAppointments();
 
-  return (
-    <div className="flex justify-center">
-      <AppointmentList appointmentsJson={JSON.stringify(appointments)} />
-    </div>
-  );
+  return <AppointmentList appointmentsJson={JSON.stringify(appointments)} />;
 };
 
 export default ClientAppointmentPage;

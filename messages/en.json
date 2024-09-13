@@ -62,6 +62,11 @@
     "lastNameAr": "Last name (Arabic)"
   },
   "AppointmentList": {
+    "appointmentReminder": "You have an unpaid appointment starting on {day}, {date} at {startTime}.",
+    "paymentWarning": "Payment must be completed at least 1 hour before the meeting starts, or the appointment will be canceled.",
+      "actionRequired": "Action required",
+  "appointmentNeedsPayment": "Appointment needs to be paid by {expiryDate} at the latest.",
+  "completePayment": "Complete payment",
     "all": "All",
     "confirmed": "Confirmed",
     "canceled": "Canceled",

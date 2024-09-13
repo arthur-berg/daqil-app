@@ -41,6 +41,7 @@ import {
   CommandItem,
 } from "@/components/ui/command";
 import { CaretSortIcon } from "@radix-ui/react-icons";
+import PageTitle from "@/components/page-title";
 
 const getGmtOffset = (timezone: string) => {
   const now = new Date();
@@ -112,135 +113,150 @@ const SettingsForm = () => {
   };
 
   return (
-    <Card className="sm:w-[500px] w-full">
-      <CardHeader>
-        <p className="text-2xl font-semibold text-center">{t("settings")}</p>
-      </CardHeader>
-      <CardContent>
-        <Form {...form}>
-          <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="space-y-4">
-              {user?.isOAuth === false && (
-                <>
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{t("emailLabel")}</FormLabel>
-                        <FormControl>
-                          <Input {...field} disabled={isPending} type="email" />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="password"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{t("currentPasswordLabel")}</FormLabel>
-                        <FormControl>
-                          <Input
-                            {...field}
-                            disabled={isPending}
-                            type="password"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="newPassword"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{t("newPasswordLabel")}</FormLabel>
-                        <FormControl>
-                          <Input
-                            {...field}
-                            disabled={isPending}
-                            type="password"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </>
-              )}
+    <>
+      <div className="sm:w-[500px] w-full mx-auto">
+        <PageTitle title={t("settings")} />
+        <h1 className="text-3xl font-bold text-center text-primary flex-grow"></h1>
+      </div>
+      <div className="flex justify-center">
+        <Card className="sm:w-[500px] w-full">
+          <CardHeader></CardHeader>
+          <CardContent>
+            <Form {...form}>
+              <form
+                className="space-y-6"
+                onSubmit={form.handleSubmit(onSubmit)}
+              >
+                <div className="space-y-4">
+                  {user?.isOAuth === false && (
+                    <>
+                      <FormField
+                        control={form.control}
+                        name="email"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{t("emailLabel")}</FormLabel>
+                            <FormControl>
+                              <Input
+                                {...field}
+                                disabled={isPending}
+                                type="email"
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="password"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{t("currentPasswordLabel")}</FormLabel>
+                            <FormControl>
+                              <Input
+                                {...field}
+                                disabled={isPending}
+                                type="password"
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="newPassword"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{t("newPasswordLabel")}</FormLabel>
+                            <FormControl>
+                              <Input
+                                {...field}
+                                disabled={isPending}
+                                type="password"
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </>
+                  )}
 
-              <FormField
-                control={form.control}
-                name="settings.timeZone"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="block">
-                      {t("timezoneLabel")}
-                    </FormLabel>
-                    <Popover
-                      open={timezonePopoverOpen}
-                      onOpenChange={(isOpen) => setTimezonePopoverOpen(isOpen)}
-                    >
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant="outline"
-                          role="combobox"
-                          className="justify-between w-[300px] sm:w-full"
+                  <FormField
+                    control={form.control}
+                    name="settings.timeZone"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="block">
+                          {t("timezoneLabel")}
+                        </FormLabel>
+                        <Popover
+                          open={timezonePopoverOpen}
+                          onOpenChange={(isOpen) =>
+                            setTimezonePopoverOpen(isOpen)
+                          }
                         >
-                          <div className="truncate max-w-[calc(100%-24px)]">
-                            {field.value && allTimezones[field.value]
-                              ? `${getGmtOffset(field.value)} ${
-                                  allTimezones[field.value]
-                                }`
-                              : t("selectTimezone")}
-                          </div>
-                          <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-[280px] p-0">
-                        <Command>
-                          <CommandInput
-                            placeholder={t("searchTimezone")}
-                            value={timezoneSearch}
-                            onValueChange={setTimezoneSearch}
-                          />
-                          <CommandList>
-                            <CommandEmpty>{t("noTimezoneFound")}</CommandEmpty>
-                            <CommandGroup>
-                              {timezoneOptions
-                                .filter((option) =>
-                                  option.label
-                                    .toLowerCase()
-                                    .includes(timezoneSearch.toLowerCase())
-                                )
-                                .map((option) => (
-                                  <CommandItem
-                                    key={option.value}
-                                    onSelect={() => {
-                                      const parsedTimezone = parseTimezone(
-                                        option.value
-                                      ).value;
-                                      field.onChange(parsedTimezone);
-                                      setTimezonePopoverOpen(false);
-                                    }}
-                                  >
-                                    {option.label}
-                                  </CommandItem>
-                                ))}
-                            </CommandGroup>
-                          </CommandList>
-                        </Command>
-                      </PopoverContent>
-                    </Popover>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant="outline"
+                              role="combobox"
+                              className="justify-between w-[300px] sm:w-full"
+                            >
+                              <div className="truncate max-w-[calc(100%-24px)]">
+                                {field.value && allTimezones[field.value]
+                                  ? `${getGmtOffset(field.value)} ${
+                                      allTimezones[field.value]
+                                    }`
+                                  : t("selectTimezone")}
+                              </div>
+                              <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-[280px] p-0">
+                            <Command>
+                              <CommandInput
+                                placeholder={t("searchTimezone")}
+                                value={timezoneSearch}
+                                onValueChange={setTimezoneSearch}
+                              />
+                              <CommandList>
+                                <CommandEmpty>
+                                  {t("noTimezoneFound")}
+                                </CommandEmpty>
+                                <CommandGroup>
+                                  {timezoneOptions
+                                    .filter((option) =>
+                                      option.label
+                                        .toLowerCase()
+                                        .includes(timezoneSearch.toLowerCase())
+                                    )
+                                    .map((option) => (
+                                      <CommandItem
+                                        key={option.value}
+                                        onSelect={() => {
+                                          const parsedTimezone = parseTimezone(
+                                            option.value
+                                          ).value;
+                                          field.onChange(parsedTimezone);
+                                          setTimezonePopoverOpen(false);
+                                        }}
+                                      >
+                                        {option.label}
+                                      </CommandItem>
+                                    ))}
+                                </CommandGroup>
+                              </CommandList>
+                            </Command>
+                          </PopoverContent>
+                        </Popover>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-              {/* {user?.isOAuth === false && (
+                  {/* {user?.isOAuth === false && (
                 <FormField
                   control={form.control}
                   name="isTwoFactorEnabled"
@@ -261,16 +277,18 @@ const SettingsForm = () => {
                   )}
                 />
               )} */}
-            </div>
-            <FormError message={error} />
-            <FormSuccess message={success} />
-            <Button disabled={isPending} type="submit">
-              {t("saveBtn")}
-            </Button>
-          </form>
-        </Form>
-      </CardContent>
-    </Card>
+                </div>
+                <FormError message={error} />
+                <FormSuccess message={success} />
+                <Button disabled={isPending} type="submit">
+                  {t("saveBtn")}
+                </Button>
+              </form>
+            </Form>
+          </CardContent>
+        </Card>
+      </div>
+    </>
   );
 };
 

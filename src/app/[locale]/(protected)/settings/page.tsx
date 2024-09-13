@@ -1,11 +1,7 @@
 import SettingsForm from "./settings-form";
 
 const SettingsPage = async () => {
-  return (
-    <div className="flex justify-center">
-      <SettingsForm />
-    </div>
-  );
+  return <SettingsForm />;
 };
 
 export default SettingsPage;

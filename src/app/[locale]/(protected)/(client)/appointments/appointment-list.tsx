@@ -8,10 +8,10 @@ import {
   isAfter,
   parseISO,
   differenceInMinutes,
+  subHours,
 } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/navigation";
-import { Card, CardContent } from "@/components/ui/card";
 import {
   Accordion,
   AccordionItem,
@@ -33,6 +33,7 @@ import {
   MultiSelectorTrigger,
 } from "@/components/ui/multi-select";
 import { useUserName } from "@/hooks/use-user-name";
+import PageTitle from "@/components/page-title";
 
 const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
   const [filters, setFilters] = useState<string[]>([
@@ -53,8 +54,9 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
   const pendingPaymentAppointments = useMemo(() => {
     return appointments?.filter(
       (appointment: any) =>
-        appointment.payment?.status === "pending" ||
-        appointment.payment?.status === "payAfterBooking"
+        (appointment.payment?.status === "pending" ||
+          appointment.payment?.status === "payAfterBooking") &&
+        appointment.status === "confirmed"
     );
   }, [appointments]);
 
@@ -158,42 +160,47 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
       timeUntilStart <= 20 && timeUntilStart >= 0 && !hasMeetingEnded;
 
     return (
-      <div className="mb-6 p-4 w-full bg-green-100 border-l-4 border-green-500">
-        <h2 className="text-2xl font-bold text-green-800 mb-2">
-          {t("yourNextAppointment")}
-        </h2>
-        <div className="text-sm text-gray-700">
-          <p>
-            <strong>{t("title")}:</strong> {nextAppointment.title}
-          </p>
-          <p>
-            <strong>{t("start")}:</strong>{" "}
-            {format(new Date(nextAppointment.startDate), "EEEE, MMMM d, HH:mm")}
-          </p>
-          <p>
-            <strong>{t("participants")}:</strong>{" "}
-            {nextAppointment.participants
-              .map((participant: any) =>
-                getFullName(participant.firstName, participant.lastName)
-              )
-              .join(", ")}
-          </p>
-          <div className="mt-4">
-            {isJoinEnabled ? (
-              <Link
-                className="text-center"
-                href={`/appointments/${nextAppointment._id}`}
-              >
-                <Button disabled={!isJoinEnabled}>{t("joinMeeting")}</Button>
-              </Link>
-            ) : (
-              <div className="text-center">
-                <Button disabled={!isJoinEnabled}>{t("joinMeeting")}</Button>
-              </div>
-            )}
+      <>
+        <div className="mb-6 p-4 w-full bg-green-100 border-l-4 border-green-500">
+          <h2 className="text-2xl font-bold text-green-800 mb-2">
+            {t("yourNextAppointment")}
+          </h2>
+          <div className="text-sm text-gray-700">
+            <p>
+              <strong>{t("title")}:</strong> {nextAppointment.title}
+            </p>
+            <p>
+              <strong>{t("start")}:</strong>{" "}
+              {format(
+                new Date(nextAppointment.startDate),
+                "EEEE, MMMM d, HH:mm"
+              )}
+            </p>
+            <p>
+              <strong>{t("participants")}:</strong>{" "}
+              {nextAppointment.participants
+                .map((participant: any) =>
+                  getFullName(participant.firstName, participant.lastName)
+                )
+                .join(", ")}
+            </p>
+            <div className="mt-4">
+              {isJoinEnabled ? (
+                <Link
+                  className="text-center"
+                  href={`/appointments/${nextAppointment._id}`}
+                >
+                  <Button disabled={!isJoinEnabled}>{t("joinMeeting")}</Button>
+                </Link>
+              ) : (
+                <div className="text-center">
+                  <Button disabled={!isJoinEnabled}>{t("joinMeeting")}</Button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
-      </div>
+      </>
     );
   };
 
@@ -202,302 +209,353 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
 
     return (
       <div className="mb-6 p-4 w-full bg-red-100 border-l-4 border-red-500">
-        <h2 className="text-2xl font-bold text-red-800 mb-2">
+        <h2 className="text-2xl font-bold text-red-800 mb-4">
           {t("actionRequired")}
         </h2>
-        {pendingPaymentAppointments.map((appointment: any) => (
-          <div key={appointment._id} className="mb-4">
-            <p>
-              {t("appointmentNeedsPayment", {
-                expiryDate: format(
-                  new Date(appointment.payment.paymentExpiryDate),
-                  "P HH:mm"
-                ),
-              })}
-            </p>
-          </div>
-        ))}
+        {pendingPaymentAppointments.map((appointment: any) => {
+          const paymentDeadline = subHours(new Date(appointment.startDate), 1);
+          const startDateFormatted = format(
+            new Date(appointment.startDate),
+            "P"
+          );
+          const startTimeFormatted = format(
+            new Date(appointment.startDate),
+            "HH:mm"
+          );
+
+          return (
+            <div
+              key={appointment._id}
+              className="mb-6 p-4 bg-white rounded shadow-md"
+            >
+              <p className="text-gray-700 mb-2">
+                {t("appointmentReminder", {
+                  day: format(new Date(appointment.startDate), "EEEE"),
+                  date: startDateFormatted, // Include full date
+                  startTime: startTimeFormatted,
+                  paymentDeadline: format(paymentDeadline, "P HH:mm"),
+                })}
+              </p>
+              <p className="text-gray-700 mb-2 font-semibold">
+                {t("paymentWarning")}
+              </p>
+              <p className="text-gray-700 mb-2">
+                <strong>{t("therapist")}:</strong>{" "}
+                {getFullName(
+                  appointment.hostUserId.firstName,
+                  appointment.hostUserId.lastName
+                )}
+              </p>
+              <p className="text-gray-700 mb-2">
+                <strong>{t("title")}:</strong> {appointment.title}
+              </p>
+              <Link
+                href={`/invoices/${
+                  appointment._id
+                }/checkout?appointmentTypeId=${
+                  appointment.appointmentTypeId
+                }&date=${encodeURIComponent(appointment.startDate)}`}
+              >
+                <Button>{t("completePayment")}</Button>
+              </Link>
+            </div>
+          );
+        })}
       </div>
     );
   };
 
   return (
-    <Card className="w-full xl:w-9/12">
-      <CardContent>
-        <div className="flex justify-center py-8">
-          <div className="space-y-8 w-full max-w-4xl">
-            {renderPendingPayments()}
+    <>
+      <div className="w-full xl:w-9/12 mx-auto">
+        <PageTitle title={t("appointments")} />
+      </div>
 
-            <div className="flex justify-center">
-              <div className="flex justify-center items-center flex-col w-2/3">
-                {nextAppointment && renderNextAppointment()}
-                <div className="mr-4 rtl:mr-0 rtl:ml-4">
-                  {t("appointmentStatus")}:{" "}
+      <div className="flex justify-center">
+        <div className="w-full xl:w-9/12 p-2 sm:p-6 rounded-xl bg-white">
+          <div>
+            <div className="flex justify-center py-8">
+              <div className="space-y-8 w-full max-w-4xl">
+                <div className="w-full sm:w-2/3 mx-auto">
+                  {renderPendingPayments()}
                 </div>
-                <MultiSelector
-                  values={filters as string[]}
-                  onValuesChange={setFilters}
-                >
-                  <MultiSelectorTrigger
-                    className="flex-col items-start  sm:flex-row sm:items-center"
-                    badgeClassName="w-full justify-center sm:w-auto sm:justify-start mb-2 sm:mb-0"
-                  >
-                    <MultiSelectorInput
-                      placeholder={t("selectStatus")}
-                      className="w-full justify-center sm:w-auto sm:justify-start"
-                    />
-                  </MultiSelectorTrigger>
-                  <MultiSelectorContent>
-                    <MultiSelectorList>
-                      <MultiSelectorItem value="confirmed">
-                        {t("confirmed")}
-                      </MultiSelectorItem>
-                      <MultiSelectorItem value="canceled">
-                        {t("canceled")}
-                      </MultiSelectorItem>
-                      <MultiSelectorItem value="completed">
-                        {t("completed")}
-                      </MultiSelectorItem>
-                      <MultiSelectorItem value="pending">
-                        {t("pending")}
-                      </MultiSelectorItem>
-                    </MultiSelectorList>
-                  </MultiSelectorContent>
-                </MultiSelector>
-              </div>
-            </div>
-            {sortedStatuses.length ? (
-              sortedStatuses.map((status) => (
-                <div key={status}>
-                  <h2 className="text-xl font-bold mb-4">
-                    {status === "confirmed"
-                      ? t("confirmedAppointments")
-                      : `${statusTranslations[status]} ${t("appointments")}`}
-                  </h2>
-                  {Object.keys(groupedByStatus[status])
-                    .sort((a, b) => {
-                      const dateA = parseISO(a);
-                      const dateB = parseISO(b);
+                <div className="flex justify-center">
+                  <div className="flex justify-center items-center flex-col w-full sm:w-2/3">
+                    {nextAppointment && renderNextAppointment()}
+                    <div className="mr-4 rtl:mr-0 rtl:ml-4">
+                      {t("appointmentStatus")}:{" "}
+                    </div>
+                    <MultiSelector
+                      values={filters as string[]}
+                      onValuesChange={setFilters}
+                    >
+                      <MultiSelectorTrigger
+                        className="flex-col items-start  sm:flex-row sm:items-center"
+                        badgeClassName="w-full justify-center sm:w-auto sm:justify-start mb-2 sm:mb-0"
+                      >
+                        <MultiSelectorInput
+                          placeholder={t("selectStatus")}
+                          className="w-full justify-center sm:w-auto sm:justify-start"
+                        />
+                      </MultiSelectorTrigger>
+                      <MultiSelectorContent>
+                        <MultiSelectorList>
+                          <MultiSelectorItem value="confirmed">
+                            {t("confirmed")}
+                          </MultiSelectorItem>
+                          <MultiSelectorItem value="canceled">
+                            {t("canceled")}
+                          </MultiSelectorItem>
+                          <MultiSelectorItem value="completed">
+                            {t("completed")}
+                          </MultiSelectorItem>
+                          <MultiSelectorItem value="pending">
+                            {t("pending")}
+                          </MultiSelectorItem>
+                        </MultiSelectorList>
+                      </MultiSelectorContent>
+                    </MultiSelector>
+                  </div>
+                </div>
+                {sortedStatuses.length ? (
+                  sortedStatuses.map((status) => (
+                    <div key={status}>
+                      <h2 className="text-xl font-bold mb-4">
+                        {status === "confirmed"
+                          ? t("confirmedAppointments")
+                          : `${statusTranslations[status]} ${t(
+                              "appointments"
+                            )}`}
+                      </h2>
+                      {Object.keys(groupedByStatus[status])
+                        .sort((a, b) => {
+                          const dateA = parseISO(a);
+                          const dateB = parseISO(b);
 
-                      if (isToday(dateA)) return -1;
-                      if (isToday(dateB)) return 1;
-                      if (isTomorrow(dateA)) return -1;
-                      if (isTomorrow(dateB)) return 1;
-                      if (isPast(dateA) && !isPast(dateB)) return 1;
-                      if (!isPast(dateA) && isPast(dateB)) return -1;
-                      return isAfter(dateA, dateB) ? 1 : -1;
-                    })
-                    .map((date) => (
-                      <div key={date}>
-                        <h3 className="text-lg font-semibold text-blue-800 mb-2">
-                          {getDateLabel(date)}
-                        </h3>
-                        <Accordion
-                          type="single"
-                          collapsible
-                          className="w-full mb-4"
-                        >
-                          {groupedByStatus[status][date].map(
-                            (appointment: any) => {
-                              const timeUntilStart = differenceInMinutes(
-                                new Date(appointment.startDate),
-                                new Date()
-                              );
+                          if (isToday(dateA)) return -1;
+                          if (isToday(dateB)) return 1;
+                          if (isTomorrow(dateA)) return -1;
+                          if (isTomorrow(dateB)) return 1;
+                          if (isPast(dateA) && !isPast(dateB)) return 1;
+                          if (!isPast(dateA) && isPast(dateB)) return -1;
+                          return isAfter(dateA, dateB) ? 1 : -1;
+                        })
+                        .map((date) => (
+                          <div key={date}>
+                            <h3 className="text-lg font-semibold text-blue-800 mb-2">
+                              {getDateLabel(date)}
+                            </h3>
+                            <Accordion
+                              type="single"
+                              collapsible
+                              className="w-full mb-4"
+                            >
+                              {groupedByStatus[status][date].map(
+                                (appointment: any) => {
+                                  const timeUntilStart = differenceInMinutes(
+                                    new Date(appointment.startDate),
+                                    new Date()
+                                  );
 
-                              const hasMeetingEnded =
-                                new Date() > new Date(appointment.endDate);
+                                  const hasMeetingEnded =
+                                    new Date() > new Date(appointment.endDate);
 
-                              const isJoinEnabled =
-                                timeUntilStart <= 20 &&
-                                timeUntilStart >= 0 &&
-                                !hasMeetingEnded;
+                                  const isJoinEnabled =
+                                    timeUntilStart <= 20 &&
+                                    timeUntilStart >= 0 &&
+                                    !hasMeetingEnded;
 
-                              const disableAccordion =
-                                isPast(new Date(appointment.startDate)) &&
-                                hasMeetingEnded;
+                                  const disableAccordion =
+                                    isPast(new Date(appointment.startDate)) &&
+                                    hasMeetingEnded;
 
-                              return (
-                                <AccordionItem
-                                  className={`bg-white ${
-                                    disableAccordion ? "opacity-50" : ""
-                                  } ${
-                                    appointment.status === "canceled"
-                                      ? "opacity-50"
-                                      : ""
-                                  }`}
-                                  key={appointment._id.toString()}
-                                  value={appointment._id.toString()}
-                                >
-                                  <AccordionTrigger className="flex justify-between p-4 bg-gray-100 rounded flex-col md:flex-row">
-                                    <span>
-                                      {format(
-                                        new Date(appointment.startDate),
-                                        "P HH:mm"
-                                      )}{" "}
-                                      - {appointment.title}
-                                    </span>
-                                    <span className="flex items-center gap-2">
-                                      {getStatusIcon(appointment.status)}
-                                      <div className="mt-2 mb-2 md:mt-0 md:mb-0">
-                                        {getFullName(
-                                          appointment.hostUserId.firstName,
-                                          appointment.hostUserId.lastName
-                                        )}
-                                      </div>
-                                    </span>
-                                  </AccordionTrigger>
-                                  <AccordionContent className="p-4 border-t border-gray-200">
-                                    <div className="flex justify-between items-start flex-col reverse w-full">
-                                      <div className="text-sm text-gray-500 space-y-1 order-last sm:order-1">
-                                        <p>
-                                          <strong>{t("start")}: </strong>{" "}
+                                  return (
+                                    <AccordionItem
+                                      className={`bg-white ${
+                                        disableAccordion ? "opacity-50" : ""
+                                      } ${
+                                        appointment.status === "canceled"
+                                          ? "opacity-50"
+                                          : ""
+                                      }`}
+                                      key={appointment._id.toString()}
+                                      value={appointment._id.toString()}
+                                    >
+                                      <AccordionTrigger className="flex justify-between p-4 bg-gray-100 rounded flex-col md:flex-row">
+                                        <span>
                                           {format(
                                             new Date(appointment.startDate),
                                             "P HH:mm"
-                                          )}
-                                        </p>
-                                        <p>
-                                          <strong>{t("duration")}:</strong>{" "}
-                                          {appointment.durationInMinutes}{" "}
-                                          {t("minutes")}
-                                        </p>
-                                        <p>
-                                          <strong>{t("status")}:</strong>{" "}
-                                          {appointment.status}
-                                        </p>
-                                        {appointment.status === "canceled" && (
-                                          <>
-                                            {appointment.cancellationReason ===
-                                            "custom" ? (
-                                              <p>
-                                                <strong>
-                                                  {t("cancellationReason")}:
-                                                </strong>{" "}
-                                                {
-                                                  appointment.customCancellationReason
-                                                }
-                                              </p>
-                                            ) : (
-                                              <p>
-                                                <strong>
-                                                  {t("cancellationReason")}:
-                                                </strong>{" "}
-                                                {getCancellationReason(
-                                                  appointment.cancellationReason
-                                                )}
-                                              </p>
-                                            )}
-                                          </>
-                                        )}
-                                        <p>
-                                          <strong>{t("paid")}:</strong>{" "}
-                                          {appointment.payment.status === "paid"
-                                            ? t("yes")
-                                            : t("no")}
-                                        </p>
-                                      </div>
-                                      {(appointment.status === "pending" ||
-                                        appointment.status === "confirmed") && (
-                                        <div className="mb-8 inline-flex justify-center sm:justify-end w-full">
-                                          <Button
-                                            disabled={isPending}
-                                            variant="secondary"
-                                            onClick={() => {
-                                              setSelectedAppointment(
-                                                appointment
-                                              );
-                                              setIsCancelDialogOpen(true);
-                                            }}
-                                          >
-                                            {t("cancelAppointment")}
-                                          </Button>
-                                        </div>
-                                      )}
-                                    </div>
-                                    <div className="mt-4">
-                                      <h4 className="text-md font-semibold">
-                                        {t("host")}:
-                                      </h4>
-                                      <p className="text-sm text-gray-500">
-                                        {getFullName(
-                                          appointment.hostUserId.firstName,
-                                          appointment.hostUserId.lastName
-                                        )}{" "}
-                                        ({appointment.hostUserId.email})
-                                      </p>
-                                    </div>
-                                    <div className="mt-6 flex justify-center">
-                                      {appointment.status === "confirmed" &&
-                                        !isPending && (
-                                          <div className="flex flex-col align-items center">
-                                            {isJoinEnabled ? (
-                                              <Link
-                                                className="text-center"
-                                                href={`/appointments/${appointment._id}`}
-                                              >
-                                                <Button
-                                                  disabled={!isJoinEnabled}
-                                                >
-                                                  {t("joinMeeting")}
-                                                </Button>
-                                              </Link>
-                                            ) : (
-                                              <div className="text-center">
-                                                <Button
-                                                  disabled={!isJoinEnabled}
-                                                >
-                                                  {t("joinMeeting")}
-                                                </Button>
-                                              </div>
-                                            )}
-
-                                            {!isJoinEnabled && (
-                                              <p className="text-sm text-gray-500 mt-2 text-center">
-                                                {t("joinDisabledMessage", {
-                                                  time: 20,
-                                                })}
-                                                <br />
-                                                {t("refreshMessage")}
-                                              </p>
+                                          )}{" "}
+                                          - {appointment.title}
+                                        </span>
+                                        <span className="flex items-center gap-2">
+                                          {getStatusIcon(appointment.status)}
+                                          <div className="mt-2 mb-2 md:mt-0 md:mb-0">
+                                            {getFullName(
+                                              appointment.hostUserId.firstName,
+                                              appointment.hostUserId.lastName
                                             )}
                                           </div>
-                                        )}
-                                    </div>
-                                  </AccordionContent>
-                                </AccordionItem>
-                              );
-                            }
-                          )}
-                        </Accordion>
-                      </div>
-                    ))}
-                </div>
-              ))
-            ) : (
-              <p>{t("noAppointments")}</p>
-            )}
+                                        </span>
+                                      </AccordionTrigger>
+                                      <AccordionContent className="p-4 border-t border-gray-200">
+                                        <div className="flex justify-between items-start flex-col reverse w-full">
+                                          <div className="text-sm text-gray-500 space-y-1 order-last sm:order-1">
+                                            <p>
+                                              <strong>{t("start")}: </strong>{" "}
+                                              {format(
+                                                new Date(appointment.startDate),
+                                                "P HH:mm"
+                                              )}
+                                            </p>
+                                            <p>
+                                              <strong>{t("duration")}:</strong>{" "}
+                                              {appointment.durationInMinutes}{" "}
+                                              {t("minutes")}
+                                            </p>
+                                            <p>
+                                              <strong>{t("status")}:</strong>{" "}
+                                              {appointment.status}
+                                            </p>
+                                            {appointment.status ===
+                                              "canceled" && (
+                                              <>
+                                                {appointment.cancellationReason ===
+                                                "custom" ? (
+                                                  <p>
+                                                    <strong>
+                                                      {t("cancellationReason")}:
+                                                    </strong>{" "}
+                                                    {
+                                                      appointment.customCancellationReason
+                                                    }
+                                                  </p>
+                                                ) : (
+                                                  <p>
+                                                    <strong>
+                                                      {t("cancellationReason")}:
+                                                    </strong>{" "}
+                                                    {getCancellationReason(
+                                                      appointment.cancellationReason
+                                                    )}
+                                                  </p>
+                                                )}
+                                              </>
+                                            )}
+                                            <p>
+                                              <strong>{t("paid")}:</strong>{" "}
+                                              {appointment.payment.status ===
+                                              "paid"
+                                                ? t("yes")
+                                                : t("no")}
+                                            </p>
+                                          </div>
+                                          {(appointment.status === "pending" ||
+                                            appointment.status ===
+                                              "confirmed") && (
+                                            <div className="mb-8 inline-flex justify-center sm:justify-end w-full">
+                                              <Button
+                                                disabled={isPending}
+                                                variant="secondary"
+                                                onClick={() => {
+                                                  setSelectedAppointment(
+                                                    appointment
+                                                  );
+                                                  setIsCancelDialogOpen(true);
+                                                }}
+                                              >
+                                                {t("cancelAppointment")}
+                                              </Button>
+                                            </div>
+                                          )}
+                                        </div>
+                                        <div className="mt-4">
+                                          <h4 className="text-md font-semibold">
+                                            {t("host")}:
+                                          </h4>
+                                          <p className="text-sm text-gray-500">
+                                            {getFullName(
+                                              appointment.hostUserId.firstName,
+                                              appointment.hostUserId.lastName
+                                            )}{" "}
+                                            ({appointment.hostUserId.email})
+                                          </p>
+                                        </div>
+                                        <div className="mt-6 flex justify-center">
+                                          {appointment.status === "confirmed" &&
+                                            !isPending && (
+                                              <div className="flex flex-col align-items center">
+                                                {isJoinEnabled ? (
+                                                  <Link
+                                                    className="text-center"
+                                                    href={`/appointments/${appointment._id}`}
+                                                  >
+                                                    <Button
+                                                      disabled={!isJoinEnabled}
+                                                    >
+                                                      {t("joinMeeting")}
+                                                    </Button>
+                                                  </Link>
+                                                ) : (
+                                                  <div className="text-center">
+                                                    <Button
+                                                      disabled={!isJoinEnabled}
+                                                    >
+                                                      {t("joinMeeting")}
+                                                    </Button>
+                                                  </div>
+                                                )}
+
+                                                {!isJoinEnabled && (
+                                                  <p className="text-sm text-gray-500 mt-2 text-center">
+                                                    {t("joinDisabledMessage", {
+                                                      time: 20,
+                                                    })}
+                                                    <br />
+                                                    {t("refreshMessage")}
+                                                  </p>
+                                                )}
+                                              </div>
+                                            )}
+                                        </div>
+                                      </AccordionContent>
+                                    </AccordionItem>
+                                  );
+                                }
+                              )}
+                            </Accordion>
+                          </div>
+                        ))}
+                    </div>
+                  ))
+                ) : (
+                  <p>{t("noAppointments")}</p>
+                )}
+              </div>
+            </div>
           </div>
-        </div>
-      </CardContent>
 
-      {selectedAppointment && (
-        <CancelAppointmentForm
-          selectedAppointment={selectedAppointment}
-          isPending={isPending}
-          startTransition={startTransition}
-          isCancelDialogOpen={isCancelDialogOpen}
-          setIsCancelDialogOpen={setIsCancelDialogOpen}
-          setSelectedAppointment={setSelectedAppointment}
-        />
-      )}
+          {selectedAppointment && (
+            <CancelAppointmentForm
+              selectedAppointment={selectedAppointment}
+              isPending={isPending}
+              startTransition={startTransition}
+              isCancelDialogOpen={isCancelDialogOpen}
+              setIsCancelDialogOpen={setIsCancelDialogOpen}
+              setSelectedAppointment={setSelectedAppointment}
+            />
+          )}
 
-      {/* Loader Overlay */}
-      {isPending && (
-        <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center z-50">
-          <BeatLoader color="#ffffff" />
+          {/* Loader Overlay */}
+          {isPending && (
+            <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center z-50">
+              <BeatLoader color="#ffffff" />
+            </div>
+          )}
         </div>
-      )}
-    </Card>
+      </div>
+    </>
   );
 };
 

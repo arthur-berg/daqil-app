@@ -12,6 +12,7 @@ import { Link } from "@/navigation";
 import { getFullName } from "@/utils/formatName";
 import connectToMongoDB from "@/lib/mongoose";
 import { getTranslations } from "next-intl/server";
+import PageTitle from "@/components/page-title";
 
 const MyClientsPage = async () => {
   await connectToMongoDB();
@@ -26,31 +27,35 @@ const MyClientsPage = async () => {
     return <div className="text-center p-4">{t("noClientsFound")}</div>;
   }
   return (
-    <div className="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-6">
-      <h1 className="text-3xl font-bold text-center mb-6">{t("myClients")}</h1>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-[200px]">{t("name")}</TableHead>
-            <TableHead>{t("email")}</TableHead>
-            <TableHead>{t("totalAppointments")}</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {clients.map(async (client: any) => (
-            <TableRow key={client.email}>
-              <TableCell className="font-medium underline text-primary">
-                <Link href={`/therapist/clients/${client.id}`}>
-                  {await getFullName(client.firstName, client.lastName)}
-                </Link>
-              </TableCell>
-              <TableCell>{client.email}</TableCell>
-              <TableCell>{client.totalAppointments}</TableCell>
+    <>
+      <div className="max-w-4xl mx-auto">
+        <PageTitle title={t("myClients")} />
+      </div>
+      <div className="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-6">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-[200px]">{t("name")}</TableHead>
+              <TableHead>{t("email")}</TableHead>
+              <TableHead>{t("totalAppointments")}</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
+          </TableHeader>
+          <TableBody>
+            {clients.map(async (client: any) => (
+              <TableRow key={client.email}>
+                <TableCell className="font-medium underline text-primary">
+                  <Link href={`/therapist/clients/${client.id}`}>
+                    {await getFullName(client.firstName, client.lastName)}
+                  </Link>
+                </TableCell>
+                <TableCell>{client.email}</TableCell>
+                <TableCell>{client.totalAppointments}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    </>
   );
 };
 

@@ -16,6 +16,7 @@ import AcceptTherapist from "./accept-therapist";
 import { getFullName } from "@/utils/formatName";
 import connectToMongoDB from "@/lib/mongoose";
 import IntroCallStepManager from "./intro-call-step-manager";
+import PageTitle from "@/components/page-title";
 
 const BookAppointmentPage = async ({
   params,
@@ -71,11 +72,11 @@ const BookAppointmentPage = async ({
       <div className="max-w-4xl mx-auto">
         <div className="relative flex justify-center">
           <div className="p-4 max-w-6xl w-full">
-            <div className="bg-secondary p-4 rounded-md mb-6">
-              <h1 className="text-3xl font-bold text-center text-primary flex-grow">
-                {selectedTherapist ? t("yourTherapist") : t("bookAppointment")}
-              </h1>
-            </div>
+            <PageTitle
+              title={
+                selectedTherapist ? t("yourTherapist") : t("bookAppointment")
+              }
+            />
 
             {introMeetingIsBookedButNotFinished ? (
               <div className="bg-white p-4 rounded-md mb-6 flex items-center flex-col text-center">
