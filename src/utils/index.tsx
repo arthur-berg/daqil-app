@@ -50,3 +50,5 @@ export const formatDateTime = (date: Date): string =>
 export const convertToSubcurrency = (amount: number, factor = 100) => {
   return Math.round(amount * factor);
 };
+
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
