@@ -33,7 +33,7 @@ export default {
               password: 1,
             },
           });
-          console.log("before fetch in authorize");
+
           try {
             const response = await fetch(
               `${process.env.MONGO_OPEN_API_ENDPOINT as string}/findOne`,
@@ -47,8 +47,6 @@ export default {
                 body: data,
               }
             );
-
-            console.log("after fetch in authorize");
 
             const { document: user } = await response.json();
 
