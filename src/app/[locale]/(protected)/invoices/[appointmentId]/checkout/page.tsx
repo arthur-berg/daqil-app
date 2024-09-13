@@ -5,15 +5,21 @@ import { getTranslations } from "next-intl/server";
 import connectToMongoDB from "@/lib/mongoose";
 
 const InvoiceCheckoutPage = async ({
-  searchParams: { appointmentTypeId, date, appointmentId },
+  searchParams: { appointmentTypeId, date },
+  params: { appointmentId },
 }: {
-  searchParams: {
+  params: {
     appointmentId: string;
+  };
+  searchParams: {
     appointmentTypeId: string;
     date: string;
   };
 }) => {
   await connectToMongoDB();
+  console.log("date", date);
+  console.log("appointmentTypeId", appointmentTypeId);
+  console.log("appointmentId", appointmentId);
   const appointmentType = await getAppointmentTypeById(appointmentTypeId);
   const dateObject = new Date(decodeURIComponent(date));
   const appointment = await getAppointmentById(appointmentId);
