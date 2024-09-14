@@ -93,7 +93,7 @@ export const cancelAppointment = async (
         new Date()
       );
 
-      if (hoursUntilAppointment > 24) {
+      if (hoursUntilAppointment > 24 && appointment.payment.status === "paid") {
         // Fetch the payment intent using the appointmentId as metadata
         const paymentIntents = await stripe.paymentIntents.list({
           customer: appointment.participants[0].userId.stripeCustomerId,

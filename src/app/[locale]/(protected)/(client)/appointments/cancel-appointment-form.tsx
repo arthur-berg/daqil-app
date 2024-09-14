@@ -87,11 +87,12 @@ const CancelAppontmentForm = ({
               <DialogTitle>{t("areYouSure")}</DialogTitle>
               <DialogDescription>
                 {/* Warning Message for Less Than 24 Hours */}
-                {hoursUntilAppointment < 24 && (
-                  <p className="text-red-600 font-bold">
-                    {t("warningNoRefund")}
-                  </p>
-                )}
+                {hoursUntilAppointment < 24 &&
+                  selectedAppointment.payment.status === "paid" && (
+                    <p className="text-red-600 font-bold">
+                      {t("warningNoRefund")}
+                    </p>
+                  )}
 
                 <p>
                   <strong>{t("title")}: </strong> {selectedAppointment?.title}
