@@ -26,6 +26,7 @@ import { useTranslations } from "next-intl";
 import { scheduleAppointment } from "@/actions/appointments/schedule-appointment";
 import { useUserName } from "@/hooks/use-user-name";
 import { DateTimePicker } from "@/components/ui/datetime-picker";
+import { BeatLoader } from "react-spinners";
 
 const ScheduleAppointmentForm = ({
   clientJson,
@@ -169,6 +170,11 @@ const ScheduleAppointmentForm = ({
           </Form>
         </CardContent>
       </Card>
+      {isPending && (
+        <div className="absolute inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center z-10">
+          <BeatLoader color="white" />
+        </div>
+      )}
     </div>
   );
 };
