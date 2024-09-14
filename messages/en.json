@@ -415,6 +415,7 @@
     "loadingAmountPaid": "Loading amount paid..."
   },
   "ErrorMessages": {
+    "refundFailed": "Refund request failed. Please contact support.",
     "noImage": "No image",
     "invalidFields": "Invalid fields!",
     "invalidCredentials": "Invalid credentials!",

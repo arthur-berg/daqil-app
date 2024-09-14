@@ -17,6 +17,9 @@ import {
 } from "@/lib/schedule-appointment-jobs";
 import { updateAppointments } from "./utils";
 import connectToMongoDB from "@/lib/mongoose";
+import { sendNonPaidBookingConfirmationEmail } from "@/lib/mail";
+import { getFullName } from "@/utils/formatName";
+import { formatInTimeZone } from "date-fns-tz";
 
 export const scheduleAppointment = async (
   values: z.input<typeof AppointmentSchema>
@@ -28,6 +31,12 @@ export const scheduleAppointment = async (
   ]);
   const locale = await getLocale();
   const therapist = await requireAuth([UserRole.THERAPIST]);
+
+  if (!therapist) {
+    return {
+      error: ErrorMessages("therapistNotExist"),
+    };
+  }
 
   const validatedFields = AppointmentSchema.safeParse(values);
 
@@ -186,6 +195,54 @@ export const scheduleAppointment = async (
     await session.commitTransaction();
     transactionCommitted = true;
     session.endSession();
+
+    const clientTimeZone = client?.settings?.timeZone || "UTC";
+    const therapistTimeZone = therapist?.settings?.timeZone || "UTC";
+
+    const clientAppointmentDate = formatInTimeZone(
+      new Date(appointment[0].startDate),
+      clientTimeZone,
+      "yyyy-MM-dd"
+    );
+
+    const clientAppointmentTime = formatInTimeZone(
+      new Date(appointment[0].startDate),
+      clientTimeZone,
+      "HH:mm"
+    );
+
+    const therapistAppointmentDate = formatInTimeZone(
+      new Date(appointment[0].startDate),
+      therapistTimeZone,
+      "yyyy-MM-dd"
+    );
+
+    const therapistAppointmentTime = formatInTimeZone(
+      new Date(appointment[0].startDate),
+      therapistTimeZone,
+      "HH:mm"
+    );
+
+    const appointmentDetails = {
+      clientDate: clientAppointmentDate,
+      clientTime: clientAppointmentTime,
+      therapistDate: therapistAppointmentDate,
+      therapistTime: therapistAppointmentTime,
+      therapistName: `${await getFullName(
+        therapist.firstName,
+        therapist.lastName
+      )}`,
+      date: new Date(appointment[0].startDate),
+      clientName: `${await getFullName(client.firstName, client.lastName)}`,
+      appointmentId: appointmentId,
+      appointmentTypeId: appointmentTypeId,
+    };
+
+    await sendNonPaidBookingConfirmationEmail(
+      therapist.email,
+      client.email,
+      appointmentDetails
+    );
 
     return { success: SuccessMessages("appointmentCreated") };
   } catch (error) {

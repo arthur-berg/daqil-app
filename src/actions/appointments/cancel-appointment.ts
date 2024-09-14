@@ -49,7 +49,7 @@ export const cancelAppointment = async (
       .populate({
         path: "participants.userId",
         select:
-          "firstName lastName email stripeCustomerId stripePaymentMethodId settings.timeZone",
+          "firstName lastName email stripeCustomerId stripePaymentMethodId settings.timeZone selectedTherapist.introCallDone",
       })
       .populate("hostUserId", "email firstName lastName settings.timeZone");
 
@@ -125,11 +125,14 @@ export const cancelAppointment = async (
       customCancellationReason: reason,
     });
 
-    const therapistEmail = appointment.hostUserId.email;
-    const clientEmail = appointment.participants[0].userId.email;
+    const client = appointment.participants[0].userId;
+    const therapist = appointment.hostUserId;
 
-    const clientTimeZone = appointment.participants[0].userId.settings.timeZone;
-    const therapistTimeZone = appointment.hostUserId.settings.timeZone;
+    const therapistEmail = therapist.email;
+    const clientEmail = client.email;
+
+    const clientTimeZone = client.settings.timeZone;
+    const therapistTimeZone = therapist.settings.timeZone;
 
     const clientAppointmentDate = formatInTimeZone(
       new Date(appointment.startDate),
@@ -162,22 +165,20 @@ export const cancelAppointment = async (
       therapistTime: therapistAppointmentTime,
       reason,
       therapistName: `${await getFullName(
-        appointment.hostUserId.firstName,
-        appointment.hostUserId.lastName
+        therapist.firstName,
+        therapist.lastName
       )}`,
-      clientName: `${await getFullName(
-        appointment.participants[0].userId.firstName,
-        appointment.participants[0].userId.lastName
-      )}`,
+      clientName: `${await getFullName(client.firstName, client.lastName)}`,
       refundIssued,
       refundAmount,
     };
 
     if (
       appointment.appointmentTypeId.toString() ===
-      APPOINTMENT_TYPE_ID_INTRO_SESSION
+        APPOINTMENT_TYPE_ID_INTRO_SESSION &&
+      !client.selectedTherapist.introCallDone
     ) {
-      await User.findByIdAndUpdate(appointment.participants[0].userId._id, {
+      await User.findByIdAndUpdate(client._id, {
         $set: {
           "selectedTherapist.therapist": null,
         },
