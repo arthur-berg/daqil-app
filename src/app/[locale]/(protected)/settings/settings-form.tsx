@@ -216,11 +216,6 @@ const SettingsForm = () => {
                           </PopoverTrigger>
                           <PopoverContent className="w-[280px] p-0">
                             <Command>
-                              <CommandInput
-                                placeholder={t("searchTimezone")}
-                                value={timezoneSearch}
-                                onValueChange={setTimezoneSearch}
-                              />
                               <CommandList>
                                 <CommandEmpty>
                                   {t("noTimezoneFound")}
@@ -248,6 +243,15 @@ const SettingsForm = () => {
                                     ))}
                                 </CommandGroup>
                               </CommandList>
+
+                              {/* Move CommandInput to the bottom */}
+                              <div className="border-t p-2">
+                                <CommandInput
+                                  placeholder={t("searchTimezone")}
+                                  value={timezoneSearch}
+                                  onValueChange={setTimezoneSearch}
+                                />
+                              </div>
                             </Command>
                           </PopoverContent>
                         </Popover>

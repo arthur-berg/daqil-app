@@ -1,7 +1,7 @@
 "use client";
 
 import * as z from "zod";
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SetupAccountSchema } from "@/schemas";
@@ -86,8 +86,28 @@ export const SetupForm = () => {
   const [timezonePopoverOpen, setTimezonePopoverOpen] = useState(false);
   const [timezoneSearch, setTimezoneSearch] = useState("");
 
-  const email = searchParams.get("email");
-  const token = searchParams.get("token");
+  const initialEmail =
+    searchParams.get("email") || localStorage.getItem("email") || "";
+
+  // Retrieve token from search params or localStorage
+  const initialToken =
+    searchParams.get("token") || localStorage.getItem("token") || "";
+
+  const [token, setToken] = useState(initialToken);
+
+  const [email, setEmail] = useState(initialEmail);
+
+  useEffect(() => {
+    if (token) {
+      localStorage.setItem("token", token);
+    }
+  }, [token]);
+
+  useEffect(() => {
+    if (email) {
+      localStorage.setItem("email", email);
+    }
+  }, [email]);
 
   const detectedTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const defaultTimezone = getMappedTimezone(detectedTimezone);
@@ -305,15 +325,16 @@ export const SetupForm = () => {
                         placeholder="YYYY/MM/DD"
                         value={field.value}
                         onChange={(e) => {
-                          let input = e.target.value.replace(/\D/g, "");
-                          if (input.length > 8) input = input.slice(0, 8);
-                          if (input.length >= 4) {
-                            input = input.slice(0, 4) + "/" + input.slice(4);
+                          let input = e.target.value.replace(/[^\d/]/g, ""); // Allow digits and slashes
+                          if (input.length <= 10) {
+                            if (input.length >= 5 && input[4] !== "/") {
+                              input = input.slice(0, 4) + "/" + input.slice(4);
+                            }
+                            if (input.length >= 8 && input[7] !== "/") {
+                              input = input.slice(0, 7) + "/" + input.slice(7);
+                            }
                           }
-                          if (input.length >= 7) {
-                            input = input.slice(0, 7) + "/" + input.slice(7);
-                          }
-                          field.onChange(input);
+                          field.onChange(input); // Update the form state
                         }}
                         disabled={isPending}
                         className={cn("w-[240px]")}
@@ -351,11 +372,6 @@ export const SetupForm = () => {
                       </PopoverTrigger>
                       <PopoverContent className="w-[280px] p-0">
                         <Command>
-                          <CommandInput
-                            placeholder={t("searchTimezone")}
-                            value={timezoneSearch}
-                            onValueChange={setTimezoneSearch}
-                          />
                           <CommandList>
                             <CommandEmpty>{t("noTimezoneFound")}</CommandEmpty>
                             <CommandGroup>
@@ -378,6 +394,15 @@ export const SetupForm = () => {
                                 ))}
                             </CommandGroup>
                           </CommandList>
+
+                          {/* Move CommandInput to the bottom */}
+                          <div className="border-t p-2">
+                            <CommandInput
+                              placeholder={t("searchTimezone")}
+                              value={timezoneSearch}
+                              onValueChange={setTimezoneSearch}
+                            />
+                          </div>
                         </Command>
                       </PopoverContent>
                     </Popover>
