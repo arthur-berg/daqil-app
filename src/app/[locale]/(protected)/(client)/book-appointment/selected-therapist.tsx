@@ -93,9 +93,16 @@ const SelectedTherapist = ({
             <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
               {t("close")}
             </Button>
-            <Link href="/book-appointment/browse-therapists">
-              <Button>{t("browseTherapistsButton")}</Button>
-            </Link>
+            <div className="flex mb-4 sm:mb-0">
+              <Link
+                href="/book-appointment/browse-therapists"
+                className="w-full"
+              >
+                <Button className="w-full">
+                  {t("browseTherapistsButton")}
+                </Button>
+              </Link>
+            </div>
           </DialogFooter>
         </DialogContent>
       </Dialog>
