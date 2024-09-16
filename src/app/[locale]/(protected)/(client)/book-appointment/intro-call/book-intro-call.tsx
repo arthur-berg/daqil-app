@@ -222,31 +222,33 @@ const BookIntroCall = ({
                 </div>
               </>
             ) : (
-              <Calendar
-                mode="single"
-                selected={date.justDate ? date.justDate : undefined}
-                onSelect={(date) => {
-                  setDate((prev) => ({
-                    ...prev,
-                    justDate: date ? date : today,
-                  }));
-                  if (date) {
-                    setTimeSlots(date);
+              <div className="flex justify-center sm:block">
+                <Calendar
+                  mode="single"
+                  selected={date.justDate ? date.justDate : undefined}
+                  onSelect={(date) => {
+                    setDate((prev) => ({
+                      ...prev,
+                      justDate: date ? date : today,
+                    }));
+                    if (date) {
+                      setTimeSlots(date);
+                    }
+                  }}
+                  disabled={(date) =>
+                    isBefore(date, today) || isAfter(date, maxDate)
                   }
-                }}
-                disabled={(date) =>
-                  isBefore(date, today) || isAfter(date, maxDate)
-                }
-                className="rounded-md border h-full w-full flex"
-                classNames={{
-                  months:
-                    "flex w-full flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0 flex-1",
-                  month: "space-y-4 w-full flex flex-col",
-                  table: "w-full h-full border-collapse space-y-1",
-                  head_row: "",
-                  row: "w-full mt-2",
-                }}
-              />
+                  className="w-full sm:max-w-none max-w-xs sm:w-auto overflow-hidden rounded-md border h-auto"
+                  classNames={{
+                    months:
+                      "flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4",
+                    month: "space-y-4 w-full flex flex-col",
+                    table: "w-full border-collapse space-y-1",
+                    head_row: "",
+                    row: "w-full",
+                  }}
+                />
+              </div>
             )}
           </>
         </>

@@ -90,7 +90,7 @@ const ClientPage = async ({ params }: { params: { clientId: string } }) => {
           <Button className="w-full sm:w-auto">Schedule Appointment</Button>
         </Link>
         {/*  {client.selectedTherapist && (
-          <Link href={`/therapist-profile/${client.selectedTherapist._id}`}>
+          <Link href={`/therapist/${client.selectedTherapist._id}`}>
             <Button variant="secondary" className="w-full sm:w-auto">
               View Therapist Profile
             </Button>

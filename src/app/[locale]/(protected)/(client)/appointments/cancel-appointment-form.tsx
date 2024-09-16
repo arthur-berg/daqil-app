@@ -46,7 +46,6 @@ const CancelAppontmentForm = ({
   const { responseToast } = useToast();
   const { getFullName } = useUserName();
 
-  // Calculate if appointment is less than 24 hours away
   const hoursUntilAppointment = differenceInHours(
     new Date(selectedAppointment.startDate),
     new Date()
@@ -120,7 +119,7 @@ const CancelAppontmentForm = ({
                     <FormItem className="mt-4">
                       <FormLabel>{t("enterReason")}</FormLabel>
                       <FormControl>
-                        <Textarea {...field} />
+                        <Textarea {...field} autoFocus={false} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

@@ -67,7 +67,7 @@ const BrowseTherapistsPage = async ({
                   </div>
                 </div>
               )}
-              <Link href={`/therapist-profile/${therapist._id}`}>
+              <Link href={`/therapist/${therapist._id}`}>
                 <Button variant="outline" size="sm" className="mt-2">
                   {t("readMore")}
                 </Button>

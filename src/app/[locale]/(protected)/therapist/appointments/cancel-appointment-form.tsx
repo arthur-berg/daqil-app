@@ -104,7 +104,7 @@ const CancelAppontmentForm = ({
                     <FormItem className="mt-4">
                       <FormLabel>{t("enterReason")}</FormLabel>
                       <FormControl>
-                        <Textarea {...field} />
+                        <Textarea {...field} autoFocus={false} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -113,16 +113,23 @@ const CancelAppontmentForm = ({
               </DialogDescription>
             </DialogHeader>
             <DialogFooter className="rtl:space-x-reverse">
-              <Button variant="destructive" type="submit" disabled={isPending}>
-                {t("cancelAppointment")}
-              </Button>
-              <Button
-                variant="outline"
-                type="button"
-                onClick={() => setIsCancelDialogOpen(false, "goBack")}
-              >
-                {t("goBack")}
-              </Button>
+              <div className="flex flex-col sm:flex-row">
+                <Button
+                  variant="destructive"
+                  type="submit"
+                  disabled={isPending}
+                  className="mb-4 sm:mb-0"
+                >
+                  {t("cancelAppointment")}
+                </Button>
+                <Button
+                  variant="outline"
+                  type="button"
+                  onClick={() => setIsCancelDialogOpen(false)}
+                >
+                  {t("goBack")}
+                </Button>
+              </div>
             </DialogFooter>
           </form>
         </Form>
