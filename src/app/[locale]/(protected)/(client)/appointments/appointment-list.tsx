@@ -177,12 +177,11 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
               )}
             </p>
             <p>
-              <strong>{t("participants")}:</strong>{" "}
-              {nextAppointment.participants
-                .map((participant: any) =>
-                  getFullName(participant.firstName, participant.lastName)
-                )
-                .join(", ")}
+              <strong>{t("therapist")}:</strong>{" "}
+              {getFullName(
+                nextAppointment.hostUserId.firstName,
+                nextAppointment.hostUserId.lastName
+              )}
             </p>
             <div className="mt-4">
               {isJoinEnabled ? (
@@ -474,7 +473,7 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
                                         </div>
                                         <div className="mt-4">
                                           <h4 className="text-md font-semibold">
-                                            {t("host")}:
+                                            {t("therapist")}:
                                           </h4>
                                           <p className="text-sm text-gray-500">
                                             {getFullName(

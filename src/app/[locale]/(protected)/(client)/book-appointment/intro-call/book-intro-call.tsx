@@ -142,7 +142,7 @@ const BookIntroCall = ({
             </div>
             {date.justDate ? (
               <>
-                <Calendar
+                {/* <Calendar
                   mode="single"
                   selected={date.justDate ? date.justDate : today}
                   onSelect={(date) => {
@@ -166,11 +166,25 @@ const BookIntroCall = ({
                     head_row: "",
                     row: "w-full mt-2",
                   }}
-                />
+                /> */}
                 <div className="mt-4">
                   <h3 className="text-lg font-semibold mb-2">
-                    {t("availableSlots")}
+                    {t("availableSlotsFor", {
+                      date: format(date.justDate, "eeee, MMMM d, yyyy"),
+                    })}
                   </h3>
+                  <Button
+                    className="mb-4"
+                    variant="secondary"
+                    onClick={() => {
+                      setDate({
+                        justDate: undefined,
+                        dateTime: undefined,
+                      });
+                    }}
+                  >
+                    {t("changeDate")}
+                  </Button>
 
                   {Object.entries(groupTimeSlots(availableTimeSlots)).map(
                     ([timeOfDay, slots], idx) => (
@@ -278,7 +292,10 @@ const BookIntroCall = ({
             >
               {t("close")}
             </Button>
-            <Button onClick={() => handleTimeSlotClicked()}>
+            <Button
+              onClick={() => handleTimeSlotClicked()}
+              className="mb-4 sm:mb-0"
+            >
               {t("bookAppointment")}
             </Button>
           </DialogFooter>

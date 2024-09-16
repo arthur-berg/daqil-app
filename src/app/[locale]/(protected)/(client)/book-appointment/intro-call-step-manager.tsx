@@ -20,8 +20,8 @@ const IntroCallStepManager = () => {
       </div>
     </div>
   ) : (
-    <div className="flex gap-6 mb-6">
-      <div className="bg-white shadow-lg rounded-lg p-6 text-center hover:shadow-xl transition-shadow duration-300 w-1/2">
+    <div className="flex-col sm:flex-row gap-6 mb-6">
+      <div className="bg-white shadow-lg rounded-lg p-6 text-center hover:shadow-xl transition-shadow duration-300 w-full sm:w-1/2 mb-4 sm:mb-0">
         <div>
           <h2 className="text-xl font-bold mb-4">{t("chooseForMe")}</h2>
           <p className="mb-4">{t("chooseForMeDescription")}</p>
@@ -32,7 +32,7 @@ const IntroCallStepManager = () => {
           </Button>
         </Link>
       </div>
-      <div className="bg-white shadow-lg rounded-lg p-6 text-center hover:shadow-xl transition-shadow duration-300  w-1/2">
+      <div className="bg-white shadow-lg rounded-lg p-6 text-center hover:shadow-xl transition-shadow duration-300 w-full sm:w-1/2">
         <div>
           <h2 className="text-xl font-bold mb-4">
             {t("browseTherapistsTitle")}

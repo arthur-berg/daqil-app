@@ -155,6 +155,7 @@
     "heading": "اختر بين الاشتراكات أو شراء جلسة واحدة"
   },
   "BookAppointmentPage": {
+    "ourTherapists": "معالجينا",
      "oauthAccountNotFinishedMessage": "تحتاج إلى إكمال إعداد حسابك قبل المتابعة.",
   "finishAccountSetupButton": "أكمل إعداد الحساب",
     "noImage": "لا توجد صورة",

@@ -152,6 +152,7 @@
     "heading": "Choose between subscriptions or buy a single session"
   },
   "BookAppointmentPage": {
+    "ourTherapists": "Our therapists",
       "oauthAccountNotFinishedMessage": "You need to finish setting up your account before proceeding.",
   "finishAccountSetupButton": "Finish Account Setup",
     "therapists": "Therapists",

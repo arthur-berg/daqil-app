@@ -87,7 +87,7 @@ export const bookIntroAppointment = async (
       client.id,
       {
         $set: {
-          "selectedTherapist.therapist": therapist.id,
+          "selectedTherapist.therapist": therapistId,
         },
       },
       { session }
@@ -103,8 +103,9 @@ export const bookIntroAppointment = async (
     );
 
     // Update the therapist's appointments
+
     await updateAppointments(
-      therapist.id,
+      therapistId,
       appointmentDate,
       appointmentId,
       session,

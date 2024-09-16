@@ -4,6 +4,7 @@ import { Link } from "@/navigation";
 import { getTranslations } from "next-intl/server";
 import { getFullName } from "@/utils/formatName";
 import connectToMongoDB from "@/lib/mongoose";
+import PageTitle from "@/components/page-title";
 
 const BrowseTherapistsPage = async ({
   params,
@@ -20,6 +21,7 @@ const BrowseTherapistsPage = async ({
 
   return (
     <div className="px-4 sm:px-10">
+      <PageTitle title={t("ourTherapists")} />
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {therapists?.map(async (therapist: any) => (
           <div
