@@ -154,6 +154,11 @@ export default function useRoom() {
       }
       const VideoExpress = await import("@vonage/video-express");
 
+      // Create a hidden div to act as the container for the local camera stream
+      const hiddenCameraContainer = document.createElement("div");
+      hiddenCameraContainer.style.display = "none";
+      document.body.appendChild(hiddenCameraContainer);
+
       roomRef.current = new VideoExpress.Room({
         apiKey: appId,
         sessionId: sessionId,
@@ -163,7 +168,7 @@ export default function useRoom() {
         participantName: userName,
         managedLayoutOptions: {
           layoutMode: "grid",
-          speakerHighlightEnabled: true,
+          cameraPublisherContainer: hiddenCameraContainer,
         },
       }) as any;
 

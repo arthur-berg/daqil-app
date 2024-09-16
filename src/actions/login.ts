@@ -17,6 +17,8 @@ import TwoFactorToken from "@/models/TwoFactorToken";
 import TwoFactorConfirmation from "@/models/TwoFactorConfirmation";
 import { getTranslations } from "next-intl/server";
 import connectToMongoDB from "@/lib/mongoose";
+import { redirect } from "@/navigation";
+import { isRedirectError } from "next/dist/client/components/redirect";
 
 export const login = async (
   values: z.infer<typeof LoginSchema>,
@@ -123,14 +125,22 @@ export const login = async (
       return { twoFactor: true };
     }
   }
+  let errorOccurred = false;
 
   try {
     await signIn("credentials", {
       email,
       password,
-      redirectTo: callbackUrl || `/${locale}/${DEFAULT_LOGIN_REDIRECT}`,
+      redirect: false,
+      /* redirectTo: callbackUrl || `/${locale}/${DEFAULT_LOGIN_REDIRECT}`, */
     });
+    console.log("REDIRECTING");
+    redirect("/book-appointment");
+    /*    redirect(callbackUrl || "/book-appointment"); */
   } catch (error) {
+    errorOccurred = true;
+    console.error("Error loggin in", error);
+
     if (error instanceof AuthError) {
       // Hack to make broken CredentialsSignin work
       if (error.cause?.err instanceof Error) {
@@ -144,6 +154,14 @@ export const login = async (
           return { error: "Something went wrong" };
       } */
     }
-    throw error;
+    if (isRedirectError(error)) {
+      throw error;
+    }
+  } finally {
+    console.log("inside finally", errorOccurred);
+    if (!errorOccurred) {
+      console.log("REDIRECTING");
+      redirect("/book-appointment");
+    }
   }
 };

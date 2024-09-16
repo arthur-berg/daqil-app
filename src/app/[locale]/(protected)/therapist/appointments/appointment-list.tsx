@@ -190,9 +190,12 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
       <CardContent>
         <div className="flex justify-center py-8">
           <div className="space-y-8 w-full max-w-4xl">
+            <div className="sm:w-2/3 w-full mx-auto">
+              {nextAppointment && renderNextAppointment()}
+            </div>
+
             <div className="flex justify-center">
-              <div className="flex justify-center items-center flex-col whitespace-nowrap w-2/3">
-                {nextAppointment && renderNextAppointment()}
+              <div className="flex justify-center items-center flex-col whitespace-nowrap sm:w-2/3">
                 <div className="mr-4 rtl:mr-0 rtl:ml-4">
                   {t("appointmentStatus")}:{" "}
                 </div>
@@ -426,6 +429,16 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
                                         {appointment.status === "confirmed" &&
                                           !isPending && (
                                             <div className="flex flex-col align-items center">
+                                              <Link
+                                                className="text-center"
+                                                href={`/appointments/${appointment._id}`}
+                                              >
+                                                <Button
+                                                  disabled={!isJoinEnabled}
+                                                >
+                                                  {t("startMeeting")}
+                                                </Button>
+                                              </Link>
                                               {isJoinEnabled ? (
                                                 <Link
                                                   className="text-center"

@@ -191,6 +191,8 @@
     "noImage": "No image"
   },
   "BookingCalendar": {
+    "changeDate": "Change date",
+  "availableSlotsFor": "Available time slots for {date}",
     "calendar": "Calendar",
     "goToAppointmentsOverview": "Go to appointments overview",
     "bookAnotherAppointment": "Book another appointment",
@@ -412,7 +414,8 @@
     "receiveConfirmation": "You will receive a confirmation email with the appointment details.",
     "amountToBePaid": "Amount to be paid:",
     "bookingConfirmed": "Booking confirmed",
-    "loadingAmountPaid": "Loading amount paid..."
+    "loadingAmountPaid": "Loading amount paid...",
+    "goToAppointments": "Go to Appointments"
   },
   "ErrorMessages": {
     "refundFailed": "Refund request failed. Please contact support.",

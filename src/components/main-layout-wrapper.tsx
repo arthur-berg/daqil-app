@@ -25,7 +25,7 @@ export default function AdminPanelLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
   const sidebarMenuRef = useRef<any>();
 
@@ -33,19 +33,29 @@ export default function AdminPanelLayout({
     matchesPath(pathname, route)
   );
 
-  const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
+  const isDesktop = useMediaQuery({ query: "(min-width: 1024px)" });
 
   useEffect(() => {
-    if (isMobile) {
-      if (!isOpen) {
-        clearAllBodyScrollLocks();
-      } else {
-        disableBodyScroll(sidebarMenuRef.current);
-      }
+    // Automatically open the sidebar on desktop screens
+    if (isDesktop) {
+      setIsOpen(true);
+    } else {
+      setIsOpen(false); // Ensure it is closed on mobile screens
+    }
+  }, [isDesktop]);
+
+  useEffect(() => {
+    // Handle body scroll locking based on isOpen state on mobile
+    if (!isDesktop && isOpen && sidebarMenuRef.current) {
+      disableBodyScroll(sidebarMenuRef.current);
     } else {
       clearAllBodyScrollLocks();
     }
-  }, [isOpen, isMobile]);
+
+    return () => {
+      clearAllBodyScrollLocks();
+    };
+  }, [isOpen, isDesktop]);
 
   if (shouldRenderWithoutSidebar) {
     return <div>{children}</div>;

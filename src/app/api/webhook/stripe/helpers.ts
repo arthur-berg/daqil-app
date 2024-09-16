@@ -15,6 +15,7 @@ import {
 import { getTranslations } from "next-intl/server";
 import { getFullName } from "@/utils/nameUtilsForApiRoutes";
 import { formatInTimeZone } from "date-fns-tz";
+import { revalidatePath } from "next/cache";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
@@ -206,7 +207,8 @@ async function handlePayBeforeBooking(
     appointmentDetails,
     t
   );
-
+  revalidatePath(`/book-appointment`);
+  revalidatePath(`/appointments`);
   await scheduleReminderJobs(appointment, locale);
   await scheduleStatusUpdateJob(appointment);
 }
@@ -222,6 +224,8 @@ async function handlePayAfterBooking(
     "payment.status": "paid",
   });
 
+  revalidatePath(`/book-appointment`);
+  revalidatePath(`/appointments`);
   await scheduleReminderJobs(appointment, locale);
   await scheduleStatusUpdateJob(appointment);
 

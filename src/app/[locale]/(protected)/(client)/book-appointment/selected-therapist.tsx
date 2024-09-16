@@ -59,7 +59,7 @@ const SelectedTherapist = ({
           </p>
           <div className="mb-2">
             <Link
-              href={`/therapist-profile/${selectedTherapist._id}?selectedTherapistView=true`}
+              href={`/therapist/${selectedTherapist._id}?selectedTherapistView=true`}
             >
               <Button variant="ghost" size="sm">
                 {t("goToProfilePage")}

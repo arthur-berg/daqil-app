@@ -18,7 +18,7 @@ const InvoiceCheckoutPage = async ({
 }) => {
   await connectToMongoDB();
   const appointmentType = await getAppointmentTypeById(appointmentTypeId);
-  console.log("appointmentType", appointmentType);
+
   const dateObject = new Date(decodeURIComponent(date));
   const appointment = await getAppointmentById(appointmentId);
   const t = await getTranslations("Checkout");
@@ -39,7 +39,7 @@ const InvoiceCheckoutPage = async ({
   }
 
   return (
-    <div className="max-w-4xl mx-auto bg-white p-10 rounded-md text-black ">
+    <div className="max-w-4xl mx-auto bg-white py-6 px-2 sm:p-10 rounded-md text-black ">
       <CheckoutWrapper
         appointmentType={appointmentType}
         appointmentId={appointmentId}

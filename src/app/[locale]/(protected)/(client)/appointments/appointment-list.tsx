@@ -279,9 +279,11 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
                 <div className="w-full sm:w-2/3 mx-auto">
                   {renderPendingPayments()}
                 </div>
+                <div className="w-full sm:w-2/3 mx-auto">
+                  {nextAppointment && renderNextAppointment()}
+                </div>
                 <div className="flex justify-center">
-                  <div className="flex justify-center items-center flex-col w-full sm:w-2/3">
-                    {nextAppointment && renderNextAppointment()}
+                  <div className="flex justify-center items-center flex-col sm:w-2/3">
                     <div className="mr-4 rtl:mr-0 rtl:ml-4">
                       {t("appointmentStatus")}:{" "}
                     </div>
@@ -486,6 +488,16 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
                                           {appointment.status === "confirmed" &&
                                             !isPending && (
                                               <div className="flex flex-col align-items center">
+                                                <Link
+                                                  className="text-center"
+                                                  href={`/appointments/${appointment._id}`}
+                                                >
+                                                  <Button
+                                                    disabled={!isJoinEnabled}
+                                                  >
+                                                    {t("joinMeeting")}
+                                                  </Button>
+                                                </Link>
                                                 {isJoinEnabled ? (
                                                   <Link
                                                     className="text-center"

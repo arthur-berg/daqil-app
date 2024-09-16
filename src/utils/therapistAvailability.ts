@@ -227,9 +227,11 @@ export const getTherapistAvailableTimeSlots = (
     );
 
     const isTimeInPast = isBefore(time, now);
+    const isTimeTooSoon = isBefore(time, addMinutes(now, 15));
 
     return (
       !isTimeInPast &&
+      !isTimeTooSoon &&
       !blockedTimes.some((blocked) => {
         const blockedStart = new Date(blocked.startDate);
         const blockedEnd = new Date(blocked.endDate);

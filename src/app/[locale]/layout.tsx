@@ -8,8 +8,15 @@ import "@/app/globals.css";
 const dmSans = DM_Sans({ subsets: ["latin"], weight: ["400", "600"] });
 
 export const metadata: Metadata = {
-  title: "Zakina app",
-  description: "Zakina app",
+  title: "Daqil",
+  description: "Daqil - Easy and affordable online therapy",
+};
+
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: "no",
 };
 
 export default async function LocaleLayout({

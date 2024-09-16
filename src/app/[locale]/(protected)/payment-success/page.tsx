@@ -5,6 +5,8 @@ import { currencyToSymbol } from "@/utils";
 import connectToMongoDB from "@/lib/mongoose";
 import { getCurrentUser } from "@/lib/auth";
 import { formatInTimeZone } from "date-fns-tz";
+import { Link } from "@/navigation";
+import { Button } from "@/components/ui/button";
 
 const PaymentSuccessPage = async ({
   searchParams: { appointmentId, amountPaid },
@@ -65,7 +67,13 @@ const PaymentSuccessPage = async ({
             {currencyToSymbol(appointment.currency)}
             {amountPaid}
           </p>
+          <div>
+            <Link href="/appointments">
+              <Button>{t("goToAppointments")}</Button>
+            </Link>
+          </div>
         </div>
+
         <p className="text-gray-500 mt-4">{t("receiveConfirmation")}</p>
       </div>
     </div>

@@ -30,7 +30,7 @@ const BookAppointmentPage = async ({
   const user = await getCurrentUser();
 
   const OAuthAccountNotFinished = !!user?.isOAuth && !user?.isAccountSetupDone;
-  console.log("user", user);
+
   if (!user) {
     return ErrorMessages("userNotFound");
   }
@@ -73,7 +73,7 @@ const BookAppointmentPage = async ({
     <>
       <div className="max-w-4xl mx-auto">
         <div className="relative flex justify-center">
-          <div className="p-4 max-w-6xl w-full">
+          <div className="max-w-6xl w-full">
             <PageTitle
               title={
                 selectedTherapist ? t("yourTherapist") : t("bookAppointment")

@@ -166,7 +166,7 @@ const BookingCalendar = ({
         <>
           <>
             <div className="flex justify-center">
-              <div className="w-3/4 sm:w-1/3 mb-4  sm:px-0">
+              <div className="w-64 sm:w-1/3 mb-4  sm:px-0">
                 <Select
                   onValueChange={(value) => {
                     setDate({
@@ -204,7 +204,7 @@ const BookingCalendar = ({
                 </div>
                 {date.justDate ? (
                   <>
-                    <Calendar
+                    {/* <Calendar
                       mode="single"
                       selected={date.justDate ? date.justDate : today}
                       onSelect={(date) => {
@@ -228,11 +228,25 @@ const BookingCalendar = ({
                         head_row: "",
                         row: "w-full mt-2",
                       }}
-                    />
+                    /> */}
                     <div className="mt-4">
                       <h3 className="text-lg font-semibold mb-2">
-                        {t("availableSlots")}
+                        {t("availableSlotsFor", {
+                          date: format(date.justDate, "eeee, MMMM d, yyyy"),
+                        })}
                       </h3>
+                      <Button
+                        className="mb-4"
+                        variant="secondary"
+                        onClick={() => {
+                          setDate({
+                            justDate: undefined,
+                            dateTime: undefined,
+                          });
+                        }}
+                      >
+                        {t("changeDate")}
+                      </Button>
 
                       {Object.entries(groupTimeSlots(availableTimeSlots)).map(
                         ([timeOfDay, slots], idx) => (
@@ -270,31 +284,33 @@ const BookingCalendar = ({
                     </div>
                   </>
                 ) : (
-                  <Calendar
-                    mode="single"
-                    selected={date.justDate ? date.justDate : undefined}
-                    onSelect={(date) => {
-                      setDate((prev) => ({
-                        ...prev,
-                        justDate: date ? date : today,
-                      }));
-                      if (date) {
-                        setTimeSlots(date);
+                  <div className="flex justify-center sm:block">
+                    <Calendar
+                      mode="single"
+                      selected={date.justDate ? date.justDate : undefined}
+                      onSelect={(date) => {
+                        setDate((prev) => ({
+                          ...prev,
+                          justDate: date ? date : today,
+                        }));
+                        if (date) {
+                          setTimeSlots(date);
+                        }
+                      }}
+                      disabled={(date) =>
+                        isBefore(date, today) || isAfter(date, maxDate)
                       }
-                    }}
-                    disabled={(date) =>
-                      isBefore(date, today) || isAfter(date, maxDate)
-                    }
-                    className="rounded-md border h-full w-full flex"
-                    classNames={{
-                      months:
-                        "flex w-full flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0 flex-1",
-                      month: "space-y-4 w-full flex flex-col",
-                      table: "w-full h-full border-collapse space-y-1",
-                      head_row: "",
-                      row: "w-full mt-2",
-                    }}
-                  />
+                      className="w-full sm:max-w-none max-w-xs sm:w-auto overflow-hidden rounded-md border h-auto"
+                      classNames={{
+                        months:
+                          "flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4",
+                        month: "space-y-4 w-full flex flex-col",
+                        table: "w-full border-collapse space-y-1",
+                        head_row: "",
+                        row: "w-full",
+                      }}
+                    />
+                  </div>
                 )}
               </>
             )}

@@ -193,6 +193,8 @@
     "goToProfilePage": "الانتقال إلى صفحة الملف الشخصي"
   },
   "BookingCalendar": {
+     "changeDate": "تغيير التاريخ",
+  "availableSlotsFor": "الأوقات المتاحة لـ {date}",
     "calendar": "التقويم",
     "goToAppointmentsOverview": "اذهب إلى نظرة عامة على المواعيد",
     "bookAnotherAppointment": "احجز موعدًا آخر",
@@ -413,7 +415,8 @@
     "receiveConfirmation": "ستتلقى رسالة تأكيد بالبريد الإلكتروني تحتوي على تفاصيل الموعد.",
     "loadingAmountPaid": "جاري تحميل المبلغ المدفوع...",
     "bookingConfirmed": "تم تأكيد الحجز",
-    "amountToBePaid": "المبلغ المطلوب دفعه"
+    "amountToBePaid": "المبلغ المطلوب دفعه",
+    "goToAppointments": "الذهاب إلى المواعيد"
   },
   "ErrorMessages": {
     "refundFailed": "فشل طلب الاسترداد. يرجى التواصل مع الدعم.",

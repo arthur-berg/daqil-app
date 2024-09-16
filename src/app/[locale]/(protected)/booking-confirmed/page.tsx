@@ -4,6 +4,8 @@ import { getTranslations } from "next-intl/server";
 import connectToMongoDB from "@/lib/mongoose";
 import { formatInTimeZone } from "date-fns-tz";
 import { getCurrentUser } from "@/lib/auth";
+import { Link } from "@/navigation";
+import { Button } from "@/components/ui/button";
 
 const BookingConfirmedPage = async ({
   searchParams: { appointmentId },
@@ -51,6 +53,11 @@ const BookingConfirmedPage = async ({
             <span className="font-semibold">{t("duration")}</span>{" "}
             {appointment.durationInMinutes} {t("minutes")}
           </p>
+          <div>
+            <Link href="/appointments">
+              <Button>{t("goToAppointments")}</Button>
+            </Link>
+          </div>
         </div>
         <p className="text-gray-500 mt-4">{t("receiveConfirmation")}</p>
       </div>
