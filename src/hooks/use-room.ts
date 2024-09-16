@@ -155,9 +155,21 @@ export default function useRoom() {
       const VideoExpress = await import("@vonage/video-express");
 
       // Create a hidden div to act as the container for the local camera stream
+      /*    const isDesktop = useMediaQuery({ query: "(min-width: 1024px)" }); */
+
       const hiddenCameraContainer = document.createElement("div");
       hiddenCameraContainer.style.display = "none";
       document.body.appendChild(hiddenCameraContainer);
+
+      /*   const selfVideoContainer = document.createElement("div");
+      selfVideoContainer.style.position = "fixed";
+      selfVideoContainer.style.bottom = "162px";
+      selfVideoContainer.style.right = "138px";
+      selfVideoContainer.style.width = "150px";
+      selfVideoContainer.style.height = "150px";
+      selfVideoContainer.style.border = "2px solid gray";
+      selfVideoContainer.style.zIndex = "100";
+      document.body.appendChild(selfVideoContainer); */
 
       roomRef.current = new VideoExpress.Room({
         apiKey: appId,

@@ -64,7 +64,7 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
     const futureAppointments = appointments
       .filter(
         (appointment: any) =>
-          new Date(appointment.startDate) > new Date() &&
+          new Date(appointment.endDate) > new Date() &&
           (appointment.status === "confirmed" ||
             appointment.status === "pending")
       )
@@ -368,7 +368,7 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
                                     !hasMeetingEnded;
 
                                   const disableAccordion =
-                                    isPast(new Date(appointment.startDate)) &&
+                                    isPast(new Date(appointment.endDate)) &&
                                     hasMeetingEnded;
 
                                   return (
