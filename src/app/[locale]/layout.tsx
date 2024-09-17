@@ -29,7 +29,7 @@ export default async function LocaleLayout({
   params: { locale: string };
 }>) {
   const direction = getLangDir(locale);
-  //
+
   return (
     <html lang={locale} dir={direction}>
       <body className={dmSans.className}>
