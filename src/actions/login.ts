@@ -131,12 +131,8 @@ export const login = async (
     await signIn("credentials", {
       email,
       password,
-      redirect: false,
-      /* redirectTo: callbackUrl || `/${locale}/${DEFAULT_LOGIN_REDIRECT}`, */
+      redirectTo: callbackUrl || `/${locale}/${DEFAULT_LOGIN_REDIRECT}`,
     });
-    console.log("REDIRECTING");
-    redirect("/book-appointment");
-    /*    redirect(callbackUrl || "/book-appointment"); */
   } catch (error) {
     errorOccurred = true;
     console.error("Error loggin in", error);
@@ -158,9 +154,7 @@ export const login = async (
       throw error;
     }
   } finally {
-    console.log("inside finally", errorOccurred);
     if (!errorOccurred) {
-      console.log("REDIRECTING");
       redirect("/book-appointment");
     }
   }
