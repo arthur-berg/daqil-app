@@ -39,6 +39,7 @@
     "@stripe/react-stripe-js": "^2.8.0",
     "@stripe/stripe-js": "^4.3.0",
     "@upstash/qstash": "^2.6.5",
+    "@vercel/analytics": "^1.3.1",
     "@vonage/auth": "^1.10.0",
     "@vonage/video": "^1.16.1",
     "@vonage/video-express": "^1.8.0",

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { DM_Sans } from "next/font/google";
 import { Toaster } from "@/components/ui/toaster";
 import { getLangDir } from "rtl-detect";
+import { Analytics } from "@vercel/analytics/react";
 
 import "@/app/globals.css";
 
@@ -34,6 +35,7 @@ export default async function LocaleLayout({
         <Toaster />
 
         {children}
+        <Analytics />
       </body>
     </html>
   );
