@@ -3,6 +3,7 @@ import { DM_Sans } from "next/font/google";
 import { Toaster } from "@/components/ui/toaster";
 import { getLangDir } from "rtl-detect";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import "@/app/globals.css";
 
@@ -28,7 +29,7 @@ export default async function LocaleLayout({
   params: { locale: string };
 }>) {
   const direction = getLangDir(locale);
-
+  //
   return (
     <html lang={locale} dir={direction}>
       <body className={dmSans.className}>
@@ -36,6 +37,7 @@ export default async function LocaleLayout({
 
         {children}
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
