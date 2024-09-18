@@ -53,8 +53,6 @@ const BookingCalendar = ({
   const [isPending, startTransition] = useTransition();
   const t = useTranslations("BookingCalendar");
   const tAppointmentTypes = useTranslations("AppointmentTypes");
-  const [error, setError] = useState<string | undefined>();
-  const [success, setSuccess] = useState<string | undefined>();
   const [availableTimeSlots, setAvailableTimeSlots] = useState<
     { start: Date; end: Date }[]
   >([]);
@@ -63,7 +61,6 @@ const BookingCalendar = ({
     dateTime: undefined,
   });
   const router = useRouter();
-  const [reservedAppointment, setReservedAppointment] = useState<any>(null);
   const { toast } = useToast();
   const [appointmentType, setAppointmentType] = useState(
     showOnlyIntroCalls ? appointmentTypes[0] : ""
