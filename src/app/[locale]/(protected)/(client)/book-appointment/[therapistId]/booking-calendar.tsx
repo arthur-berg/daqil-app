@@ -204,31 +204,6 @@ const BookingCalendar = ({
                 </div>
                 {date.justDate ? (
                   <>
-                    {/* <Calendar
-                      mode="single"
-                      selected={date.justDate ? date.justDate : today}
-                      onSelect={(date) => {
-                        setDate((prev) => ({
-                          ...prev,
-                          justDate: date ? date : today,
-                        }));
-                        if (date) {
-                          setTimeSlots(date);
-                        }
-                      }}
-                      disabled={(date) =>
-                        isBefore(date, today) || isAfter(date, maxDate)
-                      }
-                      className="rounded-md border h-full w-full flex"
-                      classNames={{
-                        months:
-                          "flex w-full flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0 flex-1",
-                        month: "space-y-4 w-full flex flex-col",
-                        table: "w-full h-full border-collapse space-y-1",
-                        head_row: "",
-                        row: "w-full mt-2",
-                      }}
-                    /> */}
                     <div className="mt-4">
                       <h3 className="text-lg font-semibold mb-2">
                         {t("availableSlotsFor", {

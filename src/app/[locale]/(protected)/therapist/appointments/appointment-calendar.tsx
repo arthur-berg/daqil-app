@@ -2,15 +2,12 @@
 import {
   Calendar,
   Views,
-  momentLocalizer,
   NavigateAction,
   View,
   dateFnsLocalizer,
 } from "react-big-calendar";
-import moment from "moment";
-import "react-big-calendar/lib/css/react-big-calendar.css";
 import { useState, useMemo, useTransition } from "react";
-import { enGB, ar } from "date-fns/locale"; // Import English and Arabic locales
+import { enGB } from "date-fns/locale"; // Import English and Arabic locales
 
 import {
   Dialog,

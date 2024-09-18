@@ -357,7 +357,8 @@
     "willBeShownPatientCalendar": "Will be shown in patient's calendar",
     "willNotBeShownPatientCalendar": "Will not be shown in patient's calendar",
     "description": "Description -",
-    "schedule": "Schedule"
+    "schedule": "Schedule",
+    "selectAppointmentType": "Select type of appointment"
   },
   "AdminPage": {
     "inviteTherapists": "Invite therapists",
@@ -529,7 +530,8 @@
     "temporaryPasswordMessage": "Here is your temporary password: {password}",
     "confirmEmailMessage": "Please confirm your email address to complete the registration process.",
     "confirmEmailButton": "Confirm Email",
-    "ignoreMessage": "If you did not sign up for this account, please ignore this email."
+    "ignoreMessage": "If you did not sign up for this account, please ignore this email.",
+    "expirationMessage": "This verification link is valid for {days} days."
   },
   "PasswordResetEmail": {
     "daqil": "Daqil",
@@ -633,5 +635,8 @@
     "previewRoom": "Preview room:",
     "testSetup": "Test your audio and video before joining the call. You will not be able to see yourself once in the call.",
     "waitingForOtherUser": "Waiting for other user to join..."
+  },
+  "DateTimePicker": {
+    "ok": "Ok"
   }
 }

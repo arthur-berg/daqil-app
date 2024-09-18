@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Menu } from "@/components/sidebar/menu";
 import LanguageSwitcher from "../language-switcher";
+import Image from "next/image";
 
 interface SidebarToggleProps {
   isOpen: boolean | undefined;
@@ -15,7 +16,7 @@ function SidebarToggle({ isOpen, setIsOpen }: SidebarToggleProps) {
   return (
     <div
       className={cn(
-        "absolute top-[12px] z-20 transition-transform duration-300 ease-in-out",
+        "absolute top-[12px] z-20 transition-transform duration-300 ease-in-out will-change-transform",
         isOpen
           ? "translate-x-0 right-[-16px] rtl:right-[190px] rtl:lg:right-[240px]"
           : "translate-x-[100%] sm:right-[40px] lg:right-[16px] rtl:lg:right-[105px]"
@@ -117,8 +118,7 @@ export const Sidebar = forwardRef<
                 : "-translate-x-96 opacity-0 rtl:translate-x-96"
             )}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/daqil-logo.png" alt="daqil" className="object-cover" />
+            <Image height={100} width={250} alt="Logo" src="/daqil-logo.png" />
           </div>
           <Menu isOpen={isOpen} setIsOpen={setIsOpen} />
         </div>

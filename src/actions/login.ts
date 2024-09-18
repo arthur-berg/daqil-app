@@ -19,6 +19,7 @@ import { getTranslations } from "next-intl/server";
 import connectToMongoDB from "@/lib/mongoose";
 import { redirect } from "@/navigation";
 import { isRedirectError } from "next/dist/client/components/redirect";
+import { UserRole } from "@/generalTypes";
 
 export const login = async (
   values: z.infer<typeof LoginSchema>,
@@ -127,11 +128,18 @@ export const login = async (
   }
   let errorOccurred = false;
 
+  const redirectUrl =
+    existingUser.role === UserRole.CLIENT
+      ? "book-appointment"
+      : existingUser.role === UserRole.THERAPIST
+      ? "therapist/appointments"
+      : "admin";
+
   try {
     await signIn("credentials", {
       email,
       password,
-      redirectTo: callbackUrl || `/${locale}/${DEFAULT_LOGIN_REDIRECT}`,
+      redirectTo: callbackUrl || `/${locale}/${redirectUrl}`,
     });
   } catch (error) {
     errorOccurred = true;

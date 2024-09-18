@@ -235,7 +235,7 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
             {sortedStatuses.length ? (
               sortedStatuses.map((status) => (
                 <div key={status}>
-                  <h2 className="text-xl font-bold mb-4">
+                  <h2 className="text-xl font-bold mb-4 p-2 bg-secondary rounded-lg shadow-sm border border-gray-200">
                     {status === "confirmed"
                       ? t("confirmedAppointments")
                       : `${statusTranslations[status]} ${t("appointments")}`}

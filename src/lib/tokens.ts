@@ -49,7 +49,7 @@ export const generatePasswordResetToken = async (email: string) => {
 
 export const generateVerificationToken = async (
   email: string,
-  expiresInHours: number = 1
+  expiresInHours: number = 72
 ) => {
   const token = uuidv4();
   const expires = new Date(new Date().getTime() + expiresInHours * 3600 * 1000);

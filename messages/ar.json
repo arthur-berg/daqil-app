@@ -358,7 +358,8 @@
     "willBeShownPatientCalendar": "سيظهر في تقويم المريض",
     "willNotBeShownPatientCalendar": "لن يظهر في تقويم المريض",
     "description": "الوصف -",
-    "schedule": "جدولة"
+    "schedule": "جدولة",
+    "selectAppointmentType": "اختر نوع الموعد"
   },
   "AdminPage": {
     "inviteTherapists": "دعوة المعالجين",
@@ -531,7 +532,8 @@
     "temporaryPasswordMessage": "هنا كلمة المرور المؤقتة الخاصة بك: <strong>{password}</strong>",
     "confirmEmailMessage": "يرجى تأكيد عنوان بريدك الإلكتروني لإكمال عملية التسجيل.",
     "confirmEmailButton": "تأكيد البريد الإلكتروني",
-    "ignoreMessage": "إذا لم تقم بالتسجيل لهذا الحساب، يرجى تجاهل هذا البريد الإلكتروني."
+    "ignoreMessage": "إذا لم تقم بالتسجيل لهذا الحساب، يرجى تجاهل هذا البريد الإلكتروني.",
+    "expirationMessage": "رابط التحقق هذا صالح لمدة {days} أيام."
   },
   "PasswordResetEmail": {
     "zakina": "زاكينا",
@@ -633,5 +635,8 @@
 "previewRoom": "غرفة المعاينة:",
 "testSetup": "اختبر الصوت والفيديو قبل الانضمام إلى المكالمة. لن تتمكن من رؤية نفسك بعد الانضمام.",
 "waitingForOtherUser": "بانتظار انضمام مستخدم آخر..."
-  }
+  },
+  "DateTimePicker": {
+  "ok": "موافق"
+}
 }

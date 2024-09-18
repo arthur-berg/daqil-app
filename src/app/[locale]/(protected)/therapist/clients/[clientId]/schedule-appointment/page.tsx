@@ -1,6 +1,12 @@
 import { getUserById } from "@/data/user";
-import { APPOINTMENT_TYPE_ID_SHORT_SESSION } from "@/contants/config";
-import { getAppointmentTypeById } from "@/data/appointment-types";
+import {
+  APPOINTMENT_TYPE_ID_LONG_SESSION,
+  APPOINTMENT_TYPE_ID_SHORT_SESSION,
+} from "@/contants/config";
+import {
+  getAppointmentTypeById,
+  getAppointmentTypesByIDs,
+} from "@/data/appointment-types";
 import ScheduleAppointmentForm from "./schedule-appointment-form";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/navigation";
@@ -15,9 +21,11 @@ const ScheduleAppointmentPage = async ({
   await connectToMongoDB();
 
   const user = await getUserById(params.clientId);
-  const appointmentType = await getAppointmentTypeById(
-    APPOINTMENT_TYPE_ID_SHORT_SESSION
-  );
+
+  const appointmentTypes = await getAppointmentTypesByIDs([
+    APPOINTMENT_TYPE_ID_SHORT_SESSION,
+    APPOINTMENT_TYPE_ID_LONG_SESSION,
+  ]);
   const t = await getTranslations("MyClientsPage");
 
   if (!user) return "No user found";
@@ -29,7 +37,7 @@ const ScheduleAppointmentPage = async ({
       </Link>
       <ScheduleAppointmentForm
         clientJson={JSON.stringify(user)}
-        appointmentType={appointmentType}
+        appointmentTypes={appointmentTypes}
       />
     </div>
   );

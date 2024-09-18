@@ -37,28 +37,33 @@ export const verificationEmailTemplate = (
 
   const therapistMessage = isTherapist ? `<p>${t("therapistMessage")}</p>` : "";
 
+  const expirationMessage = `<p>${t("expirationMessage", {
+    days: 3,
+  })}</p>`;
+
   return `
-    <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
-      <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
-        <div style="text-align: center; margin-bottom: 20px;">
-          <img src="${daqilLogoUrl}" alt="daqil" style="width: 50%; max-width: 100%; height: auto;" />
-        </div>
-        <div style="margin-top: 20px;">
-          <p>${t("welcomeMessage")}</p>
-          ${therapistMessage}
-          ${temporaryPasswordMessage}
-          
-          <p>${t("confirmEmailMessage")}</p> 
-          <a href="${confirmLink}" style="display: inline-block; padding: 12px 24px; margin: 20px 0; background-color: #007bff; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: bold; text-align: center;">${t(
+  <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
+    <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+      <div style="text-align: center; margin-bottom: 20px;">
+        <img src="${daqilLogoUrl}" alt="daqil" style="width: 50%; max-width: 100%; height: auto;" />
+      </div>
+      <div style="margin-top: 20px;">
+        <p>${t("welcomeMessage")}</p>
+        ${therapistMessage}
+        ${temporaryPasswordMessage}
+        
+        <p>${t("confirmEmailMessage")}</p> 
+        <a href="${confirmLink}" style="display: inline-block; padding: 12px 24px; margin: 20px 0; background-color: #007bff; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: bold; text-align: center;">${t(
     "confirmEmailButton"
-  )}</a> 
-        </div>
-        <div style="margin-top: 20px; font-size: 12px; color: #888888; text-align: center;">
-          ${t("ignoreMessage")} 
-        </div>
+  )}</a>
+        ${expirationMessage} 
+      </div>
+      <div style="margin-top: 20px; font-size: 12px; color: #888888; text-align: center;">
+        ${t("ignoreMessage")} 
       </div>
     </div>
-  `;
+  </div>
+`;
 };
 
 export const passwordResetEmailTemplate = (token: string, t: any) => {

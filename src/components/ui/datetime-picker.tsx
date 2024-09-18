@@ -15,6 +15,7 @@ import {
   MdChevronLeft,
   MdChevronRight,
   MdAccessTime,
+  MdCheck,
 } from "react-icons/md";
 
 import * as React from "react";
@@ -28,6 +29,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { DayPicker } from "react-day-picker";
+import { useTranslations } from "next-intl";
 
 // ---------- utils start ----------
 /**
@@ -664,7 +666,9 @@ const DateTimePicker = React.forwardRef<
     ref
   ) => {
     const [month, setMonth] = React.useState<Date>(value ?? new Date());
+    const [isOpen, setIsOpen] = React.useState(false);
     const buttonRef = useRef<HTMLButtonElement>(null);
+    const t = useTranslations("DateTimePicker");
     /**
      * carry over the current time when a user clicks a new day
      * instead of resetting to 00:00
@@ -713,7 +717,7 @@ const DateTimePicker = React.forwardRef<
     }
 
     return (
-      <Popover>
+      <Popover open={isOpen} onOpenChange={setIsOpen}>
         <PopoverTrigger asChild disabled={disabled}>
           <Button
             variant="outline"
@@ -760,6 +764,11 @@ const DateTimePicker = React.forwardRef<
               />
             </div>
           )}
+          <div className="pb-4  flex justify-center">
+            <Button onClick={() => setIsOpen(false)} variant="success">
+              Ok
+            </Button>
+          </div>
         </PopoverContent>
       </Popover>
     );

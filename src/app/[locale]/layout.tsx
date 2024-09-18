@@ -36,8 +36,12 @@ export default async function LocaleLayout({
         <Toaster />
 
         {children}
-        <Analytics />
-        <SpeedInsights />
+        {process.env.NODE_ENV !== "development" && (
+          <>
+            <Analytics />
+            <SpeedInsights />
+          </>
+        )}
       </body>
     </html>
   );

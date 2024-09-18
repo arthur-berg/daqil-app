@@ -23,11 +23,13 @@ export const reserveAppointment = async (
   startDate: Date
 ) => {
   await connectToMongoDB();
-  const [SuccessMessages, ErrorMessages, t] = await Promise.all([
-    getTranslations("SuccessMessages"),
-    getTranslations("ErrorMessages"),
-    getTranslations("AppointmentAction"),
-  ]);
+  const [SuccessMessages, ErrorMessages, t, tAppointmentTypes] =
+    await Promise.all([
+      getTranslations("SuccessMessages"),
+      getTranslations("ErrorMessages"),
+      getTranslations("AppointmentAction"),
+      getTranslations("AppointmentTypes"),
+    ]);
   const client = await requireAuth([UserRole.CLIENT, UserRole.ADMIN]);
 
   const therapist = (await getTherapistById(therapistId)) as any;
@@ -70,9 +72,7 @@ export const reserveAppointment = async (
 
   try {
     const appointmentData = {
-      title: `${t("therapySessionWith")} ${await getFirstName(
-        therapist?.firstName
-      )}`,
+      title: `${tAppointmentTypes(appointmentType._id)}`,
       startDate,
       endDate,
       participants: [{ userId: client.id, showUp: false }],
