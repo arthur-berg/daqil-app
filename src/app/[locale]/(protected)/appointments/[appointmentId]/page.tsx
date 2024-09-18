@@ -10,7 +10,11 @@ const AppointmentSessionPage = async ({
 
   if (!sessionData) return;
 
-  return <VideoRoom sessionData={sessionData} />;
+  return (
+    <div>
+      <VideoRoom sessionData={sessionData} />
+    </div>
+  );
 };
 
 export default AppointmentSessionPage;

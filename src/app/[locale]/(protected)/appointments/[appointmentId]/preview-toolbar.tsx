@@ -13,7 +13,7 @@ export default function PreviewToolbar({
   toggleVideo: () => void;
 }) {
   return (
-    <div className="bg-[#41464D] flex justify-center items-center w-full md:w-3/4 h-[45px] sm:h-[90px] p-4 rounded-md space-x-4 mb-4">
+    <div className="bg-[#41464D] flex justify-center items-center w-full md:w-3/4 h-[45px] sm:h-[55px] p-4 rounded-md space-x-4 mb-4">
       {/* Toggle Audio */}
       <Button variant="ghost" onClick={toggleAudio}>
         {hasAudio ? (

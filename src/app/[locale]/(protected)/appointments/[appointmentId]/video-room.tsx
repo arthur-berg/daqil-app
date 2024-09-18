@@ -72,7 +72,7 @@ const VideoRoom = ({
           publisherProperties: {
             resolution: "1280x720",
             fitMode: "cover",
-            insertMode: "append",
+            insertMode: "replace",
             width: "100%",
             publishAudio: hasAudio,
             publishVideo: hasVideo,
@@ -149,66 +149,71 @@ const VideoRoom = ({
 
   if (isPreviewing) {
     return (
-      <div className="h-screen w-full flex flex-col justify-center items-center p-2 box-border">
-        <div
-          id="previewContainer"
-          className="w-full h-full md:w-3/4 md:h-3/4 bg-[#20262D] rounded-md relative"
-        ></div>
-        {/* Explanatory Text with Background Styling */}
-        <div className="bg-[#2C3036] text-center text-sm text-white mb-4 p-4 rounded-lg shadow-md max-w-lg">
-          <span className="font-bold">{t("previewRoom")}</span> {t("testSetup")}
-        </div>
-        <div className="">
-          <PreviewToolbar
-            toggleAudio={() => {
-              setHasAudio((prev) => {
-                const newState = !prev;
-                if (previewPublisherRef.current) {
-                  if (!newState) {
-                    previewPublisherRef.current.disableAudio();
+      <div className="h-[calc(100vh-90px)] w-full flex flex-col justify-between items-center p-2 box-border">
+        <div className="flex flex-col flex-grow justify-center items-center w-full">
+          <div
+            id="previewContainer"
+            className="w-full h-full md:w-3/4 md:h-3/4 bg-[#20262D] rounded-md relative"
+          ></div>
+          <div className="bg-[#2C3036] text-center text-sm text-white mb-4 p-4 rounded-lg shadow-md max-w-lg">
+            <span className="font-bold">{t("previewRoom")}</span>{" "}
+            {t("testSetup")}
+          </div>
+          <div className="flex justify-center">
+            <PreviewToolbar
+              toggleAudio={() => {
+                setHasAudio((prev) => {
+                  const newState = !prev;
+                  if (previewPublisherRef.current) {
+                    if (!newState) {
+                      previewPublisherRef.current.disableAudio();
+                    }
+                    if (newState) {
+                      previewPublisherRef.current.enableAudio();
+                    }
                   }
-                  if (newState) {
-                    previewPublisherRef.current.enableAudio();
+                  return newState;
+                });
+              }}
+              toggleVideo={() => {
+                setHasVideo((prev) => {
+                  const newState = !prev;
+                  if (previewPublisherRef.current) {
+                    if (!newState) {
+                      previewPublisherRef.current.disableVideo();
+                    }
+                    if (newState) {
+                      previewPublisherRef.current.enableVideo();
+                    }
                   }
-                }
-                return newState;
-              });
-            }}
-            toggleVideo={() => {
-              setHasVideo((prev) => {
-                const newState = !prev;
-                if (previewPublisherRef.current) {
-                  if (!newState) {
-                    previewPublisherRef.current.disableVideo();
-                  }
-                  if (newState) {
-                    previewPublisherRef.current.enableVideo();
-                  }
-                }
-                return newState;
-              });
-            }}
-            hasAudio={hasAudio}
-            hasVideo={hasVideo}
-          />
+                  return newState;
+                });
+              }}
+              hasAudio={hasAudio}
+              hasVideo={hasVideo}
+            />
+          </div>
         </div>
 
-        <Button
-          onClick={handleJoinCall}
-          size="lg"
-          className="w-full sm:w-initial h-14"
-        >
-          {t("joinMeeting")}
-        </Button>
+        {/* Join Meeting Button Fixed at the Bottom */}
+        <div className="w-full p-4 flex justify-center ">
+          <Button
+            onClick={handleJoinCall}
+            size="lg"
+            className="w-full sm:w-auto h-14"
+          >
+            {t("joinMeeting")}
+          </Button>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="h-screen w-full flex flex-col p-2 box-border">
+    <div className="h-[calc(100vh-90px)] w-full flex flex-col p-2 box-border">
       <div
         id="callContainer"
-        className="flex flex-col flex-grow w-full overflow-hidden"
+        className="flex flex-col flex-grow w-full overflow-hidden relative"
       >
         <div
           id="roomContainer"
@@ -220,28 +225,21 @@ const VideoRoom = ({
               {t("waitingForOtherUser")}
             </div>
           )}
-          {/* <div
-            id="screenSharingContainer"
-            className="absolute top-2 left-2 z-10 p-y"
-          >
-            {isScreenSharing && (
-              <div className="absolute inset-0 bg-black bg-opacity-40 z-10 flex justify-center items-center text-lg text-white">
-                You Are Screensharing
-              </div>
-            )}
-          </div> */}
         </div>
-        <ToolBar
-          roomName={sessionData.roomName}
-          room={room}
-          participants={participants}
-          localParticipant={localParticipant}
-          connected={connected}
-          cameraPublishing={cameraPublishing}
-          isScreenSharing={isScreenSharing}
-          startScreenSharing={startScreenSharing}
-          stopScreenSharing={stopScreenSharing}
-        />
+        {/* Fix toolbar at the bottom */}
+        <div className="absolute bottom-0 left-0 w-full">
+          <ToolBar
+            roomName={sessionData.roomName}
+            room={room}
+            participants={participants}
+            localParticipant={localParticipant}
+            connected={connected}
+            cameraPublishing={cameraPublishing}
+            isScreenSharing={isScreenSharing}
+            startScreenSharing={startScreenSharing}
+            stopScreenSharing={stopScreenSharing}
+          />
+        </div>
       </div>
     </div>
   );
