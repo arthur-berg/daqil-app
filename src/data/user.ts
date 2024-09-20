@@ -168,6 +168,31 @@ export const getTherapistById = async (id: string) => {
   }
 };
 
+export const getTherapistAdminProfileById = async (id: string) => {
+  try {
+    await connectToMongoDB();
+
+    const therapist = await User.findById(id)
+      .populate([
+        "appointments.bookedAppointments",
+        "appointments.temporarilyReservedAppointments",
+        "assignedClients",
+      ])
+
+      .lean();
+
+    if (!therapist) {
+      console.log(`therapist with id ${id} not found.`);
+      return null;
+    }
+
+    return therapist as any;
+  } catch (error) {
+    console.error(`Error fetching user with id ${id}:`, error);
+    return null;
+  }
+};
+
 //emailVerified: { $ne: null },
 
 export const getTherapists = async () => {

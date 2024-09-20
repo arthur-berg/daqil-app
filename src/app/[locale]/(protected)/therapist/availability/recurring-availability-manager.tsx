@@ -102,10 +102,12 @@ const DefaultAvailabilityManager = ({
   appointmentTypes,
   recurringAvailableTimes,
   settings,
+  adminPageProps,
 }: {
   appointmentTypes: any[];
   recurringAvailableTimes: any[];
   settings: any;
+  adminPageProps?: { therapistId: string };
 }) => {
   const [isPending, startTransition] = useTransition();
 
@@ -153,7 +155,10 @@ const DefaultAvailabilityManager = ({
         ...values,
         interval: parseInt(values.interval),
       };
-      const data = await updateRecurringAvailabilitySettings(structuredData);
+      const data = await updateRecurringAvailabilitySettings(
+        structuredData,
+        adminPageProps
+      );
       responseToast(data);
     });
   };
@@ -262,6 +267,7 @@ const DefaultAvailabilityManager = ({
             </div>
             {editModes[day] ? (
               <RecurringAvailabilityForm
+              adminPageProps={adminPageProps}
                 appointmentTypes={appointmentTypes}
                 editModes={editModes}
                 setEditModes={setEditModes}

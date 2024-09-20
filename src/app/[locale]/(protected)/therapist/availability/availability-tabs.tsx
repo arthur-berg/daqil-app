@@ -21,14 +21,18 @@ import {
 
 const AvailabilityTabs = ({
   appointmentTypes,
-  availableTimes,
+  availableTimesJson,
+  adminPageProps,
 }: {
   appointmentTypes: any[];
-  availableTimes: any;
+  availableTimesJson: any;
+  adminPageProps?: { therapistId: string };
 }) => {
   const t = useTranslations("AvailabilityPage");
 
   const [activeTab, setActiveTab] = useState("overview"); // state to manage active section for mobile
+
+  const availableTimes = JSON.parse(availableTimesJson);
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
@@ -63,6 +67,7 @@ const AvailabilityTabs = ({
             </TabsContent>
             <TabsContent value="default-availability">
               <RecurringAvailabilityManager
+                adminPageProps={adminPageProps}
                 appointmentTypes={appointmentTypes}
                 settings={availableTimes?.settings}
                 recurringAvailableTimes={
@@ -72,6 +77,7 @@ const AvailabilityTabs = ({
             </TabsContent>
             <TabsContent value="non-recurring-times">
               <NonRecurringAvailabilityForm
+                adminPageProps={adminPageProps}
                 appointmentTypes={appointmentTypes}
                 nonRecurringAvailableTimes={
                   availableTimes?.nonRecurringAvailableTimes
@@ -80,6 +86,7 @@ const AvailabilityTabs = ({
             </TabsContent>
             <TabsContent value="block-dates">
               <BlockAvailabilityForm
+                adminPageProps={adminPageProps}
                 appointmentTypes={appointmentTypes}
                 blockedOutTimes={availableTimes?.blockedOutTimes}
               />

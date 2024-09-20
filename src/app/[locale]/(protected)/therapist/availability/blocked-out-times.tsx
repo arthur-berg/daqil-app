@@ -44,15 +44,17 @@ const BlockedOutTimes = ({
                 )}
               </div>
               <div className="space-y-2">
-                {dateTime.timeRanges.map((timeRange: TimeRange) => (
-                  <div
-                    key={timeRange.startDate?.toString()}
-                    className="bg-red-200 p-2 rounded-md text-red-900 inline-flex mr-2"
-                  >
-                    {formatDateTime(timeRange.startDate!)} -{" "}
-                    {formatDateTime(timeRange.endDate!)}
-                  </div>
-                ))}
+                {dateTime.timeRanges.map(
+                  (timeRange: TimeRange, index: number) => (
+                    <div
+                      key={`${timeRange.startDate?.toString()}${index}`}
+                      className="bg-red-200 p-2 rounded-md text-red-900 inline-flex mr-2"
+                    >
+                      {formatDateTime(timeRange.startDate!)} -{" "}
+                      {formatDateTime(timeRange.endDate!)}
+                    </div>
+                  )
+                )}
               </div>
             </div>
           ))

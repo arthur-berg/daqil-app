@@ -58,6 +58,7 @@ const RecurringAvailabilityForm = ({
   editModes,
   setEditModes,
   appointmentTypes,
+  adminPageProps,
 }: {
   day: any;
   timeRangeInputs: any;
@@ -65,6 +66,7 @@ const RecurringAvailabilityForm = ({
   editModes: any;
   setEditModes: any;
   appointmentTypes: any[];
+  adminPageProps?: { therapistId: string };
 }) => {
   const [isPending, startTransition] = useTransition();
   const [startTimePopoverOpen, setStartTimePopoverOpen] = useState(false);
@@ -83,8 +85,8 @@ const RecurringAvailabilityForm = ({
           to,
           appointmentTypeIds,
         }: {
-          from: Date;
-          to: Date;
+          from: string | Date;
+          to: string | Date;
           appointmentTypeIds: string[];
         }) => ({
           startTime: new Date(from),
@@ -106,16 +108,17 @@ const RecurringAvailabilityForm = ({
       const newRanges = [...(prev[day] || [])];
       newRanges.splice(index, 1);
 
-      form.setValue(
-        `timeRanges`,
-        newRanges.map(({ from, to, appointmentTypeIds }, idx) => ({
-          startTime: from,
-          endTime: to,
-          appointmentTypeIds: appointmentTypeIds || [],
-        }))
-      );
-
-      form.trigger(`timeRanges`);
+      setTimeout(() => {
+        form.setValue(
+          `timeRanges`,
+          newRanges.map(({ from, to, appointmentTypeIds }) => ({
+            startTime: new Date(from),
+            endTime: new Date(to),
+            appointmentTypeIds: appointmentTypeIds || [],
+          }))
+        );
+        form.trigger(`timeRanges`); // Immediately trigger form validatio
+      }, 0);
 
       return { ...prev, [day]: newRanges };
     });
@@ -125,15 +128,17 @@ const RecurringAvailabilityForm = ({
     day: string,
     index: number,
     field: "from" | "to",
-    value: Date
+    value: Date | string // Accept both Date and string
   ) => {
+    const newDate = new Date(value); // Convert to Date object if it's a string
+
     setTimeRangeInputs((prev: any) => {
       const newRanges = [...(prev[day] || [])];
-      newRanges[index][field] = value;
+      newRanges[index][field] = newDate; // Ensure this is a Date object
 
       form.setValue(
         `timeRanges.${index}.${field === "from" ? "startTime" : "endTime"}`,
-        value
+        newDate
       );
       form.trigger(`timeRanges`);
       return { ...prev, [day]: newRanges };
@@ -142,7 +147,7 @@ const RecurringAvailabilityForm = ({
 
   const onSubmitDay = (values: z.infer<typeof RecurringAvailabilitySchema>) => {
     startTransition(async () => {
-      const data = await saveRecurringAvailableTimes(values);
+      const data = await saveRecurringAvailableTimes(values, adminPageProps);
       responseToast(data);
       if (data?.success) {
         setEditModes((prev: any) => ({ ...prev, [day]: false }));
@@ -153,8 +158,8 @@ const RecurringAvailabilityForm = ({
   const addTimeRange = (day: string) => {
     setTimeRangeInputs((prev: any) => {
       const newTimeRange = {
-        from: "",
-        to: "",
+        from: undefined, // Intentionally left as empty for user selection
+        to: undefined,
         appointmentTypeIds: appointmentTypes.map((type) => type._id),
       };
       return {
@@ -164,10 +169,8 @@ const RecurringAvailabilityForm = ({
     });
 
     const newIndex = timeRangeInputs[day] ? timeRangeInputs[day].length : 0;
-    form.setValue(
-      `timeRanges.${newIndex}.appointmentTypeIds`,
-      appointmentTypes.map((type) => type._id)
-    );
+    form.setValue(`timeRanges.${newIndex}.startTime`, undefined);
+    form.setValue(`timeRanges.${newIndex}.endTime`, undefined);
   };
 
   return (

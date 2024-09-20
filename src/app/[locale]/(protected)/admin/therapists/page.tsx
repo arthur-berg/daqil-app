@@ -14,6 +14,7 @@ import InviteTherapistForm from "./invite-therapist-form";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { getFullName } from "@/utils/formatName";
 import connectToMongoDB from "@/lib/mongoose";
+import { Link } from "@/navigation";
 
 const AdminTherapistsPage = async () => {
   await connectToMongoDB();
@@ -41,7 +42,12 @@ const AdminTherapistsPage = async () => {
               {therapists?.map(async (therapist) => (
                 <TableRow key={therapist.email}>
                   <TableCell className="font-medium">
-                    {await getFullName(therapist.firstName, therapist.lastName)}
+                    <Link href={`/admin/therapists/${therapist._id}`}>
+                      {await getFullName(
+                        therapist.firstName,
+                        therapist.lastName
+                      )}
+                    </Link>
                   </TableCell>
                   <TableCell>{therapist.email}</TableCell>
                 </TableRow>

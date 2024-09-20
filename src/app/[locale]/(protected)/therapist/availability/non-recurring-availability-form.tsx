@@ -65,9 +65,11 @@ const timeOptions = generateTimeIntervals(15);
 const NonRecurringAvailabilityForm = ({
   nonRecurringAvailableTimes,
   appointmentTypes,
+  adminPageProps,
 }: {
   nonRecurringAvailableTimes: any;
   appointmentTypes: any[];
+  adminPageProps?: { therapistId: string };
 }) => {
   const [isPending, startTransition] = useTransition();
   const [date, setDate] = useState<any>();
@@ -137,7 +139,10 @@ const NonRecurringAvailabilityForm = ({
     };
 
     startTransition(async () => {
-      const data = await saveNonRecurringAvailableTimes(formattedData);
+      const data = await saveNonRecurringAvailableTimes(
+        formattedData,
+        adminPageProps
+      );
       setShowCalendar(false);
       responseToast(data);
       if (data?.success) {
@@ -193,7 +198,7 @@ const NonRecurringAvailabilityForm = ({
       isSameDay(blocked.date, selectedDate)
     );
     startTransition(async () => {
-      const data = await removeNonRecurringDate(blocked.date);
+      const data = await removeNonRecurringDate(blocked.date, adminPageProps);
       setShowCalendar(false);
       responseToast(data);
 

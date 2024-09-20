@@ -54,25 +54,27 @@ const NonRecurringTimes = ({
               </div>
 
               <div className="space-y-2">
-                {dateTime.timeRanges.map((timeRange: TimeRange) => (
-                  <div
-                    key={timeRange.startDate?.toString()}
-                    className="bg-green-200 p-2 rounded-md text-green-900 inline-flex flex-col mr-2"
-                  >
-                    <div>
-                      {formatDateTime(timeRange.startDate!)} -{" "}
-                      {formatDateTime(timeRange.endDate!)}
+                {dateTime.timeRanges.map(
+                  (timeRange: TimeRange, index: number) => (
+                    <div
+                      key={`${timeRange.startDate?.toString()}${index}`}
+                      className="bg-green-200 p-2 rounded-md text-green-900 inline-flex flex-col mr-2"
+                    >
+                      <div>
+                        {formatDateTime(timeRange.startDate!)} -{" "}
+                        {formatDateTime(timeRange.endDate!)}
+                      </div>
+                      {/* Display appointment type names as a list */}
+                      <ul className="text-sm text-green-700 mt-1 list-disc list-inside">
+                        {getAppointmentTypeNames(
+                          timeRange.appointmentTypeIds as any
+                        ).map((name, index) => (
+                          <li key={index}>{name}</li>
+                        ))}
+                      </ul>
                     </div>
-                    {/* Display appointment type names as a list */}
-                    <ul className="text-sm text-green-700 mt-1 list-disc list-inside">
-                      {getAppointmentTypeNames(
-                        timeRange.appointmentTypeIds as any
-                      ).map((name, index) => (
-                        <li key={index}>{name}</li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
+                  )
+                )}
               </div>
             </div>
           ))

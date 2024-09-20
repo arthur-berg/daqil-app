@@ -15,7 +15,29 @@ import { isSameDay } from "date-fns";
 import { revalidatePath } from "next/cache";
 import connectToMongoDB from "@/lib/mongoose";
 
-export const removeNonRecurringDate = async (selectedDate: Date) => {
+const getUserAndAvailableTimes = async (
+  user: any,
+  adminPageProps?: { therapistId: string }
+) => {
+  let userToUpdate;
+  let userAvailableTimes;
+
+  if (!!adminPageProps) {
+    const therapist = await User.findById(adminPageProps.therapistId);
+    userToUpdate = therapist._id;
+    userAvailableTimes = therapist.availableTimes;
+  } else {
+    userToUpdate = user.id;
+    userAvailableTimes = user.availableTimes;
+  }
+
+  return { userToUpdate, userAvailableTimes };
+};
+
+export const removeNonRecurringDate = async (
+  selectedDate: Date,
+  adminPageProps?: { therapistId: string }
+) => {
   await connectToMongoDB();
 
   const [SuccessMessages, ErrorMessages] = await Promise.all([
@@ -29,13 +51,18 @@ export const removeNonRecurringDate = async (selectedDate: Date) => {
       UserRole.ADMIN,
     ])) as any;
 
+    const { userToUpdate, userAvailableTimes } = await getUserAndAvailableTimes(
+      user,
+      adminPageProps
+    );
+
     const filteredAvailableTimes =
-      user.availableTimes.nonRecurringAvailableTimes?.filter(
+      userAvailableTimes.nonRecurringAvailableTimes?.filter(
         (nonRecurringTime: any) =>
           !isSameDay(new Date(nonRecurringTime.date), new Date(selectedDate))
       ) ?? [];
 
-    await User.findByIdAndUpdate(user.id, {
+    await User.findByIdAndUpdate(userToUpdate, {
       "availableTimes.nonRecurringAvailableTimes": filteredAvailableTimes,
     });
 
@@ -48,7 +75,10 @@ export const removeNonRecurringDate = async (selectedDate: Date) => {
   }
 };
 
-export const removeBlockedDate = async (selectedDate: Date) => {
+export const removeBlockedDate = async (
+  selectedDate: Date,
+  adminPageProps?: { therapistId: string }
+) => {
   await connectToMongoDB();
 
   const [SuccessMessages, ErrorMessages] = await Promise.all([
@@ -62,13 +92,18 @@ export const removeBlockedDate = async (selectedDate: Date) => {
       UserRole.ADMIN,
     ])) as any;
 
+    const { userToUpdate, userAvailableTimes } = await getUserAndAvailableTimes(
+      user,
+      adminPageProps
+    );
+
     const filteredBlockedOutTimes =
-      user.availableTimes.blockedOutTimes?.filter(
+      userAvailableTimes.blockedOutTimes?.filter(
         (blockedOutTime: any) =>
           !isSameDay(new Date(blockedOutTime.date), new Date(selectedDate))
       ) ?? [];
 
-    await User.findByIdAndUpdate(user.id, {
+    await User.findByIdAndUpdate(userToUpdate, {
       "availableTimes.blockedOutTimes": filteredBlockedOutTimes,
     });
 
@@ -82,7 +117,8 @@ export const removeBlockedDate = async (selectedDate: Date) => {
 };
 
 export const saveBlockedOutTimes = async (
-  values: z.infer<typeof BlockAvailabilitySchemaBE>
+  values: z.infer<typeof BlockAvailabilitySchemaBE>,
+  adminPageProps?: { therapistId: string }
 ) => {
   await connectToMongoDB();
   const [SuccessMessages, ErrorMessages] = await Promise.all([
@@ -103,15 +139,20 @@ export const saveBlockedOutTimes = async (
 
     const data = validatedFields.data;
 
+    const { userToUpdate, userAvailableTimes } = await getUserAndAvailableTimes(
+      user,
+      adminPageProps
+    );
+
     const filteredBlockedOutTimes =
-      user.availableTimes.blockedOutTimes?.filter(
+      userAvailableTimes.blockedOutTimes?.filter(
         (blockedOutTime: any) =>
           !isSameDay(new Date(blockedOutTime.date), new Date(data.date))
       ) ?? [];
 
     const mergedBlockedTimes = [...filteredBlockedOutTimes, data];
 
-    await User.findByIdAndUpdate(user.id, {
+    await User.findByIdAndUpdate(userToUpdate, {
       "availableTimes.blockedOutTimes": mergedBlockedTimes,
     });
 
@@ -125,7 +166,8 @@ export const saveBlockedOutTimes = async (
 };
 
 export const saveNonRecurringAvailableTimes = async (
-  values: z.infer<typeof NonRecurringAvailabilitySchemaBE>
+  values: z.infer<typeof NonRecurringAvailabilitySchemaBE>,
+  adminPageProps?: { therapistId: string }
 ) => {
   await connectToMongoDB();
 
@@ -148,15 +190,20 @@ export const saveNonRecurringAvailableTimes = async (
 
     const data = validatedFields.data;
 
+    const { userToUpdate, userAvailableTimes } = await getUserAndAvailableTimes(
+      user,
+      adminPageProps
+    );
+
     const filteredAvailableTimes =
-      user.availableTimes.nonRecurringAvailableTimes?.filter(
+      userAvailableTimes.nonRecurringAvailableTimes?.filter(
         (availableTime: any) =>
           !isSameDay(new Date(availableTime.date), new Date(data.date))
       ) ?? [];
 
     const mergedNonRecurringTimes = [...filteredAvailableTimes, data];
 
-    await User.findByIdAndUpdate(user.id, {
+    await User.findByIdAndUpdate(userToUpdate, {
       "availableTimes.nonRecurringAvailableTimes": mergedNonRecurringTimes,
     });
 
@@ -170,7 +217,8 @@ export const saveNonRecurringAvailableTimes = async (
 };
 
 export const updateRecurringAvailabilitySettings = async (
-  values: z.infer<typeof RecurringAvailabilitySettingsSchemaBE>
+  values: z.infer<typeof RecurringAvailabilitySettingsSchemaBE>,
+  adminPageProps?: { therapistId: string }
 ) => {
   await connectToMongoDB();
 
@@ -184,6 +232,11 @@ export const updateRecurringAvailabilitySettings = async (
       UserRole.ADMIN,
     ])) as any;
 
+    const { userToUpdate } = await getUserAndAvailableTimes(
+      user,
+      adminPageProps
+    );
+
     const validatedFields =
       RecurringAvailabilitySettingsSchemaBE.safeParse(values);
 
@@ -191,7 +244,7 @@ export const updateRecurringAvailabilitySettings = async (
       return { error: ErrorMessages("invalidFields") };
     }
 
-    await User.findByIdAndUpdate(user.id, {
+    await User.findByIdAndUpdate(userToUpdate, {
       $set: {
         "availableTimes.settings.interval": values.interval,
       },
@@ -205,7 +258,8 @@ export const updateRecurringAvailabilitySettings = async (
 };
 
 export const saveRecurringAvailableTimes = async (
-  values: z.infer<typeof RecurringAvailabilitySchema>
+  values: z.infer<typeof RecurringAvailabilitySchema>,
+  adminPageProps?: { therapistId: string }
 ) => {
   await connectToMongoDB();
 
@@ -228,16 +282,21 @@ export const saveRecurringAvailableTimes = async (
 
     const data = validatedFields.data;
 
+    const { userToUpdate, userAvailableTimes } = await getUserAndAvailableTimes(
+      user,
+      adminPageProps
+    );
+
     const filteredAvailableTimes =
-      user.availableTimes.recurringAvailableTimes?.filter(
+      userAvailableTimes.recurringAvailableTimes?.filter(
         (availableTime: any) => availableTime.day !== data.day
       ) ?? {};
 
     const mergedRecurringTimes = [...filteredAvailableTimes, data];
 
-    user.availableTimes.recurringAvailableTimes = mergedRecurringTimes;
+    userAvailableTimes.recurringAvailableTimes = mergedRecurringTimes;
 
-    await User.findByIdAndUpdate(user.id, {
+    await User.findByIdAndUpdate(userToUpdate, {
       "availableTimes.recurringAvailableTimes": mergedRecurringTimes,
     });
 

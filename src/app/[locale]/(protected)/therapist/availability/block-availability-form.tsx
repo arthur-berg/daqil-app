@@ -61,9 +61,11 @@ const timeOptions = generateTimeIntervals(15);
 const BlockAvailabilityForm = ({
   blockedOutTimes,
   appointmentTypes,
+  adminPageProps,
 }: {
   blockedOutTimes: any;
   appointmentTypes: any[];
+  adminPageProps?: { therapistId: string };
 }) => {
   const [isPending, startTransition] = useTransition();
   const [date, setDate] = useState<any>();
@@ -108,7 +110,7 @@ const BlockAvailabilityForm = ({
     };
 
     startTransition(async () => {
-      const data = await saveBlockedOutTimes(formattedData);
+      const data = await saveBlockedOutTimes(formattedData, adminPageProps);
       setShowCalendar(false);
       responseToast(data);
 
@@ -154,7 +156,7 @@ const BlockAvailabilityForm = ({
       isSameDay(blocked.date, selectedDate)
     );
     startTransition(async () => {
-      const data = await removeBlockedDate(blocked.date);
+      const data = await removeBlockedDate(blocked.date, adminPageProps);
       setShowCalendar(false);
       responseToast(data);
 
