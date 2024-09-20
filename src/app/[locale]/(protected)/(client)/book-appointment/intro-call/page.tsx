@@ -19,7 +19,7 @@ const IntroCallPage = async () => {
     <div className="max-w-4xl mx-auto bg-white rounded-md p-4">
       <BookIntroCall
         appointmentType={appointmentType}
-        therapists={therapists}
+        therapistsJson={JSON.stringify(therapists)}
       />
     </div>
   );

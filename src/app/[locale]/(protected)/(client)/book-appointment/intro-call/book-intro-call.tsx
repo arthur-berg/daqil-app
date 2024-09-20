@@ -27,10 +27,10 @@ type DateType = {
 
 const BookIntroCall = ({
   appointmentType,
-  therapists,
+  therapistsJson,
 }: {
   appointmentType: any;
-  therapists: any;
+  therapistsJson: any;
 }) => {
   const t = useTranslations("BookingCalendar");
   const [bookingDialogOpen, setBookingDialogOpen] = useState(false);
@@ -48,6 +48,8 @@ const BookIntroCall = ({
   const router = useRouter();
   const [reservedAppointment, setReservedAppointment] = useState<any>(null);
   const { toast } = useToast();
+
+  const therapists = JSON.parse(therapistsJson);
 
   const today = set(new Date(), {
     hours: 0,
