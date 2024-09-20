@@ -19,7 +19,7 @@ const scheduledTask = new Schema(
     taskId: { type: String },
     createdAt: { type: Date, default: Date.now },
   },
-  { collection: "schedules_tasks" }
+  { collection: "scheduled_tasks" }
 );
 
 export default mongoose.models?.ScheduledTask ||
