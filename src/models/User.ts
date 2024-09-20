@@ -129,6 +129,7 @@ const userSchema = new Schema(
       phoneNumber: { type: String, required: false },
       sex: { type: String, enum: ["MALE", "FEMALE", "OTHER"] },
       dateOfBirth: { type: Date, required: false },
+      country: { type: String, required: false },
     },
     therapistWorkProfile: {
       type: {
@@ -167,6 +168,10 @@ const userSchema = new Schema(
       required: false,
     },
     stripePaymentMethodId: {
+      type: String,
+      required: false,
+    },
+    stripeAccountId: {
       type: String,
       required: false,
     },

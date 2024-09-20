@@ -28,6 +28,7 @@ export type ExtendedUser = DefaultSession["user"] & {
     phoneNumber: string;
     sex: "MALE" | "FEMALE" | "OTHER";
     dateOfBirth: Date;
+    country: string;
   };
   selectedTherapistHistory?: {
     therapist: string;

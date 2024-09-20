@@ -13,6 +13,8 @@ const MyProfileClientPage = async () => {
 
   const t = await getTranslations("AuthPage");
 
+  const tCountries = await getTranslations("Countries");
+
   if (!user) return null;
 
   const client = await getClientById(user.id);
@@ -60,6 +62,10 @@ const MyProfileClientPage = async () => {
               <p className="text-gray-800">
                 <span className="font-semibold">{t("dateOfBirth")}:</span>{" "}
                 {new Date(user.personalInfo.dateOfBirth).toLocaleDateString()}
+              </p>
+              <p className="text-gray-800">
+                <span className="font-semibold">{t("country")}:</span>{" "}
+                {tCountries(user.personalInfo.country)}
               </p>
             </div>
             {/*   <div className="bg-gray-100 p-4 rounded-lg shadow-sm">

@@ -100,6 +100,7 @@ const OAuthAccountSetupForm = () => {
         phoneNumber: user?.personalInfo?.phoneNumber || "",
         sex: user?.personalInfo?.sex || undefined,
         dateOfBirth: undefined,
+        country: undefined,
       },
       settings: {
         timeZone: defaultTimezone,

@@ -144,9 +144,9 @@ export const getTherapistMenuList = (pathname: string, t: any): Group[] => {
           submenus: [],
         },
         {
-          href: "/settings",
+          href: "/therapist/settings",
           label: t("settings"),
-          active: pathname.includes("/settings"),
+          active: pathname.includes("/therapist/settings"),
           icon: GearIcon,
           submenus: [],
         },

@@ -293,6 +293,7 @@ export const SetupAccountSchema = z.object({
     dateOfBirth: z.string().regex(/^\d{4}\/\d{2}\/\d{2}$/, {
       message: "Invalid date format. Use YYYY/MM/DD.",
     }),
+    country: z.string(),
   }),
   settings: z.object({
     timeZone: z.string().min(1, {
@@ -320,6 +321,7 @@ export const OAuthAccountSetupSchema = z.object({
     dateOfBirth: z.string().regex(/^\d{4}\/\d{2}\/\d{2}$/, {
       message: "Invalid date format. Use YYYY/MM/DD.",
     }),
+    country: z.string(),
   }),
   settings: z.object({
     timeZone: z.string().min(1, {

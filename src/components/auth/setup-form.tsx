@@ -44,6 +44,7 @@ import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Label } from "../ui/label";
 import { CaretSortIcon } from "@radix-ui/react-icons";
 import { BeatLoader } from "react-spinners";
+import { useGetCountries } from "@/hooks/use-get-countries";
 
 const getMappedTimezone = (ianaTimezone: string) => {
   return allTimezones[ianaTimezone] ? ianaTimezone : "Asia/Dubai";
@@ -77,6 +78,9 @@ export const SetupForm = () => {
   const [currentPasswordRequired, setCurrentPasswordRequired] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [showArabicNameFields, setShowArabicNameFields] = useState(false);
+  const [countryPopoverOpen, setCountryPopoverOpen] = useState(false);
+  const [countrySearch, setCountrySearch] = useState("");
+  const countries = useGetCountries();
   const searchParams = useSearchParams();
   const locale = useLocale();
   const t = useTranslations("AuthPage");
@@ -124,6 +128,7 @@ export const SetupForm = () => {
         phoneNumber: "",
         sex: undefined,
         dateOfBirth: undefined,
+        country: undefined,
       },
       settings: {
         timeZone: defaultTimezone,
@@ -340,6 +345,70 @@ export const SetupForm = () => {
                         className={cn("w-[240px]")}
                       />
                     </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="personalInfo.country"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("selectCountry")}</FormLabel>
+                    <Popover
+                      open={countryPopoverOpen}
+                      onOpenChange={(isOpen) => setCountryPopoverOpen(isOpen)}
+                    >
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          role="combobox"
+                          className="justify-between w-[300px] sm:w-full"
+                        >
+                          <div className="truncate max-w-[calc(100%-24px)]">
+                            {field.value
+                              ? countries.find(
+                                  (c: any) => c.value === field.value
+                                )?.label
+                              : t("selectCountry")}
+                          </div>
+                          <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-[280px] p-0">
+                        <Command>
+                          <CommandList>
+                            <CommandEmpty>{t("noCountryFound")}</CommandEmpty>
+                            <CommandGroup>
+                              {countries
+                                .filter((country: any) =>
+                                  country.label
+                                    .toLowerCase()
+                                    .includes(countrySearch.toLowerCase())
+                                )
+                                .map((country: any) => (
+                                  <CommandItem
+                                    key={country.value}
+                                    onSelect={() => {
+                                      field.onChange(country.value);
+                                      setCountryPopoverOpen(false);
+                                    }}
+                                  >
+                                    {country.label}
+                                  </CommandItem>
+                                ))}
+                            </CommandGroup>
+                          </CommandList>
+                          <div className="border-t p-2">
+                            <CommandInput
+                              placeholder={t("searchCountry")}
+                              value={countrySearch}
+                              onValueChange={setCountrySearch}
+                            />
+                          </div>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
                     <FormMessage />
                   </FormItem>
                 )}

@@ -1,6 +1,6 @@
-import SettingsForm from "./settings-form";
+import SettingsForm from "@/components/settings-form";
 
-const SettingsPage = async () => {
+const SettingsPage = () => {
   return <SettingsForm />;
 };
 

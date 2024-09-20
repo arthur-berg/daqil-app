@@ -126,6 +126,7 @@ export const inviteTherapist = async (
       email,
       password: hashedPassword,
       role: UserRole.THERAPIST,
+      stripeAccountId: "",
       firstName: {
         en: "",
         ar: "",

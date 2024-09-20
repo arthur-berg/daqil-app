@@ -7,8 +7,6 @@ import { useTransition, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useTimezoneSelect, allTimezones } from "react-timezone-select";
 
-import { Switch } from "@/components/ui/switch";
-
 import { settings } from "@/actions/settings";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
@@ -18,7 +16,6 @@ import {
   FormControl,
   FormLabel,
   FormItem,
-  FormDescription,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -42,6 +39,7 @@ import {
 } from "@/components/ui/command";
 import { CaretSortIcon } from "@radix-ui/react-icons";
 import PageTitle from "@/components/page-title";
+import { useGetCountries } from "@/hooks/use-get-countries";
 
 const getGmtOffset = (timezone: string) => {
   const now = new Date();
@@ -71,6 +69,7 @@ const SettingsForm = () => {
   const [success, setSuccess] = useState<string | undefined>();
   const [isPending, startTransition] = useTransition();
   const { update } = useSession();
+
   const t = useTranslations("SettingsPage");
   const { options: timezoneOptions, parseTimezone } = useTimezoneSelect({
     timezones: allTimezones,
