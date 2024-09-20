@@ -2,9 +2,7 @@ import { getAppointmentTypeById } from "@/data/appointment-types";
 import CheckoutWrapper from "./checkout-wrapper";
 import { getAppointmentById } from "@/data/appointment";
 import { getTranslations } from "next-intl/server";
-import { redirect } from "@/navigation";
 import { getCurrentUser } from "@/lib/auth";
-import { getClientByIdAppointments } from "@/data/user";
 import connectToMongoDB from "@/lib/mongoose";
 
 const CheckoutPage = async ({

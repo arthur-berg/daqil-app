@@ -14,7 +14,6 @@ import { format } from "date-fns";
 import mongoose from "mongoose";
 import User from "@/models/User";
 import { revalidatePath } from "next/cache";
-import { getFirstName } from "@/utils/formatName";
 import connectToMongoDB from "@/lib/mongoose";
 
 export const reserveAppointment = async (
@@ -169,8 +168,8 @@ export const reserveAppointment = async (
 
     return {
       success: SuccessMessages("appointmentReserved"),
-      appointmentId: appointmentId,
-      paymentExpiryDate: appointment[0].payment.paymentExpiryDate,
+      appointmentId: appointmentId.toString(),
+      paymentExpiryDate: appointment[0].payment.paymentExpiryDate.toISOString(),
     };
   } catch (error) {
     if (!transactionCommitted) {

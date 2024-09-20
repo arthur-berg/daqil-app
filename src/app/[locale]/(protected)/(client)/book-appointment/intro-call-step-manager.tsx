@@ -20,7 +20,7 @@ const IntroCallStepManager = () => {
       </div>
     </div>
   ) : (
-    <div className="flex-col sm:flex-row gap-6 mb-6">
+    <div className="flex flex-col sm:flex-row gap-6 mb-6">
       <div className="bg-white shadow-lg rounded-lg p-6 text-center hover:shadow-xl transition-shadow duration-300 w-full sm:w-1/2 mb-4 sm:mb-0">
         <div>
           <h2 className="text-xl font-bold mb-4">{t("chooseForMe")}</h2>
