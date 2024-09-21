@@ -1,6 +1,6 @@
 {
   "HomePage": {
-    "companyName": "Daqil",
+    "companyName": "DAQIL",
     "getStarted": "Get started",
     "login": "Log in",
     "signUp": "Sign up"
@@ -152,9 +152,6 @@
     "saveBtn": "Save",
     "settings": "Settings"
   },
-  "PricingPage": {
-    "heading": "Choose between subscriptions or buy a single session"
-  },
   "BookAppointmentPage": {
     "ourTherapists": "Our therapists",
       "oauthAccountNotFinishedMessage": "You need to finish setting up your account before proceeding.",
@@ -237,7 +234,7 @@
     "close": "Close",
     "bookAppointment": "Book appointment",
     "processing": "Processing...",
-    "daqil": "Daqil",
+    "daqil": "DAQIL",
     "hasRequested": "has requested",
     "weHaveReserved": "We have temporarily reserved your appointment for 15 minutes",
     "payBefore": "Pay before",
@@ -403,12 +400,6 @@
     "email": "Email",
     "totalAppointments":"Total appointments"
   },
-  "Breadcrumbs": {
-    "myClients": "My Clients",
-    "client": "Client",
-    "scheduleAppointment": "Schedule appointment",
-    "appontmentDetails": "Appointment details"
-  },
   "PaymentSuccessPage": {
     "thankYou": "Thank you!",
     "paymentSuccess": "Your payment was successful.",
@@ -501,36 +492,36 @@
     "therapySessionWith": "Therapy session with"
   },
   "ReminderEmail": {
-    "daqil": "Daqil",
+    "daqil": "DAQIL",
     "subject": "Upcoming Appointment Reminder",
     "greeting": "Dear {name},",
     "message": "This is a friendly reminder that you have an upcoming appointment with {therapistName} on {date} at {time}. Please ensure that you are prepared and that your microphone and camera are functioning properly.",
-    "footer": "Thank you for using Daqil."
+    "footer": "Thank you for using DAQIL."
   },
   "PaymentReminderEmail": {
-    "daqil": "Daqil",
+    "daqil": "DAQIL",
     "subject": "Reminder: Payment Required for Your Upcoming Appointment",
-    "companyName": "Daqil",
+    "companyName": "DAQIL",
     "greeting": "Dear {clientFirstName},",
     "reminderText": "This is a friendly reminder that payment for your upcoming appointment at {appointmentStartTime} is due.",
     "paymentInstructions": "Please ensure that your payment is completed at least 1 hour before the scheduled time.",
     "payNowButton": "Pay Now",
-    "footerText": "Thank you for using Daqil."
+    "footerText": "Thank you for using DAQIL."
   },
   "SmsReminder": {
     "reminderMessage": "Reminder: Your appointment with {hostFirstName} {hostLastName} starts in 30 minutes at {appointmentTime}. Please be ready and ensure your microphone and video are working properly."
   },
   "TwoFactorEmail": {
-    "daqil": "Daqil",
+    "daqil": "DAQIL",
     "subject": "Your Two-Factor Authentication Code",
     "message": "Your Two-Factor Authentication (2FA) code is:",
     "footer": "If you did not request this, please ignore this email."
   },
   "VerificationEmail": {
-    "daqil": "Daqil",
+    "daqil": "DAQIL",
     "subject": "Confirm Your Email Address",
-    "welcomeMessage": "Welcome to Daqil!",
-    "therapistMessage": "You have been invited to Daqil as a therapist.",
+    "welcomeMessage": "Welcome to DAQIL!",
+    "therapistMessage": "You have been invited to DAQIL as a therapist.",
     "temporaryPasswordMessage": "Here is your temporary password: {password}",
     "confirmEmailMessage": "Please confirm your email address to complete the registration process.",
     "confirmEmailButton": "Confirm Email",
@@ -538,14 +529,14 @@
     "expirationMessage": "This verification link is valid for {days} days."
   },
   "PasswordResetEmail": {
-    "daqil": "Daqil",
+    "daqil": "DAQIL",
     "subject": "Reset Your Password",
     "resetMessage": "We received a request to reset your password. You can do so by clicking the button below:",
     "resetButton": "Reset Password",
     "ignoreMessage": "If you did not request a password reset, please ignore this email."
   },
   "AppointmentCancellationEmail": {
-    "daqil": "Daqil",
+    "daqil": "DAQIL",
     "therapistSubject": "Appointment Canceled by Client",
     "clientSubject": "Your Appointment has been Canceled",
     "therapistButtonText": "See all my appointments",
@@ -555,12 +546,12 @@
     "dateLabel": "Date:",
     "timeLabel": "Time:",
     "reasonLabel": "Reason:",
-    "thankYouMessage": "Thank you for using Daqil.",
+    "thankYouMessage": "Thank you for using DAQIL.",
     "refundLabel": "Refund",
     "refundIssuedMessage": "A refund of {{refundAmount}} has been issued to your account."
   },
   "NonPaidAppointmentConfirmationEmail": {
-    "daqil": "Daqil",
+    "daqil": "DAQIL",
     "therapistSubject": "New Appointment Booking",
     "clientSubject": "Action Required: Confirm Your Appointment with Payment",
     "therapistButtonText": "See all my appointments",
@@ -568,14 +559,14 @@
     "therapistAdditionalMessage": "To join the session and manage all your appointments, please visit your appointments page.",
     "clientAdditionalMessage": "Please note that this appointment needs to be paid for at least 1 hour before the meeting starts. You can make the payment using the link below. You can also join your upcoming session and see an overview of all your appointments on your appointments page.",
     "payNowButtonText": "Pay Now",
-    "thankYouMessage": "Thank you for using Daqil.",
+    "thankYouMessage": "Thank you for using DAQIL.",
     "therapistLabel": "Therapist:",
     "clientLabel": "Client:",
     "dateLabel": "Date:",
     "timeLabel": "Time:"
   },
   "InvoicePaidEmail": {
-    "daqil": "Daqil",
+    "daqil": "DAQIL",
     "therapistSubject": "{clientName} has paid for their appointment",
     "clientSubject": "Invoice Successfully Paid",
     "therapistAdditionalMessage": "{clientName} has completed the payment for their appointment with you.",
@@ -592,10 +583,10 @@
     "timeLabel": "Time:",
     "durationLabel": "Duration:",
     "minutesLabel": "minutes",
-    "thankYouMessage": "Thank you for using Daqil."
+    "thankYouMessage": "Thank you for using DAQIL."
   },
   "PaidBookingConfirmationEmail": {
-    "daqil": "Daqil",
+    "daqil": "DAQIL",
     "therapistSubject": "New Appointment Booking",
     "clientSubject": "Appointment Confirmation and Payment Receipt",
     "therapistButtonText": "See all my appointments",
@@ -612,19 +603,19 @@
     "timeLabel": "Time:",
     "durationLabel": "Duration:",
     "minutesLabel": "minutes",
-    "thankYouMessage": "Thank you for using Daqil."
+    "thankYouMessage": "Thank you for using DAQIL."
   },
   "ClientNotPaidInTimeEmail": {
     "clientSubject": "Your Appointment Was Canceled Because Payment Was Not Made on Time",
     "therapistSubject": "Appointment Canceled: Client Did Not Pay on Time",
-    "daqil": "Daqil",
+    "daqil": "DAQIL",
     "therapistLabel": "Therapist:",
     "clientLabel": "Client:",
     "dateLabel": "Date:",
     "timeLabel": "Time:",
     "notPaidInTimeMessageClient": "Unfortunately, your appointment was canceled because you did not pay on time. Please make sure to pay in advance for future bookings.",
     "notPaidInTimeMessageTherapist": "The appointment with your client was canceled because the client did not pay on time. Please check your upcoming appointments.",
-    "thankYouMessage": "Thank you for using Daqil."
+    "thankYouMessage": "Thank you for using DAQIL."
   },
   "AppointmentTypes": {
     "6692b4919a6b12347d0afac4": "Therapy session - 30 minutes",

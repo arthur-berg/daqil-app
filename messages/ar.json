@@ -6,6 +6,7 @@
     "signUp": "الاشتراك"
   },
   "AuthPage": {
+    "finishAccountSetup": "أكمل إعداد حسابك",
     "country": "البلد",
     "searchCountry": "ابحث عن البلد",
     "selectCountry": "اختر البلد",
@@ -47,11 +48,11 @@
     "phoneNumber": "رقم الهاتف",
     "dateOfBirth": "تاريخ الميلاد",
     "pickADate": "اختر تاريخًا",
-    "phoneNumberPlaceholder": "+XX XXX XXX XXXX",
+"phoneNumberPlaceholder": "+XX XXX XXX XXXX",
     "name": "الاسم",
     "totalAppointments": "إجمالي المواعيد",
     "currentTherapist": "المعالج الحالي",
-    "appointmentsAndTherapist": "المواعيد والمعالج",
+"appointmentsAndTherapist": "المواعيد والمعالج",
     "personalInformation": "المعلومات الشخصية",
     "myProfile": "ملفي الشخصي",
     "startedOn": "بدأ في",
@@ -81,7 +82,6 @@
     "bookSession": "احجز جلسة علاجية",
     "forAllUsers": "لكل المستخدمين",
     "forTherapists": "للمعالجين",
-    "createAppointments": "إنشاء مواعيد وجلسات فيديو",
     "payment": "الاشتراك والرصيد",
     "settings": "الإعدادات",
     "logout": "تسجيل الخروج",
@@ -155,9 +155,6 @@
     "saveBtn": "حفظ",
     "settings": "الإعدادات"
   },
-  "PricingPage": {
-    "heading": "اختر بين الاشتراكات أو شراء جلسة واحدة"
-  },
   "BookAppointmentPage": {
     "ourTherapists": "معالجينا",
     "oauthAccountNotFinishedMessage": "تحتاج إلى إكمال إعداد حسابك قبل المتابعة.",
@@ -195,7 +192,8 @@
     "browseTherapistsDescriptionOnlyOption": "تصفح معالجينا واختر المعالج الذي ترغب في حجز موعد معه.",
     "introMeetingIsPending": "لديك بالفعل اجتماع تمهيدي محجوز. إذا كنت ترغب في اختيار وقت آخر، يرجى إلغاء موعدك لحجز موعد جديد.",
     "seeAppointments": "عرض المواعيد",
-    "goToProfilePage": "الانتقال إلى صفحة الملف الشخصي"
+    "goToProfilePage": "الانتقال إلى صفحة الملف الشخصي",
+    "readMore": "اقرأ المزيد"
   },
   "BookingCalendar": {
     "changeDate": "تغيير التاريخ",
@@ -221,8 +219,9 @@
     "changeTherapistButton": "تغيير المعالج",
     "bookingAppointmentLoading": "جارٍ حجز الموعد... يرجى الانتظار",
     "loadingCheckout": "جارٍ تحميل عملية الدفع...",
-    "zakina": "زكينا",
-    "selectAppointmentType": "اختر نوع الموعد"
+    "daqil": "زكينا",
+    "selectAppointmentType": "اختر نوع الموعد",
+    "free": "مجاني"
   },
   "Checkout": {
     "pay": "ادفع ${amount}",
@@ -239,7 +238,7 @@
     "close": "إغلاق",
     "bookAppointment": "احجز موعداً",
     "processing": "جارٍ المعالجة...",
-    "zakina": "زاكينا",
+    "daqil": "زاكينا",
     "hasRequested": "قد طلب",
     "weHaveReserved": "لقد قمنا بحجز موعدك مؤقتاً لمدة 15 دقيقة",
     "payBefore": "ادفع الآن",
@@ -348,7 +347,8 @@
     "cancelAppointment": "إلغاء الموعد",
     "appointmentStatus": "حالة الموعد",
     "all": "الكل",
-    "selectStatus": "اختر الحالة"
+    "selectStatus": "اختر الحالة",
+    "day": "اليوم"
   },
   "ScheduleAppointmentPage": {
     "scheduleAnotherAppointment": "جدولة موعد آخر",
@@ -403,12 +403,6 @@
     "name": "الاسم",
     "email": "البريد الإلكتروني",
     "totalAppointments": "إجمالي المواعيد"
-  },
-  "Breadcrumbs": {
-    "myClients": "عملائي",
-    "client": "عميل",
-    "scheduleAppointment": "جدولة موعد",
-    "appointmentDetails": "تفاصيل الموعد"
   },
   "PaymentSuccessPage": {
     "thankYou": "شكرًا لك!",
@@ -502,15 +496,14 @@
     "therapySessionWith": "جلسة علاجية مع"
   },
   "ReminderEmail": {
-    "zakina": "زاكينا",
-
+    "daqil": "زاكينا",
     "subject": "تذكير بالموعد القادم",
     "greeting": "عزيزي {name}،",
     "message": "هذا تذكير ودي بأن لديك موعدًا قادمًا مع {therapistName} في {date} الساعة {time}. يرجى التأكد من أنك مستعد وأن الميكروفون والكاميرا يعملان بشكل صحيح.",
     "footer": "شكرًا لاختيارك زاكينا."
   },
   "PaymentReminderEmail": {
-    "zakina": "زاكينا",
+    "daqil": "زاكينا",
     "subject": "تذكير: الدفع مطلوب لموعدك القادم",
     "companyName": "زاكينا",
     "greeting": "عزيزي {clientFirstName}،",
@@ -523,13 +516,13 @@
     "reminderMessage": "تذكير: موعدك مع {hostFirstName} {hostLastName} سيبدأ بعد 30 دقيقة في {appointmentTime}. يرجى التأكد من جاهزيتك وأن الميكروفون والفيديو يعملان بشكل صحيح."
   },
   "TwoFactorEmail": {
-    "zakina": "زاكينا",
+    "daqil": "زاكينا",
     "subject": "رمز التحقق بخطوتين الخاص بك",
     "message": "رمز التحقق بخطوتين (2FA) الخاص بك هو:",
     "footer": "إذا لم تطلب هذا، يرجى تجاهل هذه الرسالة."
   },
   "VerificationEmail": {
-    "zakina": "زاكينا",
+    "daqil": "زاكينا",
     "subject": "تأكيد عنوان بريدك الإلكتروني",
     "welcomeMessage": "مرحبًا بك في زاكينا!",
     "therapistMessage": "لقد تمت دعوتك إلى زاكينا كمعالج.",
@@ -540,14 +533,14 @@
     "expirationMessage": "رابط التحقق هذا صالح لمدة {days} أيام."
   },
   "PasswordResetEmail": {
-    "zakina": "زاكينا",
+    "daqil": "زاكينا",
     "subject": "إعادة تعيين كلمة المرور الخاصة بك",
     "resetMessage": "لقد تلقينا طلبًا لإعادة تعيين كلمة المرور الخاصة بك. يمكنك القيام بذلك عن طريق النقر على الزر أدناه:",
     "resetButton": "إعادة تعيين كلمة المرور",
     "ignoreMessage": "إذا لم تطلب إعادة تعيين كلمة المرور، يرجى تجاهل هذا البريد الإلكتروني."
   },
   "AppointmentCancellationEmail": {
-    "zakina": "زاكينا",
+    "daqil": "زاكينا",
     "therapistSubject": "تم إلغاء الموعد من قبل العميل",
     "clientSubject": "تم إلغاء موعدك",
     "therapistButtonText": "عرض جميع مواعيدي",
@@ -557,10 +550,12 @@
     "dateLabel": "التاريخ:",
     "timeLabel": "الوقت:",
     "reasonLabel": "السبب:",
-    "thankYouMessage": "شكرًا لاستخدامك زاكينا."
+    "thankYouMessage": "شكرًا لاستخدامك زاكينا.",
+    "refundLabel": "استرداد",
+"refundIssuedMessage": "تم إصدار استرداد بقيمة {{refundAmount}} إلى حسابك."
   },
   "NonPaidAppointmentConfirmationEmail": {
-    "zakina": "زاكينا",
+    "daqil": "زاكينا",
     "therapistSubject": "حجز موعد جديد",
     "clientSubject": "الإجراء مطلوب: يرجى تأكيد موعدك عن طريق الدفع",
     "therapistButtonText": "عرض جميع مواعيدي",
@@ -575,7 +570,7 @@
     "timeLabel": "الوقت:"
   },
   "InvoicePaidEmail": {
-    "zakina": "زاكينا",
+    "daqil": "زاكينا",
     "therapistSubject": "قام {clientName} بدفع ثمن موعده",
     "clientSubject": "تم دفع الفاتورة بنجاح",
     "therapistAdditionalMessage": "أكمل {clientName} الدفع لموعده معك.",
@@ -595,7 +590,7 @@
     "thankYouMessage": "شكرًا لاستخدامك زاكينا."
   },
   "PaidBookingConfirmationEmail": {
-    "zakina": "زاكينا",
+    "daqil": "زاكينا",
     "therapistSubject": "حجز موعد جديد",
     "clientSubject": "تأكيد الموعد وإيصال الدفع",
     "therapistButtonText": "عرض جميع مواعيدي",
@@ -617,7 +612,7 @@
   "ClientNotPaidInTimeEmail": {
     "clientSubject": "تم إلغاء موعدك لأن الدفع لم يتم في الوقت المحدد",
     "therapistSubject": "تم إلغاء الموعد: العميل لم يدفع في الوقت المحدد",
-    "zakina": "زاكينا",
+    "daqil": "زاكينا",
     "therapistLabel": "المعالج:",
     "clientLabel": "العميل:",
     "dateLabel": "التاريخ:",
