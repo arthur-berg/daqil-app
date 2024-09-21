@@ -67,20 +67,28 @@ const BookAppointmentPage = async ({
     return ErrorMessages("appointmentTypeNotExist");
   }
 
-  const introMeetingWasCanceledDueToNoShowUp = client?.appointments?.some(
-    (appointment: any) => {
-      return appointment.bookedAppointments?.every((bookedAppointment: any) => {
-        return (
-          bookedAppointment.status === "canceled" &&
-          (bookedAppointment.canceledReason === "no-show-both" ||
-            bookedAppointment.canceledReason === "no-show-host" ||
-            bookedAppointment.canceledReason === "no-show-participant") &&
-          bookedAppointment.appointmentTypeId ===
-            APPOINTMENT_TYPE_ID_INTRO_SESSION
-        );
-      });
-    }
+  const introAppointments = client?.appointments?.map((appointment: any) => {
+    return appointment.bookedAppointments?.filter(
+      (bookedAppointment: any) =>
+        bookedAppointment.appointmentTypeId ===
+        APPOINTMENT_TYPE_ID_INTRO_SESSION
+    );
+  });
+
+  const completedIntroAppointmentFound = introAppointments.some(
+    (introAppointment: any) => introAppointment.status === "completed"
   );
+
+  const canceledIntroDueToNoShowAppointmentFound = introAppointments.some(
+    (introAppointment: any) =>
+      introAppointment.status === "canceled" &&
+      (introAppointment.canceledReason === "no-show-both" ||
+        introAppointment.canceledReason === "no-show-host" ||
+        introAppointment.canceledReason === "no-show-participant")
+  );
+
+  const introAppointmentWasCanceledDueToNoShowUp =
+    !completedIntroAppointmentFound && canceledIntroDueToNoShowAppointmentFound;
 
   const introMeetingIsBookedButNotFinished =
     client?.appointments?.some((appointment: any) =>
@@ -112,7 +120,7 @@ const BookAppointmentPage = async ({
                   </Button>
                 </Link>
               </div>
-            ) : introMeetingWasCanceledDueToNoShowUp ? (
+            ) : introAppointmentWasCanceledDueToNoShowUp ? (
               <div className="bg-white p-4 rounded-md mb-6 flex items-center flex-col text-center">
                 <MdEvent className="mr-2 text-destructive mb-4" size={48} />
                 <p className="text-lg mb-4 flex items-center justify-center">
