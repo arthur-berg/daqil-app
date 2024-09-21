@@ -6,6 +6,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { Link } from "@/navigation";
 import { getTranslations } from "next-intl/server";
 import {
+  APPOINTMENT_TYPE_ID_INTRO_SESSION,
   APPOINTMENT_TYPE_ID_LONG_SESSION,
   APPOINTMENT_TYPE_ID_SHORT_SESSION,
 } from "@/contants/config";
@@ -53,6 +54,10 @@ const BookAppointmentPage = async ({
     user?.selectedTherapist?.clientIntroTherapistSelectionStatus ===
       "REJECTED" && user?.selectedTherapist.introCallDone;
 
+  // TODO - Sida / Text för ifall användaren har en intro session som är klar och fick status "canceled"
+
+  // Into meeting was canceled due to host did not show up or similar
+
   const appointmentTypes = await getAppointmentTypesByIDs([
     APPOINTMENT_TYPE_ID_SHORT_SESSION,
     APPOINTMENT_TYPE_ID_LONG_SESSION,
@@ -61,6 +66,21 @@ const BookAppointmentPage = async ({
   if (!appointmentTypes) {
     return ErrorMessages("appointmentTypeNotExist");
   }
+
+  const introMeetingWasCanceledDueToNoShowUp = client?.appointments?.some(
+    (appointment: any) => {
+      return appointment.bookedAppointments?.every((bookedAppointment: any) => {
+        return (
+          bookedAppointment.status === "canceled" &&
+          (bookedAppointment.canceledReason === "no-show-both" ||
+            bookedAppointment.canceledReason === "no-show-host" ||
+            bookedAppointment.canceledReason === "no-show-participant") &&
+          bookedAppointment.appointmentTypeId ===
+            APPOINTMENT_TYPE_ID_INTRO_SESSION
+        );
+      });
+    }
+  );
 
   const introMeetingIsBookedButNotFinished =
     client?.appointments?.some((appointment: any) =>
@@ -91,6 +111,15 @@ const BookAppointmentPage = async ({
                     {t("finishAccountSetupButton")}
                   </Button>
                 </Link>
+              </div>
+            ) : introMeetingWasCanceledDueToNoShowUp ? (
+              <div className="bg-white p-4 rounded-md mb-6 flex items-center flex-col text-center">
+                <MdEvent className="mr-2 text-destructive mb-4" size={48} />
+                <p className="text-lg mb-4 flex items-center justify-center">
+                  Your appointment was canceled because one or both participants
+                  didn&apos;t connect. Please book a new intro call.
+                </p>
+                <IntroCallStepManager />
               </div>
             ) : introMeetingIsBookedButNotFinished ? (
               <div className="bg-white p-4 rounded-md mb-6 flex items-center flex-col text-center">

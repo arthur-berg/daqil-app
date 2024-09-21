@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { verifySignatureAppRouter } from "@upstash/qstash/nextjs";
 import Appointment from "@/models/Appointment";
 import connectToMongoDB from "@/lib/mongoose";
+import { APPOINTMENT_TYPE_ID_INTRO_SESSION } from "@/contants/config";
+import User from "@/models/User";
 
 export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
   await connectToMongoDB();
@@ -24,6 +26,11 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
 
     if (hostShowUp && participantShowUp) {
       statusUpdate = { status: "completed" };
+      /*  if (appointment.appointmentTypeId === APPOINTMENT_TYPE_ID_INTRO_SESSION) {
+        await User.findByIdAndUpdate(appointment.participants[0].userId, {
+          $set: { "selectedTherapist.introCallDone": true },
+        });
+      } */
     } else if (!hostShowUp && !participantShowUp) {
       statusUpdate = {
         status: "canceled",

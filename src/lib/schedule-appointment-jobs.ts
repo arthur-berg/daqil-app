@@ -98,7 +98,6 @@ export const schedulePayAfterPaymentExpiredStatusUpdateJobs = async (
   paymentExpiryDate: Date,
   locale: string
 ) => {
-  console.log("paymentExpiryDate", paymentExpiryDate);
   const taskId = await scheduleTask(
     `${process.env.QSTASH_API_URL}/pay-after-booking/payment-expired-status-update`,
     { appointmentId: appointmentId },
