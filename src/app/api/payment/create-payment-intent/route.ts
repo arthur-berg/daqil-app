@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
 
     const appointmentType = await getAppointmentTypeById(appointmentTypeId);
 
-    // Validate and apply the discount code server-side
+    // Validate and apply the discount code server-sideds
     let discountCodeError = null;
     let discountCodeSuccess = null;
     let finalAmount = convertToSubcurrency(appointmentType.price);
