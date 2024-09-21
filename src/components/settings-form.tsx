@@ -187,7 +187,7 @@ const SettingsForm = () => {
                     control={form.control}
                     name="settings.timeZone"
                     render={({ field }) => (
-                      <FormItem>
+                      <FormItem className="flex flex-col">
                         <FormLabel className="block">
                           {t("timezoneLabel")}
                         </FormLabel>
@@ -201,7 +201,7 @@ const SettingsForm = () => {
                             <Button
                               variant="outline"
                               role="combobox"
-                              className="justify-between w-[300px] sm:w-full"
+                              className="justify-between sm:w-full"
                             >
                               <div className="truncate max-w-[calc(100%-24px)]">
                                 {field.value && allTimezones[field.value]

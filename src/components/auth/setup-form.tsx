@@ -342,7 +342,7 @@ export const SetupForm = () => {
                           field.onChange(input); // Update the form state
                         }}
                         disabled={isPending}
-                        className={cn("w-[240px]")}
+                        className={cn("max-w-[240px]")}
                       />
                     </FormControl>
                     <FormMessage />
@@ -353,7 +353,7 @@ export const SetupForm = () => {
                 control={form.control}
                 name="personalInfo.country"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="flex flex-col max-w-[240px]">
                     <FormLabel>{t("selectCountry")}</FormLabel>
                     <Popover
                       open={countryPopoverOpen}
@@ -363,7 +363,7 @@ export const SetupForm = () => {
                         <Button
                           variant="outline"
                           role="combobox"
-                          className="justify-between w-[300px] sm:w-full"
+                          className="justify-between sm:w-full"
                         >
                           <div className="truncate max-w-[calc(100%-24px)]">
                             {field.value
@@ -417,7 +417,7 @@ export const SetupForm = () => {
                 control={form.control}
                 name="settings.timeZone"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="flex flex-col">
                     <FormLabel>{t("selectTimezone")}</FormLabel>
                     <Popover
                       open={timezonePopoverOpen}
@@ -427,7 +427,7 @@ export const SetupForm = () => {
                         <Button
                           variant="outline"
                           role="combobox"
-                          className="justify-between w-[300px] sm:w-full"
+                          className="justify-between sm:w-full"
                         >
                           <div className="truncate max-w-[calc(100%-24px)]">
                             {field.value && allTimezones[field.value]

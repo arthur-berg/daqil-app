@@ -44,6 +44,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { useRouter } from "@/navigation";
 import { useToast } from "@/components/ui/use-toast";
+import { useGetCountries } from "@/hooks/use-get-countries";
 
 const getGmtOffset = (timezone: string) => {
   const now = new Date();
@@ -72,6 +73,10 @@ const OAuthAccountSetupForm = () => {
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
   const [showArabicNameFields, setShowArabicNameFields] = useState(false);
+  const [countryPopoverOpen, setCountryPopoverOpen] = useState(false);
+  const [countrySearch, setCountrySearch] = useState("");
+  const countries = useGetCountries();
+
   const router = useRouter();
   const user = useCurrentUser();
   const t = useTranslations("AuthPage");
@@ -146,7 +151,7 @@ const OAuthAccountSetupForm = () => {
                   control={form.control}
                   name="firstName.en"
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem className="max-w-[280px]">
                       <FormLabel>{t("firstNameEn")}</FormLabel>
                       <FormControl>
                         <Input disabled={isPending} {...field} />
@@ -160,7 +165,7 @@ const OAuthAccountSetupForm = () => {
                   control={form.control}
                   name="lastName.en"
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem className="max-w-[280px]">
                       <FormLabel>{t("lastNameEn")}</FormLabel>
                       <FormControl>
                         <Input disabled={isPending} {...field} />
@@ -187,7 +192,7 @@ const OAuthAccountSetupForm = () => {
                       control={form.control}
                       name="firstName.ar"
                       render={({ field }) => (
-                        <FormItem>
+                        <FormItem className="max-w-[280px]">
                           <FormLabel>{t("firstNameAr")}</FormLabel>
                           <FormControl>
                             <Input disabled={isPending} {...field} />
@@ -201,7 +206,7 @@ const OAuthAccountSetupForm = () => {
                       control={form.control}
                       name="lastName.ar"
                       render={({ field }) => (
-                        <FormItem>
+                        <FormItem className="max-w-[280px]">
                           <FormLabel>{t("lastNameAr")}</FormLabel>
                           <FormControl>
                             <Input disabled={isPending} {...field} />
@@ -217,7 +222,7 @@ const OAuthAccountSetupForm = () => {
                   control={form.control}
                   name="personalInfo.phoneNumber"
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem className="max-w-[280px]">
                       <FormLabel>{t("phoneNumber")}</FormLabel>
                       <FormControl>
                         <PhoneInput
@@ -284,7 +289,7 @@ const OAuthAccountSetupForm = () => {
                             field.onChange(input);
                           }}
                           disabled={isPending}
-                          className={cn("w-[240px]")}
+                          className={cn("max-w-[280px]")}
                         />
                       </FormControl>
                       <FormMessage />
@@ -294,9 +299,74 @@ const OAuthAccountSetupForm = () => {
 
                 <FormField
                   control={form.control}
+                  name="personalInfo.country"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col max-w-[280px]">
+                      <FormLabel>{t("selectCountry")}</FormLabel>
+                      <Popover
+                        open={countryPopoverOpen}
+                        onOpenChange={(isOpen) => setCountryPopoverOpen(isOpen)}
+                      >
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant="outline"
+                            role="combobox"
+                            className="justify-between sm:w-full"
+                          >
+                            <div className="truncate max-w-[calc(100%-24px)]">
+                              {field.value
+                                ? countries.find(
+                                    (c: any) => c.value === field.value
+                                  )?.label
+                                : t("selectCountry")}
+                            </div>
+                            <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-[280px] p-0">
+                          <Command>
+                            <CommandList>
+                              <CommandEmpty>{t("noCountryFound")}</CommandEmpty>
+                              <CommandGroup>
+                                {countries
+                                  .filter((country: any) =>
+                                    country.label
+                                      .toLowerCase()
+                                      .includes(countrySearch.toLowerCase())
+                                  )
+                                  .map((country: any) => (
+                                    <CommandItem
+                                      key={country.value}
+                                      onSelect={() => {
+                                        field.onChange(country.value);
+                                        setCountryPopoverOpen(false);
+                                      }}
+                                    >
+                                      {country.label}
+                                    </CommandItem>
+                                  ))}
+                              </CommandGroup>
+                            </CommandList>
+                            <div className="border-t p-2">
+                              <CommandInput
+                                placeholder={t("searchCountry")}
+                                value={countrySearch}
+                                onValueChange={setCountrySearch}
+                              />
+                            </div>
+                          </Command>
+                        </PopoverContent>
+                      </Popover>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
                   name="settings.timeZone"
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem className="flex flex-col">
                       <FormLabel>{t("selectTimezone")}</FormLabel>
                       <Popover
                         open={timezonePopoverOpen}
@@ -308,7 +378,7 @@ const OAuthAccountSetupForm = () => {
                           <Button
                             variant="outline"
                             role="combobox"
-                            className="justify-between w-[300px] sm:w-full"
+                            className="justify-between sm:w-full"
                           >
                             <div className="truncate max-w-[calc(100%-24px)]">
                               {field.value && allTimezones[field.value]
