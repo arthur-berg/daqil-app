@@ -147,7 +147,7 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
 
     return (
       <div className="mb-6 p-4 w-full bg-green-100 border-l-4 border-green-500">
-        <h2 className="text-2xl font-bold text-green-800 mb-2">
+        <h2 className="text-lg sm:text-2xl font-bold text-green-800 mb-2">
           {t("yourNextAppointment")}
         </h2>
         <div className="text-sm text-gray-700">
@@ -393,7 +393,9 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
                                             "confirmed") && (
                                           <div className="mb-8 inline-flex justify-center sm:justify-end w-full">
                                             <Button
-                                              disabled={isPending}
+                                              disabled={
+                                                isPending || disableAccordion
+                                              }
                                               variant="secondary"
                                               onClick={() => {
                                                 setSelectedAppointment(

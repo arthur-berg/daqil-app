@@ -56,7 +56,8 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
       (appointment: any) =>
         (appointment.payment?.status === "pending" ||
           appointment.payment?.status === "payAfterBooking") &&
-        appointment.status === "confirmed"
+        appointment.status === "confirmed" &&
+        !isPast(new Date(appointment.payment.paymentExpiryDate))
     );
   }, [appointments]);
 
@@ -162,7 +163,7 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
     return (
       <>
         <div className="mb-6 p-4 w-full bg-green-100 border-l-4 border-green-500">
-          <h2 className="text-2xl font-bold text-green-800 mb-2">
+          <h2 className="text-lg sm:text-2xl font-bold text-green-800 mb-2">
             {t("yourNextAppointment")}
           </h2>
           <div className="text-sm text-gray-700">
@@ -208,7 +209,7 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
 
     return (
       <div className="mb-6 p-4 w-full bg-red-100 border-l-4 border-red-500">
-        <h2 className="text-2xl font-bold text-red-800 mb-4">
+        <h2 className="text-lg sm:text-2xl font-bold text-red-800 mb-4">
           {t("actionRequired")}
         </h2>
         {pendingPaymentAppointments.map((appointment: any) => {
@@ -271,7 +272,7 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
       </div>
 
       <div className="flex justify-center">
-        <div className="w-full xl:w-9/12 p-2 sm:p-6 rounded-xl bg-white">
+        <div className="w-full xl:w-9/12 p-4 sm:p-6 rounded-xl bg-white">
           <div>
             <div className="flex justify-center py-8">
               <div className="space-y-8 w-full max-w-4xl">
@@ -321,7 +322,7 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
                 {sortedStatuses.length ? (
                   sortedStatuses.map((status) => (
                     <div key={status}>
-                      <h2 className="text-xl font-bold mb-4 p-2 bg-gray-100 rounded-lg shadow-sm border border-gray-200">
+                      <h2 className="text-lg sm:text-xl font-bold mb-4 p-2 bg-secondary rounded-lg shadow-sm border border-gray-200">
                         {status === "confirmed"
                           ? t("confirmedAppointments")
                           : `${statusTranslations[status]} ${t(
@@ -457,7 +458,9 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
                                               "confirmed") && (
                                             <div className="mb-8 inline-flex justify-center sm:justify-end w-full">
                                               <Button
-                                                disabled={isPending}
+                                                disabled={
+                                                  isPending || disableAccordion
+                                                }
                                                 variant="secondary"
                                                 onClick={() => {
                                                   setSelectedAppointment(
