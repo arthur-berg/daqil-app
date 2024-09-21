@@ -171,6 +171,10 @@ const RecurringAvailabilityForm = ({
     const newIndex = timeRangeInputs[day] ? timeRangeInputs[day].length : 0;
     form.setValue(`timeRanges.${newIndex}.startTime`, undefined);
     form.setValue(`timeRanges.${newIndex}.endTime`, undefined);
+    form.setValue(
+      `timeRanges.${newIndex}.appointmentTypeIds`,
+      appointmentTypes.map((type) => type._id)
+    );
   };
 
   return (

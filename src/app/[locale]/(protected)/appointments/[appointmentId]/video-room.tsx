@@ -149,7 +149,7 @@ const VideoRoom = ({
 
   if (isPreviewing) {
     return (
-      <div className="h-[calc(100vh-90px)] w-full flex flex-col justify-between items-center p-2 box-border">
+      <div className="h-[calc(100vh-100px)] w-full flex flex-col justify-between items-center p-2 box-border">
         <div className="flex flex-col flex-grow justify-center items-center w-full">
           <div
             id="previewContainer"
