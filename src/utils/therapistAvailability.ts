@@ -93,6 +93,7 @@ export const getTherapistAvailableTimeSlots = (
   const validTemporarilyReservedAppointments = selectedAppointment
     ? selectedAppointment.temporarilyReservedAppointments.filter(
         (appointment: any) =>
+          appointment?.payment?.paymentExpiryDate &&
           new Date(appointment.payment.paymentExpiryDate) > new Date()
       )
     : [];

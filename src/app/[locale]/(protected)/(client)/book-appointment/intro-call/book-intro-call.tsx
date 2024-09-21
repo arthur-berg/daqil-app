@@ -16,7 +16,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { convertToUtcWithTime, currencyToSymbol } from "@/utils";
+import { currencyToSymbol } from "@/utils";
 import { getTherapistAvailableTimeSlots } from "@/utils/therapistAvailability";
 import { bookIntroAppointment } from "@/actions/appointments/book-intro-appointment";
 
@@ -35,8 +35,6 @@ const BookIntroCall = ({
   const t = useTranslations("BookingCalendar");
   const [bookingDialogOpen, setBookingDialogOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
-  const [error, setError] = useState<string | undefined>();
-  const [success, setSuccess] = useState<string | undefined>();
 
   const [availableTimeSlots, setAvailableTimeSlots] = useState<
     { start: Date; end: Date }[]
@@ -46,7 +44,6 @@ const BookIntroCall = ({
     dateTime: undefined,
   });
   const router = useRouter();
-  const [reservedAppointment, setReservedAppointment] = useState<any>(null);
   const { toast } = useToast();
 
   const therapists = JSON.parse(therapistsJson);
@@ -144,31 +141,6 @@ const BookIntroCall = ({
             </div>
             {date.justDate ? (
               <>
-                {/* <Calendar
-                  mode="single"
-                  selected={date.justDate ? date.justDate : today}
-                  onSelect={(date) => {
-                    setDate((prev) => ({
-                      ...prev,
-                      justDate: date ? date : today,
-                    }));
-                    if (date) {
-                      setTimeSlots(date);
-                    }
-                  }}
-                  disabled={(date) =>
-                    isBefore(date, today) || isAfter(date, maxDate)
-                  }
-                  className="rounded-md border h-full w-full flex"
-                  classNames={{
-                    months:
-                      "flex w-full flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0 flex-1",
-                    month: "space-y-4 w-full flex flex-col",
-                    table: "w-full h-full border-collapse space-y-1",
-                    head_row: "",
-                    row: "w-full mt-2",
-                  }}
-                /> */}
                 <div className="mt-4">
                   <h3 className="text-lg font-semibold mb-2">
                     {t("availableSlotsFor", {
@@ -260,24 +232,24 @@ const BookIntroCall = ({
           <DialogHeader>
             <DialogTitle>{t("appointmentDetails")}</DialogTitle>
             <DialogDescription>
-              <div>
+              <span className="block">
                 <strong>{t("day")}:</strong>{" "}
                 <span>
                   {date?.justDate &&
                     format(date?.justDate, "eeee, MMMM d, yyyy")}
                 </span>
-              </div>
-              <div>
+              </span>
+              <span className="block">
                 <strong>{t("time")}:</strong>{" "}
                 <span>{date.dateTime && format(date.dateTime, "HH:mm")}</span>
-              </div>
-              <div>
+              </span>
+              <span className="block">
                 <strong>{t("duration")}:</strong>{" "}
                 <span>
                   {appointmentType.durationInMinutes} {t("minutes")}
                 </span>
-              </div>
-              <div>
+              </span>
+              <span className="block">
                 <strong>{t("cost")}:</strong>{" "}
                 <span>
                   {appointmentType.price === 0
@@ -286,7 +258,7 @@ const BookIntroCall = ({
                         appointmentType.price
                       }`}
                 </span>
-              </div>
+              </span>
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>

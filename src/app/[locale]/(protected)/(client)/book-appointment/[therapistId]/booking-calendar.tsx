@@ -306,24 +306,24 @@ const BookingCalendar = ({
           <DialogHeader>
             <DialogTitle>{t("appointmentDetails")}</DialogTitle>
             <DialogDescription>
-              <div>
+              <span className="block">
                 <strong>{t("day")}:</strong>{" "}
                 <span>
                   {date?.justDate &&
                     format(date?.justDate, "eeee, MMMM d, yyyy")}
                 </span>
-              </div>
-              <div>
+              </span>
+              <span className="block">
                 <strong>{t("time")}:</strong>{" "}
                 <span>{date.dateTime && format(date.dateTime, "HH:mm")}</span>
-              </div>
-              <div>
+              </span>
+              <span className="block">
                 <strong>{t("duration")}:</strong>{" "}
                 <span>
                   {appointmentType.durationInMinutes} {t("minutes")}
                 </span>
-              </div>
-              <div>
+              </span>
+              <span className="block">
                 <strong>{t("cost")}:</strong>{" "}
                 <span>
                   {appointmentType.price === 0
@@ -332,7 +332,7 @@ const BookingCalendar = ({
                         appointmentType.price
                       }`}
                 </span>
-              </div>
+              </span>
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
