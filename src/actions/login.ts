@@ -130,20 +130,20 @@ export const login = async (
 
   const redirectUrl =
     existingUser.role === UserRole.CLIENT
-      ? "book-appointment"
+      ? "/book-appointment"
       : existingUser.role === UserRole.THERAPIST
-      ? "therapist/appointments"
-      : "admin";
+      ? "/therapist/appointments"
+      : "/admin";
 
   try {
     await signIn("credentials", {
       email,
       password,
-      redirectTo: callbackUrl || `/${locale}/${redirectUrl}`,
+      redirect: false,
+      /*  redirectTo: callbackUrl || `/${locale}/${redirectUrl}`, */
     });
   } catch (error) {
     errorOccurred = true;
-    console.error("Error loggin in", error);
 
     if (error instanceof AuthError) {
       // Hack to make broken CredentialsSignin work
@@ -163,7 +163,7 @@ export const login = async (
     }
   } finally {
     if (!errorOccurred) {
-      redirect("/book-appointment");
+      redirect(redirectUrl);
     }
   }
 };
