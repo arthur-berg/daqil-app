@@ -34,6 +34,8 @@ import {
 import { useUserName } from "@/hooks/use-user-name";
 
 const AppointmentList = ({ appointments }: { appointments: any }) => {
+  const [filterType, setFilterType] = useState("upcoming");
+
   const [filters, setFilters] = useState<string[]>([
     "confirmed",
     "completed",
@@ -63,24 +65,42 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
   }, [appointments]);
 
   const filteredAppointments = useMemo(() => {
-    if (filters.length === 0) {
-      return appointments;
-    }
-    return appointments?.filter((appointment: any) =>
-      filters.includes(appointment.status)
-    );
-  }, [appointments, filters]);
+    return appointments.filter((appointment: any) => {
+      const isPastAppointment = isPast(new Date(appointment.endDate));
+      const isUpcoming =
+        appointment.status === "confirmed" || appointment.status === "pending";
+      const isHistory =
+        appointment.status === "completed" || appointment.status === "canceled";
 
-  const groupedByStatus = filteredAppointments?.reduce(
-    (acc: any, appointment: any) => {
-      if (!acc[appointment.status]) acc[appointment.status] = {};
-      const date = format(new Date(appointment.startDate), "yyyy-MM-dd");
-      if (!acc[appointment.status][date]) acc[appointment.status][date] = [];
-      acc[appointment.status][date].push(appointment);
+      if (filterType === "upcoming") {
+        return !isPastAppointment && isUpcoming;
+      } else {
+        return isPastAppointment || isHistory;
+      }
+    });
+  }, [appointments, filterType]);
+
+  const groupedByStatusAndDate = useMemo(() => {
+    return filteredAppointments.reduce((acc: any, appointment: any) => {
+      const statusGroup = appointment.status;
+      const appointmentDate = format(
+        new Date(appointment.startDate),
+        "yyyy-MM-dd"
+      );
+
+      if (!acc[statusGroup]) {
+        acc[statusGroup] = {};
+      }
+
+      if (!acc[statusGroup][appointmentDate]) {
+        acc[statusGroup][appointmentDate] = [];
+      }
+
+      acc[statusGroup][appointmentDate].push(appointment);
+
       return acc;
-    },
-    {}
-  );
+    }, {});
+  }, [filteredAppointments]);
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -119,8 +139,8 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
     return format(parsedDate, "eeee, MMMM d");
   };
 
-  const sortedStatuses = groupedByStatus
-    ? Object.keys(groupedByStatus).sort((a, b) => {
+  const sortedStatuses = groupedByStatusAndDate
+    ? Object.keys(groupedByStatusAndDate).sort((a, b) => {
         if (a === "confirmed") return -1;
         if (b === "confirmed") return 1;
         return a.localeCompare(b);
@@ -193,42 +213,24 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
             <div className="sm:w-2/3 w-full mx-auto">
               {nextAppointment && renderNextAppointment()}
             </div>
-
-            <div className="flex justify-center">
-              <div className="flex justify-center items-center flex-col whitespace-nowrap sm:w-2/3">
-                <div className="mr-4 rtl:mr-0 rtl:ml-4">
-                  {t("appointmentStatus")}:{" "}
-                </div>
-                <MultiSelector
-                  values={filters as string[]}
-                  onValuesChange={setFilters}
+            <div className="text-center mb-6">
+              <h3 className="text-lg font-semibold">
+                {t("appointmentFilter")}
+              </h3>
+              <div className="mt-4">
+                <Button
+                  onClick={() => setFilterType("upcoming")}
+                  variant={filterType === "upcoming" ? undefined : "outline"}
+                  className="mr-4"
                 >
-                  <MultiSelectorTrigger
-                    className="flex-col items-start  sm:flex-row sm:items-center"
-                    badgeClassName="w-full justify-center sm:w-auto sm:justify-start mb-2 sm:mb-0"
-                  >
-                    <MultiSelectorInput
-                      placeholder={t("selectStatus")}
-                      className="w-full justify-center sm:w-auto sm:justify-start"
-                    />
-                  </MultiSelectorTrigger>
-                  <MultiSelectorContent>
-                    <MultiSelectorList>
-                      <MultiSelectorItem value="confirmed">
-                        {t("confirmed")}
-                      </MultiSelectorItem>
-                      <MultiSelectorItem value="canceled">
-                        {t("canceled")}
-                      </MultiSelectorItem>
-                      <MultiSelectorItem value="completed">
-                        {t("completed")}
-                      </MultiSelectorItem>
-                      <MultiSelectorItem value="pending">
-                        {t("pending")}
-                      </MultiSelectorItem>
-                    </MultiSelectorList>
-                  </MultiSelectorContent>
-                </MultiSelector>
+                  {t("upcoming")}
+                </Button>
+                <Button
+                  onClick={() => setFilterType("history")}
+                  variant={filterType === "history" ? undefined : "outline"}
+                >
+                  {t("history")}
+                </Button>
               </div>
             </div>
 
@@ -240,7 +242,7 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
                       ? t("confirmedAppointments")
                       : `${statusTranslations[status]} ${t("appointments")}`}
                   </h2>
-                  {Object.keys(groupedByStatus[status])
+                  {Object.keys(groupedByStatusAndDate[status])
                     .sort((a, b) => {
                       const dateA = parseISO(a);
                       const dateB = parseISO(b);
@@ -263,7 +265,7 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
                           collapsible
                           className="w-full mb-4"
                         >
-                          {groupedByStatus[status][date].map(
+                          {groupedByStatusAndDate[status][date].map(
                             (appointment: any) => {
                               const timeUntilStart = differenceInMinutes(
                                 new Date(appointment.startDate),

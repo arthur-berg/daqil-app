@@ -67,6 +67,9 @@
     "finishAccountSetup": "Finish account setup"
   },
   "AppointmentList": {
+    "upcoming": "Upcoming",
+    "history": "History",
+    "appointmentFilter": "Appointment filter",
     "appointmentReminder": "You have an unpaid appointment starting on {day}, {date} at {startTime}.",
     "paymentWarning": "Payment must be completed at least 1 hour before the meeting starts, or the appointment will be canceled.",
       "actionRequired": "Action required",

@@ -89,6 +89,9 @@
     "myProfile": "ملفي الشخصي"
   },
   "AppointmentList": {
+    "upcoming": "المواعيد القادمة",
+    "history": "السجل",
+    "appointmentFilter": "تصفية المواعيد",
     "appointmentReminder": "لديك موعد غير مدفوع يبدأ في {day}، {date} الساعة {startTime}.",
     "paymentWarning": "يجب إتمام الدفع قبل ساعة واحدة على الأقل من بدء الاجتماع، وإلا سيتم إلغاء الموعد.",
     "actionRequired": "مطلوب اتخاذ إجراء",
