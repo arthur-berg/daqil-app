@@ -12,6 +12,9 @@ const dmSans = DM_Sans({ subsets: ["latin"], weight: ["400", "600"] });
 export const metadata: Metadata = {
   title: "Daqil",
   description: "Daqil - Easy and affordable online therapy",
+  icons: {
+    icon: "https://zakina-images.s3.eu-north-1.amazonaws.com/daqil-icon.png",
+  },
 };
 
 export const viewport = {

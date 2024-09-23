@@ -48,11 +48,11 @@
     "phoneNumber": "رقم الهاتف",
     "dateOfBirth": "تاريخ الميلاد",
     "pickADate": "اختر تاريخًا",
-"phoneNumberPlaceholder": "+XX XXX XXX XXXX",
+    "phoneNumberPlaceholder": "+XX XX XXX XXXX",
     "name": "الاسم",
     "totalAppointments": "إجمالي المواعيد",
     "currentTherapist": "المعالج الحالي",
-"appointmentsAndTherapist": "المواعيد والمعالج",
+    "appointmentsAndTherapist": "المواعيد والمعالج",
     "personalInformation": "المعلومات الشخصية",
     "myProfile": "ملفي الشخصي",
     "startedOn": "بدأ في",
@@ -555,7 +555,7 @@
     "reasonLabel": "السبب:",
     "thankYouMessage": "شكرًا لاستخدامك زاكينا.",
     "refundLabel": "استرداد",
-"refundIssuedMessage": "تم إصدار استرداد بقيمة {{refundAmount}} إلى حسابك."
+    "refundIssuedMessage": "تم إصدار استرداد بقيمة {{refundAmount}} إلى حسابك."
   },
   "NonPaidAppointmentConfirmationEmail": {
     "daqil": "زاكينا",
