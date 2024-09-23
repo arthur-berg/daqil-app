@@ -1,6 +1,6 @@
 "use server";
 
-import { getFirstName } from "./../../utils/formatName";
+import { getFirstName, getFullName } from "./../../utils/formatName";
 import { APPOINTMENT_TYPE_ID_INTRO_SESSION } from "@/contants/config";
 import { getTherapistById } from "@/data/user";
 import { UserRole } from "@/generalTypes";
@@ -9,10 +9,16 @@ import Appointment from "@/models/Appointment";
 import User from "@/models/User";
 import { format } from "date-fns";
 import mongoose from "mongoose";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { updateAppointments } from "./utils";
 import { revalidatePath } from "next/cache";
 import connectToMongoDB from "@/lib/mongoose";
+import { formatInTimeZone } from "date-fns-tz";
+import { sendIntroBookingConfirmationMail } from "@/lib/mail";
+import {
+  scheduleReminderJobs,
+  scheduleStatusUpdateJob,
+} from "@/lib/schedule-appointment-jobs";
 
 export const bookIntroAppointment = async (
   appointmentType: any,
@@ -20,6 +26,7 @@ export const bookIntroAppointment = async (
   startDate: Date
 ) => {
   await connectToMongoDB();
+  const locale = await getLocale();
 
   const [SuccessMessages, ErrorMessages, t, tAppointmentTypes] =
     await Promise.all([
@@ -116,8 +123,65 @@ export const bookIntroAppointment = async (
     transactionCommitted = true;
     session.endSession();
 
+    const clientTimeZone = client.settings?.timeZone || "UTC";
+    const therapistTimeZone = therapist.settings.timeZone || "UTC";
+
+    const clientEmail = client.email;
+    const therapistEmail = therapist.email;
+
+    const fetchedAppointment = appointment[0];
+
+    const therapistAppointmentDate = formatInTimeZone(
+      new Date(fetchedAppointment.startDate),
+      therapistTimeZone,
+      "yyyy-MM-dd"
+    );
+
+    const therapistAppointmentTime = formatInTimeZone(
+      new Date(fetchedAppointment.startDate),
+      therapistTimeZone,
+      "HH:mm"
+    );
+
+    const clientAppointmentDate = formatInTimeZone(
+      new Date(fetchedAppointment.startDate),
+      clientTimeZone,
+      "yyyy-MM-dd"
+    );
+    const clientAppointmentTime = formatInTimeZone(
+      new Date(fetchedAppointment.startDate),
+      clientTimeZone,
+      "HH:mm"
+    );
+
+    const therapistName = await getFullName(
+      therapist.firstName,
+      therapist.lastName
+    );
+
+    const clientName = await getFullName(client.firstName, client.lastName);
+
+    const appointmentDetails = {
+      clientDate: clientAppointmentDate,
+      clientTime: clientAppointmentTime,
+      therapistDate: therapistAppointmentDate,
+      therapistTime: therapistAppointmentTime,
+      therapistName: therapistName,
+      clientName: clientName,
+      durationInMinutes: fetchedAppointment.durationInMinutes,
+    };
+
+    await sendIntroBookingConfirmationMail(
+      therapistEmail,
+      clientEmail,
+      appointmentDetails
+    );
+
     revalidatePath("/appointments");
     revalidatePath("/book-appointment");
+
+    await scheduleReminderJobs(fetchedAppointment, locale);
+    await scheduleStatusUpdateJob(fetchedAppointment);
 
     return {
       success: SuccessMessages("bookingConfirmed"),

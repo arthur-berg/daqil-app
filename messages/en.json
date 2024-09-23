@@ -620,6 +620,17 @@
     "notPaidInTimeMessageTherapist": "The appointment with your client was canceled because the client did not pay on time. Please check your upcoming appointments.",
     "thankYouMessage": "Thank you for using DAQIL."
   },
+  "BookingConfirmedIntroCall": {
+  "therapistSubject": "New Appointment Booking: Introductory Call",
+  "clientSubject": "Appointment Confirmation",
+  "therapistLabel": "Therapist:",
+  "clientLabel": "Client:",
+  "dateLabel": "Date:",
+  "timeLabel": "Time:",
+  "durationLabel": "Duration:",
+  "minutesLabel": "minutes",
+  "thankYouMessage": "Thank you for choosing our platform for your session. We look forward to your upcoming appointment!"
+},
   "AppointmentTypes": {
     "6692b4919a6b12347d0afac4": "Therapy session - 30 minutes",
     "66cd9d22e83c327cf7e0f57b": "Therapy session - 60 minutes",
