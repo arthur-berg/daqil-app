@@ -625,8 +625,8 @@
     "thankYouMessage": "شكرًا لاستخدامك زاكينا."
   },
   "BookingConfirmedIntroCall": {
-  "therapistSubject": "موعد مكالمة تعريفية جديدة مع {clientName}",
-  "clientSubject": "موعد مكالمتك التعريفية مع {therapistName}",
+ "therapistSubject": "حجز موعد جديد: مكالمة تعريفية",
+"clientSubject": "تأكيد الموعد",
   "therapistLabel": "المعالج:",
   "clientLabel": "العميل:",
   "dateLabel": "التاريخ:",
