@@ -14,6 +14,7 @@ import {
   reminderEmailTemplate,
   clientNotPaidInTimeTemplate,
   therapistNotPaidInTimeTemplate,
+  introBookingConfirmationTemplate,
 } from "./emailTemplates";
 import { getTranslations } from "next-intl/server";
 
@@ -290,6 +291,55 @@ export const sendAppointmentCancellationEmail = async (
     ]);
   } catch (error) {
     console.error("Error sending appointment cancellation email:", error);
+  }
+};
+
+export const sendIntroBookingConfirmationMail = async (
+  therapistEmail: string,
+  clientEmail: string,
+  appointmentDetails: {
+    clientDate: string;
+    clientTime: string;
+    therapistDate: string;
+    therapistTime: string;
+    therapistName: string;
+    clientName: string;
+    durationInMinutes: number;
+  }
+) => {
+  const t = await getTranslations("BookingConfirmedIntroCall");
+
+  const therapistMessage = {
+    from_email: "no-reply@daqil.com",
+    subject: t("therapistSubject"),
+    html: introBookingConfirmationTemplate(appointmentDetails, true, t),
+    to: [
+      {
+        email: therapistEmail,
+        type: "to",
+      },
+    ],
+  };
+
+  const clientMessage = {
+    from_email: "no-reply@daqil.com",
+    subject: t("clientSubject"),
+    html: introBookingConfirmationTemplate(appointmentDetails, false, t),
+    to: [
+      {
+        email: clientEmail,
+        type: "to",
+      },
+    ],
+  };
+
+  try {
+    await Promise.all([
+      mailchimpTx.messages.send({ message: therapistMessage as any }),
+      mailchimpTx.messages.send({ message: clientMessage as any }),
+    ]);
+  } catch (error) {
+    console.error("Error sending intro booking confirmation email:", error);
   }
 };
 

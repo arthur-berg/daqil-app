@@ -624,6 +624,17 @@
     "notPaidInTimeMessageTherapist": "تم إلغاء الموعد مع عميلك لأن العميل لم يدفع في الوقت المحدد. يرجى التحقق من مواعيدك القادمة.",
     "thankYouMessage": "شكرًا لاستخدامك زاكينا."
   },
+  "BookingConfirmedIntroCall": {
+  "therapistSubject": "موعد مكالمة تعريفية جديدة مع {clientName}",
+  "clientSubject": "موعد مكالمتك التعريفية مع {therapistName}",
+  "therapistLabel": "المعالج:",
+  "clientLabel": "العميل:",
+  "dateLabel": "التاريخ:",
+  "timeLabel": "الوقت:",
+  "durationLabel": "المدة:",
+  "minutesLabel": "دقائق",
+  "thankYouMessage": "شكرًا لاختيارك منصتنا لجلساتك. نتطلع إلى موعدك القادم!"
+},
   "AppointmentTypes": {
     "6692b4919a6b12347d0afac4": "جلسة علاجية - 30 دقيقة",
     "66cd9d22e83c327cf7e0f57b": "جلسة علاجية - 60 دقيقة",

@@ -345,6 +345,60 @@ export const paidAppointmentConfirmationTemplate = (
   `;
 };
 
+export const introBookingConfirmationTemplate = (
+  appointmentDetails: {
+    clientDate: string;
+    clientTime: string;
+    therapistDate: string;
+    therapistTime: string;
+    therapistName: string;
+    clientName: string;
+    durationInMinutes: number;
+  },
+  isTherapist: boolean,
+  t: any
+) => {
+  console.log(
+    "appointmentDetails.therapistName",
+    appointmentDetails.therapistName
+  );
+  const subject = isTherapist ? t("therapistSubject") : t("clientSubject");
+
+  const date = isTherapist
+    ? appointmentDetails.therapistDate
+    : appointmentDetails.clientDate;
+  const time = isTherapist
+    ? appointmentDetails.therapistTime
+    : appointmentDetails.clientTime;
+
+  return `
+    <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
+      <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+        <div style="text-align: center; margin-bottom: 20px;">
+          <img src="https://zakina-images.s3.eu-north-1.amazonaws.com/daqil-logo.png" alt="daqil" style="width: 50%; max-width: 100%; height: auto;" />
+        </div>
+        <div style="margin-top: 20px;">
+          <p>${subject}</p>
+          <p><strong>${t("therapistLabel")}</strong> ${
+    appointmentDetails.therapistName
+  }</p>
+          <p><strong>${t("clientLabel")}</strong> ${
+    appointmentDetails.clientName
+  }</p>
+          <p><strong>${t("dateLabel")}</strong> ${date}</p>
+          <p><strong>${t("timeLabel")}</strong> ${time}</p>
+          <p><strong>${t("durationLabel")}</strong> ${
+    appointmentDetails.durationInMinutes
+  } ${t("minutesLabel")}</p>
+        </div>
+        <div style="margin-top: 20px; font-size: 12px; color: #888888; text-align: center;">
+          ${t("thankYouMessage")}
+        </div>
+      </div>
+    </div>
+  `;
+};
+
 export const nonPaidAppointmentConfirmationTemplate = (
   appointmentDetails: {
     date: Date;
