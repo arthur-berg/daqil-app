@@ -152,7 +152,7 @@ export const login = async (
       }
       return { error: ErrorMessages("somethingWentWrong") };
       /*  switch (error.type) {
-        case "CredentialsSignin":x
+        case "CredentialsSignin":
           return { error: "Invalid credentials" };
         default:
           return { error: "Something went wrong" };
