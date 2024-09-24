@@ -147,6 +147,10 @@
     "yourNextAppointment": "موعدك القادم"
   },
   "SettingsPage": {
+    "selectCurrency": "اختر العملة",
+    "searchCurrency": "ابحث عن العملة",
+   "preferredCurrency": "العملة المفضلة",
+    "noCurrencyFound": "لم يتم العثور على عملة",
     "timezoneLabel": "المنطقة الزمنية",
     "selectTimezone": "اختر المنطقة الزمنية",
     "noTimezoneFound": "لم يتم العثور على منطقة زمنية",

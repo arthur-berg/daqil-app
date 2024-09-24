@@ -144,6 +144,10 @@
     "myProfile": "My Profile"
   },
   "SettingsPage": {
+    "selectCurrency": "Select currency",
+    "searchCurrency": "Search currency",
+    "preferredCurrency": "Preferred currency",
+    "noCurrencyFound": "No currency found",
     "selectTimezone": "Select timezone",
     "noTimezoneFound": "No timezone found",
     "searchTimezone": "Search timezone",

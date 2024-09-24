@@ -71,6 +71,9 @@ export const SettingsSchema = z
       timeZone: z.string().min(1, {
         message: "Timezone is required",
       }),
+      preferredCurrency: z.string().min(1, {
+        message: "Currency is required",
+      }),
     }),
   })
   .refine(
