@@ -24,16 +24,10 @@ export const twoFactorTokenTemplate = (token: string, t: any) => `
 export const verificationEmailTemplate = (
   t: any,
   token: string,
-  password?: string,
   isTherapist?: boolean
 ) => {
   const encodedToken = encodeURIComponent(token);
   const confirmLink = `${process.env.NEXT_PUBLIC_APP_URL}/auth/new-verification?token=${encodedToken}`;
-  const temporaryPasswordMessage = password
-    ? `<p>${t("temporaryPasswordMessage", {
-        password: `<strong>${password}</strong>`,
-      })}</p>`
-    : "";
 
   const therapistMessage = isTherapist ? `<p>${t("therapistMessage")}</p>` : "";
 
@@ -50,7 +44,7 @@ export const verificationEmailTemplate = (
       <div style="margin-top: 20px;">
         <p>${t("welcomeMessage")}</p>
         ${therapistMessage}
-        ${temporaryPasswordMessage}
+    
         
         <p>${t("confirmEmailMessage")}</p> 
         <a href="${confirmLink}" style="display: inline-block; padding: 12px 24px; margin: 20px 0; background-color: #007bff; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: bold; text-align: center;">${t(

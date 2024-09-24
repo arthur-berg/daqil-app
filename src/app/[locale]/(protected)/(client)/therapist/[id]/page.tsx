@@ -6,6 +6,7 @@ import { getTranslations } from "next-intl/server";
 import { FaUser } from "react-icons/fa";
 import { getFullName } from "@/utils/formatName";
 import connectToMongoDB from "@/lib/mongoose";
+import Image from "next/image";
 
 const TherapistPage = async ({
   params,
@@ -43,18 +44,22 @@ const TherapistPage = async ({
         {`${await getFullName(therapist.firstName, therapist.lastName)} `}
       </h1>
       <div className="flex justify-center mb-8">
-        {therapist.image ? (
-          <Avatar className="w-28 h-28">
-            <AvatarImage src={therapist.image || ""} />
-            <AvatarFallback className="bg-background flex items-center justify-center w-full h-full">
-              <FaUser className="text-4xl text-gray-500" />
-            </AvatarFallback>
-          </Avatar>
-        ) : (
-          <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center mb-4">
-            <span className="text-gray-500">{t("noImage")}</span>
-          </div>
-        )}
+        <Avatar className="w-28 h-28">
+          <AvatarImage src={therapist.image || ""} />
+          <AvatarFallback className="bg-background flex items-center justify-center w-full h-full">
+            <Image
+              width={150}
+              height={50}
+              src={
+                locale === "en"
+                  ? "https://zakina-images.s3.eu-north-1.amazonaws.com/daqil-logo-en.png"
+                  : "https://zakina-images.s3.eu-north-1.amazonaws.com/daqil-logo-ar.png"
+              }
+              alt="psychologist-image"
+              className="w-full"
+            />
+          </AvatarFallback>
+        </Avatar>
       </div>
       <div className="space-y-8">
         <div>

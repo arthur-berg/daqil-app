@@ -185,6 +185,7 @@ export const bookIntroAppointment = async (
 
     return {
       success: SuccessMessages("bookingConfirmed"),
+      appointmentId: appointmentId.toString(),
     };
   } catch (error) {
     if (!transactionCommitted) {

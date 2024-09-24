@@ -44,6 +44,7 @@
     "@vonage/auth": "^1.10.0",
     "@vonage/video": "^1.16.1",
     "@vonage/video-express": "^1.8.0",
+    "add-to-calendar-button-react": "^2.6.19",
     "anchor-pki": "^0.3.2",
     "bcryptjs": "^2.4.3",
     "body-scroll-lock": "^4.0.0-beta.0",

@@ -12,9 +12,9 @@ import {
 import { Link } from "@/navigation";
 import { useTranslations } from "next-intl";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { FaUser } from "react-icons/fa";
 import { useUserName } from "@/hooks/use-user-name";
 import BookingCalendar from "./[therapistId]/booking-calendar";
+import Image from "next/image";
 
 const SelectedTherapist = ({
   selectedTherapistData,
@@ -35,18 +35,24 @@ const SelectedTherapist = ({
       <div className="bg-white shadow-lg rounded-lg p-6 mb-4 ">
         <div className="flex flex-col items-center mb-4">
           {/* Therapist Image or Placeholder */}
-          {selectedTherapist.image ? (
-            <Avatar className="w-28 h-28">
-              <AvatarImage src={selectedTherapist.image || ""} />
-              <AvatarFallback className="bg-background flex items-center justify-center w-full h-full">
-                <FaUser className="text-4xl text-gray-500" />
-              </AvatarFallback>
-            </Avatar>
-          ) : (
-            <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center mb-4">
-              <span className="text-gray-500">{t("noImage")}</span>
-            </div>
-          )}
+
+          <Avatar className="w-28 h-28">
+            <AvatarImage src={selectedTherapist.image || ""} />
+            <AvatarFallback className="bg-background flex items-center justify-center w-full h-full">
+              <Image
+                width={150}
+                height={50}
+                src={
+                  locale === "en"
+                    ? "https://zakina-images.s3.eu-north-1.amazonaws.com/daqil-logo-en.png"
+                    : "https://zakina-images.s3.eu-north-1.amazonaws.com/daqil-logo-ar.png"
+                }
+                alt="psychologist-image"
+                className="w-full"
+              />
+            </AvatarFallback>
+          </Avatar>
+
           <h2 className="text-xl font-bold mb-2">
             {getFullName(
               selectedTherapist.firstName,

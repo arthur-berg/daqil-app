@@ -179,7 +179,6 @@ export const sendTwoFactorTokenEmail = async (email: string, token: string) => {
 export const sendVerificationEmail = async (
   email: string,
   token: string,
-  password?: string,
   isTherapist?: boolean
 ) => {
   const t = await getTranslations("VerificationEmail");
@@ -187,7 +186,7 @@ export const sendVerificationEmail = async (
   const message = {
     from_email: "no-reply@daqil.com",
     subject: t("subject"),
-    html: verificationEmailTemplate(t, token, password, isTherapist),
+    html: verificationEmailTemplate(t, token, isTherapist),
     to: [
       {
         email,

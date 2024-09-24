@@ -158,7 +158,6 @@ export const inviteTherapist = async (
     await sendVerificationEmail(
       verificationToken.email,
       verificationToken.token,
-      password,
       isTherapist
     );
 

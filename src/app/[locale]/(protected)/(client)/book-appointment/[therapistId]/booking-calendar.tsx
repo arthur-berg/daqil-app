@@ -28,6 +28,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { BeatLoader } from "react-spinners";
 import { APPOINTMENT_TYPE_ID_INTRO_SESSION } from "@/contants/config";
 import { reserveAppointment } from "@/actions/appointments/reserve-appointment";
+import AddToCalendarDialog from "@/app/[locale]/(protected)/(client)/book-appointment/[therapistId]/add-to-calendar-dialog";
 
 type DateType = {
   justDate: Date | undefined;
@@ -65,6 +66,7 @@ const BookingCalendar = ({
   const [appointmentType, setAppointmentType] = useState(
     showOnlyIntroCalls ? appointmentTypes[0] : ""
   );
+  const [showAddToCalendarDialog, setShowAddToCalendarDialog] = useState(false);
 
   const setTimeSlots = (selectedDate: Date) => {
     if (!selectedDate) return [];
@@ -121,7 +123,9 @@ const BookingCalendar = ({
           });
         }
         if (data.success) {
-          router.push(`/appointments`);
+          router.push(
+            `/intro-booking-success?appointmentId=${data.appointmentId}`
+          );
         }
       });
     } else {

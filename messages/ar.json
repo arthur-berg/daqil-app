@@ -194,7 +194,7 @@
     "changeTherapistTitle": "تغيير الأخصائي النفسي الخاص بك",
     "changeTherapistDescription": "يمكنك تصفح الأخصائيين النفسيين واختيار أخصائي نفسي جديد إذا أردت. لاحظ أن الأخصائي النفسي الخاص بك سيتغير فقط بعد حجز موعد مع أخصائي نفسي جديد من القائمة.",
     "close": "إغلاق",
-    "yourTherapist": "معالجك",
+"yourTherapist": "معالجك النفسي",
     "chooseForMe": "اختر لي",
     "chooseForMeDescription": "إذا كنت لا ترغب في اختيار معالج وتريد فقط رؤية جميع الأوقات المتاحة، انقر هنا.",
     "seeAvailableTimes": "عرض الأوقات المتاحة",
@@ -208,6 +208,10 @@
     "readMore": "اقرأ المزيد"
   },
   "BookingCalendar": {
+    "addToCalendar": "أضف إلى التقويم",
+"addThisEventToYourCalendar": "أضف هذا الحدث إلى تقويمك",
+"addToGoogleCalendar": "أضف إلى تقويم جوجل",
+"addToOutlookCalendar": "أضف إلى تقويم أوتلوك",
     "changeDate": "تغيير التاريخ",
     "availableSlotsFor": "الأوقات المتاحة لـ {date}",
     "calendar": "التقويم",
@@ -420,6 +424,10 @@
     "totalAppointments": "إجمالي المواعيد"
   },
   "PaymentSuccessPage": {
+    "introMeetingSuccessfullyBooked": "تم حجز الاجتماع التمهيدي بنجاح",
+    "addToCalendar": "أضف إلى التقويم",
+    "addToGoogleCalendar": "أضف إلى تقويم جوجل",
+"addToOutlookCalendar": "أضف إلى تقويم أوتلوك",
     "thankYou": "شكرًا لك!",
     "paymentSuccess": "تم الدفع بنجاح.",
     "appointment": "الموعد:",

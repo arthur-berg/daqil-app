@@ -190,7 +190,7 @@
     "changeTherapistTitle": "Change Your Psychologist",
     "changeTherapistDescription": "You can browse psychologists and choose a new one if you like. Note that your psychologist will only be changed after you book an appointment with a new therapist from the list.",
     "close": "Close",
-    "yourTherapist": "Your Therapist",
+    "yourTherapist": "Your Psychologist",
     "chooseForMe": "See All Available Times",
     "chooseForMeDescription": "If you don't want to choose a therapist and just want to see all available times, click here.",
     "seeAvailableTimes": "See Available Times",
@@ -205,6 +205,10 @@
     "noImage": "No image"
   },
   "BookingCalendar": {
+    "addToCalendar": "Add to calendar",
+    "addThisEventToYourCalendar": "Add this event to your calendar",
+    "addToGoogleCalendar":"Add to Google Calendar",
+    "addToOutlookCalendar":"Add to Outlook Calendar",
     "changeDate": "Change date",
   "availableSlotsFor": "Available time slots for {date}",
     "calendar": "Calendar",
@@ -416,6 +420,10 @@
     "totalAppointments":"Total appointments"
   },
   "PaymentSuccessPage": {
+    "introMeetingSuccessfullyBooked": "Introductory meeting successfully booked",
+    "addToCalendar": "Add to calendar",
+    "addToGoogleCalendar": "Add to Google Calendar",
+    "addToOutlookCalendar": "Add to Outlook Calendar",
     "thankYou": "Thank you!",
     "paymentSuccess": "Your payment was successful.",
     "appointment": "Appointment:",

@@ -18,6 +18,7 @@ import connectToMongoDB from "@/lib/mongoose";
 import BookingCalendar from "./booking-calendar";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/navigation";
+import Image from "next/image";
 
 const TherapistUserProfile = async ({
   params,
@@ -64,18 +65,23 @@ const TherapistUserProfile = async ({
       <div className="flex flex-col items-center justify-center">
         <div className="flex flex-col items-center">
           {/* Therapist Image or Placeholder */}
-          {therapist.image ? (
-            <Avatar className="w-28 h-28">
-              <AvatarImage src={therapist.image || ""} />
-              <AvatarFallback className="bg-background flex items-center justify-center w-full h-full">
-                <FaUser className="text-4xl text-gray-500" />
-              </AvatarFallback>
-            </Avatar>
-          ) : (
-            <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center mb-4">
-              <span className="text-gray-500">{ErrorMessages("noImage")}</span>
-            </div>
-          )}
+          <Avatar className="w-28 h-28">
+            <AvatarImage src={therapist.image || ""} />
+            <AvatarFallback className="bg-background flex items-center justify-center w-full h-full">
+              <Image
+                width={150}
+                height={50}
+                src={
+                  locale === "en"
+                    ? "https://zakina-images.s3.eu-north-1.amazonaws.com/daqil-logo-en.png"
+                    : "https://zakina-images.s3.eu-north-1.amazonaws.com/daqil-logo-ar.png"
+                }
+                alt="psychologist-image"
+                className="w-full"
+              />
+            </AvatarFallback>
+          </Avatar>
+
           <h2 className="text-xl font-bold mb-2">
             {await getFullName(therapist.firstName, therapist.lastName)}
           </h2>

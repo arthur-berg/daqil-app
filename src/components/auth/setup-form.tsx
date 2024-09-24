@@ -9,7 +9,6 @@ import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -45,8 +44,6 @@ import { Label } from "../ui/label";
 import { CaretSortIcon } from "@radix-ui/react-icons";
 import { BeatLoader } from "react-spinners";
 import { useGetCountries } from "@/hooks/use-get-countries";
-import { useGetCurrencies } from "@/hooks/use-currencies";
-import { useCurrentRole } from "@/hooks/use-current-role";
 
 const getMappedTimezone = (ianaTimezone: string) => {
   return allTimezones[ianaTimezone] ? ianaTimezone : "Asia/Dubai";
@@ -84,7 +81,6 @@ export const SetupForm = () => {
   const [countrySearch, setCountrySearch] = useState("");
   const countries = useGetCountries();
   const searchParams = useSearchParams();
-  const { isClient } = useCurrentRole();
 
   const locale = useLocale();
   const t = useTranslations("AuthPage");
@@ -149,14 +145,16 @@ export const SetupForm = () => {
         setSuccess(data?.success);
         await login({ email: values.email, password: values.password }, locale);
       }
-      if ("error" in data && data.error) {
+      /*   if ("error" in data && data.error) {
         setError(data.error);
         if ("currentPasswordRequired" in data && data.currentPasswordRequired) {
           setCurrentPasswordRequired(true);
         }
-      }
+      } */
     });
   };
+
+  if (!token) return "Token is missing";
 
   return isPending ? (
     <div className="flex flex-col items-center justify-center h-screen space-y-4">
@@ -481,7 +479,7 @@ export const SetupForm = () => {
               />
 
               {/* Existing Password Fields */}
-              {(!token || currentPasswordRequired) && (
+              {/* {(!token || currentPasswordRequired) && (
                 <FormField
                   control={form.control}
                   name="currentPassword"
@@ -499,7 +497,7 @@ export const SetupForm = () => {
                     </FormItem>
                   )}
                 />
-              )}
+              )} */}
               <FormField
                 control={form.control}
                 name="password"

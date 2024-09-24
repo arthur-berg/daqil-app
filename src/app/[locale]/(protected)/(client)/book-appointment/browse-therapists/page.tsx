@@ -5,6 +5,8 @@ import { getTranslations } from "next-intl/server";
 import { getFullName } from "@/utils/formatName";
 import connectToMongoDB from "@/lib/mongoose";
 import PageTitle from "@/components/page-title";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import Image from "next/image";
 
 const BrowseTherapistsPage = async ({
   params,
@@ -35,21 +37,22 @@ const BrowseTherapistsPage = async ({
           >
             <div className="flex flex-col items-center p-6">
               <div className="flex justify-center mt-4">
-                {/* eslint-disable */}
-                {therapist.image ? (
-                  <img
-                    src={therapist.image}
-                    alt={`${await getFullName(
-                      therapist.firstName,
-                      therapist.lastName
-                    )} `}
-                    className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover"
-                  />
-                ) : (
-                  <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gray-200 flex items-center justify-center">
-                    <span className="text-gray-500">{t("noImage")}</span>
-                  </div>
-                )}
+                <Avatar className="w-28 h-28">
+                  <AvatarImage src={therapist.image || ""} />
+                  <AvatarFallback className="bg-background flex items-center justify-center w-full h-full">
+                    <Image
+                      width={150}
+                      height={50}
+                      src={
+                        locale === "en"
+                          ? "https://zakina-images.s3.eu-north-1.amazonaws.com/daqil-logo-en.png"
+                          : "https://zakina-images.s3.eu-north-1.amazonaws.com/daqil-logo-ar.png"
+                      }
+                      alt="psychologist-image"
+                      className="w-full"
+                    />
+                  </AvatarFallback>
+                </Avatar>
               </div>
               <div className="font-bold text-lg sm:text-xl mb-1 text-center mt-2">
                 {await getFullName(therapist.firstName, therapist.lastName)}

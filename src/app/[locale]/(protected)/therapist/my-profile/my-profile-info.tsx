@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import MyProfileForm from "./my-profile-form";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import {
   Dialog,
   DialogContent,
@@ -17,6 +17,7 @@ import { useToast } from "@/components/ui/use-toast";
 import Image from "next/image";
 import { useUserName } from "@/hooks/use-user-name";
 import { Separator } from "@/components/ui/separator";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 const MyProfileInfo = ({ therapistJson }: { therapistJson: any }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -24,6 +25,7 @@ const MyProfileInfo = ({ therapistJson }: { therapistJson: any }) => {
   const [uploadSuccess, setUploadSuccess] = useState<boolean | null>(null);
   const [isPending, startTransition] = useTransition();
   const { responseToast } = useToast();
+  const locale = useLocale();
   const { getFullName } = useUserName();
 
   const therapist = JSON.parse(therapistJson);
@@ -66,17 +68,23 @@ const MyProfileInfo = ({ therapistJson }: { therapistJson: any }) => {
             onClick={() => setIsImageDialogOpen(true)}
           >
             {/* eslint-disable */}
-            {imageUrl ? (
-              <img
-                src={imageUrl}
-                alt={`${getFullName(therapist.firstName, therapist.lastName)}`}
-                className="w-24 h-24 rounded-full object-cover"
-              />
-            ) : (
-              <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center">
-                <span className="text-gray-500">{t("noImage")}</span>
-              </div>
-            )}
+            <Avatar className="w-28 h-28">
+              <AvatarImage src={therapist.image || ""} />
+              <AvatarFallback className="bg-background flex items-center justify-center w-full h-full">
+                <Image
+                  width={150}
+                  height={50}
+                  src={
+                    locale === "en"
+                      ? "https://zakina-images.s3.eu-north-1.amazonaws.com/daqil-logo-en.png"
+                      : "https://zakina-images.s3.eu-north-1.amazonaws.com/daqil-logo-ar.png"
+                  }
+                  alt="psychologist-image"
+                  className="w-full"
+                />
+              </AvatarFallback>
+            </Avatar>
+
             {/* Edit Icon */}
             <div className="absolute top-1 right-1 bg-white p-1 rounded-full group-hover:scale-110 transition-transform duration-150 ease-in-out">
               <MdEdit className="text-gray-600" />

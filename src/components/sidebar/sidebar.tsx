@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Menu } from "@/components/sidebar/menu";
 import LanguageSwitcher from "../language-switcher";
 import Image from "next/image";
+import { useLocale } from "next-intl";
 
 interface SidebarToggleProps {
   isOpen: boolean | undefined;
@@ -50,6 +51,7 @@ export const Sidebar = forwardRef<
   }
 >(({ setIsOpen, isOpen }, sidebarMenuRef) => {
   const sidebarRef = useRef<any>();
+  const locale = useLocale();
 
   // Close sidebar when clicking outside on screens smaller than lg
   useEffect(() => {
@@ -118,7 +120,19 @@ export const Sidebar = forwardRef<
                 : "-translate-x-96 opacity-0 rtl:translate-x-96"
             )}
           >
-            <Image height={100} width={250} alt="Logo" src="/daqil-logo.png" />
+            <div className="flex justify-center">
+              <Image
+                height={100}
+                width={250}
+                alt="Logo"
+                className="w-[80%]"
+                src={
+                  locale === "en"
+                    ? "https://zakina-images.s3.eu-north-1.amazonaws.com/daqil-logo-en.png"
+                    : "https://zakina-images.s3.eu-north-1.amazonaws.com/daqil-logo-ar.png"
+                }
+              />
+            </div>
           </div>
           <Menu isOpen={isOpen} setIsOpen={setIsOpen} />
         </div>
