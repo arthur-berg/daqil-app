@@ -442,13 +442,13 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
                                                 )}
                                               </>
                                             )}
-                                            <p>
+                                            {/* <p>
                                               <strong>{t("paid")}:</strong>{" "}
                                               {appointment.payment.status ===
                                               "paid"
                                                 ? t("yes")
                                                 : t("no")}
-                                            </p>
+                                            </p> */}
                                           </div>
                                           {(appointment.status === "pending" ||
                                             appointment.status ===

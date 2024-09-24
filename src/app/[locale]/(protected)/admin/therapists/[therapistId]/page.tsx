@@ -6,6 +6,14 @@ import { getTherapistAdminProfileById } from "@/data/user";
 import { format } from "date-fns";
 import { Link } from "@/navigation";
 import connectToMongoDB from "@/lib/mongoose";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 const TherapistPage = async ({
   params,
@@ -70,79 +78,64 @@ const TherapistPage = async ({
       <div className="mb-6">
         <Separator />
       </div>
-      <Link href={`/admin/therapists/${therapistId}/availability`}>
-        <Button>Therapist&apos;s Availability</Button>
-      </Link>
+      <div className="flex justify-center sm:justify-start">
+        <Link href={`/admin/therapists/${therapistId}/availability`}>
+          <Button>Therapist&apos;s Availability</Button>
+        </Link>
+      </div>
+
       <div className="flex flex-col justify-between items-center mb-6">
-        <h2 className="text-xl font-bold">Appointments Overview</h2>
+        <h2 className="text-xl font-bold mt-4">Appointments Overview</h2>
       </div>
 
       <div className="overflow-x-auto">
-        <table className="table-auto w-full text-left">
-          <thead>
-            <tr className="border-b">
-              <th className="px-4 py-2 w-full sm:w-1/2">Date</th>
-              <th className="px-4 py-2 w-full sm:w-1/2">Booked Appointments</th>
-            </tr>
-          </thead>
-          <tbody>
-            {therapist.appointments.length === 0 ? (
-              <tr>
-                <td colSpan={2} className="text-center py-4">
-                  No appointments available
-                </td>
-              </tr>
-            ) : (
-              therapist.appointments.map((appointment: any, index: number) => (
-                <tr key={index} className="border-b">
-                  <td className="px-4 py-2 w-full sm:w-1/2">
-                    {format(new Date(appointment.date), "yyyy-MM-dd")}
-                  </td>
-                  <td className="px-4 py-2 w-full sm:w-1/2">
-                    {appointment.bookedAppointments.length}
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
-
-      <div className="mt-6">
-        <h2 className="text-xl font-bold mb-4">Assigned Clients</h2>
-        {therapist.assignedClients.length === 0 ? (
-          <p>No clients assigned</p>
+        {therapist.appointments.length === 0 ? (
+          <p className="text-center py-4">No appointments available</p>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {therapist.assignedClients.map((client: any, index: number) => (
-              <Card key={index} className="mb-4 shadow-lg">
-                <CardHeader className="flex items-center space-x-4">
-                  <div>
-                    <CardTitle className="text-lg font-semibold">
-                      {client.firstName?.en || "Client"}{" "}
-                      {client.lastName?.en || index + 1}
-                    </CardTitle>
-                    <p className="text-sm text-gray-500">{client.email}</p>
-                  </div>
-                </CardHeader>
-                <CardContent className="mt-4">
-                  <div className="space-y-2">
-                    <p>
-                      <strong>Client ID:</strong> {client._id}
-                    </p>
-                    <p>
-                      <strong>Phone Number:</strong>{" "}
-                      {client.personalInfo?.phoneNumber || "Not Provided"}
-                    </p>
-                    <p>
-                      <strong>Last Updated:</strong>{" "}
-                      {format(new Date(client.updatedAt), "yyyy-MM-dd")}
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Date</TableHead>
+                <TableHead>Total Appointments</TableHead>
+                <TableHead>Completed Appointments</TableHead>
+                <TableHead>Canceled Appointments</TableHead>
+                <TableHead>Details</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {therapist.appointments.map((appointment: any, index: number) => {
+                const totalAppointments = appointment.bookedAppointments.length;
+                const completedAppointments =
+                  appointment.bookedAppointments.filter(
+                    (appt: any) => appt.status === "completed"
+                  ).length;
+                const canceledAppointments =
+                  appointment.bookedAppointments.filter(
+                    (appt: any) => appt.status === "canceled"
+                  ).length;
+
+                return (
+                  <TableRow key={index}>
+                    <TableCell>
+                      {format(new Date(appointment.date), "yyyy-MM-dd")}
+                    </TableCell>
+                    <TableCell>{totalAppointments}</TableCell>
+                    <TableCell>{completedAppointments}</TableCell>
+                    <TableCell>{canceledAppointments}</TableCell>
+                    <TableCell>
+                      <Link
+                        href={`/admin/therapists/${therapistId}/${encodeURIComponent(
+                          format(new Date(appointment.date), "yyyy-MM-dd")
+                        )}`}
+                      >
+                        <Button>See more details</Button>
+                      </Link>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
         )}
       </div>
     </div>

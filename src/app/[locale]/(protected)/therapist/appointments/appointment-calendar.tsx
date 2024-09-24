@@ -29,6 +29,7 @@ import {
   sub,
   add,
   differenceInMinutes,
+  isPast,
 } from "date-fns";
 import CancelAppontmentForm from "./cancel-appointment-form";
 import {
@@ -41,6 +42,7 @@ import {
 } from "@/components/ui/multi-select";
 import { useUserName } from "@/hooks/use-user-name";
 import { useMediaQuery } from "react-responsive";
+import "react-big-calendar/lib/css/react-big-calendar.css";
 
 const locales = {
   "en-GB": enGB,
@@ -160,11 +162,7 @@ const AppointmentCalendar = ({ appointments }: { appointments: any }) => {
   const [showCancelForm, setShowCancelForm] = useState(false);
   const [isPending, startTransition] = useTransition();
   const { getFullName } = useUserName();
-  const [filters, setFilters] = useState<string[]>([
-    "confirmed",
-    "completed",
-    "pending",
-  ]);
+  const [filterType, setFilterType] = useState("upcoming");
 
   const t = useTranslations("AppointmentCalendar");
 
@@ -222,13 +220,20 @@ const AppointmentCalendar = ({ appointments }: { appointments: any }) => {
   };
 
   const filteredAppointments = useMemo(() => {
-    if (filters.length === 0) {
-      return appointments;
-    }
-    return appointments?.filter((appointment: any) =>
-      filters.includes(appointment.status)
-    );
-  }, [appointments, filters]);
+    return appointments.filter((appointment: any) => {
+      const isPastAppointment = isPast(new Date(appointment.endDate));
+      const isUpcoming =
+        appointment.status === "confirmed" || appointment.status === "pending";
+      const isHistory =
+        appointment.status === "completed" || appointment.status === "canceled";
+
+      if (filterType === "upcoming") {
+        return !isPastAppointment && isUpcoming;
+      } else {
+        return isPastAppointment || isHistory;
+      }
+    });
+  }, [appointments, filterType]);
 
   const events = useMemo(
     () =>
@@ -264,36 +269,22 @@ const AppointmentCalendar = ({ appointments }: { appointments: any }) => {
       <h2 className="text-xl md:text-2xl font-bold text-primary mb-4 text-center sm:text-left">
         {t("appointmentsCalendar")}
       </h2>
-      <div className="flex justify-center mb-6">
-        <div className="flex items-center mb-6 flex-col">
-          <div className="mr-4">{t("appointmentStatus")}:</div>
-          <MultiSelector values={filters} onValuesChange={setFilters}>
-            <MultiSelectorTrigger
-              className="flex-col items-start sm:flex-row sm:items-center"
-              badgeClassName="w-full justify-center sm:w-auto sm:justify-start mb-2 sm:mb-0"
-            >
-              <MultiSelectorInput
-                placeholder={t("selectStatus")}
-                className="w-full justify-center sm:w-auto sm:justify-start"
-              />
-            </MultiSelectorTrigger>
-            <MultiSelectorContent>
-              <MultiSelectorList>
-                <MultiSelectorItem value="confirmed">
-                  {t("confirmed")}
-                </MultiSelectorItem>
-                <MultiSelectorItem value="canceled">
-                  {t("canceled")}
-                </MultiSelectorItem>
-                <MultiSelectorItem value="completed">
-                  {t("completed")}
-                </MultiSelectorItem>
-                <MultiSelectorItem value="pending">
-                  {t("pending")}
-                </MultiSelectorItem>
-              </MultiSelectorList>
-            </MultiSelectorContent>
-          </MultiSelector>
+      <div className="text-center mb-6">
+        <h3 className="text-lg font-semibold">{t("appointmentFilter")}</h3>
+        <div className="mt-4">
+          <Button
+            onClick={() => setFilterType("upcoming")}
+            variant={filterType === "upcoming" ? undefined : "outline"}
+            className="mr-4"
+          >
+            {t("upcoming")}
+          </Button>
+          <Button
+            onClick={() => setFilterType("history")}
+            variant={filterType === "history" ? undefined : "outline"}
+          >
+            {t("history")}
+          </Button>
         </div>
       </div>
       <CustomToolbar

@@ -154,35 +154,55 @@ export default function useRoom() {
       }
       const VideoExpress = await import("@vonage/video-express");
 
-      // Create a hidden div to act as the container for the local camera stream
-      /*    const isDesktop = useMediaQuery({ query: "(min-width: 1024px)" }); */
+      // Create a self-video container inside the roomContainer
+      const selfVideoContainer = document.createElement("div");
+      const isMobile = window.innerWidth <= 768;
 
-      const hiddenCameraContainer = document.createElement("div");
-      hiddenCameraContainer.style.display = "none";
-      document.body.appendChild(hiddenCameraContainer);
+      if (isMobile) {
+        // Mobile view adjustments: smaller video and centered within the roomContainer
+        selfVideoContainer.style.position = "absolute"; // Change to absolute for positioning relative to roomContainer
+        selfVideoContainer.style.bottom = "90px";
+        selfVideoContainer.style.right = "0";
+        selfVideoContainer.style.width = "180px"; // Smaller size for mobile
+        selfVideoContainer.style.height = "118px";
+      } else {
+        // Desktop view adjustments: bottom-right corner within the roomContainer
+        selfVideoContainer.style.position = "absolute"; // Change to absolute for positioning relative to roomContainer
+        selfVideoContainer.style.bottom = "0";
+        selfVideoContainer.style.right = "0";
+        selfVideoContainer.style.width = "207px"; // Adjust size for desktop
+        selfVideoContainer.style.height = "168px";
+      }
 
-      /*   const selfVideoContainer = document.createElement("div");
-      selfVideoContainer.style.position = "fixed";
-      selfVideoContainer.style.bottom = "162px";
-      selfVideoContainer.style.right = "138px";
-      selfVideoContainer.style.width = "150px";
-      selfVideoContainer.style.height = "150px";
       selfVideoContainer.style.border = "2px solid gray";
       selfVideoContainer.style.zIndex = "100";
-      document.body.appendChild(selfVideoContainer); */
+
+      // Append the selfVideoContainer to the roomContainer
+      roomContainer.appendChild(selfVideoContainer);
 
       roomRef.current = new VideoExpress.Room({
         apiKey: appId,
         sessionId: sessionId,
         token: token,
-        roomContainer: "roomContainer",
-        maxVideoParticipantsOnScreen: 25,
+        roomContainer: "roomContainer", // This is the parent container
+        maxVideoParticipantsOnScreen: 2,
         participantName: userName,
         managedLayoutOptions: {
           layoutMode: "grid",
-          cameraPublisherContainer: hiddenCameraContainer,
+          cameraPublisherContainer: selfVideoContainer, // Attach the self-video to this container
         },
       }) as any;
+
+      const publisherProperties = {
+        resolution: "1280x720",
+        fitMode: "cover",
+        insertMode: "replace",
+        width: "100%",
+        height: "100%",
+        publishAudio: true,
+        publishVideo: true,
+        insertDefaultUI: true,
+      };
 
       startRoomListeners();
 
@@ -201,6 +221,7 @@ export default function useRoom() {
       } else {
         publisherOptionsRef.current = {
           ...publisherOptions,
+          ...publisherProperties,
           style: {
             buttonDisplayMode: "off",
             nameDisplayMode: "auto",

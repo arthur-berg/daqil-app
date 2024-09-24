@@ -6,7 +6,7 @@ import { addDays, format, isAfter, isBefore, set } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
 import { BeatLoader } from "react-spinners";
-import { useRouter } from "@/navigation";
+import { Link, useRouter } from "@/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import {
   Dialog,
@@ -136,6 +136,11 @@ const BookIntroCall = ({
       ) : (
         <>
           <>
+            <div className="mb-4">
+              <Link href="/book-appointment">
+                <Button variant="secondary">{t("goBack")}</Button>
+              </Link>
+            </div>
             <div className="flex">
               <h2 className="text-xl font-bold mb-4 mr-4">{t("calendar")}</h2>
             </div>

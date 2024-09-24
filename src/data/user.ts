@@ -199,6 +199,7 @@ export const getTherapists = async () => {
   try {
     const therapists = await User.find({
       role: UserRole.THERAPIST,
+      isAccountSetupDone: true,
     }).lean();
 
     return therapists;

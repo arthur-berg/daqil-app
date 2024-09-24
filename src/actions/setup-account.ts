@@ -133,7 +133,7 @@ export const setupAccount = async (
   }
 
   const updatedSettings = {
-    ...existingUser.settings,
+    preferredCurrency: settings.preferredCurrency,
     timeZone: settings.timeZone,
   };
 

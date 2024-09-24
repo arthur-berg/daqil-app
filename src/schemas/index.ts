@@ -299,6 +299,9 @@ export const SetupAccountSchema = z.object({
     timeZone: z.string().min(1, {
       message: "Timezone is required",
     }),
+    preferredCurrency: z.string().min(1, {
+      message: "Currency is required",
+    }),
   }),
 });
 

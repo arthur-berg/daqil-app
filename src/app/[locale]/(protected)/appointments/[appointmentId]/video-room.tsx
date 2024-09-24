@@ -11,7 +11,8 @@ import { useRouter } from "@/navigation";
 import { useUserName } from "@/hooks/use-user-name";
 import PreviewToolbar from "@/app/[locale]/(protected)/appointments/[appointmentId]/preview-toolbar";
 import { Button } from "@/components/ui/button";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import Image from "next/image";
 
 const VideoRoom = ({
   sessionData,
@@ -47,6 +48,7 @@ const VideoRoom = ({
   const { fullName } = useUserName();
   const t = useTranslations("VideoRoom");
   const router = useRouter();
+  const locale = useLocale();
 
   const userName = fullName;
 
@@ -57,6 +59,11 @@ const VideoRoom = ({
   const handleJoinCall = () => {
     setIsPreviewing(false);
   };
+
+  const logoSrc =
+    locale === "en"
+      ? "https://zakina-images.s3.eu-north-1.amazonaws.com/daqil-logo-en.png"
+      : "https://zakina-images.s3.eu-north-1.amazonaws.com/daqil-logo-ar.png";
 
   useEffect(() => {
     const startPreview = async () => {
@@ -124,12 +131,12 @@ const VideoRoom = ({
 
     return () => {
       if (room) {
-        /*  const selfVideoContainer = document.querySelector(
+        const selfVideoContainer = document.querySelector(
           "div[style*='bottom: 162px;']"
         );
         if (selfVideoContainer) {
           selfVideoContainer.remove();
-        } */
+        }
         room.leave();
       }
     };
@@ -150,11 +157,19 @@ const VideoRoom = ({
   if (isPreviewing) {
     return (
       <div className="h-[calc(100vh-100px)] md:h-screen w-full flex flex-col justify-between items-center p-2 box-border">
+        <div className="flex justify-center mb-4">
+          <Image
+            src={logoSrc}
+            alt="daqil-logo"
+            width={150}
+            height={50}
+            className="object-contain"
+          />
+        </div>
         <div className="flex flex-col flex-grow justify-center items-center w-full">
-          <div
-            id="previewContainer"
-            className="w-full h-full md:w-3/4 md:h-3/4 bg-[#20262D] rounded-md relative"
-          ></div>
+          <div className="w-full h-full md:max-w-5xl bg-[#20262D] rounded-md overflow-hidden relative">
+            <div id="previewContainer" className="w-full h-full"></div>
+          </div>
           <div className="bg-[#2C3036] text-center text-sm text-white mb-4 p-4 rounded-lg shadow-md max-w-lg">
             <span className="font-bold">{t("previewRoom")}</span>{" "}
             {t("testSetup")}
@@ -210,14 +225,24 @@ const VideoRoom = ({
   }
 
   return (
-    <div className="h-[calc(100vh-90px)] w-full flex flex-col p-2 box-border">
+    <div className="h-screen w-full flex flex-col p-2 box-border">
+      {/* Logo Header */}
+      <div className="flex justify-center mb-4">
+        <Image
+          src={logoSrc}
+          alt="daqil-logo"
+          width={150}
+          height={50}
+          className="object-contain"
+        />
+      </div>
       <div
         id="callContainer"
-        className="flex flex-col flex-grow w-full overflow-hidden relative"
+        className="flex flex-col items-center flex-grow w-full overflow-hidden relative md:max-w-7xl mx-auto mb-8"
       >
         <div
           id="roomContainer"
-          className="flex-grow bg-[#20262D] overflow-hidden"
+          className="flex-grow bg-[#20262D] overflow-hidden w-full h-full rounded-md"
           ref={roomContainer}
         >
           {participants.length === 0 && (
@@ -227,7 +252,7 @@ const VideoRoom = ({
           )}
         </div>
         {/* Fix toolbar at the bottom */}
-        <div className="absolute bottom-0 left-0 w-full">
+        <div className="absolute bottom-0 left-0  w-full md:max-w-7xl">
           <ToolBar
             roomName={sessionData.roomName}
             room={room}

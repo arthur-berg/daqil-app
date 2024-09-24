@@ -282,6 +282,7 @@ export const paidAppointmentConfirmationTemplate = (
     ? t("therapistAdditionalMessage")
     : t("clientAdditionalMessage");
 
+  // Payment details only for the client, not for the therapist
   const paymentDetails = !isTherapist
     ? `
       <div style="margin-top: 20px;">
@@ -297,7 +298,7 @@ export const paidAppointmentConfirmationTemplate = (
       }</p>
       </div>
     `
-    : "";
+    : ""; // No payment details for the therapist
 
   const date = isTherapist
     ? appointmentDetails.therapistDate
@@ -340,7 +341,6 @@ export const paidAppointmentConfirmationTemplate = (
           ${t("thankYouMessage")}
         </div>
       </div>
-       </div>
     </div>
   `;
 };

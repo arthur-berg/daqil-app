@@ -45,6 +45,7 @@ import { Label } from "../ui/label";
 import { CaretSortIcon } from "@radix-ui/react-icons";
 import { BeatLoader } from "react-spinners";
 import { useGetCountries } from "@/hooks/use-get-countries";
+import { useGetCurrencies } from "@/hooks/use-currencies";
 
 const getMappedTimezone = (ianaTimezone: string) => {
   return allTimezones[ianaTimezone] ? ianaTimezone : "Asia/Dubai";
@@ -80,8 +81,12 @@ export const SetupForm = () => {
   const [showArabicNameFields, setShowArabicNameFields] = useState(false);
   const [countryPopoverOpen, setCountryPopoverOpen] = useState(false);
   const [countrySearch, setCountrySearch] = useState("");
+  const [currencyPopoverOpen, setCurrencyPopoverOpen] = useState(false);
+  const [currencySearch, setCurrencySearch] = useState("");
   const countries = useGetCountries();
+  const currencies = useGetCurrencies();
   const searchParams = useSearchParams();
+
   const locale = useLocale();
   const t = useTranslations("AuthPage");
   const { options: timezoneOptions } = useTimezoneSelect({
@@ -132,6 +137,7 @@ export const SetupForm = () => {
       },
       settings: {
         timeZone: defaultTimezone,
+        preferredCurrency: "USD",
       },
     },
   });
@@ -140,6 +146,7 @@ export const SetupForm = () => {
     setError("");
     setSuccess("");
     startTransition(async () => {
+      console.log("values", values);
       const data = await setupAccount(values, locale, token);
       if ("success" in data && data.success) {
         setSuccess(data?.success);
@@ -153,6 +160,7 @@ export const SetupForm = () => {
       }
     });
   };
+  console.log("values", form.getValues());
 
   return isPending ? (
     <div className="flex flex-col items-center justify-center h-screen space-y-4">
@@ -219,7 +227,6 @@ export const SetupForm = () => {
                   </FormItem>
                 )}
               />
-
               {/* Toggle Arabic Name Fields */}
               <Button
                 type="button"
@@ -231,7 +238,6 @@ export const SetupForm = () => {
                   ? t("hideArabicName")
                   : t("addArabicName")}
               </Button>
-
               {/* Conditional Arabic Fields */}
               {showArabicNameFields && (
                 <>
@@ -265,7 +271,6 @@ export const SetupForm = () => {
                   />
                 </>
               )}
-
               {/* New Fields for personalInfo */}
               <FormField
                 control={form.control}
@@ -285,7 +290,6 @@ export const SetupForm = () => {
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
                 name="personalInfo.sex"
@@ -470,6 +474,79 @@ export const SetupForm = () => {
                               placeholder={t("searchTimezone")}
                               value={timezoneSearch}
                               onValueChange={setTimezoneSearch}
+                            />
+                          </div>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="settings.preferredCurrency"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>{t("localCurrency")}</FormLabel>
+                    <Popover
+                      open={currencyPopoverOpen}
+                      onOpenChange={(isOpen) => setCurrencyPopoverOpen(isOpen)}
+                    >
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          role="combobox"
+                          className="justify-between sm:w-full"
+                        >
+                          <div className="truncate max-w-[calc(100%-24px)]">
+                            {field.value
+                              ? currencies.find(
+                                  (c: any) => c.code === field.value
+                                )?.name
+                              : t("selectCurrency")}
+                          </div>
+                          <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-[280px] p-0">
+                        <Command>
+                          <CommandList>
+                            <CommandEmpty>{t("noCurrencyFound")}</CommandEmpty>
+                            <CommandGroup>
+                              {currencies
+                                .filter(
+                                  (currency: { code: string; name: string }) =>
+                                    currency.name
+                                      .toLowerCase()
+                                      .includes(currencySearch.toLowerCase()) ||
+                                    currency.code
+                                      .toLowerCase()
+                                      .includes(currencySearch.toLowerCase())
+                                )
+                                .map(
+                                  (currency: {
+                                    code: string;
+                                    name: string;
+                                  }) => (
+                                    <CommandItem
+                                      key={currency.code}
+                                      onSelect={() => {
+                                        field.onChange(currency.code);
+                                        setCurrencyPopoverOpen(false);
+                                      }}
+                                    >
+                                      {currency.name} ({currency.code})
+                                    </CommandItem>
+                                  )
+                                )}
+                            </CommandGroup>
+                          </CommandList>
+                          <div className="border-t p-2">
+                            <CommandInput
+                              placeholder={t("searchCurrency")}
+                              value={currencySearch}
+                              onValueChange={setCurrencySearch}
                             />
                           </div>
                         </Command>

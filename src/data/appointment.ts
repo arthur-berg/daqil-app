@@ -70,3 +70,5 @@ export const getAppointments = async () => {
 
   return await getSerializedAppointments(dbUser.appointments);
 };
+
+export const getAppointmentsByIds = async (therapistId: string) => {};

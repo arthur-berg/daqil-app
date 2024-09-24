@@ -167,7 +167,7 @@ const DefaultAvailabilityManager = ({
 
   return timeRangeInputs ? (
     <div className="bg-white rounded-lg">
-      <Form {...form}>
+      {/* <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmitDefaultAvailability)}>
           <div className="mt-4">
             <FormField
@@ -237,7 +237,7 @@ const DefaultAvailabilityManager = ({
             {t("saveSettings")}
           </Button>
         </form>
-      </Form>
+      </Form> */}
       <div
         className="bg-blue-100 border mt-4 border-blue-400 text-blue-700 px-4 py-3 rounded inline-flex text-sm"
         role="alert"
@@ -267,7 +267,7 @@ const DefaultAvailabilityManager = ({
             </div>
             {editModes[day] ? (
               <RecurringAvailabilityForm
-              adminPageProps={adminPageProps}
+                adminPageProps={adminPageProps}
                 appointmentTypes={appointmentTypes}
                 editModes={editModes}
                 setEditModes={setEditModes}

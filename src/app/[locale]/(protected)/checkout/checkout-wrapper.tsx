@@ -43,9 +43,9 @@ const CheckoutWrapper = ({
   const [isPending, startTransition] = useTransition();
   const [finalAmount, setFinalAmount] = useState(appointmentType.price);
   const t = useTranslations("Checkout");
-  const [paymentOption, setPaymentOption] = useState<"payBefore" | "payAfter">(
+  /*   const [paymentOption, setPaymentOption] = useState<"payBefore" | "payAfter">(
     "payBefore"
-  );
+  ); */
   const [clientSecret, setClientSecret] = useState("");
   const [customerSessionClientSecret, setCustomerSessionClientSecret] =
     useState("");
@@ -53,7 +53,6 @@ const CheckoutWrapper = ({
   const [discountLoading, setDiscountLoading] = useState(false);
   const { toast, responseToast } = useToast();
   const router = useRouter();
-  const user = useCurrentUser();
 
   const [discountCode, setDiscountCode] = useState("");
   const [discountCodeApplied, setDiscountCodeApplied] = useState(false);
@@ -213,15 +212,6 @@ const CheckoutWrapper = ({
     );
   };
 
-  /*  const hasCompletedAppointments = appointments.some((appointment) =>
-    appointment?.bookedAppointments?.some(
-      (bookedAppointment: any) =>
-        bookedAppointment.status === "completed" &&
-        bookedAppointment.appointmentTypeId.toString() !==
-          APPOINTMENT_TYPE_ID_INTRO_SESSION
-    )
-  ); */
-
   return (
     <>
       <div className="flex justify-center">
@@ -295,7 +285,7 @@ const CheckoutWrapper = ({
           </>
         ) : (
           <>
-            <div className="mb-8">
+            {/*    <div className="mb-8">
               <h3 className="text-xl font-semibold mb-4">
                 {t("whenDoYouWantToPay")}
               </h3>
@@ -319,9 +309,26 @@ const CheckoutWrapper = ({
                   </div>
                 </RadioGroup>
               </div>
-            </div>
+            </div> */}
 
-            {paymentOption === "payBefore" ? (
+            <>
+              {renderDiscountCodeForm()}
+              <Elements
+                stripe={stripePromise}
+                options={{
+                  customerSessionClientSecret,
+                  clientSecret,
+                }}
+              >
+                <Checkout
+                  clientSecret={clientSecret}
+                  amount={finalAmount}
+                  appointmentId={appointmentId}
+                />
+              </Elements>
+            </>
+
+            {/*   {paymentOption === "payBefore" ? (
               <>
                 {renderDiscountCodeForm()}
                 <Elements
@@ -346,7 +353,7 @@ const CheckoutWrapper = ({
                   {t("confirmAndPayLater")}
                 </Button>
               </div>
-            )}
+            )} */}
           </>
         )}
       </div>
