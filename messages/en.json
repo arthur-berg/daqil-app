@@ -6,8 +6,9 @@
     "signUp": "Sign up"
   },
   "AuthPage": {
+    "selectCurrency": "Select currency",
     "searchCurrency": "Search currency",
-    "localCurrency": "Local currency",
+    "preferredCurrency": "Preferred currency",
     "noCurrencyFound": "No currency found",
     "country":"Country",
     "searchCountry": "Search country",

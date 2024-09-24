@@ -6,8 +6,9 @@
     "signUp": "الاشتراك"
   },
   "AuthPage": {
+    "selectCurrency": "اختر العملة",
     "searchCurrency": "ابحث عن العملة",
-    "localCurrency": "العملة المحلية",
+   "preferredCurrency": "العملة المفضلة",
     "noCurrencyFound": "لم يتم العثور على عملة",
     "finishAccountSetup": "أكمل إعداد حسابك",
     "country": "البلد",

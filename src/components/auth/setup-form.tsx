@@ -46,6 +46,7 @@ import { CaretSortIcon } from "@radix-ui/react-icons";
 import { BeatLoader } from "react-spinners";
 import { useGetCountries } from "@/hooks/use-get-countries";
 import { useGetCurrencies } from "@/hooks/use-currencies";
+import { useCurrentRole } from "@/hooks/use-current-role";
 
 const getMappedTimezone = (ianaTimezone: string) => {
   return allTimezones[ianaTimezone] ? ianaTimezone : "Asia/Dubai";
@@ -86,6 +87,7 @@ export const SetupForm = () => {
   const countries = useGetCountries();
   const currencies = useGetCurrencies();
   const searchParams = useSearchParams();
+  const { isClient } = useCurrentRole();
 
   const locale = useLocale();
   const t = useTranslations("AuthPage");
@@ -137,7 +139,7 @@ export const SetupForm = () => {
       },
       settings: {
         timeZone: defaultTimezone,
-        preferredCurrency: "USD",
+        preferredCurrency: undefined,
       },
     },
   });
@@ -146,7 +148,6 @@ export const SetupForm = () => {
     setError("");
     setSuccess("");
     startTransition(async () => {
-      console.log("values", values);
       const data = await setupAccount(values, locale, token);
       if ("success" in data && data.success) {
         setSuccess(data?.success);
@@ -160,7 +161,6 @@ export const SetupForm = () => {
       }
     });
   };
-  console.log("values", form.getValues());
 
   return isPending ? (
     <div className="flex flex-col items-center justify-center h-screen space-y-4">
@@ -483,79 +483,91 @@ export const SetupForm = () => {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="settings.preferredCurrency"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col">
-                    <FormLabel>{t("localCurrency")}</FormLabel>
-                    <Popover
-                      open={currencyPopoverOpen}
-                      onOpenChange={(isOpen) => setCurrencyPopoverOpen(isOpen)}
-                    >
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant="outline"
-                          role="combobox"
-                          className="justify-between sm:w-full"
-                        >
-                          <div className="truncate max-w-[calc(100%-24px)]">
-                            {field.value
-                              ? currencies.find(
-                                  (c: any) => c.code === field.value
-                                )?.name
-                              : t("selectCurrency")}
-                          </div>
-                          <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-[280px] p-0">
-                        <Command>
-                          <CommandList>
-                            <CommandEmpty>{t("noCurrencyFound")}</CommandEmpty>
-                            <CommandGroup>
-                              {currencies
-                                .filter(
-                                  (currency: { code: string; name: string }) =>
-                                    currency.name
-                                      .toLowerCase()
-                                      .includes(currencySearch.toLowerCase()) ||
-                                    currency.code
-                                      .toLowerCase()
-                                      .includes(currencySearch.toLowerCase())
-                                )
-                                .map(
-                                  (currency: {
-                                    code: string;
-                                    name: string;
-                                  }) => (
-                                    <CommandItem
-                                      key={currency.code}
-                                      onSelect={() => {
-                                        field.onChange(currency.code);
-                                        setCurrencyPopoverOpen(false);
-                                      }}
-                                    >
-                                      {currency.name} ({currency.code})
-                                    </CommandItem>
+              {isClient && (
+                <FormField
+                  control={form.control}
+                  name="settings.preferredCurrency"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col">
+                      <FormLabel>{t("preferredCurrency")}</FormLabel>
+                      <Popover
+                        open={currencyPopoverOpen}
+                        onOpenChange={(isOpen) =>
+                          setCurrencyPopoverOpen(isOpen)
+                        }
+                      >
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant="outline"
+                            role="combobox"
+                            className="justify-between sm:w-full"
+                          >
+                            <div className="truncate max-w-[calc(100%-24px)]">
+                              {field.value
+                                ? currencies.find(
+                                    (c: any) => c.code === field.value
+                                  )?.name
+                                : t("selectCurrency")}
+                            </div>
+                            <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-[280px] p-0">
+                          <Command>
+                            <CommandList>
+                              <CommandEmpty>
+                                {t("noCurrencyFound")}
+                              </CommandEmpty>
+                              <CommandGroup>
+                                {currencies
+                                  .filter(
+                                    (currency: {
+                                      code: string;
+                                      name: string;
+                                    }) =>
+                                      currency.name
+                                        .toLowerCase()
+                                        .includes(
+                                          currencySearch.toLowerCase()
+                                        ) ||
+                                      currency.code
+                                        .toLowerCase()
+                                        .includes(currencySearch.toLowerCase())
                                   )
-                                )}
-                            </CommandGroup>
-                          </CommandList>
-                          <div className="border-t p-2">
-                            <CommandInput
-                              placeholder={t("searchCurrency")}
-                              value={currencySearch}
-                              onValueChange={setCurrencySearch}
-                            />
-                          </div>
-                        </Command>
-                      </PopoverContent>
-                    </Popover>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                                  .map(
+                                    (currency: {
+                                      code: string;
+                                      name: string;
+                                    }) => (
+                                      <CommandItem
+                                        key={currency.code}
+                                        onSelect={() => {
+                                          field.onChange(currency.code);
+                                          setCurrencyPopoverOpen(false);
+                                        }}
+                                      >
+                                        {currency.name} ({currency.code})
+                                      </CommandItem>
+                                    )
+                                  )}
+                              </CommandGroup>
+                            </CommandList>
+                            <div className="border-t p-2">
+                              <CommandInput
+                                placeholder={t("searchCurrency")}
+                                value={currencySearch}
+                                onValueChange={setCurrencySearch}
+                              />
+                            </div>
+                          </Command>
+                        </PopoverContent>
+                      </Popover>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
+
               {/* Existing Password Fields */}
               {(!token || currentPasswordRequired) && (
                 <FormField
