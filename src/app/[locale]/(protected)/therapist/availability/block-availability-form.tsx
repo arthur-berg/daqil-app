@@ -167,6 +167,13 @@ const BlockAvailabilityForm = ({
     });
   };
 
+  const today = set(new Date(), {
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+    milliseconds: 0,
+  });
+
   return (
     <div>
       <div className="mb-8">
@@ -191,6 +198,7 @@ const BlockAvailabilityForm = ({
         <>
           <div className="flex w-full">
             <Calendar
+              disabled={(date) => isBefore(date, today)}
               mode="single"
               selected={date}
               onSelect={(date) => {

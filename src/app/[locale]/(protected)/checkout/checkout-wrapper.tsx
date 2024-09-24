@@ -53,6 +53,7 @@ const CheckoutWrapper = ({
   const [discountLoading, setDiscountLoading] = useState(false);
   const { toast, responseToast } = useToast();
   const router = useRouter();
+  const user = useCurrentUser();
 
   const [discountCode, setDiscountCode] = useState("");
   const [discountCodeApplied, setDiscountCodeApplied] = useState(false);
@@ -157,7 +158,7 @@ const CheckoutWrapper = ({
         </span>
       );
     }
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleApplyDiscount = () => {
     startTransition(async () => {
@@ -212,6 +213,8 @@ const CheckoutWrapper = ({
     );
   };
 
+  if (!user) return "No user found";
+
   return (
     <>
       <div className="flex justify-center">
@@ -252,7 +255,7 @@ const CheckoutWrapper = ({
               t("calculatingPrice")
             ) : (
               <>
-                {t("price")}: {currencyToSymbol(appointmentType.currency)}
+                {t("price")}: {currencyToSymbol("USD")}
                 {finalAmount}
               </>
             )}
@@ -260,6 +263,38 @@ const CheckoutWrapper = ({
         </div>
 
         {loading || discountLoading ? (
+          <div className="text-center mt-8 pb-8">
+            <BeatLoader />
+            <div className="text-lg font-medium ">
+              {discountLoading ? t("discountLoading") : t("loadingCheckout")}
+            </div>
+          </div>
+        ) : (
+          <>
+            {renderDiscountCodeForm()}
+            <Elements
+              stripe={stripePromise}
+              options={{
+                customerSessionClientSecret,
+                clientSecret,
+              }}
+            >
+              <Checkout
+                clientSecret={clientSecret}
+                amount={appointmentType.price}
+                appointmentId={appointmentId}
+              />
+            </Elements>
+          </>
+        )}
+      </div>
+    </>
+  );
+};
+
+/*
+
+{loading || discountLoading ? (
           <div className="text-center mt-8 pb-8">
             <BeatLoader />
             <div className="text-lg font-medium ">
@@ -285,7 +320,7 @@ const CheckoutWrapper = ({
           </>
         ) : (
           <>
-            {/*    <div className="mb-8">
+              <div className="mb-8">
               <h3 className="text-xl font-semibold mb-4">
                 {t("whenDoYouWantToPay")}
               </h3>
@@ -309,7 +344,7 @@ const CheckoutWrapper = ({
                   </div>
                 </RadioGroup>
               </div>
-            </div> */}
+            </div> 
 
             <>
               {renderDiscountCodeForm()}
@@ -328,7 +363,7 @@ const CheckoutWrapper = ({
               </Elements>
             </>
 
-            {/*   {paymentOption === "payBefore" ? (
+             {paymentOption === "payBefore" ? (
               <>
                 {renderDiscountCodeForm()}
                 <Elements
@@ -353,12 +388,7 @@ const CheckoutWrapper = ({
                   {t("confirmAndPayLater")}
                 </Button>
               </div>
-            )} */}
+            )} 
           </>
-        )}
-      </div>
-    </>
-  );
-};
-
+        )}*/
 export default CheckoutWrapper;

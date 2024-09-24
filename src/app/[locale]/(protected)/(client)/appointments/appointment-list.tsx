@@ -169,8 +169,15 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
 
     const hasMeetingEnded = new Date() > new Date(nextAppointment.endDate);
 
+    const timeSinceStart = differenceInMinutes(
+      new Date(),
+      new Date(nextAppointment.startDate)
+    );
+
     const isJoinEnabled =
-      timeUntilStart <= 20 && timeUntilStart >= 0 && !hasMeetingEnded;
+      ((timeUntilStart <= 20 && timeUntilStart >= 0) ||
+        (timeSinceStart >= 0 && timeSinceStart <= 10)) &&
+      !hasMeetingEnded;
 
     return (
       <>
@@ -356,12 +363,19 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
                                     new Date()
                                   );
 
+                                  const timeSinceStart = differenceInMinutes(
+                                    new Date(),
+                                    new Date(nextAppointment.startDate)
+                                  );
+
                                   const hasMeetingEnded =
                                     new Date() > new Date(appointment.endDate);
 
                                   const isJoinEnabled =
-                                    timeUntilStart <= 20 &&
-                                    timeUntilStart >= 0 &&
+                                    ((timeUntilStart <= 20 &&
+                                      timeUntilStart >= 0) ||
+                                      (timeSinceStart >= 0 &&
+                                        timeSinceStart <= 10)) &&
                                     !hasMeetingEnded;
 
                                   const disableAccordion =

@@ -21,7 +21,6 @@ const Checkout = ({
   const stripe = useStripe();
   const elements = useElements();
   const [errorMessage, setErrorMessage] = useState<string>();
-  useState("");
   const [loading, setLoading] = useState(false);
   const t = useTranslations("Checkout");
 
