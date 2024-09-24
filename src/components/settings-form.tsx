@@ -39,9 +39,6 @@ import {
 } from "@/components/ui/command";
 import { CaretSortIcon } from "@radix-ui/react-icons";
 import PageTitle from "@/components/page-title";
-import { useGetCountries } from "@/hooks/use-get-countries";
-import { useGetCurrencies } from "@/hooks/use-currencies";
-import { useCurrentRole } from "@/hooks/use-current-role";
 
 const getGmtOffset = (timezone: string) => {
   const now = new Date();
@@ -78,10 +75,6 @@ const SettingsForm = () => {
   });
   const [timezonePopoverOpen, setTimezonePopoverOpen] = useState(false);
   const [timezoneSearch, setTimezoneSearch] = useState("");
-  const [currencyPopoverOpen, setCurrencyPopoverOpen] = useState(false);
-  const [currencySearch, setCurrencySearch] = useState("");
-  const { isClient } = useCurrentRole();
-  const currencies = useGetCurrencies();
 
   const form = useForm<z.infer<typeof SettingsSchema>>({
     resolver: zodResolver(SettingsSchema),
@@ -95,7 +88,6 @@ const SettingsForm = () => {
         timeZone:
           user?.settings?.timeZone ||
           Intl.DateTimeFormat().resolvedOptions().timeZone,
-        preferredCurrency: user?.settings?.preferredCurrency || undefined,
       },
     },
   });
@@ -265,92 +257,6 @@ const SettingsForm = () => {
                       </FormItem>
                     )}
                   />
-                  {isClient && (
-                    <FormField
-                      control={form.control}
-                      name="settings.preferredCurrency"
-                      render={({ field }) => (
-                        <FormItem className="flex flex-col">
-                          <FormLabel>{t("preferredCurrency")}</FormLabel>
-                          <Popover
-                            open={currencyPopoverOpen}
-                            onOpenChange={(isOpen) =>
-                              setCurrencyPopoverOpen(isOpen)
-                            }
-                          >
-                            <PopoverTrigger asChild>
-                              <Button
-                                variant="outline"
-                                role="combobox"
-                                className="justify-between sm:w-full"
-                              >
-                                <div className="truncate max-w-[calc(100%-24px)]">
-                                  {field.value
-                                    ? currencies.find(
-                                        (c: any) => c.code === field.value
-                                      )?.name
-                                    : t("selectCurrency")}
-                                </div>
-                                <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                              </Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-[280px] p-0">
-                              <Command>
-                                <CommandList>
-                                  <CommandEmpty>
-                                    {t("noCurrencyFound")}
-                                  </CommandEmpty>
-                                  <CommandGroup>
-                                    {currencies
-                                      .filter(
-                                        (currency: {
-                                          code: string;
-                                          name: string;
-                                        }) =>
-                                          currency.name
-                                            .toLowerCase()
-                                            .includes(
-                                              currencySearch.toLowerCase()
-                                            ) ||
-                                          currency.code
-                                            .toLowerCase()
-                                            .includes(
-                                              currencySearch.toLowerCase()
-                                            )
-                                      )
-                                      .map(
-                                        (currency: {
-                                          code: string;
-                                          name: string;
-                                        }) => (
-                                          <CommandItem
-                                            key={currency.code}
-                                            onSelect={() => {
-                                              field.onChange(currency.code);
-                                              setCurrencyPopoverOpen(false);
-                                            }}
-                                          >
-                                            {currency.name} ({currency.code})
-                                          </CommandItem>
-                                        )
-                                      )}
-                                  </CommandGroup>
-                                </CommandList>
-                                <div className="border-t p-2">
-                                  <CommandInput
-                                    placeholder={t("searchCurrency")}
-                                    value={currencySearch}
-                                    onValueChange={setCurrencySearch}
-                                  />
-                                </div>
-                              </Command>
-                            </PopoverContent>
-                          </Popover>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  )}
 
                   {/* {user?.isOAuth === false && (
                 <FormField

@@ -71,9 +71,6 @@ export const SettingsSchema = z
       timeZone: z.string().min(1, {
         message: "Timezone is required",
       }),
-      preferredCurrency: z.string().min(1, {
-        message: "Currency is required",
-      }),
     }),
   })
   .refine(
@@ -302,7 +299,6 @@ export const SetupAccountSchema = z.object({
     timeZone: z.string().min(1, {
       message: "Timezone is required",
     }),
-    preferredCurrency: z.string().optional(),
   }),
 });
 
@@ -330,9 +326,6 @@ export const OAuthAccountSetupSchema = z.object({
   settings: z.object({
     timeZone: z.string().min(1, {
       message: "Timezone is required",
-    }),
-    preferredCurrency: z.string().min(1, {
-      message: "Currency is required",
     }),
   }),
 });
