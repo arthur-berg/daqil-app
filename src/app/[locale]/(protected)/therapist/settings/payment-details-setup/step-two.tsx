@@ -23,15 +23,17 @@ const StepTwo = ({
   onNextStep,
   onPrevStep,
   t,
+  isNextButtonEnabled,
+  setIsNextButtonEnabled,
 }: {
   form: any;
   onNextStep: () => void;
   onPrevStep: () => void;
   t: any;
+  setIsNextButtonEnabled: any;
+  isNextButtonEnabled: any;
 }) => {
   const accountType = form.watch("accountType");
-
-  const [isNextButtonEnabled, setIsNextButtonEnabled] = useState(false);
 
   useEffect(() => {
     const accountType = form.getValues("accountType");
@@ -39,13 +41,22 @@ const StepTwo = ({
     if (accountType === "personal") {
       const isPersonalFieldsFilled =
         !!form.getValues("firstName") && !!form.getValues("lastName");
-      setIsNextButtonEnabled(isPersonalFieldsFilled);
+      setIsNextButtonEnabled((prev: any) => ({
+        ...prev,
+        step2: isPersonalFieldsFilled,
+      }));
     } else if (accountType === "company") {
       const isCompanyFieldsFilled =
         !!form.getValues("ownerName") && !!form.getValues("ownerRole");
-      setIsNextButtonEnabled(isCompanyFieldsFilled);
+      setIsNextButtonEnabled((prev: any) => ({
+        ...prev,
+        step2: isCompanyFieldsFilled,
+      }));
     } else {
-      setIsNextButtonEnabled(false);
+      setIsNextButtonEnabled((prev: any) => ({
+        ...prev,
+        step2: false,
+      }));
     }
   }, [
     form.watch("accountType"),
@@ -53,6 +64,7 @@ const StepTwo = ({
     form.watch("lastName"),
     form.watch("ownerName"),
     form.watch("ownerRole"),
+    setIsNextButtonEnabled,
   ]);
 
   /*   console.log("values", form.getValues()); */
@@ -200,7 +212,7 @@ const StepTwo = ({
         <Button
           variant="outline"
           onClick={onNextStep}
-          disabled={!isNextButtonEnabled}
+          disabled={!isNextButtonEnabled.step2}
         >
           {t("continue")}
         </Button>

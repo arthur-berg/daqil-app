@@ -175,6 +175,11 @@
     "settings": "Settings"
   },
   "PaymentSettingsPage": {
+    "swift": "SWIFT/BIC Code",
+    "country": "Country",
+    "paymentMethod": "Payment method",
+    "dob": "Date of birth",
+    "goToSettings": "Go to settings page",
     "goBack": "Go back",
     "noPaymentDetailsSaved": "No payment details saved yet",
     "companyRegistration": "Company registration number",

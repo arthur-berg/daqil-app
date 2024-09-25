@@ -15,14 +15,17 @@ const StepThree = ({
   onPrevStep,
   onNextStep,
   t,
+  isNextButtonEnabled,
+  setIsNextButtonEnabled,
 }: {
   form: any;
   onPrevStep: () => void;
   onNextStep: () => void;
   t: any;
+  isNextButtonEnabled: any;
+  setIsNextButtonEnabled: any;
 }) => {
   const accountType = form.watch("accountType");
-  const [isNextButtonEnabled, setIsNextButtonEnabled] = useState(false);
 
   const formatDateForInput = (date: string | Date | undefined) => {
     if (!date) return "";
@@ -54,15 +57,24 @@ const StepThree = ({
         !!form.getValues("dob") &&
         !!form.getValues("placeOfBirth") &&
         !!form.getValues("citizenship");
-      setIsNextButtonEnabled(isPersonalFieldsFilled);
+      setIsNextButtonEnabled((prev: any) => ({
+        ...prev,
+        step3: isPersonalFieldsFilled, // Update step 3's state
+      }));
     } else if (accountType === "company") {
       const isCompanyFieldsFilled =
         !!form.getValues("dob") &&
         !!form.getValues("placeOfBirth") &&
         !!form.getValues("citizenship");
-      setIsNextButtonEnabled(isCompanyFieldsFilled);
+      setIsNextButtonEnabled((prev: any) => ({
+        ...prev,
+        step3: isCompanyFieldsFilled, // Update step 3's state
+      }));
     } else {
-      setIsNextButtonEnabled(false);
+      setIsNextButtonEnabled((prev: any) => ({
+        ...prev,
+        step3: false,
+      }));
     }
   }, [
     form.watch("accountType"),
@@ -206,7 +218,7 @@ const StepThree = ({
         <Button
           variant="outline"
           onClick={onNextStep}
-          disabled={!isNextButtonEnabled}
+          disabled={!isNextButtonEnabled.step3}
         >
           {t("continue")}
         </Button>

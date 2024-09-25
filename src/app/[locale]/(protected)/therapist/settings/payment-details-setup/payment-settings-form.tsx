@@ -1,7 +1,7 @@
 "use client";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
-import { useState, useTransition } from "react";
+import { useState, useTransition, useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Progress } from "@/components/ui/progress";
 import { Form } from "@/components/ui/form";
@@ -10,17 +10,28 @@ import StepOne from "@/app/[locale]/(protected)/therapist/settings/payment-detai
 import StepTwo from "@/app/[locale]/(protected)/therapist/settings/payment-details-setup/step-two";
 import StepThree from "@/app/[locale]/(protected)/therapist/settings/payment-details-setup/step-three";
 import StepFour from "@/app/[locale]/(protected)/therapist/settings/payment-details-setup/step-four";
+import StepFive from "@/app/[locale]/(protected)/therapist/settings/payment-details-setup/step-five";
 import { useTranslations } from "next-intl";
 import { saveTherapistPaymentSettings } from "@/actions/saveTherapistPaymentSettings";
 import { BeatLoader } from "react-spinners";
 import { useToast } from "@/components/ui/use-toast";
-import StepFive from "@/app/[locale]/(protected)/therapist/settings/payment-details-setup/step-five";
 import { useRouter } from "@/navigation";
 
 const PaymentSettingsForm = () => {
   const [isPending, startTransition] = useTransition();
   const { responseToast } = useToast();
   const router = useRouter();
+  const t = useTranslations("PaymentSettingsPage");
+  const [step, setStep] = useState(1);
+  const totalSteps = 5;
+  const [isNextButtonEnabled, setIsNextButtonEnabled] = useState({
+    step1: false,
+    step2: false,
+    step3: false,
+    step4: false,
+    step5: true,
+  });
+
   const form = useForm({
     resolver: zodResolver(PaymentSettingsSchema),
     defaultValues: {
@@ -44,11 +55,6 @@ const PaymentSettingsForm = () => {
       companyRegistration: "",
     },
   });
-
-  const t = useTranslations("PaymentSettingsPage");
-
-  const [step, setStep] = useState(1);
-  const totalSteps = 4;
 
   const onSubmit = (values: z.infer<typeof PaymentSettingsSchema>) => {
     startTransition(async () => {
@@ -80,17 +86,34 @@ const PaymentSettingsForm = () => {
           onKeyDown={(e: any) => {
             if (e.key === "Enter" && e.target.tagName === "INPUT") {
               e.preventDefault();
+              if (
+                (step === 1 && isNextButtonEnabled.step1) ||
+                (step === 2 && isNextButtonEnabled.step2) ||
+                (step === 3 && isNextButtonEnabled.step3) ||
+                (step === 4 && isNextButtonEnabled.step4) ||
+                (step === 5 && isNextButtonEnabled.step5)
+              ) {
+                handleNextStep();
+              }
             }
           }}
         >
           {step === 1 && (
-            <StepOne form={form} onNextStep={handleNextStep} t={t} />
+            <StepOne
+              form={form}
+              onNextStep={handleNextStep}
+              t={t}
+              isNextButtonEnabled={isNextButtonEnabled}
+              setIsNextButtonEnabled={setIsNextButtonEnabled}
+            />
           )}
           {step === 2 && (
             <StepTwo
               form={form}
               onNextStep={handleNextStep}
               onPrevStep={handlePrevStep}
+              isNextButtonEnabled={isNextButtonEnabled}
+              setIsNextButtonEnabled={setIsNextButtonEnabled}
               t={t}
             />
           )}
@@ -99,6 +122,8 @@ const PaymentSettingsForm = () => {
               form={form}
               onNextStep={handleNextStep}
               onPrevStep={handlePrevStep}
+              isNextButtonEnabled={isNextButtonEnabled}
+              setIsNextButtonEnabled={setIsNextButtonEnabled}
               t={t}
             />
           )}
@@ -107,6 +132,8 @@ const PaymentSettingsForm = () => {
               form={form}
               onPrevStep={handlePrevStep}
               onNextStep={handleNextStep}
+              isNextButtonEnabled={isNextButtonEnabled}
+              setIsNextButtonEnabled={setIsNextButtonEnabled}
               t={t}
             />
           )}

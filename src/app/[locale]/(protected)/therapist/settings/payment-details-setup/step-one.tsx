@@ -36,10 +36,14 @@ const StepOne = ({
   form,
   onNextStep,
   t,
+  isNextButtonEnabled,
+  setIsNextButtonEnabled,
 }: {
   form: any;
   onNextStep: () => void;
   t: any;
+  isNextButtonEnabled: any;
+  setIsNextButtonEnabled: any;
 }) => {
   const countries = useGetCountries();
   const paymentMethods = [
@@ -51,14 +55,20 @@ const StepOne = ({
   const [countryPopoverOpen, setCountryPopoverOpen] = useState(false);
   const [countrySearch, setCountrySearch] = useState("");
 
-  const [isNextButtonEnabled, setIsNextButtonEnabled] = useState(false);
-
   useEffect(() => {
     const isCountrySelected = !!form.getValues("country");
     const isPaymentMethodSelected = !!form.getValues("paymentMethod");
 
-    setIsNextButtonEnabled(isCountrySelected && isPaymentMethodSelected);
-  }, [form.watch("country"), form.watch("paymentMethod")]);
+    // Update the parent state for step1
+    setIsNextButtonEnabled((prev: any) => ({
+      ...prev,
+      step1: isCountrySelected && isPaymentMethodSelected,
+    }));
+  }, [
+    form.watch("country"),
+    form.watch("paymentMethod"),
+    setIsNextButtonEnabled,
+  ]);
 
   return (
     <div>
@@ -170,7 +180,7 @@ const StepOne = ({
         <Button
           variant="outline"
           onClick={onNextStep}
-          disabled={!isNextButtonEnabled}
+          disabled={!isNextButtonEnabled.step1}
         >
           {t("continue")}
         </Button>

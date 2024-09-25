@@ -177,6 +177,11 @@
     "settings": "الإعدادات"
   },
   "PaymentSettingsPage": {
+    "swift": "رمز SWIFT/BIC",
+  "paymentMethod": "طريقة الدفع",
+    "country": "البلد",
+    "dob": "تاريخ الميلاد",
+    "goToSettings": "اذهب إلى صفحة الإعدادات",
     "goBack": "العودة",
     "paymentDetailsSavedSuccess": "تم حفظ تفاصيل الدفع بنجاح",
   "selectYourCountry": "اختر دولتك",

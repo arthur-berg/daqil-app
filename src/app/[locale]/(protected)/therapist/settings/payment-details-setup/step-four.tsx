@@ -16,32 +16,51 @@ const StepFour = ({
   onPrevStep,
   onNextStep,
   t,
+  isNextButtonEnabled,
+  setIsNextButtonEnabled,
 }: {
   form: any;
   onPrevStep: () => void;
   onNextStep: () => void;
   t: any;
+  isNextButtonEnabled: any;
+  setIsNextButtonEnabled: any;
 }) => {
   const accountType = form.watch("accountType");
-  const [isNextButtonEnabled, setIsNextButtonEnabled] = useState(false);
 
   useEffect(() => {
     const accountType = form.getValues("accountType");
 
     if (accountType === "personal") {
+      const accountNumber = form.getValues("accountNumber");
+      const confirmAccountNumber = form.getValues("confirmAccountNumber");
+      const bankName = form.getValues("bankName");
+
       const isPersonalBankDetailsFilled =
-        !!form.getValues("accountNumber") &&
-        !!form.getValues("confirmAccountNumber") &&
-        !!form.getValues("bankName");
-      setIsNextButtonEnabled(isPersonalBankDetailsFilled);
+        !!accountNumber &&
+        !!confirmAccountNumber &&
+        !!bankName &&
+        accountNumber === confirmAccountNumber; // Ensure account numbers match
+
+      setIsNextButtonEnabled((prev: any) => ({
+        ...prev,
+        step4: isPersonalBankDetailsFilled,
+      }));
     } else if (accountType === "company") {
       const isCompanyBankDetailsFilled =
         !!form.getValues("iban") &&
         !!form.getValues("swift") &&
         !!form.getValues("bankName");
-      setIsNextButtonEnabled(isCompanyBankDetailsFilled);
+
+      setIsNextButtonEnabled((prev: any) => ({
+        ...prev,
+        step4: isCompanyBankDetailsFilled,
+      }));
     } else {
-      setIsNextButtonEnabled(false);
+      setIsNextButtonEnabled((prev: any) => ({
+        ...prev,
+        step4: false,
+      }));
     }
   }, [
     form.watch("accountType"),
@@ -218,7 +237,7 @@ const StepFour = ({
         <Button
           variant="outline"
           onClick={onNextStep}
-          disabled={!isNextButtonEnabled}
+          disabled={!isNextButtonEnabled.step4}
         >
           {t("continue")}
         </Button>

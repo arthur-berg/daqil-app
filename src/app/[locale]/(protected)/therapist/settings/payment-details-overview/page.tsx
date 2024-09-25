@@ -23,14 +23,16 @@ const PaymentSettingsOverviewPage = async ({
   return (
     <div className="max-w-2xl mx-auto bg-white py-6 px-4 sm:p-10 rounded-md relative">
       {newInformationSaved && (
-        <div className="flex items-center text-green-600">
+        <div className="flex items-center text-green-600 mb-4">
           <MdCheck size={24} className="mr-2" />
           <span>{t("paymentDetailsSavedSuccess")}</span>
         </div>
       )}
       <div>
         <Link href="/therapist/settings">
-          <Button variant="secondary">{t("goBack")}</Button>
+          <Button variant="secondary">
+            {newInformationSaved ? t("goToSettings") : t("goBack")}
+          </Button>
         </Link>
       </div>
 
