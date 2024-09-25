@@ -100,26 +100,6 @@ export const SettingsSchema = z
     }
   );
 
-const timeStringOrDateSchema = z.union([
-  z.string().refine(
-    (val) => {
-      const [hour, minute] = val.split(":").map(Number);
-      return (
-        !isNaN(hour) &&
-        !isNaN(minute) &&
-        hour >= 0 &&
-        hour < 24 &&
-        minute >= 0 &&
-        minute < 60
-      );
-    },
-    {
-      message: "Invalid time format",
-    }
-  ),
-  z.date(),
-]);
-
 export const RecurringAvailabilitySchema = z.object({
   day: z.string(),
   timeRanges: z.array(
@@ -253,22 +233,6 @@ export const LoginSchema = z.object({
   code: z.optional(z.string()),
 });
 
-// Custom function to validate date in YYYY/MM/DD format
-const isValidDate = (dateString: string) => {
-  const regex = /^\d{4}\/\d{2}\/\d{2}$/; // Regex to match YYYY/MM/DD format
-  if (!regex.test(dateString)) {
-    return false;
-  }
-
-  const [year, month, day] = dateString.split("/").map(Number);
-  const date = new Date(year, month - 1, day); // JavaScript months are 0-based
-  return (
-    date.getFullYear() === year &&
-    date.getMonth() === month - 1 &&
-    date.getDate() === day
-  );
-};
-
 export const SetupAccountSchema = z.object({
   email: z.string().email({ message: "Email is required" }),
   password: z.string().min(6, {
@@ -332,4 +296,10 @@ export const OAuthAccountSetupSchema = z.object({
 
 export const RegisterSchema = z.object({
   email: z.string().email({ message: "Email is required" }),
+});
+
+export const PaymentSettingsSchema = z.object({
+  country: z.string().min(1, "Please select a country"),
+  paymentMethod: z.string().min(1, "Please select a payment method"),
+  accountType: z.string().min(1, "Please select an account type"),
 });

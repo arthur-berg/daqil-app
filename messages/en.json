@@ -144,6 +144,7 @@
     "myProfile": "My Profile"
   },
   "SettingsPage": {
+    "paymentSettings": "Payment settings",
     "selectCurrency": "Select currency",
     "searchCurrency": "Search currency",
     "preferredCurrency": "Preferred currency",

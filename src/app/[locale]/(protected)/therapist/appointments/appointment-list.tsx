@@ -23,28 +23,15 @@ import { FaCheck, FaTimes, FaClock, FaQuestion } from "react-icons/fa";
 import { useTranslations } from "next-intl";
 import BeatLoader from "react-spinners/BeatLoader";
 import CancelAppontmentForm from "./cancel-appointment-form";
-import {
-  MultiSelector,
-  MultiSelectorContent,
-  MultiSelectorInput,
-  MultiSelectorItem,
-  MultiSelectorList,
-  MultiSelectorTrigger,
-} from "@/components/ui/multi-select";
+
 import { useUserName } from "@/hooks/use-user-name";
 
 const AppointmentList = ({ appointments }: { appointments: any }) => {
   const [filterType, setFilterType] = useState("upcoming");
 
-  const [filters, setFilters] = useState<string[]>([
-    "confirmed",
-    "completed",
-    "pending",
-  ]);
   const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
   const [selectedAppointment, setSelectedAppointment] = useState<any>(null);
   const [isPending, startTransition] = useTransition();
-  const [cancelReason, setCancelReason] = useState<string>("");
   const { getFullName } = useUserName();
   const t = useTranslations("AppointmentList");
 

@@ -6,10 +6,10 @@ import User from "@/models/User";
 const getStructuredParticipantData = (appointment: any) => {
   const transformedParticipants = appointment.participants.map(
     (participant: any) => ({
-      firstName: participant.userId.firstName,
-      lastName: participant.userId.lastName,
-      email: participant.userId.email,
-      userId: participant.userId._id.toString(),
+      firstName: participant.userId?.firstName,
+      lastName: participant.userId?.lastName,
+      email: participant.userId?.email,
+      userId: participant.userId?._id.toString(),
       showUp: participant.showUp,
     })
   );

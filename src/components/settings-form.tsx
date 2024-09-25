@@ -62,7 +62,7 @@ const getGmtOffset = (timezone: string) => {
   return `${timeZoneName}`;
 };
 
-const SettingsForm = () => {
+const SettingsForm = ({ hidePageTitle }: { hidePageTitle?: boolean }) => {
   const user = useCurrentUser();
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
@@ -112,10 +112,11 @@ const SettingsForm = () => {
 
   return (
     <>
-      <div className="sm:w-[500px] w-full mx-auto">
-        <PageTitle title={t("settings")} />
-        <h1 className="text-3xl font-bold text-center text-primary flex-grow"></h1>
-      </div>
+      {!hidePageTitle && (
+        <div className="sm:w-[500px] w-full mx-auto">
+          <PageTitle title={t("settings")} />
+        </div>
+      )}
       <div className="flex justify-center">
         <Card className="sm:w-[500px] w-full">
           <CardHeader></CardHeader>

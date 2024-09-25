@@ -1,0 +1,160 @@
+import { useState } from "react";
+import {
+  TooltipProvider,
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from "@/components/ui/tooltip";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@/components/ui/popover";
+import {
+  Command,
+  CommandList,
+  CommandItem,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+} from "@/components/ui/command";
+import { MdInfoOutline } from "react-icons/md";
+import { CaretSortIcon } from "@radix-ui/react-icons";
+import { useGetCountries } from "@/hooks/use-get-countries";
+
+const StepOne = ({ form }: { form: any }) => {
+  const countries = useGetCountries(); // Assume this is an array of country objects
+  const paymentMethods = [
+    { label: "Bank transfer (in USD)", value: "bank_usd" },
+  ] as any;
+
+  const selectedCountry = form.watch("country");
+
+  const [countryPopoverOpen, setCountryPopoverOpen] = useState(false);
+  const [countrySearch, setCountrySearch] = useState("");
+
+  return (
+    <div>
+      {/* Country Selection with Command and Popover */}
+      <FormField
+        control={form.control}
+        name="country"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel className="block">Select your country</FormLabel>
+            <Popover
+              open={countryPopoverOpen}
+              onOpenChange={setCountryPopoverOpen}
+            >
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  role="combobox"
+                  className="justify-between  w-full sm:w-[280px]"
+                >
+                  <div className="truncate max-w-[calc(100%-24px)]">
+                    {field.value
+                      ? countries.find((c: any) => c.value === field.value)
+                          ?.label
+                      : "Select your country"}
+                  </div>
+                  <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-[280px] p-0">
+                <Command>
+                  <CommandInput
+                    placeholder="Search country"
+                    value={countrySearch}
+                    onValueChange={setCountrySearch}
+                  />
+                  <CommandList>
+                    <CommandEmpty>No country found.</CommandEmpty>
+                    <CommandGroup>
+                      {countries
+                        .filter((country: any) =>
+                          country.label
+                            .toLowerCase()
+                            .includes(countrySearch.toLowerCase())
+                        )
+                        .map((country: any) => (
+                          <CommandItem
+                            key={country.value}
+                            onSelect={() => {
+                              field.onChange(country.value);
+                              setCountryPopoverOpen(false);
+                            }}
+                          >
+                            {country.label}
+                          </CommandItem>
+                        ))}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
+      {/* Payment Method Selection with RadioGroup and Tooltip */}
+      {selectedCountry && (
+        <FormField
+          control={form.control}
+          name="paymentMethod"
+          render={({ field }) => (
+            <FormItem className="mt-8">
+              <FormLabel>Select Payment Method</FormLabel>
+              <FormControl>
+                <RadioGroup
+                  onValueChange={field.onChange}
+                  value={field.value}
+                  className="flex flex-col space-y-2"
+                >
+                  {paymentMethods?.map((method: any) => (
+                    <div
+                      key={method.value}
+                      className="flex items-center space-x-2"
+                    >
+                      <RadioGroupItem value={method.value} id={method.value} />
+                      <Label htmlFor={method.value}>{method.label}</Label>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <span className="ml-2 text-gray-500 cursor-pointer">
+                              <MdInfoOutline size={20} />
+                            </span>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>
+                              Payments will be transferred in USD. Your bank may
+                              charge conversion fees.
+                            </p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
+                  ))}
+                </RadioGroup>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      )}
+    </div>
+  );
+};
+
+export default StepOne;
