@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   FormControl,
   FormField,
@@ -15,13 +16,63 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 
-const StepTwo = ({ form }: { form: any }) => {
+const StepTwo = ({
+  form,
+  onNextStep,
+  onPrevStep,
+}: {
+  form: any;
+  onNextStep: () => void;
+  onPrevStep: () => void;
+}) => {
   const accountType = form.watch("accountType");
+
+  const [isNextButtonEnabled, setIsNextButtonEnabled] = useState(false);
+
+  useEffect(() => {
+    const accountType = form.getValues("accountType");
+
+    if (accountType === "personal") {
+      const isPersonalFieldsFilled =
+        !!form.getValues("firstName") && !!form.getValues("lastName");
+      setIsNextButtonEnabled(isPersonalFieldsFilled);
+    } else if (accountType === "company") {
+      const isCompanyFieldsFilled =
+        !!form.getValues("ownerName") && !!form.getValues("ownerRole");
+      setIsNextButtonEnabled(isCompanyFieldsFilled);
+    } else {
+      setIsNextButtonEnabled(false);
+    }
+  }, [
+    form.watch("accountType"),
+    form.watch("firstName"),
+    form.watch("lastName"),
+    form.watch("ownerName"),
+    form.watch("ownerRole"),
+  ]);
+
+  useEffect(() => {
+    form.resetField("firstName");
+    form.resetField("lastName");
+    form.resetField("ownerName");
+    form.resetField("ownerRole");
+    form.resetField("dob");
+    form.resetField("placeOfBirth");
+    form.resetField("citizenship");
+    form.resetField("bankName");
+    form.resetField("accountSubtype");
+    form.resetField("clearingNumber");
+    form.resetField("accountNumber");
+    form.resetField("confirmAccountNumber");
+    form.resetField("iban");
+    form.resetField("swift");
+    form.resetField("companyRegistration");
+  }, [accountType, form]);
 
   return (
     <div>
-      {/* Account Type Selection */}
       <FormField
         control={form.control}
         name="accountType"
@@ -49,10 +100,8 @@ const StepTwo = ({ form }: { form: any }) => {
         )}
       />
 
-      {/* Additional Fields for Personal Account */}
       {accountType === "personal" && (
         <>
-          {/* First Name */}
           <FormField
             control={form.control}
             name="firstName"
@@ -67,7 +116,6 @@ const StepTwo = ({ form }: { form: any }) => {
             )}
           />
 
-          {/* Last Name */}
           <FormField
             control={form.control}
             name="lastName"
@@ -91,10 +139,8 @@ const StepTwo = ({ form }: { form: any }) => {
         </>
       )}
 
-      {/* Additional Fields for Company Account */}
       {accountType === "company" && (
         <>
-          {/* Account Owner's Name */}
           <FormField
             control={form.control}
             name="ownerName"
@@ -109,13 +155,6 @@ const StepTwo = ({ form }: { form: any }) => {
             )}
           />
 
-          {/* Disclaimer Text */}
-          <p className="text-sm text-gray-600 mt-4">
-            Enter the name of the company or legal entity exactly as it is
-            written on the account.
-          </p>
-
-          {/* Role Selection */}
           <FormField
             control={form.control}
             name="ownerRole"
@@ -142,8 +181,26 @@ const StepTwo = ({ form }: { form: any }) => {
               </FormItem>
             )}
           />
+
+          <p className="text-sm text-gray-600 mt-4">
+            Enter the name of the company or legal entity exactly as it is
+            written on the account.
+          </p>
         </>
       )}
+
+      <div className="flex justify-between mt-6">
+        <Button variant="outline" onClick={onPrevStep}>
+          Back
+        </Button>
+        <Button
+          variant="outline"
+          onClick={onNextStep}
+          disabled={!isNextButtonEnabled}
+        >
+          Continue
+        </Button>
+      </div>
     </div>
   );
 };

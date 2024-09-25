@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   TooltipProvider,
   Tooltip,
@@ -32,8 +32,14 @@ import { MdInfoOutline } from "react-icons/md";
 import { CaretSortIcon } from "@radix-ui/react-icons";
 import { useGetCountries } from "@/hooks/use-get-countries";
 
-const StepOne = ({ form }: { form: any }) => {
-  const countries = useGetCountries(); // Assume this is an array of country objects
+const StepOne = ({
+  form,
+  onNextStep,
+}: {
+  form: any;
+  onNextStep: () => void;
+}) => {
+  const countries = useGetCountries();
   const paymentMethods = [
     { label: "Bank transfer (in USD)", value: "bank_usd" },
   ] as any;
@@ -43,9 +49,17 @@ const StepOne = ({ form }: { form: any }) => {
   const [countryPopoverOpen, setCountryPopoverOpen] = useState(false);
   const [countrySearch, setCountrySearch] = useState("");
 
+  const [isNextButtonEnabled, setIsNextButtonEnabled] = useState(false);
+
+  useEffect(() => {
+    const isCountrySelected = !!form.getValues("country");
+    const isPaymentMethodSelected = !!form.getValues("paymentMethod");
+
+    setIsNextButtonEnabled(isCountrySelected && isPaymentMethodSelected);
+  }, [form.watch("country"), form.watch("paymentMethod")]);
+
   return (
     <div>
-      {/* Country Selection with Command and Popover */}
       <FormField
         control={form.control}
         name="country"
@@ -108,7 +122,6 @@ const StepOne = ({ form }: { form: any }) => {
         )}
       />
 
-      {/* Payment Method Selection with RadioGroup and Tooltip */}
       {selectedCountry && (
         <FormField
           control={form.control}
@@ -153,6 +166,16 @@ const StepOne = ({ form }: { form: any }) => {
           )}
         />
       )}
+
+      <div className="flex justify-between mt-6">
+        <Button
+          variant="outline"
+          onClick={onNextStep}
+          disabled={!isNextButtonEnabled}
+        >
+          Continue
+        </Button>
+      </div>
     </div>
   );
 };

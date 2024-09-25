@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import {
   FormControl,
   FormField,
@@ -5,71 +6,93 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from "@/components/ui/popover";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import { CalendarIcon } from "@radix-ui/react-icons"; // Using Radix UI CalendarIcon
-import { format } from "date-fns";
-import { useState } from "react";
 import { Input } from "@/components/ui/input";
+import { format } from "date-fns";
+import { useEffect, useState } from "react";
 
-const StepThree = ({ form }: { form: any }) => {
+const StepThree = ({
+  form,
+  onPrevStep,
+  onNextStep,
+}: {
+  form: any;
+  onPrevStep: () => void;
+  onNextStep: () => void;
+}) => {
   const accountType = form.watch("accountType");
-  const [dobPopoverOpen, setDobPopoverOpen] = useState(false); // State to control popover
+  const [isNextButtonEnabled, setIsNextButtonEnabled] = useState(false);
+
+  const formatDateForInput = (date: string | Date | undefined) => {
+    if (!date) return "";
+    if (typeof date === "string") return date;
+    return format(date, "yyyy/MM/dd");
+  };
+
+  const handleDateInput = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    field: any
+  ) => {
+    let input = e.target.value.replace(/[^\d/]/g, "");
+    if (input.length <= 10) {
+      if (input.length >= 5 && input[4] !== "/") {
+        input = input.slice(0, 4) + "/" + input.slice(4);
+      }
+      if (input.length >= 8 && input[7] !== "/") {
+        input = input.slice(0, 7) + "/" + input.slice(7);
+      }
+    }
+    field.onChange(input);
+  };
+
+  useEffect(() => {
+    const accountType = form.getValues("accountType");
+
+    if (accountType === "personal") {
+      const isPersonalFieldsFilled =
+        !!form.getValues("dob") &&
+        !!form.getValues("placeOfBirth") &&
+        !!form.getValues("citizenship");
+      setIsNextButtonEnabled(isPersonalFieldsFilled);
+    } else if (accountType === "company") {
+      const isCompanyFieldsFilled =
+        !!form.getValues("dob") &&
+        !!form.getValues("placeOfBirth") &&
+        !!form.getValues("citizenship");
+      setIsNextButtonEnabled(isCompanyFieldsFilled);
+    } else {
+      setIsNextButtonEnabled(false);
+    }
+  }, [
+    form.watch("accountType"),
+    form.watch("dob"),
+    form.watch("placeOfBirth"),
+    form.watch("citizenship"),
+  ]);
 
   return (
     <div className="space-y-4 mt-8">
-      {/* KYC for Personal Account */}
       {accountType === "personal" && (
         <>
-          {/* Date of Birth */}
           <FormField
             control={form.control}
             name="dob"
             render={({ field }) => (
               <FormItem className="flex flex-col">
                 <FormLabel>Date of Birth</FormLabel>
-                <Popover open={dobPopoverOpen} onOpenChange={setDobPopoverOpen}>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant={"outline"}
-                        className="w-[240px] pl-3 text-left font-normal"
-                      >
-                        {field.value ? (
-                          format(new Date(field.value), "PPP")
-                        ) : (
-                          <span>Pick a date</span>
-                        )}
-                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={field.value}
-                      onSelect={(date) => {
-                        field.onChange(date);
-                        setDobPopoverOpen(false); // Close the popover when date is selected
-                      }}
-                      disabled={(date) =>
-                        date > new Date() || date < new Date("1900-01-01")
-                      }
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
+                <FormControl>
+                  <Input
+                    type="text"
+                    placeholder="YYYY/MM/DD"
+                    value={formatDateForInput(field.value)}
+                    onChange={(e) => handleDateInput(e, field)}
+                    className="max-w-[240px]"
+                  />
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
 
-          {/* Place of Birth */}
           <FormField
             control={form.control}
             name="placeOfBirth"
@@ -84,7 +107,6 @@ const StepThree = ({ form }: { form: any }) => {
             )}
           />
 
-          {/* Citizenship */}
           <FormField
             control={form.control}
             name="citizenship"
@@ -101,53 +123,28 @@ const StepThree = ({ form }: { form: any }) => {
         </>
       )}
 
-      {/* KYC for Company Account */}
       {accountType === "company" && (
         <>
-          {/* Date of Birth of Representative */}
           <FormField
             control={form.control}
             name="dob"
             render={({ field }) => (
               <FormItem className="flex flex-col">
                 <FormLabel>Date of Birth (Representative)</FormLabel>
-                <Popover open={dobPopoverOpen} onOpenChange={setDobPopoverOpen}>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant={"outline"}
-                        className="w-[240px] pl-3 text-left font-normal"
-                      >
-                        {field.value ? (
-                          format(new Date(field.value), "PPP")
-                        ) : (
-                          <span>Pick a date</span>
-                        )}
-                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={field.value}
-                      onSelect={(date) => {
-                        field.onChange(date);
-                        setDobPopoverOpen(false); // Close the popover when date is selected
-                      }}
-                      disabled={(date) =>
-                        date > new Date() || date < new Date("1900-01-01")
-                      }
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
+                <FormControl>
+                  <Input
+                    type="text"
+                    placeholder="YYYY/MM/DD"
+                    value={formatDateForInput(field.value)}
+                    onChange={(e) => handleDateInput(e, field)}
+                    className="max-w-[240px]"
+                  />
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
 
-          {/* Place of Birth */}
           <FormField
             control={form.control}
             name="placeOfBirth"
@@ -165,7 +162,6 @@ const StepThree = ({ form }: { form: any }) => {
             )}
           />
 
-          {/* Citizenship */}
           <FormField
             control={form.control}
             name="citizenship"
@@ -183,7 +179,6 @@ const StepThree = ({ form }: { form: any }) => {
             )}
           />
 
-          {/* (Optional) Company Registration Information */}
           <FormField
             control={form.control}
             name="companyRegistration"
@@ -202,6 +197,18 @@ const StepThree = ({ form }: { form: any }) => {
           />
         </>
       )}
+      <div className="flex justify-between mt-6">
+        <Button variant="outline" onClick={onPrevStep}>
+          Back
+        </Button>
+        <Button
+          variant="outline"
+          onClick={onNextStep}
+          disabled={!isNextButtonEnabled}
+        >
+          Continue
+        </Button>
+      </div>
     </div>
   );
 };

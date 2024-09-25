@@ -3,13 +3,13 @@
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Form } from "@/components/ui/form";
 import { PaymentSettingsSchema } from "@/schemas";
 import StepOne from "@/app/[locale]/(protected)/therapist/settings/payment/step-one";
 import StepTwo from "@/app/[locale]/(protected)/therapist/settings/payment/step-two";
 import StepThree from "@/app/[locale]/(protected)/therapist/settings/payment/step-three";
+import StepFour from "@/app/[locale]/(protected)/therapist/settings/payment/step-four";
 
 const PaymentSettingsForm = () => {
   const form = useForm({
@@ -22,20 +22,18 @@ const PaymentSettingsForm = () => {
   });
 
   const [step, setStep] = useState(1);
-  const totalSteps = 3;
+  const totalSteps = 4;
 
   const onSubmit = (data) => {
     console.log("Form Submitted:", data);
     // Handle form submission
   };
 
-  const handleNextStep = (e) => {
-    e.preventDefault();
+  const handleNextStep = () => {
     if (step < totalSteps) setStep(step + 1);
   };
 
-  const handlePrevStep = (e) => {
-    e.preventDefault();
+  const handlePrevStep = () => {
     if (step > 1) setStep(step - 1);
   };
 
@@ -45,23 +43,22 @@ const PaymentSettingsForm = () => {
 
       <Form {...form} onSubmit={form.handleSubmit(onSubmit)}>
         <form>
-          {step === 1 && <StepOne form={form} />}
-          {step === 2 && <StepTwo form={form} />}
-          {step === 3 && <StepThree form={form} />}
-
-          <div className="flex justify-between mt-6">
-            {step > 1 && (
-              <Button variant="outline" onClick={handlePrevStep}>
-                Back
-              </Button>
-            )}
-            {step < totalSteps && (
-              <Button variant="outline" onClick={handleNextStep}>
-                Continue
-              </Button>
-            )}
-            {step === totalSteps && <Button type="submit">Submit</Button>}
-          </div>
+          {step === 1 && <StepOne form={form} onNextStep={handleNextStep} />}
+          {step === 2 && (
+            <StepTwo
+              form={form}
+              onNextStep={handleNextStep}
+              onPrevStep={handlePrevStep}
+            />
+          )}
+          {step === 3 && (
+            <StepThree
+              form={form}
+              onNextStep={handleNextStep}
+              onPrevStep={handlePrevStep}
+            />
+          )}
+          {step === 4 && <StepFour form={form} onPrevStep={handlePrevStep} />}
         </form>
       </Form>
     </div>
