@@ -35,9 +35,11 @@ import { useGetCountries } from "@/hooks/use-get-countries";
 const StepOne = ({
   form,
   onNextStep,
+  t,
 }: {
   form: any;
   onNextStep: () => void;
+  t: any;
 }) => {
   const countries = useGetCountries();
   const paymentMethods = [
@@ -65,7 +67,7 @@ const StepOne = ({
         name="country"
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="block">Select your country</FormLabel>
+            <FormLabel className="block">{t("selectYourCountry")}</FormLabel>
             <Popover
               open={countryPopoverOpen}
               onOpenChange={setCountryPopoverOpen}
@@ -80,7 +82,7 @@ const StepOne = ({
                     {field.value
                       ? countries.find((c: any) => c.value === field.value)
                           ?.label
-                      : "Select your country"}
+                      : t("selectYourCountry")}
                   </div>
                   <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
@@ -93,7 +95,7 @@ const StepOne = ({
                     onValueChange={setCountrySearch}
                   />
                   <CommandList>
-                    <CommandEmpty>No country found.</CommandEmpty>
+                    <CommandEmpty>{t("noCountryFound")}</CommandEmpty>
                     <CommandGroup>
                       {countries
                         .filter((country: any) =>
@@ -128,7 +130,7 @@ const StepOne = ({
           name="paymentMethod"
           render={({ field }) => (
             <FormItem className="mt-8">
-              <FormLabel>Select Payment Method</FormLabel>
+              <FormLabel>{t("selectPaymentMethod")}</FormLabel>
               <FormControl>
                 <RadioGroup
                   onValueChange={field.onChange}
@@ -150,10 +152,7 @@ const StepOne = ({
                             </span>
                           </TooltipTrigger>
                           <TooltipContent>
-                            <p>
-                              Payments will be transferred in USD. Your bank may
-                              charge conversion fees.
-                            </p>
+                            <p>{t("bankTransferInfo")}</p>
                           </TooltipContent>
                         </Tooltip>
                       </TooltipProvider>
@@ -173,7 +172,7 @@ const StepOne = ({
           onClick={onNextStep}
           disabled={!isNextButtonEnabled}
         >
-          Continue
+          {t("continue")}
         </Button>
       </div>
     </div>

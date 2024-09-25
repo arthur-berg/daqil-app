@@ -106,7 +106,6 @@ export const useGetCountries = () => {
     { value: "SG", label: t("SG") }, // Singapore
     { value: "SK", label: t("SK") }, // Slovakia
     { value: "SI", label: t("SI") }, // Slovenia
-    { value: "ZA", label: t("ZA") }, // South Africa
     { value: "KR", label: t("KR") }, // South Korea
     { value: "ES", label: t("ES") }, // Spain
     { value: "SE", label: t("SE") }, // Sweden
@@ -115,9 +114,6 @@ export const useGetCountries = () => {
     { value: "TR", label: t("TR") }, // Turkey
     { value: "UG", label: t("UG") }, // Uganda
     { value: "UA", label: t("UA") }, // Ukraine
-    { value: "AE", label: t("AE") }, // United Arab Emirates
-    { value: "GB", label: t("GB") }, // United Kingdom
-    { value: "US", label: t("US") }, // United States
     { value: "UY", label: t("UY") }, // Uruguay
     { value: "UZ", label: t("UZ") }, // Uzbekistan
     { value: "VE", label: t("VE") }, // Venezuela

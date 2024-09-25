@@ -14,9 +14,13 @@ import { useEffect, useState } from "react";
 const StepFour = ({
   form,
   onPrevStep,
+  onNextStep,
+  t,
 }: {
   form: any;
   onPrevStep: () => void;
+  onNextStep: () => void;
+  t: any;
 }) => {
   const accountType = form.watch("accountType");
   const [isNextButtonEnabled, setIsNextButtonEnabled] = useState(false);
@@ -50,7 +54,7 @@ const StepFour = ({
 
   return (
     <div>
-      <h3 className="text-lg font-medium mb-6">Add Bank Account Details</h3>
+      <h3 className="text-lg font-medium mb-6">{t("addBankAccountDetails")}</h3>
 
       {accountType === "personal" && (
         <>
@@ -59,7 +63,7 @@ const StepFour = ({
             name="accountSubtype"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Is this a checking or savings account?</FormLabel>
+                <FormLabel>{t("accountSubtype")}</FormLabel>
                 <FormControl>
                   <RadioGroup
                     onValueChange={field.onChange}
@@ -68,11 +72,11 @@ const StepFour = ({
                   >
                     <div className="flex items-center space-x-2">
                       <RadioGroupItem value="checking" id="checking" />
-                      <Label htmlFor="checking">Checking Account</Label>
+                      <Label htmlFor="checking">{t("checkingAccount")}</Label>
                     </div>
                     <div className="flex items-center space-x-2">
                       <RadioGroupItem value="savings" id="savings" />
-                      <Label htmlFor="savings">Savings Account</Label>
+                      <Label htmlFor="savings">{t("savingsAccount")}</Label>
                     </div>
                   </RadioGroup>
                 </FormControl>
@@ -86,13 +90,13 @@ const StepFour = ({
             name="bankName"
             render={({ field }) => (
               <FormItem className="mt-4">
-                <FormLabel>Bank Name</FormLabel>
+                <FormLabel>{t("bankName")}</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="Enter your bank's full name" />
+                  <Input {...field} placeholder={t("enterYourBankName")} />
                 </FormControl>
                 <FormMessage />
                 <p className="text-xs text-gray-600 mt-2">
-                  Please enter the full name of your bank.
+                  {t("enterBankNameHint")}
                 </p>
               </FormItem>
             )}
@@ -103,14 +107,16 @@ const StepFour = ({
             name="clearingNumber"
             render={({ field }) => (
               <FormItem className="mt-4">
-                <FormLabel>Clearing Number</FormLabel>
+                <FormLabel>{t("clearingNumber")}</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="Enter your clearing number" />
+                  <Input
+                    {...field}
+                    placeholder={t("enterYourClearingNumber")}
+                  />
                 </FormControl>
                 <FormMessage />
                 <p className="text-xs text-gray-600 mt-2">
-                  The clearing number for your bank account is usually 3-5
-                  digits long.
+                  {t("clearingNumberHint")}
                 </p>
               </FormItem>
             )}
@@ -121,14 +127,13 @@ const StepFour = ({
             name="accountNumber"
             render={({ field }) => (
               <FormItem className="mt-4">
-                <FormLabel>Account Number</FormLabel>
+                <FormLabel>{t("accountNumber")}</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="Enter your account number" />
+                  <Input {...field} placeholder={t("enterYourAccountNumber")} />
                 </FormControl>
                 <FormMessage />
                 <p className="text-xs text-gray-600 mt-2">
-                  Please enter your account number. This is typically found in
-                  your account details.
+                  {t("accountNumberHint")}
                 </p>
               </FormItem>
             )}
@@ -139,11 +144,11 @@ const StepFour = ({
             name="confirmAccountNumber"
             render={({ field }) => (
               <FormItem className="mt-4">
-                <FormLabel>Confirm Account Number</FormLabel>
+                <FormLabel>{t("confirmAccountNumber")}</FormLabel>
                 <FormControl>
                   <Input
                     {...field}
-                    placeholder="Re-enter your account number"
+                    placeholder={t("reEnterYourAccountNumber")}
                   />
                 </FormControl>
                 <FormMessage />
@@ -160,13 +165,13 @@ const StepFour = ({
             name="bankName"
             render={({ field }) => (
               <FormItem className="mt-4">
-                <FormLabel>Bank Name</FormLabel>
+                <FormLabel>{t("bankName")}</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="Enter your bank's full name" />
+                  <Input {...field} placeholder={t("enterYourBankName")} />
                 </FormControl>
                 <FormMessage />
                 <p className="text-xs text-gray-600 mt-2">
-                  Please enter the full name of your bank.
+                  {t("enterBankNameHint")}
                 </p>
               </FormItem>
             )}
@@ -177,15 +182,12 @@ const StepFour = ({
             name="iban"
             render={({ field }) => (
               <FormItem className="mt-4">
-                <FormLabel>IBAN</FormLabel>
+                <FormLabel>{t("iban")}</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="Enter your IBAN" />
+                  <Input {...field} placeholder={t("enterYourIban")} />
                 </FormControl>
                 <FormMessage />
-                <p className="text-xs text-gray-600 mt-2">
-                  The International Bank Account Number (IBAN) is used to
-                  identify your bank account for international transactions.
-                </p>
+                <p className="text-xs text-gray-600 mt-2">{t("ibanHint")}</p>
               </FormItem>
             )}
           />
@@ -195,26 +197,30 @@ const StepFour = ({
             name="swift"
             render={({ field }) => (
               <FormItem className="mt-4">
-                <FormLabel>SWIFT/BIC Code</FormLabel>
+                <FormLabel>{t("swiftCode")}</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="Enter your SWIFT/BIC code" />
+                  <Input {...field} placeholder={t("enterYourSwiftCode")} />
                 </FormControl>
                 <FormMessage />
                 <p className="text-xs text-gray-600 mt-2">
-                  The SWIFT/BIC code is used for identifying your bank in
-                  international transactions.
+                  {t("swiftCodeHint")}
                 </p>
               </FormItem>
             )}
           />
         </>
       )}
+
       <div className="flex justify-between mt-6">
         <Button variant="outline" onClick={onPrevStep}>
-          Back
+          {t("back")}
         </Button>
-        <Button type="submit" disabled={!isNextButtonEnabled}>
-          Submit
+        <Button
+          variant="outline"
+          onClick={onNextStep}
+          disabled={!isNextButtonEnabled}
+        >
+          {t("continue")}
         </Button>
       </div>
     </div>

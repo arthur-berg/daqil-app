@@ -84,6 +84,7 @@ export type ExtendedUser = DefaultSession["user"] & {
     preferredCurrency?: "USD" | "AED" | "EUR";
     timeZone?: string;
   };
+  paymentSettings: any;
 };
 
 declare module "next-auth" {

@@ -275,6 +275,39 @@ const userSchema = new Schema(
         default: "America/New_York",
       },
     },
+    paymentSettings: {
+      type: { type: String, enum: ["personal", "company"] },
+      personal: {
+        kyc: {
+          firstName: String,
+          lastName: String,
+          dateOfBirth: Date,
+          placeOfBirth: String,
+          citizenship: String,
+        },
+        bankDetails: {
+          accountNumber: String,
+          bankName: String,
+          clearingNumber: String,
+          accountType: { type: String, enum: ["checking", "savings"] },
+        },
+      },
+      company: {
+        kyc: {
+          ownerName: String,
+          ownerRole: String,
+          dateOfBirth: Date,
+          placeOfBirth: String,
+          citizenship: String,
+          companyRegistration: String,
+        },
+        bankDetails: {
+          iban: String,
+          swift: String,
+          bankName: String,
+        },
+      },
+    },
   },
   {
     timestamps: true,

@@ -116,6 +116,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           session.user.therapistWorkProfile = token.therapistWorkProfile as any;
           session.user.assignedClients = token.assignedClients as string[];
           session.user.availableTimes = token.availableTimes as any;
+          session.user.paymentSettings = token.paymentSettings as any;
         }
       }
 
@@ -155,6 +156,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         token.assignedClients = existingUser.assignedClients;
         token.availableTimes = existingUser.availableTimes;
         token.therapistWorkProfile = existingUser.therapistWorkProfile;
+        token.paymentSettings = existingUser.paymentSettings;
       }
 
       return token;

@@ -22,10 +22,12 @@ const StepTwo = ({
   form,
   onNextStep,
   onPrevStep,
+  t,
 }: {
   form: any;
   onNextStep: () => void;
   onPrevStep: () => void;
+  t: any;
 }) => {
   const accountType = form.watch("accountType");
 
@@ -53,7 +55,8 @@ const StepTwo = ({
     form.watch("ownerRole"),
   ]);
 
-  useEffect(() => {
+  /*   console.log("values", form.getValues()); */
+  const resetFields = () => {
     form.resetField("firstName");
     form.resetField("lastName");
     form.resetField("ownerName");
@@ -69,7 +72,7 @@ const StepTwo = ({
     form.resetField("iban");
     form.resetField("swift");
     form.resetField("companyRegistration");
-  }, [accountType, form]);
+  };
 
   return (
     <div>
@@ -78,20 +81,24 @@ const StepTwo = ({
         name="accountType"
         render={({ field }) => (
           <FormItem className="mb-8">
-            <FormLabel>What type of account is this?</FormLabel>
+            <FormLabel>{t("typeOfAccount")}</FormLabel>
             <FormControl>
               <RadioGroup
-                onValueChange={field.onChange}
+                onValueChange={(e) => {
+                  resetFields();
+
+                  field.onChange(e);
+                }}
                 value={field.value}
                 className="flex flex-col space-y-2"
               >
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="personal" id="personal" />
-                  <Label htmlFor="personal">Personal</Label>
+                  <Label htmlFor="personal">{t("personal")}</Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="company" id="company" />
-                  <Label htmlFor="company">Company</Label>
+                  <Label htmlFor="company">{t("company")}</Label>
                 </div>
               </RadioGroup>
             </FormControl>
@@ -107,9 +114,9 @@ const StepTwo = ({
             name="firstName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>First Name</FormLabel>
+                <FormLabel>{t("firstName")}</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="Enter first name" />
+                  <Input {...field} placeholder={t("enterFirstName")} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -121,9 +128,9 @@ const StepTwo = ({
             name="lastName"
             render={({ field }) => (
               <FormItem className="mt-4">
-                <FormLabel>Last Name</FormLabel>
+                <FormLabel>{t("lastName")}</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="Enter last name" />
+                  <Input {...field} placeholder={t("enterLastName")} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -132,9 +139,7 @@ const StepTwo = ({
 
           {/* Disclaimer Text */}
           <p className="text-sm text-gray-600 mt-4">
-            Please enter the account holder’s name exactly as it appears on your
-            bank statement. If the account has multiple owners, only provide one
-            name.
+            {t("accountHolderDisclaimer")}
           </p>
         </>
       )}
@@ -146,9 +151,9 @@ const StepTwo = ({
             name="ownerName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Account Owner's Name</FormLabel>
+                <FormLabel>{t("accountOwnersName")}</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="Enter the owner's name" />
+                  <Input {...field} placeholder={t("enterOwnersName")} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -160,7 +165,7 @@ const StepTwo = ({
             name="ownerRole"
             render={({ field }) => (
               <FormItem className="mt-4">
-                <FormLabel>What is their role?</FormLabel>
+                <FormLabel>{t("whatIsTheirRole")}</FormLabel>
                 <FormControl>
                   <Select
                     onValueChange={field.onChange}
@@ -170,10 +175,10 @@ const StepTwo = ({
                       <SelectValue placeholder="Select role" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="ceo">CEO</SelectItem>
-                      <SelectItem value="owner">Owner</SelectItem>
-                      <SelectItem value="director">Director</SelectItem>
-                      <SelectItem value="manager">Manager</SelectItem>
+                      <SelectItem value="ceo">{t("ceo")}</SelectItem>
+                      <SelectItem value="owner">{t("owner")}</SelectItem>
+                      <SelectItem value="director">{t("director")}</SelectItem>
+                      <SelectItem value="manager">{t("manager")}</SelectItem>
                     </SelectContent>
                   </Select>
                 </FormControl>
@@ -183,22 +188,21 @@ const StepTwo = ({
           />
 
           <p className="text-sm text-gray-600 mt-4">
-            Enter the name of the company or legal entity exactly as it is
-            written on the account.
+            {t("companyOwnerDisclaimer")}
           </p>
         </>
       )}
 
       <div className="flex justify-between mt-6">
         <Button variant="outline" onClick={onPrevStep}>
-          Back
+          {t("back")}
         </Button>
         <Button
           variant="outline"
           onClick={onNextStep}
           disabled={!isNextButtonEnabled}
         >
-          Continue
+          {t("continue")}
         </Button>
       </div>
     </div>

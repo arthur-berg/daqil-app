@@ -14,10 +14,12 @@ const StepThree = ({
   form,
   onPrevStep,
   onNextStep,
+  t,
 }: {
   form: any;
   onPrevStep: () => void;
   onNextStep: () => void;
+  t: any;
 }) => {
   const accountType = form.watch("accountType");
   const [isNextButtonEnabled, setIsNextButtonEnabled] = useState(false);
@@ -78,7 +80,7 @@ const StepThree = ({
             name="dob"
             render={({ field }) => (
               <FormItem className="flex flex-col">
-                <FormLabel>Date of Birth</FormLabel>
+                <FormLabel>{t("dateOfBirth")}</FormLabel>
                 <FormControl>
                   <Input
                     type="text"
@@ -98,9 +100,9 @@ const StepThree = ({
             name="placeOfBirth"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Place of Birth</FormLabel>
+                <FormLabel>{t("placeOfBirth")}</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="Enter your place of birth" />
+                  <Input {...field} placeholder={t("enterYourPlaceOfBirth")} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -112,9 +114,9 @@ const StepThree = ({
             name="citizenship"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Citizenship</FormLabel>
+                <FormLabel>{t("citizenship")}</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="Enter your citizenship" />
+                  <Input {...field} placeholder={t("enterYourCitizenship")} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -130,7 +132,7 @@ const StepThree = ({
             name="dob"
             render={({ field }) => (
               <FormItem className="flex flex-col">
-                <FormLabel>Date of Birth (Representative)</FormLabel>
+                <FormLabel>{t("dateOfBirthRepresentative")}</FormLabel>
                 <FormControl>
                   <Input
                     type="text"
@@ -150,11 +152,11 @@ const StepThree = ({
             name="placeOfBirth"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Place of Birth (Representative)</FormLabel>
+                <FormLabel>{t("placeOfBirthRepresentative")}</FormLabel>
                 <FormControl>
                   <Input
                     {...field}
-                    placeholder="Enter the representative's place of birth"
+                    placeholder={t("enterRepresentativesPlaceOfBirth")}
                   />
                 </FormControl>
                 <FormMessage />
@@ -167,11 +169,11 @@ const StepThree = ({
             name="citizenship"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Citizenship (Representative)</FormLabel>
+                <FormLabel>{t("citizenshipRepresentative")}</FormLabel>
                 <FormControl>
                   <Input
                     {...field}
-                    placeholder="Enter the representative's citizenship"
+                    placeholder={t("enterRepresentativesCitizenship")}
                   />
                 </FormControl>
                 <FormMessage />
@@ -184,11 +186,11 @@ const StepThree = ({
             name="companyRegistration"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Company Registration Number (Optional)</FormLabel>
+                <FormLabel>{t("companyRegistrationNumber")}</FormLabel>
                 <FormControl>
                   <Input
                     {...field}
-                    placeholder="Enter company registration number"
+                    placeholder={t("enterCompanyRegistrationNumber")}
                   />
                 </FormControl>
                 <FormMessage />
@@ -199,14 +201,14 @@ const StepThree = ({
       )}
       <div className="flex justify-between mt-6">
         <Button variant="outline" onClick={onPrevStep}>
-          Back
+          {t("back")}
         </Button>
         <Button
           variant="outline"
           onClick={onNextStep}
           disabled={!isNextButtonEnabled}
         >
-          Continue
+          {t("continue")}
         </Button>
       </div>
     </div>

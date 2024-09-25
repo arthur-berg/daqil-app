@@ -79,11 +79,11 @@ const SettingsForm = ({ hidePageTitle }: { hidePageTitle?: boolean }) => {
   const form = useForm<z.infer<typeof SettingsSchema>>({
     resolver: zodResolver(SettingsSchema),
     defaultValues: {
-      password: undefined,
-      newPassword: undefined,
-      email: user?.email || undefined,
-      role: user?.role || undefined,
-      isTwoFactorEnabled: user?.isTwoFactorEnabled || undefined,
+      password: "",
+      newPassword: "",
+      email: user?.email || "",
+      role: user?.role || "",
+      isTwoFactorEnabled: user?.isTwoFactorEnabled || false,
       settings: {
         timeZone:
           user?.settings?.timeZone ||
