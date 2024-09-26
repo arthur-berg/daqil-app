@@ -4,6 +4,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { getLangDir } from "rtl-detect";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { GoogleTagManager } from "@next/third-parties/google";
 
 import "@/app/globals.css";
 
@@ -35,11 +36,14 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale} dir={direction}>
+      {process.env.NODE_ENV === "production" && (
+        <GoogleTagManager gtmId="GTM-WWNR5RVB" />
+      )}
       <body className={dmSans.className}>
         <Toaster />
 
         {children}
-        {process.env.NODE_ENV !== "development" && (
+        {process.env.NODE_ENV === "production" && (
           <>
             <Analytics />
             <SpeedInsights />
