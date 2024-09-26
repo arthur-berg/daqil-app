@@ -28,6 +28,13 @@ const AdminPage = async () => {
               </div>
             </Link>
           </div>
+          <div>
+            <Link href="/admin/dashboard">
+              <div className="p-4 border rounded-md shadow-md hover:bg-gray-100 transition">
+                <p className="text-lg font-medium">{t("clientOverview")}</p>
+              </div>
+            </Link>
+          </div>
         </CardContent>
       </Card>
     </div>

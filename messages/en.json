@@ -471,6 +471,7 @@
     "selectAppointmentType": "Select type of appointment"
   },
   "AdminPage": {
+    "clientOverview": "Client Overview",
     "inviteTherapists": "Invite psychologists",
     "email": "Email",
     "sendInvite": "Send invite",

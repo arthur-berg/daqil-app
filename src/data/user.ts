@@ -13,6 +13,16 @@ export const getUserByEmail = async (email: string) => {
   }
 };
 
+export const getAllClients = async () => {
+  try {
+    const clients = await User.find({ role: UserRole.CLIENT }).lean();
+
+    return clients;
+  } catch {
+    return null;
+  }
+};
+
 export const getUserById = async (id: string) => {
   try {
     const user = await User.findById(id);

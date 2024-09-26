@@ -41,7 +41,7 @@ const AdminTherapistsPage = async () => {
             <TableBody>
               {therapists?.map(async (therapist) => (
                 <TableRow key={therapist.email}>
-                  <TableCell className="font-medium">
+                  <TableCell className="font-medium text-primary underline">
                     <Link href={`/admin/therapists/${therapist._id}`}>
                       {await getFullName(
                         therapist.firstName,
