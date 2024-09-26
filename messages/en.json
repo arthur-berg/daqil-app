@@ -294,6 +294,7 @@
     "noImage": "No image"
   },
   "BookingCalendar": {
+    "closestAvailableDate": "Closest date that has available time slots: {date}",
     "addToCalendar": "Add to calendar",
     "addThisEventToYourCalendar": "Add this event to your calendar",
     "addToGoogleCalendar":"Add to Google Calendar",

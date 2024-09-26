@@ -1,7 +1,7 @@
 "use client";
 
 import { Calendar } from "@/components/ui/calendar";
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { addDays, format, isAfter, isBefore, set } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
@@ -35,6 +35,9 @@ const BookIntroCall = ({
   const t = useTranslations("BookingCalendar");
   const [bookingDialogOpen, setBookingDialogOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
+  const [closestAvailableDate, setClosestAvailableDate] = useState<Date | null>(
+    null
+  );
 
   const [availableTimeSlots, setAvailableTimeSlots] = useState<
     { start: Date; end: Date }[]
@@ -54,6 +57,51 @@ const BookIntroCall = ({
     seconds: 0,
     milliseconds: 0,
   });
+
+  const handleSetClosestAvailableDate = async (startingDate: Date) => {
+    let currentDate = startingDate;
+    const maxLookAheadDays = 30; // Define how many days ahead to search
+    let foundAvailableSlots = false; // Track if we find available slots
+
+    for (let i = 0; i < maxLookAheadDays; i++) {
+      const allAvailableSlots = therapists.reduce(
+        (slots: any, therapist: any) => {
+          const therapistAvailableTimes = therapist.availableTimes;
+          const therapistAppointments = therapist.appointments;
+
+          const introCallSlots = getTherapistAvailableTimeSlots(
+            therapistAvailableTimes,
+            appointmentType,
+            currentDate,
+            therapistAppointments
+          );
+
+          return [...slots, ...introCallSlots];
+        },
+        []
+      );
+
+      if (allAvailableSlots.length > 0) {
+        // Found available slots for this date
+        setClosestAvailableDate(currentDate); // Set the closest available date
+        setAvailableTimeSlots(allAvailableSlots); // Set available time slots for this date
+        foundAvailableSlots = true;
+        break; // Stop searching as we've found a date with available slots
+      }
+
+      currentDate = addDays(currentDate, 1); // Move to the next day
+    }
+
+    if (!foundAvailableSlots) {
+      // No available slots were found within the given days
+      setClosestAvailableDate(null); // No available dates found
+      console.log("No available time slots found within 30 days.");
+    }
+  };
+
+  useEffect(() => {
+    handleSetClosestAvailableDate(today);
+  }, []);
 
   const groupTimeSlots = (slots: { start: Date; end: Date }[]) => {
     const morning = slots.filter((slot) => slot.start.getHours() < 12);
@@ -80,6 +128,8 @@ const BookIntroCall = ({
             selectedDate,
             therapistAppointments
           );
+
+          console.log("introCallSlots", introCallSlots);
 
           return [...slots, ...introCallSlots];
         },
@@ -141,6 +191,15 @@ const BookIntroCall = ({
                 <Button variant="secondary">{t("goBack")}</Button>
               </Link>
             </div>
+            {closestAvailableDate && (
+              <div className="mb-4 p-4 bg-blue-100 rounded-md">
+                <p className="text-blue-600 font-semibold">
+                  {t("closestAvailableDate", {
+                    date: format(closestAvailableDate, "eeee, MMMM d, yyyy"),
+                  })}
+                </p>
+              </div>
+            )}
             <div className="flex">
               <h2 className="text-xl font-bold mb-4 mr-4">{t("calendar")}</h2>
             </div>

@@ -12,6 +12,7 @@ import VerificationToken from "@/models/VerificationToken";
 import { addUserNameToSubscriberProfile } from "@/lib/mail";
 import { getTranslations } from "next-intl/server";
 import connectToMongoDB from "@/lib/mongoose";
+import { capitalizeFirstLetter } from "@/utils";
 
 const verifyPasswordAndLogin = async ({
   existingUser,
@@ -98,6 +99,16 @@ export const setupAccount = async (
     return { error: ErrorMessages("emailNotExist") };
   }
 
+  const capitalizedFirstName = {
+    en: capitalizeFirstLetter(firstName.en),
+    ar: firstName.ar,
+  };
+
+  const capitalizedLastName = {
+    en: capitalizeFirstLetter(lastName.en),
+    ar: lastName.ar,
+  };
+
   const hashedPassword = await bcrypt.hash(password, 10);
 
   if (!token) {
@@ -105,8 +116,8 @@ export const setupAccount = async (
       existingUser,
       currentPassword,
       hashedPassword,
-      firstName,
-      lastName,
+      firstName: capitalizedFirstName,
+      lastName: capitalizedLastName,
       email,
       password,
       locale,
@@ -122,8 +133,8 @@ export const setupAccount = async (
       existingUser,
       currentPassword,
       hashedPassword,
-      firstName,
-      lastName,
+      firstName: capitalizedFirstName,
+      lastName: capitalizedLastName,
       email,
       password,
       locale,
@@ -140,15 +151,19 @@ export const setupAccount = async (
   await User.findByIdAndUpdate(existingUser._id, {
     password: hashedPassword,
     isAccountSetupDone: true,
-    firstName,
-    lastName,
+    firstName: capitalizedFirstName,
+    lastName: capitalizedLastName,
     personalInfo,
     settings: updatedSettings,
   });
 
   await VerificationToken.findByIdAndDelete(existingToken._id);
 
-  await addUserNameToSubscriberProfile(email, firstName, lastName);
+  await addUserNameToSubscriberProfile(
+    email,
+    capitalizedFirstName,
+    capitalizedLastName
+  );
 
   await login({ email, password }, locale);
 

@@ -287,6 +287,7 @@
     "readMore": "اقرأ المزيد"
   },
   "BookingCalendar": {
+    "closestAvailableDate": "أقرب تاريخ يحتوي على أوقات متاحة: {date}",
     "addToCalendar": "أضف إلى التقويم",
 "addThisEventToYourCalendar": "أضف هذا الحدث إلى تقويمك",
 "addToGoogleCalendar": "أضف إلى تقويم جوجل",
