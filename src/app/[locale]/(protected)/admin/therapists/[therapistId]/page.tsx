@@ -83,6 +83,11 @@ const TherapistPage = async ({
           <Button>Therapist&apos;s Availability</Button>
         </Link>
       </div>
+      <div className="flex justify-center sm:justify-start">
+        <Link href={`/admin/therapists/${therapistId}/calendar`}>
+          <Button>Therapist&apos;s Calendar</Button>
+        </Link>
+      </div>
 
       <div className="flex flex-col justify-between items-center mb-6">
         <h2 className="text-xl font-bold mt-4">Appointments Overview</h2>

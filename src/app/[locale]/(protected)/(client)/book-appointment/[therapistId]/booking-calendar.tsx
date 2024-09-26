@@ -29,6 +29,7 @@ import { BeatLoader } from "react-spinners";
 import { APPOINTMENT_TYPE_ID_INTRO_SESSION } from "@/contants/config";
 import { reserveAppointment } from "@/actions/appointments/reserve-appointment";
 import AddToCalendarDialog from "@/app/[locale]/(protected)/(client)/book-appointment/[therapistId]/add-to-calendar-dialog";
+import { cn } from "@/lib/utils";
 
 type DateType = {
   justDate: Date | undefined;
@@ -42,6 +43,7 @@ const BookingCalendar = ({
   setChangeTherapistDialogOpen,
   appointmentTypes,
   showOnlyIntroCalls,
+  adminView,
 }: {
   therapistId: string;
   therapistsAvailableTimes: string;
@@ -49,6 +51,7 @@ const BookingCalendar = ({
   setChangeTherapistDialogOpen?: (value: boolean) => void;
   appointmentTypes: any[];
   showOnlyIntroCalls: boolean;
+  adminView?: boolean;
 }) => {
   const [bookingDialogOpen, setBookingDialogOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
@@ -284,13 +287,18 @@ const BookingCalendar = ({
                                 slots.map((time, i) => (
                                   <Button
                                     key={`time-${i}`}
-                                    className="mb-2"
+                                    className={cn(
+                                      "mb-2",
+                                      adminView && "cursor-not-allowed"
+                                    )}
                                     onClick={() => {
-                                      setDate((prev) => ({
-                                        ...prev,
-                                        dateTime: time.start,
-                                      }));
-                                      setBookingDialogOpen(true);
+                                      if (!adminView) {
+                                        setDate((prev) => ({
+                                          ...prev,
+                                          dateTime: time.start,
+                                        }));
+                                        setBookingDialogOpen(true);
+                                      }
                                     }}
                                   >
                                     {format(time.start, "HH:mm")} -{" "}
