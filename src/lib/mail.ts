@@ -156,7 +156,7 @@ export const addUserNameToSubscriberProfile = async (
 export const sendTwoFactorTokenEmail = async (email: string, token: string) => {
   const t = await getTranslations("TwoFactorEmail");
   const message = {
-    from_email: "no-reply@daqil.com",
+    from_email: "no-reply@daqilhealth.com",
     subject: t("subject"),
     html: twoFactorTokenTemplate(token, t),
     to: [
@@ -184,7 +184,7 @@ export const sendVerificationEmail = async (
   const t = await getTranslations("VerificationEmail");
 
   const message = {
-    from_email: "no-reply@daqil.com",
+    from_email: "no-reply@daqilhealth.com",
     subject: isTherapist ? t("subjectTherapist") : t("subject"),
     html: verificationEmailTemplate(t, token, isTherapist),
     to: [
@@ -208,7 +208,7 @@ export const sendPasswordResetEmail = async (email: string, token: string) => {
   const t = await getTranslations("PasswordResetEmail");
 
   const message = {
-    from_email: "no-reply@daqil.com",
+    from_email: "no-reply@daqilhealth.com",
     subject: t("subject"),
     html: passwordResetEmailTemplate(token, t),
     to: [
@@ -250,7 +250,7 @@ export const sendAppointmentCancellationEmail = async (
     : "";
 
   const therapistMessage = {
-    from_email: "no-reply@daqil.com",
+    from_email: "no-reply@daqilhealth.com",
     subject: t("therapistSubject"),
     html: appointmentCancellationTemplate(
       appointmentDetails,
@@ -267,7 +267,7 @@ export const sendAppointmentCancellationEmail = async (
   };
 
   const clientMessage = {
-    from_email: "no-reply@daqil.com",
+    from_email: "no-reply@daqilhealth.com",
     subject: t("clientSubject"),
     html: appointmentCancellationTemplate(
       appointmentDetails,
@@ -309,7 +309,7 @@ export const sendIntroBookingConfirmationMail = async (
   const t = await getTranslations("BookingConfirmedIntroCall");
 
   const therapistMessage = {
-    from_email: "no-reply@daqil.com",
+    from_email: "no-reply@daqilhealth.com",
     subject: t("therapistSubject"),
     html: introBookingConfirmationTemplate(appointmentDetails, true, t),
     to: [
@@ -321,7 +321,7 @@ export const sendIntroBookingConfirmationMail = async (
   };
 
   const clientMessage = {
-    from_email: "no-reply@daqil.com",
+    from_email: "no-reply@daqilhealth.com",
     subject: t("clientSubject"),
     html: introBookingConfirmationTemplate(appointmentDetails, false, t),
     to: [
@@ -359,7 +359,7 @@ export const sendNonPaidBookingConfirmationEmail = async (
 ) => {
   const t = await getTranslations("NonPaidAppointmentConfirmationEmail");
   const therapistMessage = {
-    from_email: "no-reply@daqil.com",
+    from_email: "no-reply@daqilhealth.com",
     subject: t("therapistSubject"),
     html: nonPaidAppointmentConfirmationTemplate(appointmentDetails, true, t),
     to: [
@@ -371,7 +371,7 @@ export const sendNonPaidBookingConfirmationEmail = async (
   };
 
   const clientMessage = {
-    from_email: "no-reply@daqil.com",
+    from_email: "no-reply@daqilhealth.com",
     subject: t("clientSubject"),
     html: nonPaidAppointmentConfirmationTemplate(appointmentDetails, false, t),
     to: [
@@ -413,7 +413,7 @@ export const sendInvoicePaidEmail = async (
   t: any
 ) => {
   const therapistMessage = {
-    from_email: "no-reply@daqil.com",
+    from_email: "no-reply@daqilhealth.com",
     subject: t("therapistSubject", {
       clientName: appointmentDetails.clientName,
     }),
@@ -427,7 +427,7 @@ export const sendInvoicePaidEmail = async (
   };
 
   const clientMessage = {
-    from_email: "no-reply@daqil.com",
+    from_email: "no-reply@daqilhealth.com",
     subject: t("clientSubject"),
     html: invoicePaidTemplate(appointmentDetails, false, t),
     to: [
@@ -469,7 +469,7 @@ export const sendPaidBookingConfirmationEmail = async (
   t: any
 ) => {
   const therapistMessage = {
-    from_email: "no-reply@daqil.com",
+    from_email: "no-reply@daqilhealth.com",
     subject: t("therapistSubject"),
     html: paidAppointmentConfirmationTemplate(appointmentDetails, true, t),
     to: [
@@ -481,7 +481,7 @@ export const sendPaidBookingConfirmationEmail = async (
   };
 
   const clientMessage = {
-    from_email: "no-reply@daqil.com",
+    from_email: "no-reply@daqilhealth.com",
     subject: t("clientSubject"),
     html: paidAppointmentConfirmationTemplate(appointmentDetails, false, t),
     to: [
@@ -513,7 +513,7 @@ export const sendPaymentReminderEmail = async (
   t: any
 ) => {
   const message = {
-    from_email: "no-reply@daqil.com",
+    from_email: "no-reply@daqilhealth.com",
     subject: t("subject"),
     html: paymentReminderTemplate(
       clientFirstName,
@@ -553,7 +553,7 @@ export const sendReminderEmail = async (
     const html = reminderEmailTemplate(t, appointmentDetails);
 
     const message = {
-      from_email: "no-reply@daqil.com",
+      from_email: "no-reply@daqilhealth.com",
       subject: subject,
       html: html,
       to: [
@@ -586,7 +586,7 @@ export const sendClientNotPaidInTimeEmail = async (
   t: any
 ) => {
   const therapistMessage = {
-    from_email: "no-reply@daqil.com",
+    from_email: "no-reply@daqilhealth.com",
     subject: t("therapistSubject"),
     html: therapistNotPaidInTimeTemplate(appointmentDetails, t),
     to: [
@@ -598,7 +598,7 @@ export const sendClientNotPaidInTimeEmail = async (
   };
 
   const clientMessage = {
-    from_email: "no-reply@daqil.com",
+    from_email: "no-reply@daqilhealth.com",
     subject: t("clientSubject"),
     html: clientNotPaidInTimeTemplate(appointmentDetails, t),
     to: [
