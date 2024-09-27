@@ -221,11 +221,11 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
               {!isJoinEnabled && (
                 <>
                   {tenMinutesPassedAfterStart ? (
-                    <p className="text-sm text-gray-500 mt-2 text-center">
+                    <p className="text-xs text-gray-500 mt-2 text-center">
                       {t("tooLateToJoin")}
                     </p>
                   ) : (
-                    <p className="text-sm text-gray-500 mt-2 text-center">
+                    <p className="text-xs text-gray-500 mt-2 text-center">
                       {t("joinDisabledMessage", {
                         time: 20,
                       })}
@@ -555,11 +555,11 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
                                                 {!isJoinEnabled && (
                                                   <>
                                                     {tenMinutesPassedAfterStart ? (
-                                                      <p className="text-sm text-gray-500 mt-2 text-center">
+                                                      <p className="text-xs text-gray-500 mt-2 text-center">
                                                         {t("tooLateToJoin")}
                                                       </p>
                                                     ) : (
-                                                      <p className="text-sm text-gray-500 mt-2 text-center">
+                                                      <p className="text-xs text-gray-500 mt-2 text-center">
                                                         {t(
                                                           "joinDisabledMessage",
                                                           {
