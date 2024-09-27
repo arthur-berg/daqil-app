@@ -447,14 +447,24 @@ const AppointmentCalendar = ({ appointments }: { appointments: any }) => {
                 <div>
                   {(() => {
                     const timeUntilStart = differenceInMinutes(
-                      new Date(selectedAppointment.start),
+                      new Date(selectedAppointment.startDate),
                       new Date()
                     );
+
                     const hasMeetingEnded =
-                      new Date() > new Date(selectedAppointment.end);
+                      new Date() > new Date(selectedAppointment.endDate);
+
+                    const timeSinceStart = differenceInMinutes(
+                      new Date(),
+                      new Date(selectedAppointment.startDate)
+                    );
+
+                    const tenMinutesPassedAfterStart =
+                      timeSinceStart <= 10 && !selectedAppointment.hostShowUp;
+
                     const isJoinEnabled =
-                      timeUntilStart <= 20 &&
-                      timeUntilStart >= 0 &&
+                      ((timeUntilStart <= 20 && timeUntilStart >= 0) ||
+                        tenMinutesPassedAfterStart) &&
                       !hasMeetingEnded;
 
                     return isJoinEnabled ? (
@@ -480,13 +490,19 @@ const AppointmentCalendar = ({ appointments }: { appointments: any }) => {
                             </Button>
                           </div>
                         </div>
-                        <p className="text-sm text-gray-500 mt-2 text-center">
-                          {t("joinDisabledMessage", {
-                            time: 20,
-                          })}
-                          <br />
-                          {t("refreshMessage")}
-                        </p>
+                        {tenMinutesPassedAfterStart ? (
+                          <p className="text-xs text-gray-500 mt-2 text-center">
+                            {t("tooLateToJoin")}
+                          </p>
+                        ) : (
+                          <p className="text-xs text-gray-500 mt-2 text-center">
+                            {t("joinDisabledMessage", {
+                              time: 20,
+                            })}
+                            <br />
+                            {t("refreshMessage")}
+                          </p>
+                        )}
                       </div>
                     );
                   })()}
