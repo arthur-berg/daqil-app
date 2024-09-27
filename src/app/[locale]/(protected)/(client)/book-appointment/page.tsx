@@ -82,13 +82,18 @@ const BookAppointmentPage = async ({
   const canceledIntroDueToNoShowAppointmentFound = introAppointments.some(
     (introAppointment: any) =>
       introAppointment.status === "canceled" &&
-      (introAppointment.canceledReason === "no-show-both" ||
-        introAppointment.canceledReason === "no-show-host" ||
-        introAppointment.canceledReason === "no-show-participant")
+      (introAppointment.cancellationReason === "no-show-both" ||
+        introAppointment.cancellationReason === "no-show-host" ||
+        introAppointment.cancellationReason === "no-show-participant")
   );
 
   const introAppointmentWasCanceledDueToNoShowUp =
     !completedIntroAppointmentFound && canceledIntroDueToNoShowAppointmentFound;
+
+  console.log(
+    "introAppointmentWasCanceledDueToNoShowUp",
+    introAppointmentWasCanceledDueToNoShowUp
+  );
 
   const introMeetingIsBookedButNotFinished =
     client?.appointments?.some((appointment: any) =>
