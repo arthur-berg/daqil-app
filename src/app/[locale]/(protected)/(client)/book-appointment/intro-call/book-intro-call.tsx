@@ -129,8 +129,6 @@ const BookIntroCall = ({
             therapistAppointments
           );
 
-          console.log("introCallSlots", introCallSlots);
-
           return [...slots, ...introCallSlots];
         },
         []
@@ -167,7 +165,9 @@ const BookIntroCall = ({
         });
       }
       if (data.success) {
-        router.push(`/appointments`);
+        router.push(
+          `/intro-booking-success?appointmentId=${data.appointmentId}`
+        );
       }
     });
   };
