@@ -66,8 +66,13 @@ const BookAppointmentPage = async ({
   if (!appointmentTypes) {
     return ErrorMessages("appointmentTypeNotExist");
   }
-
+  console.log("client?.appointments", client?.appointments);
+  console.log(
+    "APPOINTMENT_TYPE_ID_INTRO_SESSION",
+    APPOINTMENT_TYPE_ID_INTRO_SESSION
+  );
   const introAppointments = client?.appointments?.map((appointment: any) => {
+    console.log("appointment", appointment);
     return appointment.bookedAppointments?.filter(
       (bookedAppointment: any) =>
         bookedAppointment.appointmentTypeId ===
