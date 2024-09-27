@@ -185,7 +185,7 @@ export const sendVerificationEmail = async (
 
   const message = {
     from_email: "no-reply@daqil.com",
-    subject: t("subject"),
+    subject: isTherapist ? t("subjectTherapist") : t("subject"),
     html: verificationEmailTemplate(t, token, isTherapist),
     to: [
       {

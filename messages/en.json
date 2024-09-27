@@ -635,6 +635,7 @@
   "VerificationEmail": {
     "daqil": "DAQIL",
     "subject": "Confirm Your Email Address",
+    "subjectTherapist": "Welcome to DAQIL! Please confirm your email adress.",
     "welcomeMessage": "Welcome to DAQIL!",
     "therapistMessage": "You have been invited to DAQIL as a psychologist.",
     "temporaryPasswordMessage": "Here is your temporary password: {password}",

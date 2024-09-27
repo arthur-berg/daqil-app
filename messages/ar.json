@@ -631,6 +631,7 @@
   "VerificationEmail": {
     "daqil": "زاكينا",
     "subject": "تأكيد عنوان بريدك الإلكتروني",
+    "subjectTherapist": "مرحبًا بك في DAQIL! يرجى تأكيد عنوان بريدك الإلكتروني.",
     "welcomeMessage": "مرحبًا بك في زاكينا!",
     "therapistMessage": "لقد تمت دعوتك إلى زاكينا كأخصائي نفسي.",
     "temporaryPasswordMessage": "هنا كلمة المرور المؤقتة الخاصة بك: <strong>{password}</strong>",
