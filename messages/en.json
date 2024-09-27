@@ -326,6 +326,7 @@
     "selectAppointmentType": "Select type of appointment"
   },
   "Checkout": {
+    "processingPayment": "Processing payment...",
     "pay": "Pay ${amount}",
     "appointmentDetails": "Appointment Details",
     "day": "Day",

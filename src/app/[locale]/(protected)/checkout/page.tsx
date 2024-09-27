@@ -44,7 +44,7 @@ const CheckoutPage = async ({
   const dateObject = new Date(decodeURIComponent(date));
 
   return (
-    <div className="max-w-4xl mx-auto bg-white py-6 px-2 sm:p-10 rounded-md text-black ">
+    <div className="max-w-4xl mx-auto bg-white py-6 px-2 sm:p-10 rounded-md text-black relative">
       <CheckoutWrapper
         appointmentType={appointmentType}
         appointmentId={appointmentId}

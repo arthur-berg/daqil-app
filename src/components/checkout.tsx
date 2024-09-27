@@ -72,17 +72,27 @@ const Checkout = ({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white p-2 rounded-md">
-      {clientSecret && <PaymentElement />}
+    <>
+      <form onSubmit={handleSubmit} className="bg-white p-2 rounded-md">
+        {clientSecret && <PaymentElement />}
 
-      {errorMessage && <div>{errorMessage}</div>}
+        {errorMessage && <div>{errorMessage}</div>}
 
-      <div className="w-32 mx-auto">
-        <Button disabled={!stripe || loading} className="mt-4 w-full">
-          {!loading ? t("pay", { amount }) : t("processing")}
-        </Button>
-      </div>
-    </form>
+        <div className="w-32 mx-auto">
+          <Button disabled={!stripe || loading} className="mt-4 w-full">
+            {!loading ? t("pay", { amount }) : t("processing")}
+          </Button>
+        </div>
+      </form>
+      {loading && (
+        <div className="absolute inset-0 bg-gray-700 bg-opacity-75 flex items-center justify-center z-50">
+          <div className="flex flex-col items-center">
+            <BeatLoader color="#ffffff" className="mb-2" />
+            <div className="text-white">{t("processingPayment")}</div>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

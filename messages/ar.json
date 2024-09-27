@@ -320,6 +320,7 @@
     "free": "مجاني"
   },
   "Checkout": {
+    "processingPayment": "جارٍ معالجة الدفع...",
     "pay": "ادفع ${amount}",
     "appointmentDetails": "تفاصيل الموعد",
     "day": "اليوم",

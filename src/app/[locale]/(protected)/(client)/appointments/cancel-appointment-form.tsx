@@ -127,8 +127,8 @@ const CancelAppontmentForm = ({
                 />
               </DialogDescription>
             </DialogHeader>
-            <DialogFooter className="rtl:space-x-reverse">
-              <div className="flex flex-col sm:flex-row">
+            <DialogFooter>
+              <div className="flex flex-col sm:flex-row sm:space-x-2 rtl:space-x-reverse">
                 <Button
                   variant="destructive"
                   type="submit"

@@ -311,7 +311,7 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
                       variant={
                         filterType === "upcoming" ? undefined : "outline"
                       }
-                      className="mr-4"
+                      className="mr-4 rtl:mr-0 rtl:ml-4"
                     >
                       {t("upcoming")}
                     </Button>
@@ -365,7 +365,7 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
 
                                   const timeSinceStart = differenceInMinutes(
                                     new Date(),
-                                    new Date(nextAppointment.startDate)
+                                    new Date(appointment.startDate)
                                   );
 
                                   const hasMeetingEnded =
@@ -469,9 +469,6 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
                                               "confirmed") && (
                                             <div className="mb-8 inline-flex justify-center sm:justify-end w-full">
                                               <Button
-                                                disabled={
-                                                  isPending || disableAccordion
-                                                }
                                                 variant="secondary"
                                                 onClick={() => {
                                                   setSelectedAppointment(

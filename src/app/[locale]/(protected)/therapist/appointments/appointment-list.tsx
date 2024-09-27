@@ -149,8 +149,15 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
 
     const hasMeetingEnded = new Date() > new Date(nextAppointment.endDate);
 
+    const timeSinceStart = differenceInMinutes(
+      new Date(),
+      new Date(nextAppointment.startDate)
+    );
+
     const isJoinEnabled =
-      timeUntilStart <= 20 && timeUntilStart >= 0 && !hasMeetingEnded;
+      ((timeUntilStart <= 20 && timeUntilStart >= 0) ||
+        (timeSinceStart >= 0 && timeSinceStart <= 10)) &&
+      !hasMeetingEnded;
 
     return (
       <div className="mb-6 p-4 w-full bg-green-100 border-l-4 border-green-500">
@@ -208,7 +215,7 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
                 <Button
                   onClick={() => setFilterType("upcoming")}
                   variant={filterType === "upcoming" ? undefined : "outline"}
-                  className="mr-4"
+                  className="mr-4 rtl:mr-0 rtl:ml-4"
                 >
                   {t("upcoming")}
                 </Button>
@@ -262,9 +269,16 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
                               const hasMeetingEnded =
                                 new Date() > new Date(appointment.endDate);
 
+                              const timeSinceStart = differenceInMinutes(
+                                new Date(),
+                                new Date(appointment.startDate)
+                              );
+
                               const isJoinEnabled =
-                                timeUntilStart <= 20 &&
-                                timeUntilStart >= 0 &&
+                                ((timeUntilStart <= 20 &&
+                                  timeUntilStart >= 0) ||
+                                  (timeSinceStart >= 0 &&
+                                    timeSinceStart <= 10)) &&
                                 !hasMeetingEnded;
 
                               const disableAccordion =
