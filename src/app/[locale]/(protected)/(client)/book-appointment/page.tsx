@@ -91,7 +91,7 @@ const BookAppointmentPage = async ({
     !completedIntroAppointmentFound && canceledIntroDueToNoShowAppointmentFound;
 
   console.log(
-    "introAppointmentWasCanceledDueToNoShowUp",
+    "introAppointmentWasCanceledDueToNoShowUps",
     introAppointmentWasCanceledDueToNoShowUp
   );
 
