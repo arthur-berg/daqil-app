@@ -158,13 +158,15 @@ const VideoRoom = ({
     return (
       <div className="h-[calc(100vh-100px)] md:h-screen w-full flex flex-col justify-between items-center p-2 box-border">
         <div className="flex justify-center mb-4">
-          <Image
-            src={logoSrc}
-            alt="daqil-logo"
-            width={150}
-            height={50}
-            className="object-contain"
-          />
+          <div className="w-[100px] md:w-[150px]">
+            <Image
+              src={logoSrc}
+              alt="daqil-logo"
+              width={150}
+              height={50}
+              className="object-contain"
+            />
+          </div>
         </div>
         <div className="flex flex-col flex-grow justify-center items-center w-full">
           <div className="w-full h-full md:max-w-5xl bg-[#20262D] rounded-md overflow-hidden relative">
@@ -228,13 +230,15 @@ const VideoRoom = ({
     <div className="h-[calc(100vh-90px)] md:h-screen w-full flex flex-col p-2 box-border">
       {/* Logo Header */}
       <div className="flex justify-center mb-4">
-        <Image
-          src={logoSrc}
-          alt="daqil-logo"
-          width={100}
-          height={25}
-          className="object-contain"
-        />
+        <div className="w-[100px] md:w-[150px]">
+          <Image
+            src={logoSrc}
+            alt="daqil-logo"
+            width={150}
+            height={50}
+            className="object-contain"
+          />
+        </div>
       </div>
       <div
         id="callContainer"
