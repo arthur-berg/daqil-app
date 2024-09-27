@@ -253,6 +253,7 @@
   "noPaymentDetails": "No payment details have been saved yet"
   },
   "BookAppointmentPage": {
+    "introMeetingWasCanceled": " Your intro appointment was not completed because one or both participants didn't join, or one of the participants canceled. Please book a new intro call.",
     "goBack": "Go back",
     "ourTherapists": "Our psychologists",
       "oauthAccountNotFinishedMessage": "You need to finish setting up your account before proceeding.",

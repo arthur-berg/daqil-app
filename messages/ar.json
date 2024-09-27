@@ -246,7 +246,7 @@
   "companyDetails": "تفاصيل الشركة"
 },
   "BookAppointmentPage": {
-    "goBack": "العودة",
+"introMeetingWasCanceled": "لم يتم إكمال موعدك التعريفي لأن أحد المشاركين أو كلاهما لم ينضم، أو لأن أحد المشاركين قام بالإلغاء. يرجى حجز مكالمة تعريفية جديدة.",    "goBack": "العودة",
     "ourTherapists": "أخصائيونا النفسيون",
     "oauthAccountNotFinishedMessage": "تحتاج إلى إكمال إعداد حسابك قبل المتابعة.",
     "finishAccountSetupButton": "أكمل إعداد الحساب",

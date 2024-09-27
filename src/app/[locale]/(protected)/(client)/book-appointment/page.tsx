@@ -71,41 +71,29 @@ const BookAppointmentPage = async ({
     "APPOINTMENT_TYPE_ID_INTRO_SESSION",
     APPOINTMENT_TYPE_ID_INTRO_SESSION
   );
-  const introAppointments = client?.appointments?.map((appointment: any) => {
-    console.log("appointment", appointment);
-    return appointment.bookedAppointments?.filter(
-      (bookedAppointment: any) =>
-        bookedAppointment.appointmentTypeId ===
-        APPOINTMENT_TYPE_ID_INTRO_SESSION
-    );
-  });
+  const introAppointments = client?.appointments
+    ?.map((appointment: any) => {
+      console.log("appointment", appointment);
+      return appointment.bookedAppointments?.filter(
+        (bookedAppointment: any) =>
+          bookedAppointment.appointmentTypeId.toString() ===
+          APPOINTMENT_TYPE_ID_INTRO_SESSION
+      );
+    })
+    .flat();
+
+  console.log("introAppointments", introAppointments);
 
   const completedIntroAppointmentFound = introAppointments.some(
     (introAppointment: any) => introAppointment.status === "completed"
   );
 
   const canceledIntroDueToNoShowAppointmentFound = introAppointments.some(
-    (introAppointment: any) =>
-      introAppointment.status === "canceled" &&
-      (introAppointment.cancellationReason === "no-show-both" ||
-        introAppointment.cancellationReason === "no-show-host" ||
-        introAppointment.cancellationReason === "no-show-participant")
+    (introAppointment: any) => introAppointment.status === "canceled"
   );
 
   const introAppointmentWasCanceledDueToNoShowUp =
     !completedIntroAppointmentFound && canceledIntroDueToNoShowAppointmentFound;
-  console.log("introAppointments", introAppointments);
-  console.log(
-    "canceledIntroDueToNoShowAppointmentFound",
-    canceledIntroDueToNoShowAppointmentFound
-  );
-
-  console.log("completedIntroAppointmentFound", completedIntroAppointmentFound);
-
-  console.log(
-    "introAppointmentWasCanceledDueToNoShowUps",
-    introAppointmentWasCanceledDueToNoShowUp
-  );
 
   const introMeetingIsBookedButNotFinished =
     client?.appointments?.some((appointment: any) =>
@@ -138,14 +126,15 @@ const BookAppointmentPage = async ({
                 </Link>
               </div>
             ) : introAppointmentWasCanceledDueToNoShowUp ? (
-              <div className="bg-white p-4 rounded-md mb-6 flex items-center flex-col text-center">
-                <MdEvent className="mr-2 text-destructive mb-4" size={48} />
-                <p className="text-lg mb-4 flex items-center justify-center">
-                  Your appointment was canceled because one or both participants
-                  didn&apos;t connect. Please book a new intro call.
-                </p>
+              <>
+                <div className="bg-white p-4 rounded-md mb-6 flex items-center flex-col text-center">
+                  <MdEvent className="mr-2 text-destructive mb-4" size={48} />
+                  <p className="text-lg mb-4 lg:px-4 flex items-center justify-center">
+                    {t("introMeetingWasCanceled")}
+                  </p>
+                </div>
                 <IntroCallStepManager />
-              </div>
+              </>
             ) : introMeetingIsBookedButNotFinished ? (
               <div className="bg-white p-4 rounded-md mb-6 flex items-center flex-col text-center">
                 <MdEvent className="mr-2 text-destructive mb-4" size={48} />
