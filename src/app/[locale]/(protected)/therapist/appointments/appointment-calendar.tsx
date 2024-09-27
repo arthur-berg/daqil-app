@@ -464,7 +464,7 @@ const AppointmentCalendar = ({ appointments }: { appointments: any }) => {
 
                     const isJoinEnabled =
                       ((timeUntilStart <= 20 && timeUntilStart >= 0) ||
-                        tenMinutesPassedAfterStart) &&
+                        (timeSinceStart >= 0 && tenMinutesPassedAfterStart)) &&
                       !hasMeetingEnded;
 
                     return isJoinEnabled ? (

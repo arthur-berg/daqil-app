@@ -159,7 +159,7 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
 
     const isJoinEnabled =
       ((timeUntilStart <= 20 && timeUntilStart >= 0) ||
-        tenMinutesPassedAfterStart) &&
+        (timeSinceStart >= 0 && tenMinutesPassedAfterStart)) &&
       !hasMeetingEnded;
 
     return (
@@ -199,11 +199,11 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
             {!isJoinEnabled && (
               <>
                 {tenMinutesPassedAfterStart ? (
-                  <p className="text-xs text-gray-500 mt-2 text-center">
+                  <p className="text-sm text-gray-500 mt-2 text-center">
                     {t("tooLateToJoin")}
                   </p>
                 ) : (
-                  <p className="text-xs text-gray-500 mt-2 text-center">
+                  <p className="text-sm text-gray-500 mt-2 text-center">
                     {t("joinDisabledMessage", {
                       time: 20,
                     })}
@@ -300,7 +300,8 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
                               const isJoinEnabled =
                                 ((timeUntilStart <= 20 &&
                                   timeUntilStart >= 0) ||
-                                  tenMinutesPassedAfterStart) &&
+                                  (timeSinceStart >= 0 &&
+                                    tenMinutesPassedAfterStart)) &&
                                 !hasMeetingEnded;
 
                               const disableAccordion =
@@ -490,11 +491,11 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
                                               {!isJoinEnabled && (
                                                 <>
                                                   {tenMinutesPassedAfterStart ? (
-                                                    <p className="text-xs text-gray-500 mt-2 text-center">
+                                                    <p className="text-sm text-gray-500 mt-2 text-center">
                                                       {t("tooLateToJoin")}
                                                     </p>
                                                   ) : (
-                                                    <p className="text-xs text-gray-500 mt-2 text-center">
+                                                    <p className="text-sm text-gray-500 mt-2 text-center">
                                                       {t(
                                                         "joinDisabledMessage",
                                                         {

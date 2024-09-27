@@ -382,17 +382,16 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
                                     new Date()
                                   );
 
-                                  const timeSinceStart = differenceInMinutes(
-                                    new Date(),
-                                    new Date(appointment.startDate)
-                                  );
-
                                   const hasMeetingEnded =
                                     new Date() > new Date(appointment.endDate);
 
+                                  const timeSinceStart = differenceInMinutes(
+                                    new Date(),
+                                    new Date(nextAppointment.startDate)
+                                  );
                                   const tenMinutesPassedAfterStart =
                                     timeSinceStart <= 10 &&
-                                    !appointment.participants[0].showUp;
+                                    !nextAppointment.participants[0].showUp;
 
                                   const isJoinEnabled =
                                     ((timeUntilStart <= 20 &&
