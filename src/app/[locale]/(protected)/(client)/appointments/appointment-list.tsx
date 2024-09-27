@@ -173,10 +173,12 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
       new Date(),
       new Date(nextAppointment.startDate)
     );
+    const tenMinutesPassedAfterStart =
+      timeSinceStart <= 10 && !nextAppointment.participants[0].showUp;
 
     const isJoinEnabled =
       ((timeUntilStart <= 20 && timeUntilStart >= 0) ||
-        (timeSinceStart >= 0 && timeSinceStart <= 10)) &&
+        (timeSinceStart >= 0 && tenMinutesPassedAfterStart)) &&
       !hasMeetingEnded;
 
     return (
@@ -215,6 +217,23 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
                 <div className="text-center">
                   <Button disabled={!isJoinEnabled}>{t("joinMeeting")}</Button>
                 </div>
+              )}
+              {!isJoinEnabled && (
+                <>
+                  {tenMinutesPassedAfterStart ? (
+                    <p className="text-sm text-gray-500 mt-2 text-center">
+                      {t("tooLateToJoin")}
+                    </p>
+                  ) : (
+                    <p className="text-sm text-gray-500 mt-2 text-center">
+                      {t("joinDisabledMessage", {
+                        time: 20,
+                      })}
+                      <br />
+                      {t("refreshMessage")}
+                    </p>
+                  )}
+                </>
               )}
             </div>
           </div>
@@ -371,11 +390,15 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
                                   const hasMeetingEnded =
                                     new Date() > new Date(appointment.endDate);
 
+                                  const tenMinutesPassedAfterStart =
+                                    timeSinceStart <= 10 &&
+                                    !appointment.participants[0].showUp;
+
                                   const isJoinEnabled =
                                     ((timeUntilStart <= 20 &&
                                       timeUntilStart >= 0) ||
                                       (timeSinceStart >= 0 &&
-                                        timeSinceStart <= 10)) &&
+                                        tenMinutesPassedAfterStart)) &&
                                     !hasMeetingEnded;
 
                                   const disableAccordion =
@@ -530,13 +553,24 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
                                                 )}
 
                                                 {!isJoinEnabled && (
-                                                  <p className="text-sm text-gray-500 mt-2 text-center">
-                                                    {t("joinDisabledMessage", {
-                                                      time: 20,
-                                                    })}
-                                                    <br />
-                                                    {t("refreshMessage")}
-                                                  </p>
+                                                  <>
+                                                    {tenMinutesPassedAfterStart ? (
+                                                      <p className="text-sm text-gray-500 mt-2 text-center">
+                                                        {t("tooLateToJoin")}
+                                                      </p>
+                                                    ) : (
+                                                      <p className="text-sm text-gray-500 mt-2 text-center">
+                                                        {t(
+                                                          "joinDisabledMessage",
+                                                          {
+                                                            time: 20,
+                                                          }
+                                                        )}
+                                                        <br />
+                                                        {t("refreshMessage")}
+                                                      </p>
+                                                    )}
+                                                  </>
                                                 )}
                                               </div>
                                             )}

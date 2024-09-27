@@ -115,6 +115,7 @@
     "enterReason": "Enter reason",
     "joinDisabledMessage": "The meeting will be accessible 20 minutes before it starts.",
     "refreshMessage": "Refresh the page if you're within the window but still see this message.",
+    "tooLateToJoin": "Joining the meeting is disabled because more than 10 minutes have passed since it started.",
     "noShowHost": "Therapist didn't show up",
     "noShowClient": "Client didn't show up",
     "noShowBoth": "Neither the therapist nor the client showed up.",

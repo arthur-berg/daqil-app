@@ -225,14 +225,14 @@ const VideoRoom = ({
   }
 
   return (
-    <div className="h-screen w-full flex flex-col p-2 box-border">
+    <div className="h-[calc(100vh-90px)] md:h-screen w-full flex flex-col p-2 box-border">
       {/* Logo Header */}
       <div className="flex justify-center mb-4">
         <Image
           src={logoSrc}
           alt="daqil-logo"
-          width={150}
-          height={50}
+          width={100}
+          height={25}
           className="object-contain"
         />
       </div>

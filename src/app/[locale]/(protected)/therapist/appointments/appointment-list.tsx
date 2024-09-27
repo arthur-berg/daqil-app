@@ -154,9 +154,12 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
       new Date(nextAppointment.startDate)
     );
 
+    const tenMinutesPassedAfterStart =
+      timeSinceStart <= 10 && !nextAppointment.hostShowUp;
+
     const isJoinEnabled =
       ((timeUntilStart <= 20 && timeUntilStart >= 0) ||
-        (timeSinceStart >= 0 && timeSinceStart <= 10)) &&
+        tenMinutesPassedAfterStart) &&
       !hasMeetingEnded;
 
     return (
@@ -192,6 +195,23 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
               <div className="text-center">
                 <Button disabled={!isJoinEnabled}>{t("startMeeting")}</Button>
               </div>
+            )}
+            {!isJoinEnabled && (
+              <>
+                {tenMinutesPassedAfterStart ? (
+                  <p className="text-sm text-gray-500 mt-2 text-center">
+                    {t("tooLateToJoin")}
+                  </p>
+                ) : (
+                  <p className="text-sm text-gray-500 mt-2 text-center">
+                    {t("joinDisabledMessage", {
+                      time: 20,
+                    })}
+                    <br />
+                    {t("refreshMessage")}
+                  </p>
+                )}
+              </>
             )}
           </div>
         </div>
@@ -274,11 +294,13 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
                                 new Date(appointment.startDate)
                               );
 
+                              const tenMinutesPassedAfterStart =
+                                timeSinceStart <= 10 && !appointment.hostShowUp;
+
                               const isJoinEnabled =
                                 ((timeUntilStart <= 20 &&
                                   timeUntilStart >= 0) ||
-                                  (timeSinceStart >= 0 &&
-                                    timeSinceStart <= 10)) &&
+                                  tenMinutesPassedAfterStart) &&
                                 !hasMeetingEnded;
 
                               const disableAccordion =
@@ -466,13 +488,24 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
                                               )}
 
                                               {!isJoinEnabled && (
-                                                <p className="text-sm text-gray-500 mt-2 text-center">
-                                                  {t("joinDisabledMessage", {
-                                                    time: 20,
-                                                  })}
-                                                  <br />
-                                                  {t("refreshMessage")}
-                                                </p>
+                                                <>
+                                                  {tenMinutesPassedAfterStart ? (
+                                                    <p className="text-sm text-gray-500 mt-2 text-center">
+                                                      {t("tooLateToJoin")}
+                                                    </p>
+                                                  ) : (
+                                                    <p className="text-sm text-gray-500 mt-2 text-center">
+                                                      {t(
+                                                        "joinDisabledMessage",
+                                                        {
+                                                          time: 20,
+                                                        }
+                                                      )}
+                                                      <br />
+                                                      {t("refreshMessage")}
+                                                    </p>
+                                                  )}
+                                                </>
                                               )}
                                             </div>
                                           )}
