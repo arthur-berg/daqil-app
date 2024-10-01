@@ -36,8 +36,7 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
       );
     }
 
-    const clientPhone =
-      appointment.participants[0].userId.personalInfo.phoneNumber;
+    const clientEmail = appointment.participants[0].userId.email;
 
     const hostFirstName = getFirstName(
       appointment.hostUserId.firstName,
@@ -48,9 +47,9 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
 
     const clientTimeZone = appointment.participants[0].userId.settings.timeZone;
 
-    if (!clientPhone) {
+    if (!clientEmail) {
       return NextResponse.json(
-        { error: "Client phone number not found" },
+        { error: "Client email not found" },
         { status: 400 }
       );
     }
@@ -62,7 +61,7 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
     );
 
     await sendMeetingLink(
-      clientPhone,
+      clientEmail,
       hostFirstName,
       hostLastName,
       formattedTime,
@@ -71,7 +70,7 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
     );
 
     return NextResponse.json({
-      message: `SMS reminder sent to ${clientPhone} for appointment ${appointmentId}.`,
+      message: `Meeting link email sent to ${clientEmail} for appointment ${appointmentId}.`,
     });
   } catch (error) {
     console.error("Error sending SMS reminder:", error);
