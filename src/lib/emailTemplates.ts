@@ -643,7 +643,9 @@ export const meetingLinkEmailTemplate = ({
             hostLastName,
             appointmentTime,
           })}</p>
-          <p>${t("joinLink")} <a href="${meetingLink}">${meetingLink}</a></p>
+          <p>${t("joinLink")} <a href="${meetingLink}">${t(
+    "joinMeeting"
+  )}</a></p>
         </div>
         <div style="margin-top: 20px; font-size: 12px; color: #888888; text-align: center;">
           ${t("footer")}

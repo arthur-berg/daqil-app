@@ -742,6 +742,7 @@
       "greeting": "Hello,",
       "message": "You have an upcoming appointment with {hostFirstName} {hostLastName} at {appointmentTime}.",
       "joinLink": "Click here to join the meeting:",
+      "joinMeeting": "Join meeting",
       "footer": "Thank you for using DAQIL."
   },
   "BookingConfirmedIntroCall": {

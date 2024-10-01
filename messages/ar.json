@@ -737,6 +737,7 @@
   "greeting": "مرحبًا،",
   "message": "لديك موعد قادم مع {hostFirstName} {hostLastName} في {appointmentTime}.",
   "joinLink": "انقر هنا للانضمام إلى الاجتماع:",
+  "joinMeeting": "انضم إلى الاجتماع",
   "footer": "شكرًا لاستخدامك DAQIL."
 },
   "BookingConfirmedIntroCall": {

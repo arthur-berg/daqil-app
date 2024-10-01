@@ -462,7 +462,7 @@ const AppointmentCalendar = ({ appointments }: { appointments: any }) => {
                     const tenMinutesPassedAfterStart =
                       timeSinceStart >= 0 &&
                       timeSinceStart <= 10 &&
-                      !nextAppointment.hostShowUp;
+                      !selectedAppointment.hostShowUp;
 
                     const isJoinEnabled =
                       ((timeUntilStart <= 20 && timeUntilStart >= 0) ||
