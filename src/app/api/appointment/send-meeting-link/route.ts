@@ -22,7 +22,7 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
     const appointment = await Appointment.findById(appointmentId)
       .populate({
         path: "participants.userId",
-        select: "firstName lastName personalInfo.phoneNumber settings.timeZone",
+        select: "firstName email lastName settings.timeZone",
       })
       .populate({
         path: "hostUserId",
