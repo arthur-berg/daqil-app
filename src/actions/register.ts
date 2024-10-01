@@ -27,6 +27,12 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
 
   const { email } = validatedFields.data;
 
+  if (process.env.NODE_ENV === "development" && !email.endsWith("@daqil.com")) {
+    return {
+      error: ErrorMessages("onlyDaqilEmailsAllowed"),
+    };
+  }
+
   const existingUser = await getUserByEmail(email);
 
   if (existingUser && existingUser.isAccountSetupDone) {

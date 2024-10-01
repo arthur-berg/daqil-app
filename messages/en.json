@@ -533,6 +533,7 @@
     "goToAppointments": "Go to Appointments"
   },
   "ErrorMessages": {
+    "onlyDaqilEmailsAllowed": "Only DAQIL emails are allowed",
     "refundFailed": "Refund request failed. Please contact support.",
     "noImage": "No image",
     "invalidFields": "Invalid fields!",

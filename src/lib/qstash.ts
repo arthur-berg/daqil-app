@@ -11,23 +11,12 @@ export const scheduleTask = async (
   locale?: string
 ) => {
   try {
-    const headers: Record<string, string> = {};
-
-    if (
-      process.env.NODE_ENV === "development" &&
-      process.env.VERCEL_PROTECTION_BYPASS_SECRET
-    ) {
-      headers["x-vercel-protection-bypass"] =
-        process.env.VERCEL_PROTECTION_BYPASS_SECRET;
-    }
-
     const response = await qstashClient.publishJSON({
       url,
       body: { ...body, locale: locale },
       retries: 3,
       method: "POST",
       notBefore: unixTimestampInSeconds,
-      headers,
     });
     const date = new Date(unixTimestampInSeconds * 1000);
     const dateString = date.toISOString();
