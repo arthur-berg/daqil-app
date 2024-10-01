@@ -155,11 +155,13 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
     );
 
     const tenMinutesPassedAfterStart =
-      timeSinceStart <= 10 && !nextAppointment.hostShowUp;
+      timeSinceStart >= 0 &&
+      timeSinceStart <= 10 &&
+      !nextAppointment.hostShowUp;
 
     const isJoinEnabled =
       ((timeUntilStart <= 20 && timeUntilStart >= 0) ||
-        (timeSinceStart >= 0 && tenMinutesPassedAfterStart)) &&
+        tenMinutesPassedAfterStart) &&
       !hasMeetingEnded;
 
     return (
@@ -295,13 +297,14 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
                               );
 
                               const tenMinutesPassedAfterStart =
-                                timeSinceStart <= 10 && !appointment.hostShowUp;
+                                timeSinceStart >= 0 &&
+                                timeSinceStart <= 10 &&
+                                !nextAppointment.hostShowUp;
 
                               const isJoinEnabled =
                                 ((timeUntilStart <= 20 &&
                                   timeUntilStart >= 0) ||
-                                  (timeSinceStart >= 0 &&
-                                    tenMinutesPassedAfterStart)) &&
+                                  tenMinutesPassedAfterStart) &&
                                 !hasMeetingEnded;
 
                               const disableAccordion =
