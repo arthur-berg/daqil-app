@@ -210,6 +210,7 @@
     "companyOwnerDisclaimer": "Enter the name of the company or legal entity exactly as it is written on the account.",
     "back": "Back",
     "dateOfBirth":"Date of birth",
+    "kycTitle": "Know Your Customer (KYC) Information",
     "placeOfBirth": "Place of Birth",
     "citizenship": "Citizenship",
     "enterYourPlaceOfBirth": "Enter your place of birth",
@@ -627,7 +628,7 @@
     "footerText": "Thank you for using DAQIL."
   },
   "SmsReminder": {
-    "reminderMessage": "Reminder: Your appointment with {hostFirstName} {hostLastName} starts in 30 minutes at {appointmentTime}. Please be ready and ensure your microphone and video are working properly."
+    "reminderMessage": "Reminder: Your appointment with {hostFirstName} {hostLastName} starts in 20 minutes at {appointmentTime}. Please be ready and ensure your microphone and video are working properly. You can join the meeting here: {meetingLink}"
   },
   "TwoFactorEmail": {
     "daqil": "DAQIL",
@@ -735,6 +736,13 @@
     "notPaidInTimeMessageClient": "Unfortunately, your appointment was canceled because you did not pay on time. Please make sure to pay in advance for future bookings.",
     "notPaidInTimeMessageTherapist": "The appointment with your client was canceled because the client did not pay on time. Please check your upcoming appointments.",
     "thankYouMessage": "Thank you for using DAQIL."
+  },
+  "MeetingLinkEmail": {
+      "subject": "Meeting with {hostFirstName} at {appointmentTime}",
+      "greeting": "Hello,",
+      "message": "You have an upcoming appointment with {hostFirstName} {hostLastName} at {appointmentTime}.",
+      "joinLink": "Click here to join the meeting:",
+      "footer": "Thank you for using DAQIL."
   },
   "BookingConfirmedIntroCall": {
   "therapistSubject": "New Appointment Booking: Introductory Call",

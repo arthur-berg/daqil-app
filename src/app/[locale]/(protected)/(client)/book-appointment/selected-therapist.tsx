@@ -37,7 +37,10 @@ const SelectedTherapist = ({
           {/* Therapist Image or Placeholder */}
 
           <Avatar className="w-28 h-28">
-            <AvatarImage src={selectedTherapist.image || ""} />
+            <AvatarImage
+              src={selectedTherapist.image || ""}
+              className="object-cover"
+            />
             <AvatarFallback className="bg-background flex items-center justify-center w-full h-full">
               <Image
                 width={150}

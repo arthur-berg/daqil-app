@@ -17,15 +17,24 @@ import { useToast } from "@/components/ui/use-toast";
 import { updateTherapistProfile } from "@/actions/therapist-profile";
 import { Input } from "@/components/ui/input";
 import { useTranslations } from "next-intl";
-import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
+import dynamic from "next/dynamic";
+import { ReactQuillProps } from "react-quill";
+
+const ReactQuill = dynamic(() => import("react-quill") as any, {
+  ssr: false,
+}) as React.ComponentType<ReactQuillProps>;
+
+import "react-quill/dist/quill.snow.css";
 
 const MyProfileForm = ({
   therapist,
   setIsEditing,
+  adminPageProps,
 }: {
   therapist: any;
   setIsEditing: (isEditing: boolean) => void;
+  adminPageProps?: { therapistId: string };
 }) => {
   const [isPending, startTransition] = useTransition();
   const { responseToast } = useToast();
@@ -48,7 +57,7 @@ const MyProfileForm = ({
 
   const onSubmit = (values: z.infer<typeof TherapistMyProfileSchema>) => {
     startTransition(async () => {
-      const data = await updateTherapistProfile(values);
+      const data = await updateTherapistProfile(values, adminPageProps);
       responseToast(data);
       if (data.success) {
         setIsEditing(false);
@@ -85,9 +94,9 @@ const MyProfileForm = ({
               <FormItem>
                 <FormLabel>{t("workDescriptionLabelEn")}</FormLabel>
                 <FormControl>
-                  <Textarea
-                    {...field}
-                    disabled={isPending}
+                  <ReactQuill
+                    value={field.value}
+                    onChange={field.onChange}
                     className="h-64"
                     placeholder={t("workDescriptionPlaceholderEn")}
                   />
@@ -123,9 +132,9 @@ const MyProfileForm = ({
               <FormItem>
                 <FormLabel>{t("workDescriptionLabelAr")}</FormLabel>
                 <FormControl>
-                  <Textarea
-                    {...field}
-                    disabled={isPending}
+                  <ReactQuill
+                    value={field.value}
+                    onChange={field.onChange}
                     className="h-64"
                     placeholder={t("workDescriptionPlaceholderAr")}
                   />
@@ -135,18 +144,19 @@ const MyProfileForm = ({
             )}
           />
         </div>
-        {/* Form Actions */}
-        <div className="flex flex-col-reverse md:flex-row justify-end space-y-4 md:space-y-0 md:space-x-4">
-          <Button type="submit" disabled={isPending}>
-            {t("save")}
-          </Button>
-          <Button
-            onClick={handleCancel}
-            variant="secondary"
-            disabled={isPending}
-          >
-            {t("cancel")}
-          </Button>
+        <div>
+          <div className="flex flex-col-reverse md:flex-row justify-end space-y-4 md:space-y-0 md:space-x-4 mt-16">
+            <Button type="submit" disabled={isPending}>
+              {t("save")}
+            </Button>
+            <Button
+              onClick={handleCancel}
+              variant="secondary"
+              disabled={isPending}
+            >
+              {t("cancel")}
+            </Button>
+          </div>
         </div>
       </form>
     </Form>

@@ -195,6 +195,7 @@
   "company": "شركة",
   "firstName": "الاسم الأول",
   "lastName": "اسم العائلة",
+  "kycTitle": "معلومات اعرف عميلك (KYC)",
   "enterLastName": "أدخل اسم العائلة",
   "enterFirstName": "أدخل الاسم الأول",
   "accountHolderDisclaimer": "يرجى إدخال اسم صاحب الحساب كما هو مكتوب في كشف حسابك المصرفي. إذا كان للحساب عدة مالكين، يرجى تقديم اسم واحد فقط.",
@@ -622,7 +623,7 @@
     "footerText": "شكرًا لاستخدامك زاكينا."
   },
   "SmsReminder": {
-    "reminderMessage": "تذكير: موعدك مع {hostFirstName} {hostLastName} سيبدأ بعد 30 دقيقة في {appointmentTime}. يرجى التأكد من جاهزيتك وأن الميكروفون والفيديو يعملان بشكل صحيح."
+   "reminderMessage": "تذكير: موعدك مع {hostFirstName} {hostLastName} سيبدأ خلال 20 دقيقة في {appointmentTime}. يرجى أن تكون مستعدًا والتأكد من أن الميكروفون والفيديو يعملان بشكل صحيح. يمكنك الانضمام إلى الاجتماع هنا: {meetingLink}"
   },
   "TwoFactorEmail": {
     "daqil": "زاكينا",
@@ -731,6 +732,13 @@
     "notPaidInTimeMessageTherapist": "تم إلغاء الموعد مع عميلك لأن العميل لم يدفع في الوقت المحدد. يرجى التحقق من مواعيدك القادمة.",
     "thankYouMessage": "شكرًا لاستخدامك زاكينا."
   },
+  "MeetingLinkEmail": {
+  "subject": "موعد مع {hostFirstName} في {appointmentTime}",
+  "greeting": "مرحبًا،",
+  "message": "لديك موعد قادم مع {hostFirstName} {hostLastName} في {appointmentTime}.",
+  "joinLink": "انقر هنا للانضمام إلى الاجتماع:",
+  "footer": "شكرًا لاستخدامك DAQIL."
+},
   "BookingConfirmedIntroCall": {
  "therapistSubject": "حجز موعد جديد: مكالمة تعريفية",
 "clientSubject": "تأكيد الموعد",

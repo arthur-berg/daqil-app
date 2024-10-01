@@ -85,6 +85,7 @@ const StepThree = ({
 
   return (
     <div className="space-y-4 mt-8">
+      <h2 className="text-xl font-bold mb-6">{t("kycTitle")}</h2>
       {accountType === "personal" && (
         <>
           <FormField

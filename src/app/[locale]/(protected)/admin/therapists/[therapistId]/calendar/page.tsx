@@ -51,7 +51,7 @@ const TherapistsCalendarPage = async ({
       <div className="flex flex-col items-center justify-center">
         <div className="flex flex-col items-center">
           <Avatar className="w-28 h-28">
-            <AvatarImage src={therapist.image || ""} />
+            <AvatarImage src={therapist.image || ""} className="object-cover" />
             <AvatarFallback className="bg-background flex items-center justify-center w-full h-full">
               <Image
                 width={150}

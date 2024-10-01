@@ -38,7 +38,10 @@ const BrowseTherapistsPage = async ({
             <div className="flex flex-col items-center p-6">
               <div className="flex justify-center mt-4">
                 <Avatar className="w-28 h-28">
-                  <AvatarImage src={therapist.image || ""} />
+                  <AvatarImage
+                    src={therapist.image || ""}
+                    className="object-cover"
+                  />
                   <AvatarFallback className="bg-background flex items-center justify-center w-full h-full">
                     <Image
                       width={150}
@@ -67,11 +70,24 @@ const BrowseTherapistsPage = async ({
                   </div>
                   <div className="leading-relaxed">
                     {therapist.therapistWorkProfile[locale].description.length >
-                    maxDescriptionLength
-                      ? therapist.therapistWorkProfile[
-                          locale
-                        ].description.slice(0, maxDescriptionLength) + "..."
-                      : therapist.therapistWorkProfile[locale].description}
+                    maxDescriptionLength ? (
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html:
+                            therapist.therapistWorkProfile[
+                              locale
+                            ].description.slice(0, maxDescriptionLength) +
+                            "...",
+                        }}
+                      />
+                    ) : (
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html:
+                            therapist.therapistWorkProfile[locale].description,
+                        }}
+                      />
+                    )}
                   </div>
                 </div>
               )}

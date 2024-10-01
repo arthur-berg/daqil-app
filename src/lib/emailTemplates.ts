@@ -616,3 +616,39 @@ export const therapistNotPaidInTimeTemplate = (
     </div>
   `;
 };
+
+export const meetingLinkEmailTemplate = ({
+  hostFirstName,
+  hostLastName,
+  appointmentTime,
+  meetingLink,
+  t,
+}: {
+  hostFirstName: string;
+  hostLastName: string;
+  appointmentTime: string;
+  meetingLink: string;
+  t: any;
+}) => {
+  return `
+    <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
+      <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+        <div style="text-align: center; margin-bottom: 20px;">
+          <img src="${daqilLogoUrl}" alt="daqil" style="width: 50%; max-width: 100%; height: auto;" />
+        </div>
+        <div style="margin-top: 20px;">
+          <p>${t("greeting")}</p>
+          <p>${t("message", {
+            hostFirstName,
+            hostLastName,
+            appointmentTime,
+          })}</p>
+          <p>${t("joinLink")} <a href="${meetingLink}">${meetingLink}</a></p>
+        </div>
+        <div style="margin-top: 20px; font-size: 12px; color: #888888; text-align: center;">
+          ${t("footer")}
+        </div>
+      </div>
+    </div>
+  `;
+};

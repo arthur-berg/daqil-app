@@ -137,7 +137,8 @@ export const scheduleReminderJobs = async (
 
   /* const oneDayBefore = subDays(new Date(appointment.startDate), 1); */
   const twoHoursBefore = subHours(new Date(appointment.startDate), 2);
-  const thirtyMinutesBefore = subMinutes(new Date(appointment.startDate), 30);
+  /* const thirtyMinutesBefore = subMinutes(new Date(appointment.startDate), 30); */
+  const twentyMinutesBefore = subMinutes(new Date(appointment.startDate), 20);
   /* const tenSecondsAfter = addSeconds(new Date(now), 10); */
 
   /*  if (isAfter(oneDayBefore, addMinutes(now, 1))) {
@@ -153,7 +154,7 @@ export const scheduleReminderJobs = async (
       type: "emailReminder",
       taskId: emailReminderTaskIdOneDay,
     });
-  } */
+    } */
 
   if (isAfter(twoHoursBefore, addMinutes(now, 1))) {
     const emailReminderTaskIdOneHour = await scheduleTask(
@@ -170,10 +171,23 @@ export const scheduleReminderJobs = async (
     });
   }
 
+  const meetingLinkTaskId = await scheduleTask(
+    `${process.env.QSTASH_API_URL}/send-meeting-link`,
+    { clientEmail: appointment.clientEmail, appointmentId: appointmentId },
+    Math.floor(twentyMinutesBefore.getTime() / 1000),
+    locale
+  );
+
+  await ScheduledTask.create({
+    appointmentId: appointmentId,
+    type: "meetingLink",
+    taskId: meetingLinkTaskId,
+  });
+
   const smsReminderTaskId = await scheduleTask(
     `${process.env.QSTASH_API_URL}/sms-reminder`,
     { clientPhone: appointment.clientPhone, appointmentId: appointmentId },
-    Math.floor(thirtyMinutesBefore.getTime() / 1000),
+    Math.floor(twentyMinutesBefore.getTime() / 1000),
     locale
   );
 

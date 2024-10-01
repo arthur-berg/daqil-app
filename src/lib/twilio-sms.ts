@@ -19,14 +19,18 @@ export const sendSmsReminder = async (
   hostFirstName: string,
   hostLastName: string,
   appointmentTime: string,
-  t: any // Pass the translation function
+  t: any,
+  appointmentId: string
 ): Promise<void> => {
   try {
+    const meetingLink = `${process.env.NEXT_PUBLIC_APP_URL}/appointments/${appointmentId}`;
+
     const message = t("reminderMessage", {
       hostFirstName,
       hostLastName,
       appointmentTime,
-    }); // Use the translation function to generate the message
+      meetingLink, // Add the meeting link to the message
+    });
 
     // Send SMS via Twilio
     await client.messages.create({

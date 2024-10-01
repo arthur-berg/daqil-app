@@ -32,7 +32,11 @@ const TherapistPage = async ({
         <CardHeader>
           <div className="flex items-center space-x-4">
             <Avatar>
-              <AvatarImage src={therapist.image} alt={therapist.firstName.en} />
+              <AvatarImage
+                src={therapist.image}
+                alt={therapist.firstName.en}
+                className="object-cover"
+              />
             </Avatar>
             <div>
               <CardTitle>
@@ -78,14 +82,19 @@ const TherapistPage = async ({
       <div className="mb-6">
         <Separator />
       </div>
-      <div className="flex justify-center sm:justify-start">
+      <div className="flex justify-center sm:justify-start mb-2">
         <Link href={`/admin/therapists/${therapistId}/availability`}>
           <Button>Therapist&apos;s Availability</Button>
         </Link>
       </div>
-      <div className="flex justify-center sm:justify-start">
+      <div className="flex justify-center sm:justify-start mb-2">
         <Link href={`/admin/therapists/${therapistId}/calendar`}>
           <Button>Therapist&apos;s Calendar</Button>
+        </Link>
+      </div>
+      <div className="flex justify-center sm:justify-start">
+        <Link href={`/admin/therapists/${therapistId}/profile`}>
+          <Button>Therapist&apos;s Profile Details</Button>
         </Link>
       </div>
 

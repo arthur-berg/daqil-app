@@ -45,7 +45,7 @@ const TherapistPage = async ({
       </h1>
       <div className="flex justify-center mb-8">
         <Avatar className="w-28 h-28">
-          <AvatarImage src={therapist.image || ""} />
+          <AvatarImage src={therapist.image || ""} className="object-cover" />
           <AvatarFallback className="bg-background flex items-center justify-center w-full h-full">
             <Image
               width={150}
@@ -72,10 +72,14 @@ const TherapistPage = async ({
 
         <div>
           <h2 className="text-xl font-semibold">{t("workDescriptionLabel")}</h2>
-          <p className="text-md sm:text-lg text-gray-700 leading-relaxed">
-            {therapist?.therapistWorkProfile?.[locale]?.description ||
-              t("noDescriptionProvided")}
-          </p>
+          <div
+            className="text-md sm:text-lg text-gray-700 leading-relaxed"
+            dangerouslySetInnerHTML={{
+              __html:
+                therapist?.therapistWorkProfile?.[locale]?.description ||
+                t("noDescriptionProvided"),
+            }}
+          />
         </div>
       </div>
     </div>

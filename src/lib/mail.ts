@@ -15,6 +15,7 @@ import {
   clientNotPaidInTimeTemplate,
   therapistNotPaidInTimeTemplate,
   introBookingConfirmationTemplate,
+  meetingLinkEmailTemplate,
 } from "./emailTemplates";
 import { getTranslations } from "next-intl/server";
 
@@ -616,5 +617,54 @@ export const sendClientNotPaidInTimeEmail = async (
     ]);
   } catch (error) {
     console.error("Error sending 'not paid in time' email:", error);
+  }
+};
+
+export const sendMeetingLink = async (
+  email: string, // Client's email address
+  hostFirstName: string, // Therapist's first name
+  hostLastName: string, // Therapist's last name
+  appointmentTime: string, // Formatted appointment start time
+  t: any, // Translation function
+  appointmentId: string // Appointment ID to generate the meeting link
+): Promise<void> => {
+  try {
+    // Generate the meeting link using the appointmentId
+    const meetingLink = `${process.env.NEXT_PUBLIC_APP_URL}/appointments/${appointmentId}`;
+
+    // Get the email subject from translations
+    const subject = t("subject", { hostFirstName, appointmentTime });
+
+    // Generate the email content using the template
+    const html = meetingLinkEmailTemplate({
+      hostFirstName,
+      hostLastName,
+      appointmentTime,
+      meetingLink,
+      t,
+    });
+
+    // Create the email message
+    const message = {
+      from_email: "no-reply@daqilhealth.com",
+      subject: subject,
+      html: html,
+      to: [
+        {
+          email: email,
+          type: "to",
+        },
+      ],
+    };
+
+    // Send the email via Mailchimp Transactional
+    await mailchimpTx.messages.send({
+      message: message as any,
+    });
+
+    console.log(`Meeting link email sent to ${email}`);
+  } catch (error) {
+    console.error("Error sending meeting link email:", error);
+    throw error;
   }
 };

@@ -23,6 +23,16 @@ export const getAllClients = async () => {
   }
 };
 
+export const getUserByIdLean = async (id: string) => {
+  try {
+    const user = await User.findById(id).lean();
+
+    return user;
+  } catch {
+    return null;
+  }
+};
+
 export const getUserById = async (id: string) => {
   try {
     const user = await User.findById(id);
@@ -210,6 +220,18 @@ export const getTherapists = async () => {
     const therapists = await User.find({
       role: UserRole.THERAPIST,
       isAccountSetupDone: true,
+    }).lean();
+
+    return therapists;
+  } catch {
+    return null;
+  }
+};
+
+export const getTherapistsAdminView = async () => {
+  try {
+    const therapists = await User.find({
+      role: UserRole.THERAPIST,
     }).lean();
 
     return therapists;

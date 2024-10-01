@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifySignatureAppRouter } from "@upstash/qstash/nextjs";
 import Appointment from "@/models/Appointment";
-import { sendSmsReminder } from "@/lib/twilio-sms";
+import { sendMeetingLink } from "@/lib/mail";
 import { getTranslations } from "next-intl/server";
 import { getFirstName, getLastName } from "@/utils/nameUtilsForApiRoutes";
 import { formatInTimeZone } from "date-fns-tz";
@@ -16,7 +16,7 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
 
     const t = await getTranslations({
       locale,
-      namespace: "SmsReminder",
+      namespace: "MeetingLinkEmail",
     });
 
     const appointment = await Appointment.findById(appointmentId)
@@ -61,7 +61,7 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
       "HH:mm"
     );
 
-    await sendSmsReminder(
+    await sendMeetingLink(
       clientPhone,
       hostFirstName,
       hostLastName,

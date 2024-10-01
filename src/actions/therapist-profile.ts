@@ -6,10 +6,12 @@ import { requireAuth } from "@/lib/auth";
 import { UserRole } from "@/generalTypes";
 import User from "@/models/User";
 import { revalidatePath } from "next/cache";
+import sanitizeHtml from "sanitize-html";
 import connectToMongoDB from "@/lib/mongoose";
 
 export const updateTherapistProfile = async (
-  values: z.infer<typeof TherapistMyProfileSchema>
+  values: z.infer<typeof TherapistMyProfileSchema>,
+  adminPageProps?: { therapistId: string }
 ) => {
   await connectToMongoDB();
   const [SuccessMessages, ErrorMessages] = await Promise.all([
@@ -31,15 +33,35 @@ export const updateTherapistProfile = async (
 
     const data = validatedFields.data;
 
-    await User.findByIdAndUpdate(user.id, {
+    // Sanitize the HTML input to prevent XSS attacks
+    const sanitizedWorkDescriptionEn = sanitizeHtml(data.workDescriptionEn, {
+      allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img", "iframe"]),
+      allowedAttributes: false,
+    });
+
+    const sanitizedWorkDescriptionAr = sanitizeHtml(data.workDescriptionAr, {
+      allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img", "iframe"]),
+      allowedAttributes: false,
+    });
+
+    let userToUpdate;
+
+    if (!!adminPageProps) {
+      const therapist = await User.findById(adminPageProps.therapistId);
+      userToUpdate = therapist._id;
+    } else {
+      userToUpdate = user.id;
+    }
+
+    await User.findByIdAndUpdate(userToUpdate, {
       therapistWorkProfile: {
         en: {
           title: data.workTitleEn,
-          description: data.workDescriptionEn,
+          description: sanitizedWorkDescriptionEn,
         },
         ar: {
           title: data.workTitleAr,
-          description: data.workDescriptionAr,
+          description: sanitizedWorkDescriptionAr,
         },
       },
     });
@@ -53,7 +75,10 @@ export const updateTherapistProfile = async (
   }
 };
 
-export const uploadTherapistProfileImage = async (uploadedFileKey: string) => {
+export const uploadTherapistProfileImage = async (
+  uploadedFileKey: string,
+  adminPageProps?: { therapistId: string }
+) => {
   await connectToMongoDB();
 
   const [SuccessMessages, ErrorMessages] = await Promise.all([
@@ -67,7 +92,16 @@ export const uploadTherapistProfileImage = async (uploadedFileKey: string) => {
       UserRole.ADMIN,
     ])) as any;
 
-    await User.findByIdAndUpdate(user.id, {
+    let userToUpdate;
+
+    if (!!adminPageProps) {
+      const therapist = await User.findById(adminPageProps.therapistId);
+      userToUpdate = therapist._id;
+    } else {
+      userToUpdate = user.id;
+    }
+
+    await User.findByIdAndUpdate(userToUpdate, {
       image: uploadedFileKey,
     });
 

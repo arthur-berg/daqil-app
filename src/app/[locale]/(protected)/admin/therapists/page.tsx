@@ -1,4 +1,4 @@
-import { getTherapists } from "@/data/user";
+import { getTherapistsAdminView } from "@/data/user";
 import {
   Table,
   TableBody,
@@ -18,7 +18,7 @@ import { Link } from "@/navigation";
 
 const AdminTherapistsPage = async () => {
   await connectToMongoDB();
-  const therapists = await getTherapists();
+  const therapists = await getTherapistsAdminView();
 
   return (
     <Card className="w-full md:w-[600px]">
