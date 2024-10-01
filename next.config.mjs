@@ -14,20 +14,7 @@ const nextConfig = {
     ],
   },
   images: {
-    domains: ["zakina-images.s3.eu-north-1.amazonaws.com"],
-  },
-  async headers() {
-    return [
-      {
-        source: "/api/appointment/(.*)", 
-        headers: [
-          {
-            key: "x-vercel-protection-bypass",
-            value: "true", 
-          },
-        ],
-      },
-    ];
+    domains: ["zakina-images.s3.eu-north-1.amazonaws.com"], // Add this line to allow the domain
   },
 };
 
