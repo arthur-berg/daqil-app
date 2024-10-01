@@ -733,7 +733,7 @@
     "thankYouMessage": "شكرًا لاستخدامك زاكينا."
   },
   "MeetingLinkEmail": {
-  "subject": "موعد مع {hostFirstName} في {appointmentTime}",
+ "subject": "رابط الفيديو لموعدك في {appointmentTime}",
   "greeting": "مرحبًا،",
   "message": "لديك موعد قادم مع {hostFirstName} {hostLastName} في {appointmentTime}.",
   "joinLink": "انقر هنا للانضمام إلى الاجتماع:",

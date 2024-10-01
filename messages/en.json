@@ -738,7 +738,7 @@
     "thankYouMessage": "Thank you for using DAQIL."
   },
   "MeetingLinkEmail": {
-      "subject": "Meeting with {hostFirstName} at {appointmentTime}",
+      "subject": "Video link for your appointment at {appointmentTime}",
       "greeting": "Hello,",
       "message": "You have an upcoming appointment with {hostFirstName} {hostLastName} at {appointmentTime}.",
       "joinLink": "Click here to join the meeting:",

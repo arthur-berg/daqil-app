@@ -1,6 +1,14 @@
 "use client";
-import { AddToCalendarButton } from "add-to-calendar-button-react";
 import { formatInTimeZone } from "date-fns-tz"; // for time zone handling
+
+import dynamic from "next/dynamic";
+
+const AddToCalendarButton = dynamic(
+  () => import("add-to-calendar-button-react") as any,
+  {
+    ssr: false,
+  }
+) as any;
 
 const CalendarButton = ({
   appointment, // appointment object with date details

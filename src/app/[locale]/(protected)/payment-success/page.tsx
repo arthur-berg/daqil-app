@@ -106,6 +106,7 @@ const PaymentSuccessPage = async ({
             {currencyToSymbol(appointment.currency)}
             {amountPaid}
           </p>
+
           <div className="mb-6">
             <p className="text-xl font-bold">{t("addToCalendar")}</p>
             <div className="flex flex-col sm:flex-row justify-center sm:space-x-4 space-y-2 sm:space-y-0 mt-4">

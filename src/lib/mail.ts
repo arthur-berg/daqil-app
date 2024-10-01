@@ -633,7 +633,7 @@ export const sendMeetingLink = async (
     const meetingLink = `${process.env.NEXT_PUBLIC_APP_URL}/appointments/${appointmentId}`;
 
     // Get the email subject from translations
-    const subject = t("subject", { hostFirstName, appointmentTime });
+    const subject = t("subject", { appointmentTime });
 
     // Generate the email content using the template
     const html = meetingLinkEmailTemplate({
