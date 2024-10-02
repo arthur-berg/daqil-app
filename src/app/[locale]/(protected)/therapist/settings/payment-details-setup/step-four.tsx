@@ -32,15 +32,17 @@ const StepFour = ({
     const accountType = form.getValues("accountType");
 
     if (accountType === "personal") {
+      const accountSubtype = form.getValues("accountSubtype");
       const accountNumber = form.getValues("accountNumber");
       const confirmAccountNumber = form.getValues("confirmAccountNumber");
       const bankName = form.getValues("bankName");
 
       const isPersonalBankDetailsFilled =
+        !!accountSubtype &&
         !!accountNumber &&
         !!confirmAccountNumber &&
         !!bankName &&
-        accountNumber === confirmAccountNumber; // Ensure account numbers match
+        accountNumber === confirmAccountNumber;
 
       setIsNextButtonEnabled((prev: any) => ({
         ...prev,
@@ -64,12 +66,13 @@ const StepFour = ({
     }
   }, [
     form.watch("accountType"),
+    form.watch("accountSubtype"),
     form.watch("accountNumber"),
     form.watch("confirmAccountNumber"),
     form.watch("iban"),
     form.watch("swift"),
     form.watch("bankName"),
-  ]);
+  ]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div>

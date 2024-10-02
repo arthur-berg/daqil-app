@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/popover";
 import { useTranslations } from "next-intl";
 import { Checkbox } from "@/components/ui/checkbox";
+import { BeatLoader } from "react-spinners";
 
 const generateTimeIntervals = (intervalMinutes = 15) => {
   const times = [];
@@ -377,7 +378,7 @@ const RecurringAvailabilityForm = ({
                     )}
                   </div>
 
-                  <FormField
+                  {/*    <FormField
                     control={form.control}
                     name={`timeRanges.${index}.appointmentTypeIds`}
                     render={({ field }) => (
@@ -424,7 +425,7 @@ const RecurringAvailabilityForm = ({
                         </div>
                       </FormItem>
                     )}
-                  />
+                  /> */}
                 </div>
               ))
             ) : (
@@ -450,6 +451,14 @@ const RecurringAvailabilityForm = ({
               >
                 {t("saveTimeRanges")}
               </Button>
+            </div>
+          )}
+          {isPending && (
+            <div className="absolute inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center z-50">
+              <div className="flex flex-col text-white  items-center">
+                <BeatLoader color="#ffffff" className="mb-2" />
+                <div>{t("savingTimeSlots")}</div>
+              </div>
             </div>
           )}
         </div>

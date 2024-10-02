@@ -65,13 +65,13 @@ const NonRecurringTimes = ({
                         {formatDateTime(timeRange.endDate!)}
                       </div>
                       {/* Display appointment type names as a list */}
-                      <ul className="text-sm text-green-700 mt-1 list-disc list-inside">
+                      {/*  <ul className="text-sm text-green-700 mt-1 list-disc list-inside">
                         {getAppointmentTypeNames(
                           timeRange.appointmentTypeIds as any
                         ).map((name, index) => (
                           <li key={index}>{name}</li>
                         ))}
-                      </ul>
+                      </ul> */}
                     </div>
                   )
                 )}

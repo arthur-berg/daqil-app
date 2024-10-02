@@ -31,7 +31,7 @@ const Overview = ({
         t={t}
       />
       <NonRecurringTimes
-        appointmentTypes={appointmentTypes} // Pass appointmentTypes here
+        appointmentTypes={appointmentTypes}
         nonRecurringAvailableTimes={availableTimes.nonRecurringAvailableTimes}
         t={t}
         overview

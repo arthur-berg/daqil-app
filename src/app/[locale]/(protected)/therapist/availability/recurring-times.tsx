@@ -56,7 +56,7 @@ const RecurringTimes = ({
                         {format(new Date(timeRange.endTime), "HH:mm")}
                       </div>
                       {/* Display appointment type names as a bullet list */}
-                      <ul className="text-sm text-blue-700 mt-1 list-disc pl-4">
+                      {/* <ul className="text-sm text-blue-700 mt-1 list-disc pl-4">
                         {(
                           getAppointmentTypeNames(
                             timeRange?.appointmentTypeIds as any
@@ -64,7 +64,7 @@ const RecurringTimes = ({
                         ).map((name, index) => (
                           <li key={index}>{name}</li>
                         ))}
-                      </ul>
+                      </ul> */}
                     </div>
                   ))}
                 </div>

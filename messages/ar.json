@@ -359,6 +359,7 @@
     "cancelReservation": "إلغاء الحجز"
   },
   "AvailabilityPage": {
+    "savingTimeSlots": "جارٍ حفظ الفترات الزمنية...",
     "recurringAvailableTimes": "أوقات متاحة متكررة",
     "nonRecurringAvailableTimes": "أوقات متاحة غير متكررة",
     "blockedOutTimes": "أوقات محجوبة",

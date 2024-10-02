@@ -36,7 +36,7 @@ import { Separator } from "@/components/ui/separator";
 import { useTranslations } from "next-intl";
 import NonRecurringTimes from "./non-recurring-times";
 import { Checkbox } from "@/components/ui/checkbox";
-import { convertToUtcMidnight, convertToUtcWithTime } from "@/utils";
+import { convertToUtcMidnight } from "@/utils";
 
 const generateTimeIntervals = (intervalMinutes = 15) => {
   const times = [];
@@ -431,7 +431,7 @@ const NonRecurringAvailabilityForm = ({
                           <TrashIcon className="w-5 h-5 text-destructive hover:text-white" />
                         </Button>
                       </div>
-                      <FormField
+                      {/*    <FormField
                         control={form.control}
                         name={`timeRanges.${index}.appointmentTypeIds`}
                         render={({ field }) => (
@@ -478,7 +478,7 @@ const NonRecurringAvailabilityForm = ({
                             </div>
                           </FormItem>
                         )}
-                      />
+                      /> */}
                     </div>
                   ))}
                   <Button

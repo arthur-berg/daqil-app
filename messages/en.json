@@ -366,6 +366,7 @@
     "cancelReservation": "Cancel reservation"
   },
   "AvailabilityPage": {
+    "savingTimeSlots": "Saving time slots...",
     "recurringAvailableTimes": "Recurring available times",
     "nonRecurringAvailableTimes": "Non-recurring available times",
     "blockedOutTimes": "Blocked out times",

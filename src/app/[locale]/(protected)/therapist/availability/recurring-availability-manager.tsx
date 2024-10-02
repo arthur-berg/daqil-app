@@ -247,9 +247,9 @@ const DefaultAvailabilityManager = ({
       <h2 className="text-xl md:text-2xl font-bold text-blue-600 flex items-center mb-4 mt-4">
         <FaClock className="mr-2" /> {t("recurringAvailableTimes")}
       </h2>
-      <div className="p-4 space-y-6 max-w-lg">
+      <div className=" space-y-6 max-w-lg">
         {daysOfWeek.map((day) => (
-          <div key={day} className="space-y-4">
+          <div key={day} className="space-y-4 relative p-4">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-semibold text-blue-800">
                 {capitalizeFirstLetter(day)}
@@ -292,7 +292,7 @@ const DefaultAvailabilityManager = ({
                           {format(new Date(range.to), "HH:mm")}
                         </span>
                       </div>
-                      <ul className="list-disc md:ml-4 flex flex-col">
+                      {/*  <ul className="list-disc md:ml-4 flex flex-col">
                         {appointmentTypes.map((type) => {
                           const isSelected = range.appointmentTypeIds?.includes(
                             type._id
@@ -310,7 +310,7 @@ const DefaultAvailabilityManager = ({
                           }
                           return null;
                         })}
-                      </ul>
+                      </ul> */}
                     </div>
                   ))
                 ) : (
