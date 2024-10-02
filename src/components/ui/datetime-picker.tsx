@@ -637,6 +637,7 @@ type DateTimePickerProps = {
    * By default, the value is `second` which shows all time inputs.
    **/
   granularity?: Granularity;
+  disablePastDates?: boolean;
 } & Pick<
   CalendarProps,
   "locale" | "weekStartsOn" | "showWeekNumber" | "showOutsideDays"
@@ -661,6 +662,7 @@ const DateTimePicker = React.forwardRef<
       displayFormat,
       granularity = "second",
       placeholder = "Pick a date",
+      disablePastDates = false,
       ...props
     },
     ref
@@ -716,6 +718,8 @@ const DateTimePicker = React.forwardRef<
       };
     }
 
+    const today = new Date();
+
     return (
       <Popover open={isOpen} onOpenChange={setIsOpen}>
         <PopoverTrigger asChild disabled={disabled}>
@@ -752,6 +756,7 @@ const DateTimePicker = React.forwardRef<
             onMonthChange={handleSelect}
             yearRange={yearRange}
             locale={locale}
+            disabled={disablePastDates ? [{ before: today }] : undefined}
             {...props}
           />
           {granularity !== "day" && (

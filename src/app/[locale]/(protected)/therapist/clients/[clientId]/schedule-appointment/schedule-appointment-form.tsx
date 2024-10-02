@@ -20,7 +20,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
-import { useToast } from "@/components/ui/use-toast";
+import { toast, useToast } from "@/components/ui/use-toast";
 import { useRouter } from "@/navigation";
 import { useTranslations } from "next-intl";
 import { scheduleAppointment } from "@/actions/appointments/schedule-appointment";
@@ -75,16 +75,21 @@ const ScheduleAppointmentForm = ({
       try {
         const data = await scheduleAppointment(values);
 
-        responseToast(data);
-
         if (data.error) {
           setError(data.error);
+          toast({
+            title: data.error,
+            variant: "destructive",
+          });
         }
         if (data.success) {
           setError(undefined);
           form.reset();
 
-          router.push(`/therapist/clients/${values.clientId}`);
+          /*  router.push(`/therapist/clients/${values.clientId}`); */
+          router.push(
+            `/scheduled-appointment-success?appointmentId=${data.appointmentId}`
+          );
         }
       } catch {
         setError("Something went wrong!");
@@ -143,6 +148,7 @@ const ScheduleAppointmentForm = ({
                         <FormLabel>{t("startDate")}</FormLabel>
                         <FormControl>
                           <DateTimePicker
+                            disablePastDates
                             granularity="minute"
                             hourCycle={24}
                             value={field.value}
@@ -215,7 +221,10 @@ const ScheduleAppointmentForm = ({
       </Card>
       {isPending && (
         <div className="absolute inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center z-10">
-          <BeatLoader color="white" />
+          <div className="text-white flex flex-col items-center">
+            <BeatLoader color="white" />
+            {t("schedulingAppointment")}
+          </div>
         </div>
       )}
     </div>

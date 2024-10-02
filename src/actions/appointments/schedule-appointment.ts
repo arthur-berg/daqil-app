@@ -253,7 +253,10 @@ export const scheduleAppointment = async (
       appointmentDetails
     );
 
-    return { success: SuccessMessages("appointmentCreated") };
+    return {
+      appointmentId,
+      success: SuccessMessages("appointmentCreated"),
+    };
   } catch (error) {
     if (!transactionCommitted) {
       await session.abortTransaction();

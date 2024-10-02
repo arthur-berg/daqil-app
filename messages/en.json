@@ -71,6 +71,9 @@
     "finishAccountSetup": "Finish account setup"
   },
   "AppointmentList": {
+    "meetingNotPaid": "Appointment is waiting for payment",
+     "meetingNotPaidMessage": "The meeting is not paid yet by the client.",
+     "meetingPaymentDeadline": "They have up to {timeLimit} hour before the meeting start to pay, otherwise the meeting will be canceled.",
     "upcoming": "Upcoming",
     "history": "History",
     "appointmentFilter": "Appointment filter",
@@ -461,6 +464,7 @@
     "day": "Day"
   },
   "ScheduleAppointmentPage": {
+    "schedulingAppointment": "Scheduling appointment...",
     "scheduleAnotherAppointment": "Schedule another appointment",
     "goToAppointmentsOverview": "Go to appointments overview",
     "scheduleAppointmentWith": "Schedule appointment with",

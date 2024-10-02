@@ -158,7 +158,7 @@ const VideoRoom = ({
     return (
       <div className="h-[calc(100vh-100px)] md:h-screen w-full flex flex-col justify-between items-center p-2 box-border">
         <div className="flex justify-center mb-4">
-          <div className="w-[100px] md:w-[150px]">
+          <div className="w-[100px] md:w-[110px]">
             <Image
               src={logoSrc}
               alt="daqil-logo"
@@ -230,7 +230,7 @@ const VideoRoom = ({
     <div className="h-[calc(100vh-90px)] md:h-screen w-full flex flex-col p-2 box-border">
       {/* Logo Header */}
       <div className="flex justify-center mb-4">
-        <div className="w-[100px] md:w-[150px]">
+        <div className="w-[100px] md:w-[110px]">
           <Image
             src={logoSrc}
             alt="daqil-logo"

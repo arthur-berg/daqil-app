@@ -185,8 +185,20 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
 
     return (
       <>
-        <div className="mb-6 p-4 w-full bg-green-100 border-l-4 border-green-500">
-          <h2 className="text-lg sm:text-2xl font-bold text-green-800 mb-2">
+        <div
+          className={`mb-6 p-4 w-full border-l-4 ${
+            nextAppointment.payment.status === "pending"
+              ? "bg-yellow-100 border-yellow-500"
+              : "bg-green-100 border-green-500"
+          }`}
+        >
+          <h2
+            className={`text-lg sm:text-2xl font-bold mb-2 ${
+              nextAppointment.payment.status === "pending"
+                ? "text-yellow-800"
+                : "text-green-800"
+            }`}
+          >
             {t("yourNextAppointment")}
           </h2>
           <div className="text-sm text-gray-700">
@@ -207,6 +219,9 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
                 nextAppointment.hostUserId.lastName
               )}
             </p>
+            {nextAppointment.payment.status === "pending" && (
+              <p className="text-red-600 mt-2">{t("meetingNotPaid")}</p>
+            )}
             <div className="mt-4">
               {isJoinEnabled ? (
                 <Link
@@ -389,12 +404,12 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
 
                                   const timeSinceStart = differenceInMinutes(
                                     new Date(),
-                                    new Date(nextAppointment.startDate)
+                                    new Date(appointment.startDate)
                                   );
                                   const tenMinutesPassedAfterStart =
                                     timeSinceStart >= 0 &&
                                     timeSinceStart <= 10 &&
-                                    !nextAppointment.participants[0].showUp;
+                                    !appointment.participants[0].showUp;
 
                                   const isJoinEnabled =
                                     ((timeUntilStart <= 20 &&
@@ -480,13 +495,13 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
                                                 )}
                                               </>
                                             )}
-                                            {/* <p>
+                                            <p>
                                               <strong>{t("paid")}:</strong>{" "}
                                               {appointment.payment.status ===
                                               "paid"
                                                 ? t("yes")
                                                 : t("no")}
-                                            </p> */}
+                                            </p>
                                           </div>
                                           {(appointment.status === "pending" ||
                                             appointment.status ===

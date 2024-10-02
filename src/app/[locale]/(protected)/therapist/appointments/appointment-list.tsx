@@ -164,9 +164,23 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
         tenMinutesPassedAfterStart) &&
       !hasMeetingEnded;
 
+    const isPending = nextAppointment.payment.status === "pending";
+
     return (
-      <div className="mb-6 p-4 w-full bg-green-100 border-l-4 border-green-500">
-        <h2 className="text-lg sm:text-2xl font-bold text-green-800 mb-2">
+      <div
+        className={
+          isPending
+            ? "mb-6 p-4 w-full bg-yellow-100 border-l-4 border-yellow-500"
+            : "mb-6 p-4 w-full bg-green-100 border-l-4 border-green-500"
+        }
+      >
+        <h2
+          className={
+            isPending
+              ? "text-lg sm:text-2xl font-bold text-yellow-800 mb-2"
+              : "text-lg sm:text-2xl font-bold text-green-800 mb-2"
+          }
+        >
           {t("yourNextAppointment")}
         </h2>
         <div className="text-sm text-gray-700">
@@ -185,6 +199,18 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
               )
               .join(", ")}
           </p>
+
+          {isPending && (
+            <div className="mt-4 text-yellow-700">
+              <p>
+                <div> {t("meetingNotPaidMessage")}</div>{" "}
+                {t("meetingPaymentDeadline", {
+                  timeLimit: 1, // 1 hour before meeting
+                })}
+              </p>
+            </div>
+          )}
+
           <div className="mt-4">
             {isJoinEnabled ? (
               <Link
@@ -206,9 +232,7 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
                   </p>
                 ) : (
                   <p className="text-sm text-gray-500 mt-2 text-center">
-                    {t("joinDisabledMessage", {
-                      time: 20,
-                    })}
+                    {t("joinDisabledMessage", { time: 20 })}
                     <br />
                     {t("refreshMessage")}
                   </p>
@@ -409,13 +433,13 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
                                               )}
                                             </>
                                           )}
-                                          {/* <p>
+                                          <p>
                                             <strong>{t("paid")}:</strong>{" "}
                                             {appointment.payment.status ===
                                             "paid"
                                               ? t("yes")
                                               : t("no")}
-                                          </p> */}
+                                          </p>
                                         </div>
                                         {(appointment.status === "pending" ||
                                           appointment.status ===
