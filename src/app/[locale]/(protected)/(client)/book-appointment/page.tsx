@@ -12,12 +12,13 @@ import {
 } from "@/contants/config";
 import { redirectUserIfReservationExist } from "./helpers";
 import { MdEvent } from "react-icons/md";
-
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import AcceptTherapist from "./accept-therapist";
 import { getFullName } from "@/utils/formatName";
 import connectToMongoDB from "@/lib/mongoose";
 import IntroCallStepManager from "./intro-call-step-manager";
 import PageTitle from "@/components/page-title";
+import Image from "next/image";
 
 const BookAppointmentPage = async ({
   params,
@@ -29,7 +30,7 @@ const BookAppointmentPage = async ({
   const ErrorMessages = await getTranslations("ErrorMessages");
   const t = await getTranslations("BookAppointmentPage");
   const user = await getCurrentUser();
-
+  const locale = params.locale;
   const OAuthAccountNotFinished = !!user?.isOAuth && !user?.isAccountSetupDone;
 
   if (!user) {
@@ -101,6 +102,7 @@ const BookAppointmentPage = async ({
         (bookedAppointment: any) => bookedAppointment.status !== "canceled"
       )
     ) && !user?.selectedTherapist?.introCallDone;
+  const maxDescriptionLength = 200;
 
   return (
     <>
@@ -155,23 +157,82 @@ const BookAppointmentPage = async ({
                     <h2 className="text-xl font-bold mb-4">
                       {t("awaitingApproval")}
                     </h2>
-                    <p className="mb-4">
+                    <div className="flex justify-center mb-4">
+                      <Avatar className="w-28 h-28">
+                        <AvatarImage
+                          src={selectedTherapist.image || ""}
+                          className="object-cover"
+                        />
+                        <AvatarFallback className="bg-background flex items-center justify-center w-full h-full">
+                          <Image
+                            width={150}
+                            height={50}
+                            src={
+                              locale === "en"
+                                ? "https://zakina-images.s3.eu-north-1.amazonaws.com/daqil-logo-en.png"
+                                : "https://zakina-images.s3.eu-north-1.amazonaws.com/daqil-logo-ar.png"
+                            }
+                            alt="psychologist-image"
+                            className="w-full"
+                          />
+                        </AvatarFallback>
+                      </Avatar>
+                    </div>
+                    <p className="mb-4 font-semibold">
                       {await getFullName(
                         selectedTherapist?.firstName,
                         selectedTherapist?.lastName
                       )}
                     </p>
-                    <p className="mb-4">
-                      {
-                        selectedTherapist?.therapistWorkProfile[params.locale]
-                          ?.description
-                      }
-                    </p>
+                    {selectedTherapist.therapistWorkProfile && (
+                      <div className="text-sm text-gray-700 mb-4 text-center">
+                        <div className="font-semibold mb-2 text-base sm:text-lg">
+                          {selectedTherapist.therapistWorkProfile[locale].title}
+                        </div>
+                        <div className="leading-relaxed">
+                          {selectedTherapist.therapistWorkProfile[locale]
+                            .description.length > maxDescriptionLength ? (
+                            <div
+                              dangerouslySetInnerHTML={{
+                                __html:
+                                  selectedTherapist.therapistWorkProfile[
+                                    locale
+                                  ].description.slice(0, maxDescriptionLength) +
+                                  "...",
+                              }}
+                            />
+                          ) : (
+                            <div
+                              dangerouslySetInnerHTML={{
+                                __html:
+                                  selectedTherapist.therapistWorkProfile[locale]
+                                    .description,
+                              }}
+                            />
+                          )}
+                        </div>
+                      </div>
+                    )}
+                    <Link
+                      href={`/therapist/${selectedTherapist._id}?selectedTherapistView=true`}
+                    >
+                      <Button variant="outline" size="sm" className="mb-4">
+                        {t("readMore")}
+                      </Button>
+                    </Link>
+                    {/* <p
+                      className="mb-4"
+                      dangerouslySetInnerHTML={{
+                        __html:
+                          selectedTherapist?.therapistWorkProfile[locale]
+                            ?.description || "",
+                      }}
+                    ></p> */}
                     <AcceptTherapist />
                   </div>
                 ) : browseTherapists ? (
                   <div className="flex justify-center">
-                    <div className="bg-white shadow-lg rounded-lg p-6 text-center hover:shadow-xl transition-shadow duration-300  w-1/2">
+                    <div className="bg-white shadow-lg rounded-lg p-6 text-center hover:shadow-xl transition-shadow duration-300 sm:3/4 md:w-1/2">
                       <div>
                         <h2 className="text-xl font-bold mb-4">
                           {t("browseTherapistsTitle")}
