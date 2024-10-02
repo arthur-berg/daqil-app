@@ -99,7 +99,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         session.user.stripeCustomerId = token.stripeCustomerId as string;
         session.user.stripePaymentMethodId =
           token.stripePaymentMethodId as string;
-        session.user.appointments = token.appointments as any;
+        /* session.user.appointments = token.appointments as any; */
         session.user.personalInfo = token.personalInfo as any;
         session.user.settings = token.settings as any;
 
@@ -142,7 +142,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       token.image = existingUser.image;
       token.stripeCustomerId = existingUser.stripeCustomerId;
       token.stripePaymentMethodId = existingUser.stripePaymentMethodId;
-      token.appointments = existingUser.appointments;
+      /* token.appointments = existingUser.appointments; */
       token.personalInfo = existingUser.personalInfo;
       token.settings = existingUser.settings;
 
