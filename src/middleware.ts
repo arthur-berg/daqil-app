@@ -2,6 +2,7 @@ import authConfig from "@/auth.config";
 import NextAuth from "next-auth";
 import createMiddleware from "next-intl/middleware";
 import { locales } from "@/lib/config";
+import { cookies } from "next/headers";
 
 const { auth } = NextAuth(authConfig);
 
@@ -13,15 +14,10 @@ const intlMiddleware = createMiddleware({
   defaultLocale: "en",
 });
 
-const clearCookies = (req: NextRequest) => {
-  const response = NextResponse.next();
-
-  // Clear cookies by setting them to expire
-  req.cookies.forEach((cookie) => {
-    response.cookies.set(cookie.name, "", { maxAge: -1 });
-  });
-
-  return response;
+const clearCookies = (res: NextResponse) => {
+  res.cookies.set("session", "", { maxAge: 0 });
+  res.cookies.set("anotherCookie", "", { maxAge: 0 }); // Add any other cookies you need to clear
+  return res;
 };
 
 const authMiddleware = auth(async (req) => {
@@ -103,7 +99,8 @@ export default function middleware(req: NextRequest) {
   const isPublicRoute = publicRoutes.includes(pathWithoutLocale);
 
   if (req.headers.get("status") === "431") {
-    return clearCookies(req);
+    const res = NextResponse.next();
+    return clearCookies(res);
   }
 
   if (isPublicRoute) {
