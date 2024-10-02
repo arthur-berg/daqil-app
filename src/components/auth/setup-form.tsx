@@ -429,7 +429,7 @@ export const SetupForm = () => {
                         <Button
                           variant="outline"
                           role="combobox"
-                          className="justify-between sm:w-full"
+                          className="justify-between max-w-[280px] sm:w-full"
                         >
                           <div className="truncate max-w-[calc(100%-24px)]">
                             {field.value && allTimezones[field.value]

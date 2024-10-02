@@ -36,6 +36,12 @@ export default function AdminPanelLayout({
   const isDesktop = useMediaQuery({ query: "(min-width: 1024px)" });
 
   useEffect(() => {
+    if (!isDesktop) {
+      window.scrollTo(0, 0); // Scroll to top when page changes on mobile
+    }
+  }, [pathname, isDesktop]);
+
+  useEffect(() => {
     // Automatically open the sidebar on desktop screens
     if (isDesktop) {
       setIsOpen(true);
