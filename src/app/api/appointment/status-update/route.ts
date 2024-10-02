@@ -26,11 +26,11 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
 
     if (hostShowUp && participantShowUp) {
       statusUpdate = { status: "completed" };
-      /*  if (appointment.appointmentTypeId === APPOINTMENT_TYPE_ID_INTRO_SESSION) {
+      if (appointment.appointmentTypeId === APPOINTMENT_TYPE_ID_INTRO_SESSION) {
         await User.findByIdAndUpdate(appointment.participants[0].userId, {
           $set: { "selectedTherapist.introCallDone": true },
         });
-      } */
+      }
     } else if (!hostShowUp && !participantShowUp) {
       statusUpdate = {
         status: "canceled",

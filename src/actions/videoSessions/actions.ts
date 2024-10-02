@@ -75,7 +75,7 @@ export const getSessionData = async (appointmentId: string) => {
         return { error: ErrorMessages("userNotFound") };
       }
 
-      if (
+      /*  if (
         !user.selectedTherapist?.introCallDone &&
         appointment.appointmentTypeId.toString() ===
           APPOINTMENT_TYPE_ID_INTRO_SESSION
@@ -83,7 +83,7 @@ export const getSessionData = async (appointmentId: string) => {
         await User.findByIdAndUpdate(user.id, {
           $set: { "selectedTherapist.introCallDone": true },
         });
-      }
+      } */
 
       updateOptions.arrayFilters = [{ "elem.userId": user.id }];
 
