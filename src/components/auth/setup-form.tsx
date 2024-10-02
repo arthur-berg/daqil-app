@@ -225,7 +225,11 @@ export const SetupForm = () => {
               <Button
                 type="button"
                 variant={showArabicNameFields ? "destructive" : "outline"}
-                onClick={() => setShowArabicNameFields(!showArabicNameFields)}
+                onClick={() => {
+                  setShowArabicNameFields(!showArabicNameFields);
+                  form.setValue("firstName.ar", "");
+                  form.setValue("lastName.ar", "");
+                }}
                 className="mt-2"
               >
                 {showArabicNameFields
