@@ -24,7 +24,11 @@ const MyClientsPage = async () => {
   const clients = await getClients(user.id);
 
   if (!clients || clients.length === 0) {
-    return <div className="text-center p-4">{t("noClientsFound")}</div>;
+    return (
+      <div className="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-6">
+        {t("noClientsFound")}
+      </div>
+    );
   }
   return (
     <>
