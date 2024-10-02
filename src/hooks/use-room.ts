@@ -163,8 +163,8 @@ export default function useRoom() {
         selfVideoContainer.style.position = "absolute"; // Change to absolute for positioning relative to roomContainer
         selfVideoContainer.style.bottom = "90px";
         selfVideoContainer.style.right = "0";
-        selfVideoContainer.style.width = "180px"; // Smaller size for mobile
-        selfVideoContainer.style.height = "118px";
+        selfVideoContainer.style.width = "133px"; // Smaller size for mobile
+        selfVideoContainer.style.height = "105px";
       } else {
         // Desktop view adjustments: bottom-right corner within the roomContainer
         selfVideoContainer.style.position = "absolute"; // Change to absolute for positioning relative to roomContainer
@@ -202,6 +202,11 @@ export default function useRoom() {
         publishAudio: true,
         publishVideo: true,
         insertDefaultUI: true,
+        style: {
+          nameDisplayMode: isMobile ? "off" : "auto",
+          buttonDisplayMode: "off",
+          audioLevelDisplayMode: "off",
+        },
       };
 
       startRoomListeners();
