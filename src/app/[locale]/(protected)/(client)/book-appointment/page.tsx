@@ -43,7 +43,7 @@ const BookAppointmentPage = async ({
     ? await getTherapistById(user?.selectedTherapist.therapist)
     : null;
 
-  if (user?.appointments?.length > 0) {
+  if (client?.appointments?.length > 0) {
     await redirectUserIfReservationExist(user.id, ErrorMessages);
   }
 
