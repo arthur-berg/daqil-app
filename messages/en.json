@@ -760,7 +760,7 @@
   "timeLabel": "Time:",
   "durationLabel": "Duration:",
   "minutesLabel": "minutes",
-  "thankYouMessage": "Thank you for choosing our platform for your session. We look forward to your upcoming appointment!"
+  "thankYouMessage": "Thank you for using DAQIL."
 },
   "AppointmentTypes": {
     "6692b4919a6b12347d0afac4": "Therapy session - 30 minutes",

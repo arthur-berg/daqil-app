@@ -89,12 +89,12 @@ export default function MuteAudioButton({
             <TooltipTrigger asChild>
               <div onClick={toggleAudio}>
                 {!hasAudio ? (
-                  <MdMic
+                  <MdMicOff
                     fontSize="inherit"
                     className="w-8 h-8 text-white cursor-pointer"
                   />
                 ) : (
-                  <MdMicOff
+                  <MdMic
                     fontSize="inherit"
                     className="w-8 h-8 text-white cursor-pointer"
                   />
