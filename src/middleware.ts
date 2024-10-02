@@ -6,16 +6,31 @@ import { locales } from "@/lib/config";
 const { auth } = NextAuth(authConfig);
 
 import { DEFAULT_LOGIN_REDIRECT, publicRoutes, authRoutes } from "@/routes";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 const intlMiddleware = createMiddleware({
   locales,
   defaultLocale: "en",
 });
 
+const clearCookies = (req: NextRequest) => {
+  const response = NextResponse.next();
+
+  // Clear cookies by setting them to expire
+  req.cookies.forEach((cookie) => {
+    response.cookies.set(cookie.name, "", { maxAge: -1 });
+  });
+
+  return response;
+};
+
 const authMiddleware = auth(async (req) => {
   const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
+
+  /*  if (req.headers.get("status") === "431") {
+    return clearCookies(req);
+  } */
 
   const pathnameParts = nextUrl.pathname.split("/");
   const locale = (
@@ -86,6 +101,10 @@ export default function middleware(req: NextRequest) {
     ? `/${pathnameParts.slice(2).join("/")}`
     : req.nextUrl.pathname;
   const isPublicRoute = publicRoutes.includes(pathWithoutLocale);
+
+  if (req.headers.get("status") === "431") {
+    return clearCookies(req);
+  }
 
   if (isPublicRoute) {
     return intlMiddleware(req); // Apply internationalization for public pages
