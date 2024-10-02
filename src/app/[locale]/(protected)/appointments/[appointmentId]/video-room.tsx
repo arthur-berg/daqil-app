@@ -111,25 +111,6 @@ const VideoRoom = ({
   }, [isPreviewing, toast]);
 
   useEffect(() => {
-    const updateViewportHeight = () => {
-      // Get the viewport height and set it as a CSS custom property
-      const vh = window.innerHeight * 0.01;
-      document.documentElement.style.setProperty("--vh", `${vh}px`);
-    };
-
-    // Initial call to set the height
-    updateViewportHeight();
-
-    // Add event listener to handle resize (e.g., when search bar shows/hides)
-    window.addEventListener("resize", updateViewportHeight);
-
-    // Clean up the event listener on component unmount
-    return () => {
-      window.removeEventListener("resize", updateViewportHeight);
-    };
-  }, []);
-
-  useEffect(() => {
     if (!isPreviewing && sessionData && !effectRun.current) {
       if ("error" in sessionData) {
         toast({ variant: "destructive", title: sessionData.error });
@@ -246,7 +227,7 @@ const VideoRoom = ({
   }
 
   return (
-    <div className="h-[calc(var(--vh, 1vh)*100 - 90px)] md:h-screen w-full flex flex-col p-2 box-border">
+    <div className="h-[calc(100vh-90px)] md:h-screen w-full flex flex-col p-2 box-border">
       {/* Logo Header */}
       <div className="flex justify-center mb-4">
         <div className="w-[100px] md:w-[110px]">

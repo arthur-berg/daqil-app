@@ -1,7 +1,11 @@
 "use server";
 
 import { UserRole } from "./../../generalTypes";
-import { getTherapistById } from "@/data/user";
+import {
+  getClientByIdAppointments,
+  getTherapistById,
+  getUserByIdLean,
+} from "@/data/user";
 import { requireAuth } from "@/lib/auth";
 import { getTranslations } from "next-intl/server";
 import {
@@ -29,7 +33,10 @@ export const reserveAppointment = async (
       getTranslations("AppointmentAction"),
       getTranslations("AppointmentTypes"),
     ]);
-  const client = await requireAuth([UserRole.CLIENT, UserRole.ADMIN]);
+  const user = await requireAuth([UserRole.CLIENT, UserRole.ADMIN]);
+
+  const client = (await getClientByIdAppointments(user.id)) as any;
+  const clientId = client._id.toString();
 
   const therapist = (await getTherapistById(therapistId)) as any;
 
@@ -74,7 +81,7 @@ export const reserveAppointment = async (
       title: `${tAppointmentTypes(appointmentType._id)}`,
       startDate,
       endDate,
-      participants: [{ userId: client.id, showUp: false }],
+      participants: [{ userId: clientId, showUp: false }],
       hostUserId: therapistId,
       durationInMinutes: appointmentType.durationInMinutes,
       payment: {
@@ -98,7 +105,7 @@ export const reserveAppointment = async (
     ) {
       // Update the previous therapist in selectedTherapistHistory
       await User.updateOne(
-        { _id: client.id, "selectedTherapistHistory.current": true },
+        { _id: clientId, "selectedTherapistHistory.current": true },
         {
           $set: {
             "selectedTherapistHistory.$.current": false,
@@ -109,7 +116,7 @@ export const reserveAppointment = async (
       );
 
       await User.findByIdAndUpdate(
-        client.id,
+        clientId,
         {
           $set: {
             "selectedTherapist.therapist": therapistId,
@@ -128,23 +135,23 @@ export const reserveAppointment = async (
       // Remove client from old therapist's assignedClients list
       await User.findByIdAndUpdate(
         client.selectedTherapist?.therapist,
-        { $pull: { assignedClients: client.id } },
+        { $pull: { assignedClients: clientId } },
         { session }
       );
     }
 
     // Add client to new therapist's assignedClients list if not already present
-    if (!therapist.assignedClients?.includes(client.id)) {
+    if (!therapist.assignedClients?.includes(clientId)) {
       await User.findByIdAndUpdate(
         therapistId,
-        { $addToSet: { assignedClients: client.id } }, // $addToSet ensures no duplicates
+        { $addToSet: { assignedClients: clientId } }, // $addToSet ensures no duplicates
         { session }
       );
     }
 
     // Update the user's appointments
     await updateAppointments(
-      client.id,
+      clientId,
       appointmentDate,
       appointmentId,
       session,

@@ -511,6 +511,8 @@
     "totalAppointments": "إجمالي المواعيد"
   },
   "PaymentSuccessPage": {
+    "paymentLinkSent": "تم إرسال تأكيد الحجز ورابط الدفع إلى بريد العميل الإلكتروني.",
+"paymentExpiryDateClient": "سيحتاج العميل إلى إتمام الدفع في موعد أقصاه ساعة واحدة قبل بدء الموعد.",
     "noPaymentDetailsSaved": "لم يتم حفظ تفاصيل الدفع بعد",
   "savingPaymentSettings": "جارٍ حفظ إعدادات الدفع...",
     "introMeetingSuccessfullyBooked": "تم حجز الاجتماع التمهيدي بنجاح",

@@ -86,7 +86,6 @@ const ScheduleAppointmentForm = ({
           setError(undefined);
           form.reset();
 
-          /*  router.push(`/therapist/clients/${values.clientId}`); */
           router.push(
             `/scheduled-appointment-success?appointmentId=${data.appointmentId}`
           );

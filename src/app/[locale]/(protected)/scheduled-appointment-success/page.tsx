@@ -60,6 +60,17 @@ const ScheduledAppointmentSuccessPage = async ({
           </div>
         </div>
         <p className="text-gray-500 mt-4">{t("receiveConfirmation")}</p>
+
+        {/* Added confirmation and payment message */}
+        <div className="mt-6 bg-yellow-100 text-yellow-800 p-4 rounded-lg">
+          <p className="font-medium">
+            {t("paymentLinkSent")}
+          </p>
+          <p>
+            {t("paymentExpiryDateClient")}
+            
+          </p>
+        </div>
       </div>
     </div>
   );

@@ -520,6 +520,8 @@
     "totalAppointments":"Total appointments"
   },
   "PaymentSuccessPage": {
+    "paymentLinkSent": "A booking confirmation and a payment link have been sent to the client's email.",
+    "paymentExpiryDateClient": "The client will need to complete the payment no later than 1 hour before the appointment starts.",
     "introMeetingSuccessfullyBooked": "Introductory meeting successfully booked",
     "addToCalendar": "Add to calendar",
     "addToGoogleCalendar": "Add to Google Calendar",
