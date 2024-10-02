@@ -1,4 +1,4 @@
-import { getUserById } from "@/data/user";
+import { getUserByIdLean } from "@/data/user";
 import {
   APPOINTMENT_TYPE_ID_LONG_SESSION,
   APPOINTMENT_TYPE_ID_SHORT_SESSION,
@@ -20,7 +20,7 @@ const ScheduleAppointmentPage = async ({
 }) => {
   await connectToMongoDB();
 
-  const user = await getUserById(params.clientId);
+  const user = await getUserByIdLean(params.clientId);
 
   const appointmentTypes = await getAppointmentTypesByIDs([
     APPOINTMENT_TYPE_ID_SHORT_SESSION,

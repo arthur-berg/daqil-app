@@ -20,6 +20,7 @@ import connectToMongoDB from "@/lib/mongoose";
 import { sendNonPaidBookingConfirmationEmail } from "@/lib/mail";
 import { getFullName } from "@/utils/formatName";
 import { formatInTimeZone } from "date-fns-tz";
+import { getUserById } from "@/data/user";
 
 export const scheduleAppointment = async (
   values: z.input<typeof AppointmentSchema>
@@ -30,13 +31,17 @@ export const scheduleAppointment = async (
     getTranslations("ErrorMessages"),
   ]);
   const locale = await getLocale();
-  const therapist = await requireAuth([UserRole.THERAPIST]);
+  const user = await requireAuth([UserRole.THERAPIST]);
 
-  if (!therapist) {
+  if (!user) {
     return {
       error: ErrorMessages("therapistNotExist"),
     };
   }
+
+  const therapist = await getUserById(user.id);
+
+  const therapistId = therapist._id.toString();
 
   const validatedFields = AppointmentSchema.safeParse(values);
 
@@ -101,7 +106,7 @@ export const scheduleAppointment = async (
           },
           status: "confirmed",
           participants: [{ userId: clientId, showUp: false }],
-          hostUserId: therapist.id,
+          hostUserId: therapistId,
           durationInMinutes: appointmentType.durationInMinutes,
           ...appointmentCost,
         },
@@ -125,7 +130,7 @@ export const scheduleAppointment = async (
 
     if (
       client.selectedTherapist &&
-      client.selectedTherapist.therapist?.toString() !== therapist.id
+      client.selectedTherapist.therapist?.toString() !== therapistId
     ) {
       // Update the previous therapist in selectedTherapistHistory
       await User.updateOne(
@@ -142,7 +147,7 @@ export const scheduleAppointment = async (
       // Remove client from old therapist's assignedClients list
       await User.findByIdAndUpdate(
         client.selectedTherapist.therapist,
-        { $pull: { assignedClients: client.id } },
+        { $pull: { assignedClients: clientId } },
         { session }
       );
 
@@ -151,11 +156,11 @@ export const scheduleAppointment = async (
         clientId,
         {
           $set: {
-            "selectedTherapist.therapist": therapist.id,
+            "selectedTherapist.therapist": therapistId,
           },
           $push: {
             selectedTherapistHistory: {
-              therapist: therapist.id,
+              therapist: therapistId,
               startDate: new Date(),
               current: true,
             },
@@ -166,9 +171,13 @@ export const scheduleAppointment = async (
     }
 
     // Add client to new therapist's assignedClients list if not already present
-    if (!therapist?.assignedClients?.includes(clientId)) {
+    const assignedClientIds = therapist?.assignedClients?.map(
+      (assignedClientId: any) => assignedClientId.toString()
+    );
+
+    if (!assignedClientIds?.includes(clientId)) {
       await User.findByIdAndUpdate(
-        therapist.id,
+        therapistId,
         { $addToSet: { assignedClients: clientId } }, // $addToSet ensures no duplicates
         { session }
       );
@@ -185,7 +194,7 @@ export const scheduleAppointment = async (
 
     // Update the therapist's appointments
     await updateAppointments(
-      therapist.id,
+      therapistId,
       appointmentDate,
       appointmentId,
       session,

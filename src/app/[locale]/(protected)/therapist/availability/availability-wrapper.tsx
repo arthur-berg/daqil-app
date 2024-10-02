@@ -5,7 +5,7 @@ import { requireAuth } from "@/lib/auth";
 import { getTranslations } from "next-intl/server";
 import connectToMongoDB from "@/lib/mongoose";
 import { isBefore, startOfDay } from "date-fns";
-import { getTherapistById } from "@/data/user";
+import { getTherapistById, getUserById, getUserByIdLean } from "@/data/user";
 
 const filterPastTimes = (availableTimes: any) => {
   const today = startOfDay(new Date());
@@ -47,14 +47,16 @@ const AvailabilityWrapper = async ({
   let availableTimes;
 
   const isTherapist = user.role === UserRole.THERAPIST;
-  const isAdmin = user.role === UserRole.ADMIN;
 
   if (isTherapist) {
-    availableTimes = filterPastTimes(user?.availableTimes);
+    const therapist = (await getUserByIdLean(user.id)) as any;
+    availableTimes = filterPastTimes(therapist?.availableTimes);
   }
 
   if (!!adminPageProps) {
-    const therapist = await getTherapistById(adminPageProps.therapistId);
+    const therapist = (await getUserByIdLean(
+      adminPageProps.therapistId
+    )) as any;
     availableTimes = filterPastTimes(therapist?.availableTimes);
   }
 

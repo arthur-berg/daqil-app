@@ -7,6 +7,7 @@ import { getTranslations } from "next-intl/server";
 import connectToMongoDB from "@/lib/mongoose";
 import { getCurrentUser } from "@/lib/auth";
 import { MdError } from "react-icons/md"; // Using the MdError icon for the warning
+import { getUserByIdLean } from "@/data/user";
 
 const TherapistSettingsPage = async () => {
   await connectToMongoDB();
@@ -16,7 +17,9 @@ const TherapistSettingsPage = async () => {
 
   if (!user) return "User not found";
 
-  const paymentSettingsFound = !!user?.paymentSettings?.type;
+  const therapist = (await getUserByIdLean(user.id)) as any;
+
+  const paymentSettingsFound = !!therapist?.paymentSettings?.type;
 
   return (
     <div className="sm:w-[500px] w-full mx-auto space-y-6">
@@ -32,36 +35,42 @@ const TherapistSettingsPage = async () => {
           <CardContent className="space-y-4">
             {paymentSettingsFound ? (
               <>
-                {user?.paymentSettings?.type === "personal" && (
+                {therapist?.paymentSettings?.type === "personal" && (
                   <div>
                     <p>
                       <strong>{t("bankName")}:</strong>{" "}
-                      {user.paymentSettings.personal.bankDetails.bankName}
+                      {therapist.paymentSettings.personal.bankDetails.bankName}
                     </p>
                     <p>
                       <strong>{t("clearingNumber")}:</strong>{" "}
-                      {user.paymentSettings.personal.bankDetails.clearingNumber}
+                      {
+                        therapist.paymentSettings.personal.bankDetails
+                          .clearingNumber
+                      }
                     </p>
                     <p>
                       <strong>{t("accountNumber")}:</strong>{" "}
-                      {user.paymentSettings.personal.bankDetails.accountNumber}
+                      {
+                        therapist.paymentSettings.personal.bankDetails
+                          .accountNumber
+                      }
                     </p>
                   </div>
                 )}
 
-                {user?.paymentSettings?.type === "company" && (
+                {therapist?.paymentSettings?.type === "company" && (
                   <div>
                     <p>
                       <strong>{t("bankName")}:</strong>{" "}
-                      {user.paymentSettings.company.bankDetails.bankName}
+                      {therapist.paymentSettings.company.bankDetails.bankName}
                     </p>
                     <p>
                       <strong>{t("iban")}:</strong>{" "}
-                      {user.paymentSettings.company.bankDetails.iban}
+                      {therapist.paymentSettings.company.bankDetails.iban}
                     </p>
                     <p>
                       <strong>{t("swiftCode")}:</strong>{" "}
-                      {user.paymentSettings.company.bankDetails.swift}
+                      {therapist.paymentSettings.company.bankDetails.swift}
                     </p>
                   </div>
                 )}

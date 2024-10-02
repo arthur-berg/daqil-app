@@ -99,23 +99,12 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         session.user.stripeCustomerId = token.stripeCustomerId as string;
         session.user.stripePaymentMethodId =
           token.stripePaymentMethodId as string;
-        session.user.appointments = token.appointments as any;
-        session.user.personalInfo = token.personalInfo as any;
         session.user.settings = token.settings as any;
 
         session.user.isAccountSetupDone = token.isAccountSetupDone as any;
 
         if (session.user.role === "CLIENT") {
           session.user.selectedTherapist = token.selectedTherapist as any;
-          session.user.selectedTherapistHistory =
-            token.selectedTherapistHistory as any;
-        }
-
-        if (session.user.role === "THERAPIST") {
-          session.user.therapistWorkProfile = token.therapistWorkProfile as any;
-          session.user.assignedClients = token.assignedClients as string[];
-          session.user.availableTimes = token.availableTimes as any;
-          session.user.paymentSettings = token.paymentSettings as any;
         }
       }
 
@@ -142,20 +131,10 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       token.image = existingUser.image;
       token.stripeCustomerId = existingUser.stripeCustomerId;
       token.stripePaymentMethodId = existingUser.stripePaymentMethodId;
-      token.appointments = existingUser.appointments;
-      token.personalInfo = existingUser.personalInfo;
       token.settings = existingUser.settings;
 
       if (existingUser.role === "CLIENT") {
-        token.selectedTherapistHistory = existingUser.selectedTherapistHistory;
         token.selectedTherapist = existingUser.selectedTherapist;
-      }
-
-      if (existingUser.role === "THERAPIST") {
-        token.assignedClients = existingUser.assignedClients;
-        token.availableTimes = existingUser.availableTimes;
-        token.therapistWorkProfile = existingUser.therapistWorkProfile;
-        token.paymentSettings = existingUser.paymentSettings;
       }
 
       return token;

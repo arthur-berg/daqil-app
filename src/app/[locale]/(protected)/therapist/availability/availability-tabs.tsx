@@ -30,7 +30,7 @@ const AvailabilityTabs = ({
 }) => {
   const t = useTranslations("AvailabilityPage");
 
-  const [activeTab, setActiveTab] = useState("overview"); // state to manage active section for mobile
+  const [activeTab, setActiveTab] = useState("overview");
 
   const availableTimes = JSON.parse(availableTimesJson);
 
@@ -47,7 +47,6 @@ const AvailabilityTabs = ({
 
   return (
     <div className="w-full">
-      {/* Tabs for larger screens (lg and up) */}
       <div className="hidden md:block">
         <Tabs defaultValue="overview" className="w-full">
           <TabsList className="flex items-center justify-start flex-wrap h-auto">

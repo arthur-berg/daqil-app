@@ -5,6 +5,7 @@ import { getTranslations } from "next-intl/server";
 import { format } from "date-fns";
 import { Link } from "@/navigation";
 import { Button } from "@/components/ui/button";
+import { getUserByIdLean } from "@/data/user";
 
 const PaymentSettingsOverviewPage = async ({
   searchParams: { newInformationSaved },
@@ -15,7 +16,8 @@ const PaymentSettingsOverviewPage = async ({
 
   const user = await getCurrentUser();
   if (!user) return "No user found";
-  const { paymentSettings } = user;
+  const therapist = (await getUserByIdLean(user.id)) as any;
+  const paymentSettings = therapist?.paymentSettings;
   const savedType = paymentSettings?.type;
 
   const t = await getTranslations("PaymentSettingsPage");
@@ -46,44 +48,44 @@ const PaymentSettingsOverviewPage = async ({
             <h3 className="text-lg font-semibold">{t("personalDetails")}</h3>
             <p>
               <strong>{t("firstName")}:</strong>{" "}
-              {paymentSettings.personal.kyc.firstName}
+              {paymentSettings?.personal.kyc.firstName}
             </p>
             <p>
               <strong>{t("lastName")}:</strong>{" "}
-              {paymentSettings.personal.kyc.lastName}
+              {paymentSettings?.personal.kyc.lastName}
             </p>
             <p>
               <strong>{t("dateOfBirth")}:</strong>{" "}
               {format(
-                new Date(paymentSettings.personal.kyc.dateOfBirth),
+                new Date(paymentSettings?.personal.kyc.dateOfBirth),
                 "yyyy-MM-dd"
               )}
             </p>
             <p>
               <strong>{t("placeOfBirth")}:</strong>{" "}
-              {paymentSettings.personal.kyc.placeOfBirth}
+              {paymentSettings?.personal.kyc.placeOfBirth}
             </p>
             <p>
               <strong>{t("citizenship")}:</strong>{" "}
-              {paymentSettings.personal.kyc.citizenship}
+              {paymentSettings?.personal.kyc.citizenship}
             </p>
 
             <h4 className="mt-4 font-semibold">{t("bankDetails")}</h4>
             <p>
               <strong>{t("bankName")}:</strong>{" "}
-              {paymentSettings.personal.bankDetails.bankName}
+              {paymentSettings?.personal.bankDetails.bankName}
             </p>
             <p>
               <strong>{t("accountNumber")}:</strong>{" "}
-              {paymentSettings.personal.bankDetails.accountNumber}
+              {paymentSettings?.personal.bankDetails.accountNumber}
             </p>
             <p>
               <strong>{t("clearingNumber")}:</strong>{" "}
-              {paymentSettings.personal.bankDetails.clearingNumber}
+              {paymentSettings?.personal.bankDetails.clearingNumber}
             </p>
             <p>
               <strong>{t("accountType")}:</strong>{" "}
-              {paymentSettings.personal.bankDetails.accountType}
+              {paymentSettings?.personal.bankDetails.accountType}
             </p>
           </div>
         )}
@@ -93,44 +95,44 @@ const PaymentSettingsOverviewPage = async ({
             <h3 className="text-lg font-semibold">{t("companyDetails")}</h3>
             <p>
               <strong>{t("ownerName")}:</strong>{" "}
-              {paymentSettings.company.kyc.ownerName}
+              {paymentSettings?.company.kyc.ownerName}
             </p>
             <p>
               <strong>{t("ownerRole")}:</strong>{" "}
-              {paymentSettings.company.kyc.ownerRole}
+              {paymentSettings?.company.kyc.ownerRole}
             </p>
             <p>
               <strong>{t("dateOfBirth")}:</strong>{" "}
               {format(
-                new Date(paymentSettings.company.kyc.dateOfBirth),
+                new Date(paymentSettings?.company.kyc.dateOfBirth),
                 "yyyy-MM-dd"
               )}
             </p>
             <p>
               <strong>{t("placeOfBirth")}:</strong>{" "}
-              {paymentSettings.company.kyc.placeOfBirth}
+              {paymentSettings?.company.kyc.placeOfBirth}
             </p>
             <p>
               <strong>{t("citizenship")}:</strong>{" "}
-              {paymentSettings.company.kyc.citizenship}
+              {paymentSettings?.company.kyc.citizenship}
             </p>
             <p>
               <strong>{t("companyRegistration")}:</strong>{" "}
-              {paymentSettings.company.kyc.companyRegistration}
+              {paymentSettings?.company.kyc.companyRegistration}
             </p>
 
             <h4 className="mt-4 font-semibold">{t("bankDetails")}</h4>
             <p>
               <strong>{t("bankName")}:</strong>{" "}
-              {paymentSettings.company.bankDetails.bankName}
+              {paymentSettings?.company.bankDetails.bankName}
             </p>
             <p>
               <strong>{t("iban")}:</strong>{" "}
-              {paymentSettings.company.bankDetails.iban}
+              {paymentSettings?.company.bankDetails.iban}
             </p>
             <p>
               <strong>{t("swiftCode")}:</strong>{" "}
-              {paymentSettings.company.bankDetails.swift}
+              {paymentSettings?.company.bankDetails.swift}
             </p>
           </div>
         )}

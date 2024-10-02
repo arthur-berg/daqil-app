@@ -7,6 +7,7 @@ import CodeRedemption from "@/models/CodeRedemption";
 import DiscountCode from "@/models/DiscountCode";
 import { getTranslations } from "next-intl/server";
 import connectToMongoDB from "@/lib/mongoose";
+import User from "@/models/User";
 
 export const checkDiscountCodeValidity = async (discountCode: string) => {
   await connectToMongoDB();
@@ -17,6 +18,8 @@ export const checkDiscountCodeValidity = async (discountCode: string) => {
 
   try {
     const user = await requireAuth([UserRole.CLIENT]);
+
+    const client = await User.findById(user.id);
 
     if (!discountCode) {
       return {
@@ -45,7 +48,7 @@ export const checkDiscountCodeValidity = async (discountCode: string) => {
     }
 
     if (code.firstTimeUserOnly) {
-      const hasPreviousBookings = user.appointments.some((appointment: any) =>
+      const hasPreviousBookings = client.appointments.some((appointment: any) =>
         appointment.bookedAppointments.some(
           (bookedAppointment: any) =>
             bookedAppointment.status === "completed" &&

@@ -57,29 +57,29 @@ const MyProfileClientPage = async () => {
               </p>
               <p className="text-gray-800">
                 <span className="font-semibold">{t("phoneNumber")}:</span>{" "}
-                {user.personalInfo.phoneNumber}
+                {client.personalInfo.phoneNumber}
               </p>
               <p className="text-gray-800">
                 <span className="font-semibold">{t("dateOfBirth")}:</span>{" "}
-                {new Date(user.personalInfo.dateOfBirth).toLocaleDateString()}
+                {new Date(client.personalInfo.dateOfBirth).toLocaleDateString()}
               </p>
               <p className="text-gray-800">
                 <span className="font-semibold">{t("country")}:</span>{" "}
-                {tCountries(user.personalInfo.country)}
+                {tCountries(client.personalInfo.country)}
               </p>
             </div>
             {/*   <div className="bg-gray-100 p-4 rounded-lg shadow-sm">
               <p className="text-gray-800">
               <span className="font-semibold">{t("sex")}:</span>{" "}
-              {user.personalInfo.sex === "MALE" ? t("male") : t("female")}
+              {client.personalInfo.sex === "MALE" ? t("male") : t("female")}
             </p> 
             <p className="text-gray-800">
               <span className="font-semibold">{t("dateOfBirth")}:</span>{" "}
-              {new Date(user.personalInfo.dateOfBirth).toLocaleDateString()}
+              {new Date(client.personalInfo.dateOfBirth).toLocaleDateString()}
             </p> 
             <p className="text-gray-800">
               <span className="font-semibold">Two-Factor Enabled:</span>{" "}
-              {user.isTwoFactorEnabled ? "Yes" : "No"}
+              {client.isTwoFactorEnabled ? "Yes" : "No"}
             </p> 
           </div> */}
           </div>

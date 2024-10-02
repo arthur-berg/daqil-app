@@ -27,8 +27,9 @@ const getUserAndAvailableTimes = async (
     userToUpdate = therapist._id;
     userAvailableTimes = therapist.availableTimes;
   } else {
+    const client = await User.findById(user.id);
     userToUpdate = user.id;
-    userAvailableTimes = user.availableTimes;
+    userAvailableTimes = client.availableTimes;
   }
 
   return { userToUpdate, userAvailableTimes };

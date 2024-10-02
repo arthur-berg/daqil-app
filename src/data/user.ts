@@ -50,7 +50,7 @@ export const getClientById = async (id: string) => {
     }
     const client = await User.findById(id)
       .select(
-        "firstName lastName email selectedTherapist.therapist selectedTherapistHistory appointments"
+        "firstName lastName email selectedTherapist.therapist selectedTherapistHistory appointments personalInfo"
       )
       .populate({
         path: "selectedTherapist.therapist",
@@ -103,6 +103,7 @@ export const getClientById = async (id: string) => {
       email: client.email,
       selectedTherapist: client.selectedTherapist.therapist,
       therapistAppointmentCounts,
+      personalInfo: client.personalInfo,
     };
   } catch (error) {
     console.error("Error fetching client by ID:", error);
