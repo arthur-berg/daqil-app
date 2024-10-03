@@ -16,6 +16,7 @@ const InvoiceCheckoutPage = async ({
     date: string;
   };
 }) => {
+  //TODO make sure user is part of appointment participants
   await connectToMongoDB();
   const appointmentType = await getAppointmentTypeById(appointmentTypeId);
 

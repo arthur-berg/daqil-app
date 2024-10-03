@@ -50,7 +50,8 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
       clientFirstName,
       appointmentId,
       appointmentStartTime,
-      t
+      t,
+      locale
     );
 
     return NextResponse.json({

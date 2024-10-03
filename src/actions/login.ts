@@ -17,7 +17,8 @@ import TwoFactorToken from "@/models/TwoFactorToken";
 import TwoFactorConfirmation from "@/models/TwoFactorConfirmation";
 import { getTranslations } from "next-intl/server";
 import connectToMongoDB from "@/lib/mongoose";
-import { redirect } from "@/navigation";
+import { redirect } from "next/navigation";
+
 import { isRedirectError } from "next/dist/client/components/redirect";
 import { UserRole } from "@/generalTypes";
 
@@ -128,12 +129,13 @@ export const login = async (
   }
   let errorOccurred = false;
 
-  const redirectUrl =
-    existingUser.role === UserRole.CLIENT
-      ? "/book-appointment"
-      : existingUser.role === UserRole.THERAPIST
-      ? "/therapist/appointments"
-      : "/admin";
+  const redirectUrl = callbackUrl
+    ? decodeURIComponent(callbackUrl)
+    : existingUser.role === UserRole.CLIENT
+    ? "/book-appointment"
+    : existingUser.role === UserRole.THERAPIST
+    ? "/therapist/appointments"
+    : "/admin";
 
   try {
     await signIn("credentials", {

@@ -1,10 +1,19 @@
+import { getLocale } from "next-intl/server";
+
 const primaryColor = "#0d1a36"; // Hex color converted from HSL
 const secondaryColor = "#e1eef7";
 
-const daqilLogoUrl =
-  "https://zakina-images.s3.eu-north-1.amazonaws.com/daqil-logo.png";
+const getDaqilLogoUrl = async (locale?: string) => {
+  // If this is called from a route handler we need to make sure to pass in locale as getLocale() doesn't work for route handlers
+  const activeLocale = locale ? locale : await getLocale();
+  return activeLocale === "en"
+    ? "https://zakina-images.s3.eu-north-1.amazonaws.com/daqil-logo-en.png"
+    : "https://zakina-images.s3.eu-north-1.amazonaws.com/daqil-logo-ar.png";
+};
 
-export const twoFactorTokenTemplate = (token: string, t: any) => `
+export const twoFactorTokenTemplate = (token: string, t: any) => {
+  const daqilLogoUrl = getDaqilLogoUrl();
+  return `
   <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
     <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
       <div style="text-align: center; margin-bottom: 20px;">
@@ -20,14 +29,17 @@ export const twoFactorTokenTemplate = (token: string, t: any) => `
     </div>
   </div>
 `;
+};
 
 export const verificationEmailTemplate = (
   t: any,
   token: string,
+  locale: string,
   isTherapist?: boolean
 ) => {
+  const daqilLogoUrl = getDaqilLogoUrl(locale);
   const encodedToken = encodeURIComponent(token);
-  const confirmLink = `${process.env.NEXT_PUBLIC_APP_URL}/auth/new-verification?token=${encodedToken}`;
+  const confirmLink = `${process.env.NEXT_PUBLIC_APP_URL}/${locale}/auth/new-verification?token=${encodedToken}`;
 
   const therapistMessage = isTherapist ? `<p>${t("therapistMessage")}</p>` : "";
 
@@ -60,9 +72,14 @@ export const verificationEmailTemplate = (
 `;
 };
 
-export const passwordResetEmailTemplate = (token: string, t: any) => {
+export const passwordResetEmailTemplate = (
+  token: string,
+  t: any,
+  locale: string
+) => {
+  const daqilLogoUrl = getDaqilLogoUrl(locale);
   const encodedToken = encodeURIComponent(token);
-  const resetLink = `${process.env.NEXT_PUBLIC_APP_URL}/auth/new-password?token=${encodedToken}`;
+  const resetLink = `${process.env.NEXT_PUBLIC_APP_URL}/${locale}/auth/new-password?token=${encodedToken}`;
 
   return `
     <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
@@ -96,13 +113,15 @@ export const appointmentCancellationTemplate = (
   },
   isTherapist: boolean,
   t: any,
-  refundMessage: string
+  refundMessage: string,
+  locale: string
 ) => {
+  const daqilLogoUrl = getDaqilLogoUrl(locale);
   const subject = isTherapist ? t("therapistSubject") : t("clientSubject");
 
   const appointmentsLink = isTherapist
-    ? `${process.env.NEXT_PUBLIC_APP_URL}/therapist/appointments`
-    : `${process.env.NEXT_PUBLIC_APP_URL}/appointments`;
+    ? `${process.env.NEXT_PUBLIC_APP_URL}/${locale}/therapist/appointments`
+    : `${process.env.NEXT_PUBLIC_APP_URL}/${locale}/appointments`;
 
   const buttonText = isTherapist
     ? t("therapistButtonText")
@@ -163,8 +182,10 @@ export const invoicePaidTemplate = (
     clientTime?: string;
   },
   isTherapist: boolean,
-  t: any
+  t: any,
+  locale: string
 ) => {
+  const daqilLogoUrl = getDaqilLogoUrl(locale);
   const subject = isTherapist
     ? t("therapistSubject", { clientName: appointmentDetails.clientName })
     : t("clientSubject");
@@ -178,8 +199,8 @@ export const invoicePaidTemplate = (
       });
 
   const appointmentsLink = isTherapist
-    ? `${process.env.NEXT_PUBLIC_APP_URL}/therapist/appointments`
-    : `${process.env.NEXT_PUBLIC_APP_URL}/appointments`;
+    ? `${process.env.NEXT_PUBLIC_APP_URL}/${locale}/therapist/appointments`
+    : `${process.env.NEXT_PUBLIC_APP_URL}/${locale}/appointments`;
 
   const buttonText = isTherapist
     ? t("therapistButtonText")
@@ -260,13 +281,15 @@ export const paidAppointmentConfirmationTemplate = (
     therapistTime?: string;
   },
   isTherapist: boolean,
-  t: any
+  t: any,
+  locale: string
 ) => {
+  const daqilLogoUrl = getDaqilLogoUrl(locale);
   const subject = isTherapist ? t("therapistSubject") : t("clientSubject");
 
   const appointmentsLink = isTherapist
-    ? `${process.env.NEXT_PUBLIC_APP_URL}/therapist/appointments`
-    : `${process.env.NEXT_PUBLIC_APP_URL}/appointments`;
+    ? `${process.env.NEXT_PUBLIC_APP_URL}/${locale}/therapist/appointments`
+    : `${process.env.NEXT_PUBLIC_APP_URL}/${locale}/appointments`;
 
   const buttonText = isTherapist
     ? t("therapistButtonText")
@@ -350,12 +373,10 @@ export const introBookingConfirmationTemplate = (
     durationInMinutes: number;
   },
   isTherapist: boolean,
-  t: any
+  t: any,
+  locale: string
 ) => {
-  console.log(
-    "appointmentDetails.therapistName",
-    appointmentDetails.therapistName
-  );
+  const daqilLogoUrl = getDaqilLogoUrl(locale);
   const subject = isTherapist ? t("therapistSubject") : t("clientSubject");
 
   const date = isTherapist
@@ -369,7 +390,7 @@ export const introBookingConfirmationTemplate = (
     <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
         <div style="text-align: center; margin-bottom: 20px;">
-          <img src="https://zakina-images.s3.eu-north-1.amazonaws.com/daqil-logo.png" alt="daqil" style="width: 50%; max-width: 100%; height: auto;" />
+          <img src="${daqilLogoUrl}" alt="daqil" style="width: 50%; max-width: 100%; height: auto;" />
         </div>
         <div style="margin-top: 20px;">
           <p>${subject}</p>
@@ -406,13 +427,15 @@ export const nonPaidAppointmentConfirmationTemplate = (
     appointmentTypeId: string;
   },
   isTherapist: boolean,
-  t: any
+  t: any,
+  locale: string
 ) => {
+  const daqilLogoUrl = getDaqilLogoUrl(locale);
   const subject = isTherapist ? t("therapistSubject") : t("clientSubject");
 
   const appointmentsLink = isTherapist
-    ? `${process.env.NEXT_PUBLIC_APP_URL}/therapist/appointments`
-    : `${process.env.NEXT_PUBLIC_APP_URL}/appointments`;
+    ? `${process.env.NEXT_PUBLIC_APP_URL}/${locale}/therapist/appointments`
+    : `${process.env.NEXT_PUBLIC_APP_URL}/${locale}/appointments`;
 
   const encodedDate = encodeURIComponent(appointmentDetails.date.toString());
   const date = isTherapist
@@ -422,7 +445,7 @@ export const nonPaidAppointmentConfirmationTemplate = (
     ? appointmentDetails.therapistTime
     : appointmentDetails.clientTime;
 
-  const paymentLink = `${process.env.NEXT_PUBLIC_APP_URL}/invoices/${appointmentDetails.appointmentId}/checkout?appointmentTypeId=${appointmentDetails.appointmentTypeId}&date=${encodedDate}`;
+  const paymentLink = `${process.env.NEXT_PUBLIC_APP_URL}/${locale}/invoices/${appointmentDetails.appointmentId}/checkout?appointmentTypeId=${appointmentDetails.appointmentTypeId}&date=${encodedDate}`;
 
   const buttonText = isTherapist
     ? t("therapistButtonText")
@@ -480,9 +503,11 @@ export const paymentReminderTemplate = (
   clientFirstName: string,
   appointmentId: string,
   appointmentStartTime: string,
-  t: any // Accept the translation function
+  t: any,
+  locale: string
 ) => {
-  const paymentLink = `${process.env.NEXT_PUBLIC_APP_URL}/invoices/${appointmentId}/checkout?appointmentId=${appointmentId}`;
+  const daqilLogoUrl = getDaqilLogoUrl(locale);
+  const paymentLink = `${process.env.NEXT_PUBLIC_APP_URL}/${locale}/invoices/${appointmentId}/checkout?appointmentId=${appointmentId}`;
 
   return `
     <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
@@ -508,7 +533,12 @@ export const paymentReminderTemplate = (
   `;
 };
 
-export const reminderEmailTemplate = (t: any, appointmentDetails: any) => {
+export const reminderEmailTemplate = (
+  t: any,
+  appointmentDetails: any,
+  locale: string
+) => {
+  const daqilLogoUrl = getDaqilLogoUrl(locale);
   return `
     <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
@@ -540,8 +570,10 @@ export const clientNotPaidInTimeTemplate = (
     therapistName: string;
     clientName: string;
   },
-  t: any
+  t: any,
+  locale: string
 ) => {
+  const daqilLogoUrl = getDaqilLogoUrl(locale);
   return `
     <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
@@ -583,8 +615,10 @@ export const therapistNotPaidInTimeTemplate = (
     therapistName: string;
     clientName: string;
   },
-  t: any
+  t: any,
+  locale: string
 ) => {
+  const daqilLogoUrl = getDaqilLogoUrl(locale);
   return `
     <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
@@ -623,13 +657,16 @@ export const meetingLinkEmailTemplate = ({
   appointmentTime,
   meetingLink,
   t,
+  locale,
 }: {
   hostFirstName: string;
   hostLastName: string;
   appointmentTime: string;
   meetingLink: string;
   t: any;
+  locale: string;
 }) => {
+  const daqilLogoUrl = getDaqilLogoUrl(locale);
   return `
     <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">

@@ -92,7 +92,8 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
             locale
           )}`,
         },
-        t
+        t,
+        locale
       );
 
       await cancelAllScheduledJobsForAppointment(appointment);

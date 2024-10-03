@@ -66,7 +66,7 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
       )}`,
     };
 
-    await sendReminderEmail(clientEmail, appointmentDetails, t);
+    await sendReminderEmail(clientEmail, appointmentDetails, t, locale);
 
     return NextResponse.json({
       message: `Email reminder sent to ${clientEmail} for appointment ${appointmentId}.`,

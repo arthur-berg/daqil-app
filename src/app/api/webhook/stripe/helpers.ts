@@ -205,7 +205,8 @@ async function handlePayBeforeBooking(
     therapistEmail,
     clientEmail,
     appointmentDetails,
-    t
+    t,
+    locale
   );
   revalidatePath(`/book-appointment`);
   revalidatePath(`/appointments`);
@@ -238,7 +239,8 @@ async function handlePayAfterBooking(
     therapistEmail,
     clientEmail,
     appointmentDetails,
-    t
+    t,
+    locale
   );
 }
 

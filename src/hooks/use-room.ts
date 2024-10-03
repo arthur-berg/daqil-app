@@ -189,7 +189,7 @@ export default function useRoom() {
         participantName: userName,
         managedLayoutOptions: {
           layoutMode: "grid",
-          cameraPublisherContainer: selfVideoContainer, // Attach the self-video to this container
+          cameraPublisherContainer: selfVideoContainer,
         },
       }) as any;
 
