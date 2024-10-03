@@ -6,13 +6,10 @@ import { getCurrentUser } from "@/lib/auth";
 import connectToMongoDB from "@/lib/mongoose";
 
 const CheckoutPage = async ({
-  searchParams: { appointmentTypeId, date, appointmentId, therapistId },
+  searchParams: { appointmentId },
 }: {
   searchParams: {
     appointmentId: string;
-    appointmentTypeId: string;
-    date: string;
-    therapistId: string;
   };
 }) => {
   await connectToMongoDB();
@@ -39,9 +36,11 @@ const CheckoutPage = async ({
     );
   }
 
-  const appointmentType = await getAppointmentTypeById(appointmentTypeId);
+  const appointmentType = await getAppointmentTypeById(
+    appointment.appointmentTypeId
+  );
 
-  const dateObject = new Date(decodeURIComponent(date));
+  const dateObject = new Date(appointment.startDate);
 
   return (
     <div className="max-w-4xl mx-auto bg-white py-6 px-2 sm:p-10 rounded-md text-black relative">
@@ -49,7 +48,7 @@ const CheckoutPage = async ({
         appointmentType={appointmentType}
         appointmentId={appointmentId}
         date={dateObject}
-        therapistId={therapistId}
+        therapistId={appointment.hostUserId.toString()}
         paymentExpiryDate={appointment.payment.paymentExpiryDate}
       />
     </div>

@@ -185,13 +185,7 @@ const BookingCalendar = ({
           });
         }
         if (data.success) {
-          router.push(
-            `/checkout?appointmentId=${data.appointmentId}&appointmentTypeId=${
-              appointmentType._id
-            }&date=${encodeURIComponent(
-              combinedDateTime.toString()
-            )}&therapistId=${therapistId}`
-          );
+          router.push(`/checkout?appointmentId=${data.appointmentId}`);
         }
       });
     }
