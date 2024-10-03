@@ -100,6 +100,12 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
 
       acc[statusGroup][appointmentDate].push(appointment);
 
+      // Sort appointments by startDate within each date group
+      acc[statusGroup][appointmentDate].sort(
+        (a: any, b: any) =>
+          new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
+      );
+
       return acc;
     }, {});
   }, [filteredAppointments]);
@@ -304,13 +310,7 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
               <p className="text-gray-700 mb-2">
                 <strong>{t("title")}:</strong> {appointment.title}
               </p>
-              <Link
-                href={`/invoices/${
-                  appointment._id
-                }/checkout?appointmentTypeId=${
-                  appointment.appointmentTypeId
-                }&date=${encodeURIComponent(appointment.startDate)}`}
-              >
+              <Link href={`/invoices/${appointment._id}/checkout`}>
                 <Button>{t("completePayment")}</Button>
               </Link>
             </div>

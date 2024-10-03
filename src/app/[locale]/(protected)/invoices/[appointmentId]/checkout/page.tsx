@@ -5,23 +5,21 @@ import { getTranslations } from "next-intl/server";
 import connectToMongoDB from "@/lib/mongoose";
 
 const InvoiceCheckoutPage = async ({
-  searchParams: { appointmentTypeId, date },
   params: { appointmentId },
 }: {
   params: {
     appointmentId: string;
   };
-  searchParams: {
-    appointmentTypeId: string;
-    date: string;
-  };
 }) => {
   //TODO make sure user is part of appointment participants
   await connectToMongoDB();
-  const appointmentType = await getAppointmentTypeById(appointmentTypeId);
-
-  const dateObject = new Date(decodeURIComponent(date));
   const appointment = await getAppointmentById(appointmentId);
+  const appointmentType = await getAppointmentTypeById(
+    appointment.appointmentTypeId
+  );
+
+  const dateObject = new Date(appointment.startDate);
+
   const t = await getTranslations("Checkout");
 
   if (!appointment) return "No appointment found";

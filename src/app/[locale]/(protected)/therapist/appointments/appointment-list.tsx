@@ -85,6 +85,12 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
 
       acc[statusGroup][appointmentDate].push(appointment);
 
+      // Sort appointments by startDate within each date group
+      acc[statusGroup][appointmentDate].sort(
+        (a: any, b: any) =>
+          new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
+      );
+
       return acc;
     }, {});
   }, [filteredAppointments]);

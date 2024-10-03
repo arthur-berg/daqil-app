@@ -18,7 +18,7 @@ const authMiddleware = auth(async (req) => {
   const isLoggedIn = !!req.auth;
 
   const pathnameParts = nextUrl.pathname.split("/");
-  console.log("pathnameParts", pathnameParts);
+
   const locale = (
     locales.includes(pathnameParts[1] as any) ? pathnameParts[1] : "en"
   ) as (typeof locales)[number];
