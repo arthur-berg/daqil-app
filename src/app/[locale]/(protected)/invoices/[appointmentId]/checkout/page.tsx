@@ -3,6 +3,7 @@ import CheckoutWrapper from "./checkout-wrapper";
 import { getAppointmentById } from "@/data/appointment";
 import { getTranslations } from "next-intl/server";
 import connectToMongoDB from "@/lib/mongoose";
+import { getCurrentUser } from "@/lib/auth";
 
 const InvoiceCheckoutPage = async ({
   params: { appointmentId },
@@ -11,9 +12,17 @@ const InvoiceCheckoutPage = async ({
     appointmentId: string;
   };
 }) => {
-  //TODO make sure user is part of appointment participants
   await connectToMongoDB();
+  const user = await getCurrentUser();
+  if (!user) return "You dont have access to this invoice";
   const appointment = await getAppointmentById(appointmentId);
+
+  const participantId = appointment.participants.some(
+    (p: any) => p.userId.toString() === user.id
+  );
+
+  if (!participantId) return "You dont have access to this invoice";
+
   const appointmentType = await getAppointmentTypeById(
     appointment.appointmentTypeId
   );
