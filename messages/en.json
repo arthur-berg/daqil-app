@@ -48,7 +48,7 @@
     "female": "Female",
     "other": "Other",
     "sex": "Sex",
-    "phoneNumber": "Phone number",
+    "phoneNumber": "Phone number with country code",
     "dateOfBirth": "Date of birth",
     "pickADate": "Pick a date",
     "phoneNumberPlaceholder": "+XX XX XXX XXXX",

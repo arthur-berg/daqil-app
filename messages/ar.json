@@ -49,7 +49,7 @@
     "female": "أنثى",
     "other": "آخر",
     "sex": "الجنس",
-    "phoneNumber": "رقم الهاتف",
+    "phoneNumber": "رقم الهاتف مع رمز الدولة",
     "dateOfBirth": "تاريخ الميلاد",
     "pickADate": "اختر تاريخًا",
     "phoneNumberPlaceholder": "+XX XX XXX XXXX",

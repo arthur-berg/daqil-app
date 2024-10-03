@@ -252,7 +252,12 @@ export const SetupAccountSchema = z.object({
     ar: z.string().optional(),
   }),
   personalInfo: z.object({
-    phoneNumber: z.string(),
+    phoneNumber: z
+      .string()
+      .regex(
+        /^\+\d{1,4}/,
+        "Phone number must start with + followed by country code"
+      ),
     sex: z.enum(["MALE", "FEMALE", "OTHER"]),
     dateOfBirth: z.string().regex(/^\d{4}\/\d{2}\/\d{2}$/, {
       message: "Invalid date format. Use YYYY/MM/DD.",

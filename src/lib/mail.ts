@@ -159,7 +159,7 @@ export const sendTwoFactorTokenEmail = async (email: string, token: string) => {
   const message = {
     from_email: "no-reply@daqilhealth.com",
     subject: t("subject"),
-    html: twoFactorTokenTemplate(token, t),
+    html: await twoFactorTokenTemplate(token, t),
     to: [
       {
         email,
@@ -188,7 +188,7 @@ export const sendVerificationEmail = async (
   const message = {
     from_email: "no-reply@daqilhealth.com",
     subject: isTherapist ? t("subjectTherapist") : t("subject"),
-    html: verificationEmailTemplate(t, token, locale, isTherapist),
+    html: await verificationEmailTemplate(t, token, locale, isTherapist),
     to: [
       {
         email,
@@ -212,7 +212,7 @@ export const sendPasswordResetEmail = async (email: string, token: string) => {
   const message = {
     from_email: "no-reply@daqilhealth.com",
     subject: t("subject"),
-    html: passwordResetEmailTemplate(token, t, locale),
+    html: await passwordResetEmailTemplate(token, t, locale),
     to: [
       {
         email,
@@ -255,7 +255,7 @@ export const sendAppointmentCancellationEmail = async (
   const therapistMessage = {
     from_email: "no-reply@daqilhealth.com",
     subject: t("therapistSubject"),
-    html: appointmentCancellationTemplate(
+    html: await appointmentCancellationTemplate(
       appointmentDetails,
       true,
       t,
@@ -273,7 +273,7 @@ export const sendAppointmentCancellationEmail = async (
   const clientMessage = {
     from_email: "no-reply@daqilhealth.com",
     subject: t("clientSubject"),
-    html: appointmentCancellationTemplate(
+    html: await appointmentCancellationTemplate(
       appointmentDetails,
       false,
       t,
@@ -316,7 +316,12 @@ export const sendIntroBookingConfirmationMail = async (
   const therapistMessage = {
     from_email: "no-reply@daqilhealth.com",
     subject: t("therapistSubject"),
-    html: introBookingConfirmationTemplate(appointmentDetails, true, t, locale),
+    html: await introBookingConfirmationTemplate(
+      appointmentDetails,
+      true,
+      t,
+      locale
+    ),
     to: [
       {
         email: therapistEmail,
@@ -328,7 +333,7 @@ export const sendIntroBookingConfirmationMail = async (
   const clientMessage = {
     from_email: "no-reply@daqilhealth.com",
     subject: t("clientSubject"),
-    html: introBookingConfirmationTemplate(
+    html: await introBookingConfirmationTemplate(
       appointmentDetails,
       false,
       t,
@@ -372,7 +377,7 @@ export const sendNonPaidBookingConfirmationEmail = async (
   const therapistMessage = {
     from_email: "no-reply@daqilhealth.com",
     subject: t("therapistSubject"),
-    html: nonPaidAppointmentConfirmationTemplate(
+    html: await nonPaidAppointmentConfirmationTemplate(
       appointmentDetails,
       true,
       t,
@@ -389,7 +394,7 @@ export const sendNonPaidBookingConfirmationEmail = async (
   const clientMessage = {
     from_email: "no-reply@daqilhealth.com",
     subject: t("clientSubject"),
-    html: nonPaidAppointmentConfirmationTemplate(
+    html: await nonPaidAppointmentConfirmationTemplate(
       appointmentDetails,
       false,
       t,
@@ -439,7 +444,7 @@ export const sendInvoicePaidEmail = async (
     subject: t("therapistSubject", {
       clientName: appointmentDetails.clientName,
     }),
-    html: invoicePaidTemplate(appointmentDetails, true, t, locale),
+    html: await invoicePaidTemplate(appointmentDetails, true, t, locale),
     to: [
       {
         email: therapistEmail,
@@ -451,7 +456,7 @@ export const sendInvoicePaidEmail = async (
   const clientMessage = {
     from_email: "no-reply@daqilhealth.com",
     subject: t("clientSubject"),
-    html: invoicePaidTemplate(appointmentDetails, false, t, locale),
+    html: await invoicePaidTemplate(appointmentDetails, false, t, locale),
     to: [
       {
         email: clientEmail,
@@ -494,7 +499,7 @@ export const sendPaidBookingConfirmationEmail = async (
   const therapistMessage = {
     from_email: "no-reply@daqilhealth.com",
     subject: t("therapistSubject"),
-    html: paidAppointmentConfirmationTemplate(
+    html: await paidAppointmentConfirmationTemplate(
       appointmentDetails,
       true,
       t,
@@ -511,7 +516,7 @@ export const sendPaidBookingConfirmationEmail = async (
   const clientMessage = {
     from_email: "no-reply@daqilhealth.com",
     subject: t("clientSubject"),
-    html: paidAppointmentConfirmationTemplate(
+    html: await paidAppointmentConfirmationTemplate(
       appointmentDetails,
       false,
       t,
@@ -549,7 +554,7 @@ export const sendPaymentReminderEmail = async (
   const message = {
     from_email: "no-reply@daqilhealth.com",
     subject: t("subject"),
-    html: paymentReminderTemplate(
+    html: await paymentReminderTemplate(
       clientFirstName,
       appointmentId,
       appointmentStartTime,
@@ -586,7 +591,7 @@ export const sendReminderEmail = async (
 ) => {
   try {
     const subject = t("subject");
-    const html = reminderEmailTemplate(t, appointmentDetails, locale);
+    const html = await reminderEmailTemplate(t, appointmentDetails, locale);
 
     const message = {
       from_email: "no-reply@daqilhealth.com",
@@ -625,7 +630,7 @@ export const sendClientNotPaidInTimeEmail = async (
   const therapistMessage = {
     from_email: "no-reply@daqilhealth.com",
     subject: t("therapistSubject"),
-    html: therapistNotPaidInTimeTemplate(appointmentDetails, t, locale),
+    html: await therapistNotPaidInTimeTemplate(appointmentDetails, t, locale),
     to: [
       {
         email: therapistEmail,
@@ -637,7 +642,7 @@ export const sendClientNotPaidInTimeEmail = async (
   const clientMessage = {
     from_email: "no-reply@daqilhealth.com",
     subject: t("clientSubject"),
-    html: clientNotPaidInTimeTemplate(appointmentDetails, t, locale),
+    html: await clientNotPaidInTimeTemplate(appointmentDetails, t, locale),
     to: [
       {
         email: clientEmail,
@@ -673,7 +678,7 @@ export const sendMeetingLink = async (
     const subject = t("subject", { appointmentTime });
 
     // Generate the email content using the template
-    const html = meetingLinkEmailTemplate({
+    const html = await meetingLinkEmailTemplate({
       hostFirstName,
       hostLastName,
       appointmentTime,

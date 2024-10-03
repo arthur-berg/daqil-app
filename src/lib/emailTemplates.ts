@@ -11,8 +11,8 @@ const getDaqilLogoUrl = async (locale?: string) => {
     : "https://zakina-images.s3.eu-north-1.amazonaws.com/daqil-logo-ar.png";
 };
 
-export const twoFactorTokenTemplate = (token: string, t: any) => {
-  const daqilLogoUrl = getDaqilLogoUrl();
+export const twoFactorTokenTemplate = async (token: string, t: any) => {
+  const daqilLogoUrl = await getDaqilLogoUrl();
   return `
   <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
     <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
@@ -31,13 +31,13 @@ export const twoFactorTokenTemplate = (token: string, t: any) => {
 `;
 };
 
-export const verificationEmailTemplate = (
+export const verificationEmailTemplate = async (
   t: any,
   token: string,
   locale: string,
   isTherapist?: boolean
 ) => {
-  const daqilLogoUrl = getDaqilLogoUrl(locale);
+  const daqilLogoUrl = await getDaqilLogoUrl(locale);
   const encodedToken = encodeURIComponent(token);
   const confirmLink = `${process.env.NEXT_PUBLIC_APP_URL}/${locale}/auth/new-verification?token=${encodedToken}`;
 
@@ -72,12 +72,12 @@ export const verificationEmailTemplate = (
 `;
 };
 
-export const passwordResetEmailTemplate = (
+export const passwordResetEmailTemplate = async (
   token: string,
   t: any,
   locale: string
 ) => {
-  const daqilLogoUrl = getDaqilLogoUrl(locale);
+  const daqilLogoUrl = await getDaqilLogoUrl(locale);
   const encodedToken = encodeURIComponent(token);
   const resetLink = `${process.env.NEXT_PUBLIC_APP_URL}/${locale}/auth/new-password?token=${encodedToken}`;
 
@@ -101,7 +101,7 @@ export const passwordResetEmailTemplate = (
   `;
 };
 
-export const appointmentCancellationTemplate = (
+export const appointmentCancellationTemplate = async (
   appointmentDetails: {
     clientDate: string;
     clientTime: string;
@@ -116,7 +116,7 @@ export const appointmentCancellationTemplate = (
   refundMessage: string,
   locale: string
 ) => {
-  const daqilLogoUrl = getDaqilLogoUrl(locale);
+  const daqilLogoUrl = await getDaqilLogoUrl(locale);
   const subject = isTherapist ? t("therapistSubject") : t("clientSubject");
 
   const appointmentsLink = isTherapist
@@ -168,7 +168,7 @@ export const appointmentCancellationTemplate = (
   `;
 };
 
-export const invoicePaidTemplate = (
+export const invoicePaidTemplate = async (
   appointmentDetails: {
     therapistName: string;
     clientName: string;
@@ -185,7 +185,7 @@ export const invoicePaidTemplate = (
   t: any,
   locale: string
 ) => {
-  const daqilLogoUrl = getDaqilLogoUrl(locale);
+  const daqilLogoUrl = await getDaqilLogoUrl(locale);
   const subject = isTherapist
     ? t("therapistSubject", { clientName: appointmentDetails.clientName })
     : t("clientSubject");
@@ -267,7 +267,7 @@ export const invoicePaidTemplate = (
   `;
 };
 
-export const paidAppointmentConfirmationTemplate = (
+export const paidAppointmentConfirmationTemplate = async (
   appointmentDetails: {
     therapistName: string;
     clientName: string;
@@ -284,7 +284,7 @@ export const paidAppointmentConfirmationTemplate = (
   t: any,
   locale: string
 ) => {
-  const daqilLogoUrl = getDaqilLogoUrl(locale);
+  const daqilLogoUrl = await getDaqilLogoUrl(locale);
   const subject = isTherapist ? t("therapistSubject") : t("clientSubject");
 
   const appointmentsLink = isTherapist
@@ -362,7 +362,7 @@ export const paidAppointmentConfirmationTemplate = (
   `;
 };
 
-export const introBookingConfirmationTemplate = (
+export const introBookingConfirmationTemplate = async (
   appointmentDetails: {
     clientDate: string;
     clientTime: string;
@@ -376,7 +376,7 @@ export const introBookingConfirmationTemplate = (
   t: any,
   locale: string
 ) => {
-  const daqilLogoUrl = getDaqilLogoUrl(locale);
+  const daqilLogoUrl = await getDaqilLogoUrl(locale);
   const subject = isTherapist ? t("therapistSubject") : t("clientSubject");
 
   const date = isTherapist
@@ -414,7 +414,7 @@ export const introBookingConfirmationTemplate = (
   `;
 };
 
-export const nonPaidAppointmentConfirmationTemplate = (
+export const nonPaidAppointmentConfirmationTemplate = async (
   appointmentDetails: {
     date: Date;
     clientDate: string;
@@ -430,7 +430,7 @@ export const nonPaidAppointmentConfirmationTemplate = (
   t: any,
   locale: string
 ) => {
-  const daqilLogoUrl = getDaqilLogoUrl(locale);
+  const daqilLogoUrl = await getDaqilLogoUrl(locale);
   const subject = isTherapist ? t("therapistSubject") : t("clientSubject");
 
   const appointmentsLink = isTherapist
@@ -499,14 +499,14 @@ export const nonPaidAppointmentConfirmationTemplate = (
   `;
 };
 
-export const paymentReminderTemplate = (
+export const paymentReminderTemplate = async (
   clientFirstName: string,
   appointmentId: string,
   appointmentStartTime: string,
   t: any,
   locale: string
 ) => {
-  const daqilLogoUrl = getDaqilLogoUrl(locale);
+  const daqilLogoUrl = await getDaqilLogoUrl(locale);
   const paymentLink = `${process.env.NEXT_PUBLIC_APP_URL}/${locale}/invoices/${appointmentId}/checkout?appointmentId=${appointmentId}`;
 
   return `
@@ -533,12 +533,12 @@ export const paymentReminderTemplate = (
   `;
 };
 
-export const reminderEmailTemplate = (
+export const reminderEmailTemplate = async (
   t: any,
   appointmentDetails: any,
   locale: string
 ) => {
-  const daqilLogoUrl = getDaqilLogoUrl(locale);
+  const daqilLogoUrl = await getDaqilLogoUrl(locale);
   return `
     <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
@@ -561,7 +561,7 @@ export const reminderEmailTemplate = (
   `;
 };
 
-export const clientNotPaidInTimeTemplate = (
+export const clientNotPaidInTimeTemplate = async (
   appointmentDetails: {
     clientDate: string;
     clientTime: string;
@@ -573,7 +573,7 @@ export const clientNotPaidInTimeTemplate = (
   t: any,
   locale: string
 ) => {
-  const daqilLogoUrl = getDaqilLogoUrl(locale);
+  const daqilLogoUrl = await getDaqilLogoUrl(locale);
   return `
     <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
@@ -606,7 +606,7 @@ export const clientNotPaidInTimeTemplate = (
   `;
 };
 
-export const therapistNotPaidInTimeTemplate = (
+export const therapistNotPaidInTimeTemplate = async (
   appointmentDetails: {
     clientDate: string;
     clientTime: string;
@@ -618,7 +618,7 @@ export const therapistNotPaidInTimeTemplate = (
   t: any,
   locale: string
 ) => {
-  const daqilLogoUrl = getDaqilLogoUrl(locale);
+  const daqilLogoUrl = await getDaqilLogoUrl(locale);
   return `
     <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
@@ -651,7 +651,7 @@ export const therapistNotPaidInTimeTemplate = (
   `;
 };
 
-export const meetingLinkEmailTemplate = ({
+export const meetingLinkEmailTemplate = async ({
   hostFirstName,
   hostLastName,
   appointmentTime,
@@ -666,7 +666,7 @@ export const meetingLinkEmailTemplate = ({
   t: any;
   locale: string;
 }) => {
-  const daqilLogoUrl = getDaqilLogoUrl(locale);
+  const daqilLogoUrl = await getDaqilLogoUrl(locale);
   return `
     <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
