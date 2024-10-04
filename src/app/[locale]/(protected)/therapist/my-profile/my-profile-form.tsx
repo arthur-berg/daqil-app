@@ -98,7 +98,6 @@ const MyProfileForm = ({
                     value={field.value}
                     onChange={field.onChange}
                     className="h-64"
-                    placeholder={t("workDescriptionPlaceholderEn")}
                   />
                 </FormControl>
                 <FormMessage />
@@ -136,7 +135,6 @@ const MyProfileForm = ({
                     value={field.value}
                     onChange={field.onChange}
                     className="h-64"
-                    placeholder={t("workDescriptionPlaceholderAr")}
                   />
                 </FormControl>
                 <FormMessage />
