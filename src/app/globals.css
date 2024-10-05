@@ -99,12 +99,13 @@
   #layoutContainerWrapper #layoutContainer {
     margin: 0 !important;
     width: 100% !important;
-    height: 100% !important;
+    height: calc(100% - 90px) !important;
     display: flex;
     justify-content: center;
     align-items: center;
 
   }
+
 
  
 
