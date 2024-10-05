@@ -7,6 +7,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { GoogleTagManager } from "@next/third-parties/google";
 
 import "@/app/globals.css";
+import TidioChat from "./tidio-chat";
 
 const dmSans = DM_Sans({ subsets: ["latin"], weight: ["400", "600"] });
 
@@ -49,6 +50,7 @@ export default async function LocaleLayout({
             <SpeedInsights />
           </>
         )}
+        {/*   <TidioChat /> */}
       </body>
     </html>
   );

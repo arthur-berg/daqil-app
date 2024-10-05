@@ -295,6 +295,7 @@
     "awaitingApproval": "Do you wish to proceed with this therapist?",
     "browseTherapistsDescriptionOnlyOption": "Browse through our therapists and select the one you'd like to book an appointment with.",
     "introMeetingIsPending": " You already have an introductory meeting booked in. If you wish to choose another time, please cancel your appointment to book a new one.",
+"introMeetingIsOngoing": "You already have an introductory meeting in progress. Please wait until the meeting is finished, which is at {endDate}.",
     "seeAppointments": "See Appointments",
     "readMore": "Read more",
     "goToProfilePage": "Go to profile page",

@@ -19,6 +19,7 @@ import connectToMongoDB from "@/lib/mongoose";
 import IntroCallStepManager from "./intro-call-step-manager";
 import PageTitle from "@/components/page-title";
 import Image from "next/image";
+import { format, isWithinInterval } from "date-fns";
 
 const BookAppointmentPage = async ({
   params,
@@ -89,13 +90,26 @@ const BookAppointmentPage = async ({
   const introAppointmentWasCanceledDueToNoShowUp =
     !completedIntroAppointmentFound && canceledIntroDueToNoShowAppointmentFound;
 
-  const introMeetingIsBookedButNotFinished =
-    client?.appointments?.some((appointment: any) =>
-      appointment.bookedAppointments?.some(
-        (bookedAppointment: any) => bookedAppointment.status !== "canceled"
-      )
-    ) && !user?.selectedTherapist?.introCallDone;
+  const confirmedIntroAppointment = introAppointments?.find(
+    (bookedAppointment: any) => bookedAppointment.status === "confirmed"
+  );
+
   const maxDescriptionLength = 200;
+
+  const introMeetingIsBookedButNotFinished =
+    !!confirmedIntroAppointment && !user?.selectedTherapist?.introCallDone;
+
+  const isConfirmedAppointmentActiveNow = () => {
+    const isOngoing = isWithinInterval(new Date(), {
+      start: new Date(confirmedIntroAppointment.startDate),
+      end: new Date(confirmedIntroAppointment.endDate),
+    });
+    return isOngoing;
+  };
+
+  const confirmedAppointmentIsCurrentlyOnGoing = confirmedIntroAppointment
+    ? isConfirmedAppointmentActiveNow()
+    : false;
 
   return (
     <>
@@ -120,7 +134,8 @@ const BookAppointmentPage = async ({
                   </Button>
                 </Link>
               </div>
-            ) : introAppointmentWasCanceledDueToNoShowUp ? (
+            ) : introAppointmentWasCanceledDueToNoShowUp &&
+              !introMeetingIsBookedButNotFinished ? (
               <>
                 <div className="bg-white p-4 rounded-md mb-6 flex items-center flex-col text-center">
                   <MdEvent className="mr-2 text-destructive mb-4" size={48} />
@@ -130,7 +145,27 @@ const BookAppointmentPage = async ({
                 </div>
                 <IntroCallStepManager />
               </>
-            ) : introMeetingIsBookedButNotFinished ? (
+            ) : introMeetingIsBookedButNotFinished &&
+              confirmedAppointmentIsCurrentlyOnGoing ? (
+              <div className="bg-white p-4 rounded-md mb-6 flex items-center flex-col text-center">
+                <MdEvent className="mr-2 text-destructive mb-4" size={48} />
+                <p className="text-lg mb-4 flex items-center justify-center">
+                  {/* Icon with margin and size */}
+                  {t("introMeetingIsOngoing", {
+                    endDate: format(
+                      new Date(confirmedIntroAppointment.endDate),
+                      "HH:mm"
+                    ),
+                  })}
+                </p>
+                <Link href="/appointments">
+                  <Button className="py-2 text-lg mt-2">
+                    {t("seeAppointments")}
+                  </Button>
+                </Link>
+              </div>
+            ) : introMeetingIsBookedButNotFinished &&
+              !confirmedAppointmentIsCurrentlyOnGoing ? (
               <div className="bg-white p-4 rounded-md mb-6 flex items-center flex-col text-center">
                 <MdEvent className="mr-2 text-destructive mb-4" size={48} />
                 <p className="text-lg mb-4 flex items-center justify-center">
