@@ -143,6 +143,11 @@ export const setupAccount = async (
     });
   }
 
+  const updatedPersonalInfo = {
+    ...personalInfo,
+    phoneNumber: personalInfo.phoneNumber.replace(/\s+/g, ""),
+  };
+
   const updatedSettings = {
     ...existingUser.settings,
     timeZone: settings.timeZone,
@@ -153,7 +158,7 @@ export const setupAccount = async (
     isAccountSetupDone: true,
     firstName: capitalizedFirstName,
     lastName: capitalizedLastName,
-    personalInfo,
+    personalInfo: updatedPersonalInfo,
     settings: updatedSettings,
   });
 

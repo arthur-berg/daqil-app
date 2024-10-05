@@ -507,12 +507,14 @@ export const SetupForm = () => {
                     <FormControl>
                       <Input disabled={isPending} {...field} type="password" />
                     </FormControl>
+                    <p className="text-xs text-muted-foreground">
+                      {t("minimum6Characters")}
+                    </p>{" "}
                     <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
-            {/* Existing Error and Success Messages */}
             <FormError message={error} />
             <FormSuccess message={success} />
             <Button type="submit" className="w-full" disabled={isPending}>

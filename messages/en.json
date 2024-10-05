@@ -6,6 +6,7 @@
     "signUp": "Sign up"
   },
   "AuthPage": {
+    "minimum6Characters": "Minimum 6 characters",
     "selectCurrency": "Select currency",
     "searchCurrency": "Search currency",
     "preferredCurrency": "Preferred currency",

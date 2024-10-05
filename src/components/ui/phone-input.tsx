@@ -18,6 +18,8 @@ import {
 } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
+import * as countries from "react-phone-number-input/locale/en"; // Add this for country names
+
 import flags from "react-phone-number-input/flags";
 
 // Helper function to match the longest valid country calling code
@@ -138,11 +140,28 @@ const CountrySelect = ({
   onChange,
   options,
 }: CountrySelectProps) => {
+  const [searchTerm, setSearchTerm] = React.useState("");
+
   const handleSelect = React.useCallback(
     (country: RPNInput.Country) => {
       onChange(country);
     },
     [onChange]
+  );
+
+  // Filter options based on search input (matches calling code, ISO code, or country name)
+  const filteredOptions = React.useMemo(
+    () =>
+      options.filter((option) => {
+        const countryName = countries.default[option.value] || "";
+        return (
+          option.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          option.value.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          countryName.toLowerCase().includes(searchTerm.toLowerCase()) || // Added filter for country name
+          option.label.match(/\+\d+/)?.[0]?.includes(searchTerm)
+        );
+      }),
+    [searchTerm, options]
   );
 
   return (
@@ -166,12 +185,16 @@ const CountrySelect = ({
       </PopoverTrigger>
       <PopoverContent className="w-[300px] p-0">
         <Command>
+          <CommandInput
+            placeholder="Search by country name, code, or calling code..."
+            value={searchTerm}
+            onValueChange={setSearchTerm}
+          />
           <CommandList>
             <ScrollArea className="h-72">
-              <CommandInput placeholder="Search country..." />
               <CommandEmpty>No country found.</CommandEmpty>
               <CommandGroup>
-                {options.map((option) => (
+                {filteredOptions.map((option) => (
                   <CommandItem
                     key={option.value}
                     onSelect={() => handleSelect(option.value)}
@@ -179,9 +202,13 @@ const CountrySelect = ({
                   >
                     <FlagComponent
                       country={option.value}
-                      countryName={option.label} // Display the country name from the label
+                      countryName={countries.default[option.value]} // Display the country name
                     />
-                    <span className="flex-1 text-sm">{option.label}</span>
+                    <span className="flex-1 text-sm">
+                      {`+${RPNInput.getCountryCallingCode(option.value)} (${
+                        option.value
+                      }) - ${countries.default[option.value]}`}
+                    </span>
                     <CheckIcon
                       className={cn(
                         "ml-auto h-4 w-4",
@@ -198,7 +225,6 @@ const CountrySelect = ({
     </Popover>
   );
 };
-
 // Flag Component
 const FlagComponent = ({ country, countryName }: RPNInput.FlagProps) => {
   const Flag = flags[country];

@@ -99,7 +99,7 @@
   #layoutContainerWrapper #layoutContainer {
     margin: 0 !important;
     width: 100% !important;
-    height: calc(100% - 90px) !important;
+    height: calc(100% - 90px) !important; /* 90px is the height of the toolbar */
     display: flex;
     justify-content: center;
     align-items: center;

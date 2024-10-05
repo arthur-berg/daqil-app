@@ -6,6 +6,7 @@
     "signUp": "الاشتراك"
   },
   "AuthPage": {
+    "minimum6Characters": "الحد الأدنى 6 أحرف",
     "selectCurrency": "اختر العملة",
     "searchCurrency": "ابحث عن العملة",
    "preferredCurrency": "العملة المفضلة",
