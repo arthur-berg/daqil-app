@@ -59,6 +59,7 @@ const VideoRoom = ({
   const [isPreviewing, setIsPreviewing] = useState(true);
   const [hasAudio, setHasAudio] = useState(true);
   const [hasVideo, setHasVideo] = useState(true);
+  const [isLandscape, setIsLandscape] = useState(false);
 
   const handleJoinCall = () => {
     setIsPreviewing(false);
@@ -66,33 +67,65 @@ const VideoRoom = ({
 
   useEffect(() => {
     const handleResize = () => {
-      const viewportHeight =
-        window.visualViewport?.height || window.innerHeight;
-      const fullHeight = window.innerHeight;
-
       const isIphone = /iPhone|iPad|iPod/.test(navigator.userAgent);
       const isAndroid = /Android/.test(navigator.userAgent);
+      const isLandscape = window.innerWidth > window.innerHeight;
 
-      console.log("isIphone", isIphone);
-      console.log("isAndroid", isAndroid);
+      setIsLandscape(isLandscape);
 
-      if (isIphone) {
-        // iPhone - back/forward controller is visible at the bottom
-        setContainerHeight("h-[calc(100vh-90px)]"); // Adjust this value as needed
-      } else if (isAndroid) {
-        // Android - back/forward controller is visible at the bottom
-        setContainerHeight("h-[calc(100vh)]"); // Adjust this value as needed
+      if (isLandscape) {
+        if (isPreviewing) {
+          // In landscape mode and preview mode, increase height beyond 100vh
+          setContainerHeight("h-[calc(100vh+180px)]"); // Adjust this value as needed
+        } else {
+          if (isIphone) {
+            setContainerHeight("h-[calc(100vh-40px)]");
+          } else {
+            setContainerHeight("h-[100vh]");
+          }
+          // In landscape mode but not in preview, increase height by 50px
+        }
       } else {
-        // No bottom controllers visible
-        setContainerHeight("h-[100vh]");
+        // Normal mode
+        if (isIphone) {
+          setContainerHeight("h-[calc(100vh-110px)]");
+        } else {
+          setContainerHeight("h-[100vh]");
+        }
+      }
+    };
+
+    const handleOrientationChange = () => {
+      const isIphone = /iPhone|iPad|iPod/.test(navigator.userAgent);
+      const isLandscape = window.innerWidth > window.innerHeight;
+      setIsLandscape(isLandscape);
+
+      if (isLandscape) {
+        if (isPreviewing) {
+          // In landscape mode and preview mode, increase height beyond 100vh
+          setContainerHeight("h-[calc(100vh+180px)]");
+        } else {
+          // In landscape mode but not in preview, increase height by 50px
+          if (isIphone) {
+            setContainerHeight("h-[calc(100vh-40px)]");
+          } else {
+            setContainerHeight("h-[100vh]");
+          }
+        }
+      } else {
+        handleResize();
       }
     };
 
     window.addEventListener("resize", handleResize);
-    handleResize(); // Call once on mount
+    window.addEventListener("orientationchange", handleOrientationChange);
+    handleResize();
 
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("orientationchange", handleOrientationChange);
+    };
+  }, [isPreviewing]);
 
   const logoSrc =
     locale === "en"
@@ -194,7 +227,7 @@ const VideoRoom = ({
         className={`${containerHeight} md:h-screen w-full flex flex-col justify-between items-center p-2 box-border`}
       >
         <div className="flex justify-center mb-4">
-          <div className="w-[100px] md:w-[110px]">
+          {/* <div className="w-[100px] md:w-[110px]">
             <Image
               src={logoSrc}
               alt="daqil-logo"
@@ -202,10 +235,17 @@ const VideoRoom = ({
               height={50}
               className="object-contain"
             />
-          </div>
+          </div> */}
         </div>
         <div className="flex flex-col flex-grow justify-center items-center w-full">
           <div className="w-full h-full md:max-w-5xl bg-[#20262D] rounded-md overflow-hidden relative">
+            <Image
+              src={logoSrc}
+              alt="daqil-logo"
+              width={300}
+              height={200}
+              className="absolute top-0 right-0 w-[120px] lg:w-[150px] z-10"
+            />
             <div id="previewContainer" className="w-full h-full"></div>
           </div>
           <div className="bg-[#2C3036] text-center text-sm text-white mb-4 p-4 rounded-lg shadow-md max-w-lg">
@@ -267,7 +307,7 @@ const VideoRoom = ({
       className={`${containerHeight} md:h-screen w-full flex flex-col p-2 box-border`}
     >
       {/* Logo Header */}
-      <div className="flex justify-center mb-4">
+      {/* <div className="flex justify-center mb-4">
         <div className="w-[100px] md:w-[110px]">
           <Image
             src={logoSrc}
@@ -277,10 +317,10 @@ const VideoRoom = ({
             className="object-contain"
           />
         </div>
-      </div>
+      </div> */}
       <div
         id="callContainer"
-        className="flex flex-col items-center flex-grow w-full overflow-hidden relative md:max-w-7xl mx-auto mb-8"
+        className="flex  flex-col items-center flex-grow w-full overflow-hidden relative md:max-w-7xl mx-auto"
       >
         <div
           id="roomContainer"
@@ -292,6 +332,13 @@ const VideoRoom = ({
               {t("waitingForOtherUser")}
             </div>
           )}
+          <Image
+            src={logoSrc}
+            alt="daqil-logo"
+            width={300}
+            height={200}
+            className="absolute top-0 right-0 w-[120px] lg:w-[150px] z-10"
+          />
         </div>
         {/* Fix toolbar at the bottom */}
         <div className="absolute bottom-0 left-0  w-full md:max-w-7xl">

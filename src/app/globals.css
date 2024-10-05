@@ -95,4 +95,22 @@
   body {
     @apply bg-page-background text-foreground;
   }
+
+  #layoutContainerWrapper #layoutContainer {
+    margin: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  #layoutContainerWrapper #layoutContainer .OT_subscriber {
+    margin: 0 !important;
+  }
+
+  
+
+  @media (max-width: 768px) {
+    .self-video-container .participant-name {
+      display: none;
+    }
+  } 
 }

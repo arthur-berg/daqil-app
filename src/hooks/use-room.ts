@@ -177,6 +177,8 @@ export default function useRoom() {
       selfVideoContainer.style.border = "2px solid gray";
       selfVideoContainer.style.zIndex = "100";
 
+      selfVideoContainer.classList.add("self-video-container");
+
       // Append the selfVideoContainer to the roomContainer
       roomContainer.appendChild(selfVideoContainer);
 
@@ -195,18 +197,13 @@ export default function useRoom() {
 
       const publisherProperties = {
         resolution: "1280x720",
-        fitMode: "cover",
+
         insertMode: "replace",
         width: "100%",
         height: "100%",
         publishAudio: true,
         publishVideo: true,
         insertDefaultUI: true,
-        style: {
-          nameDisplayMode: isMobile ? "off" : "auto",
-          buttonDisplayMode: "off",
-          audioLevelDisplayMode: "off",
-        },
       };
 
       startRoomListeners();
