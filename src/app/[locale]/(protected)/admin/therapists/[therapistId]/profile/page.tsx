@@ -15,7 +15,7 @@ const TherapistProfileAdminPage = async ({
   if (!therapist) return null;
 
   return (
-    <div className="bg-white shadow-lg rounded-lg p-6 mb-4 max-w-4xl mx-auto">
+    <div className="bg-white shadow-lg rounded-lg p-6 mb-4 max-w-4xl mx-auto w-full">
       <div className="flex flex-col items-center">
         <MyProfileInfo
           therapistJson={JSON.stringify(therapist)}

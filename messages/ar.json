@@ -576,6 +576,7 @@
     "appointmentNotConfirmed": "لم يتم تأكيد الموعد."
   },
   "SuccessMessages": {
+    "therapistCreated": "تم إنشاء حساب الأخصائي النفسي بنجاح",
     "paymentSettingsSaved": "تم حفظ إعدادات الدفع",
     "accountSetupComplete": "اكتمل إعداد الحساب",
     "activateLinkSent": "تم إرسال رابط لتفعيل حسابك إلى البريد الإلكتروني المقدم",

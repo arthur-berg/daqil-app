@@ -54,21 +54,25 @@ const TherapistPage = async ({
               <p>
                 <strong>Email:</strong> {therapist.email}
               </p>
-              <p>
-                <strong>Date of Birth:</strong>{" "}
-                {format(
-                  new Date(therapist.personalInfo.dateOfBirth),
-                  "yyyy-MM-dd"
-                )}
-              </p>
-              <p>
-                <strong>Phone Number:</strong>{" "}
-                {therapist.personalInfo.phoneNumber}
-              </p>
+              {therapist.personalInfo && (
+                <>
+                  <p>
+                    <strong>Date of Birth:</strong>{" "}
+                    {format(
+                      new Date(therapist.personalInfo?.dateOfBirth),
+                      "yyyy-MM-dd"
+                    )}
+                  </p>
+                  <p>
+                    <strong>Phone Number:</strong>{" "}
+                    {therapist.personalInfo?.phoneNumber}
+                  </p>
+                </>
+              )}
             </div>
             <div>
               <p>
-                <strong>Time Zone:</strong> {therapist.settings.timeZone}
+                <strong>Time Zone:</strong> {therapist.settings?.timeZone}
               </p>
               <p>
                 <strong>Assigned Clients:</strong>{" "}

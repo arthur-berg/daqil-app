@@ -309,10 +309,6 @@ export const SetupForm = () => {
                           <RadioGroupItem value="FEMALE" id="female" />
                           <Label htmlFor="female">{t("female")}</Label>
                         </div>
-                        <div className="flex items-center space-x-2">
-                          <RadioGroupItem value="OTHER" id="other" />
-                          <Label htmlFor="other">{t("other")}</Label>
-                        </div>
                       </RadioGroup>
                     </FormControl>
 

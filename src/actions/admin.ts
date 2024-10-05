@@ -151,7 +151,7 @@ export const inviteTherapist = async (
       },
     });
 
-    const verificationToken = await generateVerificationToken(email, 168); // 7 days
+    /*  const verificationToken = await generateVerificationToken(email, 168);
 
     const isTherapist = true;
 
@@ -168,13 +168,58 @@ export const inviteTherapist = async (
 
     if (response?.error) {
       console.error(response.error);
-    }
+    } */
 
     revalidatePath("/admin/therapists");
 
-    return { success: SuccessMessages("therapistInvited") };
+    return { success: SuccessMessages("therapistCreated") };
   } catch (error) {
     console.error("Error inviting therapist", error);
+    return { error: ErrorMessages("somethingWentWrong") };
+  }
+};
+
+export const sendTherapistInviteEmail = async (
+  therapistId: string,
+  email: string
+) => {
+  await connectToMongoDB();
+
+  const [SuccessMessages, ErrorMessages] = await Promise.all([
+    getTranslations("SuccessMessages"),
+    getTranslations("ErrorMessages"),
+  ]);
+
+  try {
+    await requireAuth([UserRole.ADMIN]);
+
+    const verificationToken = await generateVerificationToken(email, 168);
+
+    const isTherapist = true;
+
+    await sendVerificationEmail(
+      verificationToken.email,
+      verificationToken.token,
+      isTherapist
+    );
+
+    await User.findByIdAndUpdate(therapistId, {
+      therapistInvitationEmail: {
+        status: "SENT",
+        expiryDate: verificationToken.expires,
+      },
+    });
+
+    const response = await addUserToSubscriberList(
+      verificationToken.email,
+      UserRole.THERAPIST
+    );
+
+    if (response?.error) {
+      console.error(response.error);
+    }
+    return { success: SuccessMessages("therapistInvited") };
+  } catch (error) {
     return { error: ErrorMessages("somethingWentWrong") };
   }
 };

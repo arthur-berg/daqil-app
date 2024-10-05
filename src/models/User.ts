@@ -180,6 +180,17 @@ const userSchema = new Schema(
       unique: true,
       required: false,
     },
+    therapistInvitationEmail: {
+      status: {
+        type: String,
+        enum: ["NOT_SENT", "SENT"],
+        required: false,
+      },
+      expiryDate: {
+        type: Date,
+        required: false
+      },
+    },
     emailVerified: {
       type: Date,
       required: false,

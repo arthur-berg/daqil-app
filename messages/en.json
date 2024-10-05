@@ -586,6 +586,7 @@
     "paymentSettingsSaved":"Payment settings saved",
     "accountSetupComplete": "Account setup completed",
     "activateLinkSent": "A link to activate your account has been emailed to the address provided",
+    "therapistCreated":"Psychologist account created successfully",
     "therapistInvited": "Psychologist was invited successfully",
     "appointmentBooked": "Appointment successfully booked",
     "appointmentCreated": "Appointment successfully created",
