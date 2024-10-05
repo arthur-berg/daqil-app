@@ -1,6 +1,12 @@
 import { qstashClient, scheduleTask } from "@/lib/qstash";
 import ScheduledTask from "@/models/ScheduledTask";
-import { addMinutes, isAfter, subHours, subMinutes } from "date-fns";
+import {
+  addMinutes,
+  addSeconds,
+  isAfter,
+  subHours,
+  subMinutes,
+} from "date-fns";
 
 export const schedulePaymentReminders = async (
   appointmentId: string,
@@ -107,11 +113,13 @@ export const schedulePayAfterPaymentExpiredStatusUpdateJobs = async (
 export const scheduleStatusUpdateJob = async (appointment: any) => {
   const appointmentEndTime = new Date(appointment.endDate);
   const appointmentId = appointment._id.toString();
+  const now = new Date();
+  const tenSecondsAfter = addSeconds(new Date(now), 60);
 
   const statusUpdateTaskId = await scheduleTask(
     `${process.env.QSTASH_API_URL}/status-update`,
     { appointmentId: appointmentId },
-    Math.floor(appointmentEndTime.getTime() / 1000)
+    Math.floor(tenSecondsAfter.getTime() / 1000)
   );
 
   await ScheduledTask.create({
@@ -132,7 +140,7 @@ export const scheduleReminderJobs = async (
   const twoHoursBefore = subHours(new Date(appointment.startDate), 2);
   /* const thirtyMinutesBefore = subMinutes(new Date(appointment.startDate), 30); */
   const twentyMinutesBefore = subMinutes(new Date(appointment.startDate), 20);
-  /* const tenSecondsAfter = addSeconds(new Date(now), 10); */
+  const tenSecondsAfter = addSeconds(new Date(now), 60);
 
   /*  if (isAfter(oneDayBefore, addMinutes(now, 1))) {
     const emailReminderTaskIdOneDay = await scheduleTask(
