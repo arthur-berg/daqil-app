@@ -226,17 +226,7 @@ const VideoRoom = ({
       <div
         className={`${containerHeight} md:h-screen w-full flex flex-col justify-between items-center p-2 box-border`}
       >
-        <div className="flex justify-center mb-4">
-          {/* <div className="w-[100px] md:w-[110px]">
-            <Image
-              src={logoSrc}
-              alt="daqil-logo"
-              width={150}
-              height={50}
-              className="object-contain"
-            />
-          </div> */}
-        </div>
+        <div className="flex justify-center mb-4"></div>
         <div className="flex flex-col flex-grow justify-center items-center w-full">
           <div className="w-full h-full md:max-w-5xl bg-[#20262D] rounded-md overflow-hidden relative">
             <Image
@@ -244,7 +234,7 @@ const VideoRoom = ({
               alt="daqil-logo"
               width={300}
               height={200}
-              className="absolute top-0 right-0 w-[120px] lg:w-[150px] z-10"
+              className="absolute top-1 right-0 w-[120px] lg:w-[150px] z-10"
             />
             <div id="previewContainer" className="w-full h-full"></div>
           </div>
@@ -306,29 +296,13 @@ const VideoRoom = ({
     <div
       className={`${containerHeight} md:h-screen w-full flex flex-col p-2 box-border`}
     >
-      {/* Logo Header */}
-      {/* <div className="flex justify-center mb-4">
-        <div className="w-[100px] md:w-[110px]">
-          <Image
-            src={logoSrc}
-            alt="daqil-logo"
-            width={150}
-            height={50}
-            className="object-contain"
-          />
-        </div>
-      </div> */}
       <div
         id="callContainer"
-        className="flex  flex-col items-center flex-grow w-full overflow-hidden relative md:max-w-7xl mx-auto"
+        className="flex flex-col items-center flex-grow w-full overflow-hidden relative md:max-w-7xl mx-auto rounded-md bg-[#20262D]  "
       >
-        <div
-          id="roomContainer"
-          className="flex-grow bg-[#20262D] overflow-hidden w-full h-full rounded-md"
-          ref={roomContainer}
-        >
+        <div id="roomContainer" className="w-full h-full" ref={roomContainer}>
           {participants.length === 0 && (
-            <div className="absolute inset-0 flex justify-center items-center text-white text-lg">
+            <div className="absolute inset-0 flex justify-center items-center text-white text-lg w-full h-full">
               {t("waitingForOtherUser")}
             </div>
           )}
@@ -337,7 +311,7 @@ const VideoRoom = ({
             alt="daqil-logo"
             width={300}
             height={200}
-            className="absolute top-0 right-0 w-[120px] lg:w-[150px] z-10"
+            className="absolute top-1 right-0 w-[120px] lg:w-[150px] z-10"
           />
         </div>
         {/* Fix toolbar at the bottom */}

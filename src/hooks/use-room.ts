@@ -197,7 +197,7 @@ export default function useRoom() {
 
       const publisherProperties = {
         resolution: "1280x720",
-
+        fitMode: "cover",
         insertMode: "replace",
         width: "100%",
         height: "100%",
