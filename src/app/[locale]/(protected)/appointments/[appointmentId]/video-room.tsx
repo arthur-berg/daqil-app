@@ -37,6 +37,10 @@ const VideoRoom = ({
   } = useRoom();
   const { isScreenSharing, startScreenSharing, stopScreenSharing } =
     useScreenSharing({ room });
+  const [containerHeight, setContainerHeight] = useState<string>(
+    "h-[calc(100vh-90px)]"
+  );
+
   const roomContainer = useRef<any>(null);
   const effectRun = useRef(false);
   const effectRunPreview = useRef(false);
@@ -59,6 +63,36 @@ const VideoRoom = ({
   const handleJoinCall = () => {
     setIsPreviewing(false);
   };
+
+  useEffect(() => {
+    const handleResize = () => {
+      const viewportHeight =
+        window.visualViewport?.height || window.innerHeight;
+      const fullHeight = window.innerHeight;
+
+      const isIphone = /iPhone|iPad|iPod/.test(navigator.userAgent);
+      const isAndroid = /Android/.test(navigator.userAgent);
+
+      console.log("isIphone", isIphone);
+      console.log("isAndroid", isAndroid);
+
+      if (isIphone) {
+        // iPhone - back/forward controller is visible at the bottom
+        setContainerHeight("h-[calc(100vh-90px)]"); // Adjust this value as needed
+      } else if (isAndroid) {
+        // Android - back/forward controller is visible at the bottom
+        setContainerHeight("h-[calc(100vh)]"); // Adjust this value as needed
+      } else {
+        // No bottom controllers visible
+        setContainerHeight("h-[100vh]");
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize(); // Call once on mount
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const logoSrc =
     locale === "en"
@@ -156,7 +190,9 @@ const VideoRoom = ({
 
   if (isPreviewing) {
     return (
-      <div className="h-[calc(100vh-100px)] md:h-screen w-full flex flex-col justify-between items-center p-2 box-border">
+      <div
+        className={`${containerHeight} md:h-screen w-full flex flex-col justify-between items-center p-2 box-border`}
+      >
         <div className="flex justify-center mb-4">
           <div className="w-[100px] md:w-[110px]">
             <Image
@@ -227,7 +263,9 @@ const VideoRoom = ({
   }
 
   return (
-    <div className="h-[calc(100vh-90px)] md:h-screen w-full flex flex-col p-2 box-border">
+    <div
+      className={`${containerHeight} md:h-screen w-full flex flex-col p-2 box-border`}
+    >
       {/* Logo Header */}
       <div className="flex justify-center mb-4">
         <div className="w-[100px] md:w-[110px]">

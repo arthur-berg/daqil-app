@@ -1,5 +1,7 @@
 import { UserRole } from "@/generalTypes";
 import { requireAuth } from "@/lib/auth";
+import AppointmentType from "@/models/AppointmentType";
+
 import Appointment from "@/models/Appointment";
 import User from "@/models/User";
 
@@ -36,6 +38,10 @@ export const getSerializedAppointments = async (appointments: any[]) => {
     .map((appointment) => appointment.bookedAppointments)
     .flat();
 
+  if (!AppointmentType.schema) {
+    throw new Error("Appointment schema is not registered.");
+  }
+
   const populatedAppointments = await Appointment.find({
     _id: { $in: appointmentIds },
     status: { $ne: "temporarily-reserved" },
@@ -45,7 +51,8 @@ export const getSerializedAppointments = async (appointments: any[]) => {
       path: "participants.userId",
       select: "firstName lastName email",
     })
-    .populate("hostUserId", "firstName lastName email");
+    .populate("hostUserId", "firstName lastName email")
+    .populate("appointmentTypeId", "price title");
 
   return populatedAppointments.map((appointment: any) => ({
     ...appointment,

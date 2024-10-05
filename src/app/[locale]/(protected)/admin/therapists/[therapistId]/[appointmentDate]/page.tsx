@@ -45,8 +45,22 @@ const AppointmentDetailsPage = async ({
     (appointment: any) => appointment.status === "canceled"
   );
 
+  // Calculate the total sum for completed appointments
+  const totalSum = completedAppointments.reduce(
+    (sum: number, appointment: any) =>
+      sum + (appointment.appointmentTypeId?.price || 0),
+    0
+  );
+
   return (
     <div className="container mx-auto p-6 bg-white">
+      {/* Total Sum Block */}
+      <div className="bg-green-100 p-4 rounded-md mb-6">
+        <h3 className="text-lg font-bold">
+          To be paid to psychologist: ${totalSum.toFixed(2)}
+        </h3>
+      </div>
+
       <h2 className="text-xl font-bold mb-4">Appointments Details</h2>
 
       {/* Completed Appointments */}
@@ -60,6 +74,8 @@ const AppointmentDetailsPage = async ({
               <TableHead>Appointment ID</TableHead>
               <TableHead>Date</TableHead>
               <TableHead>Participant</TableHead>
+              <TableHead>Appointment Type</TableHead>
+              <TableHead>Price</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -70,9 +86,11 @@ const AppointmentDetailsPage = async ({
                   {format(new Date(appointment.startDate), "yyyy-MM-dd")}
                 </TableCell>
                 <TableCell>
-                  {appointment.participants[0]?.userId?.firstName}{" "}
-                  {appointment.participants[0]?.userId?.lastName}
+                  {appointment.participants[0]?.firstName}{" "}
+                  {appointment.participants[0]?.lastName}
                 </TableCell>
+                <TableCell>{appointment.appointmentTypeId?.title}</TableCell>
+                <TableCell>${appointment.appointmentTypeId?.price}</TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -93,6 +111,8 @@ const AppointmentDetailsPage = async ({
               <TableHead>Date</TableHead>
               <TableHead>Cancellation Reason</TableHead>
               <TableHead>Participant</TableHead>
+              <TableHead>Appointment Type</TableHead>
+              <TableHead>Price</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -104,9 +124,11 @@ const AppointmentDetailsPage = async ({
                 </TableCell>
                 <TableCell>{appointment.cancellationReason}</TableCell>
                 <TableCell>
-                  {appointment.participants[0]?.userId?.firstName}{" "}
-                  {appointment.participants[0]?.userId?.lastName}
+                  {appointment.participants[0]?.firstName?.en}{" "}
+                  {appointment.participants[0]?.lastName?.en}
                 </TableCell>
+                <TableCell>{appointment.appointmentTypeId?.title}</TableCell>
+                <TableCell>${appointment.appointmentTypeId?.price}</TableCell>
               </TableRow>
             ))}
           </TableBody>

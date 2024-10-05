@@ -1,13 +1,6 @@
 import { qstashClient, scheduleTask } from "@/lib/qstash";
 import ScheduledTask from "@/models/ScheduledTask";
-import {
-  addMinutes,
-  addSeconds,
-  isAfter,
-  subHours,
-  subMinutes,
-  subSeconds,
-} from "date-fns";
+import { addMinutes, isAfter, subHours, subMinutes } from "date-fns";
 
 export const schedulePaymentReminders = async (
   appointmentId: string,
