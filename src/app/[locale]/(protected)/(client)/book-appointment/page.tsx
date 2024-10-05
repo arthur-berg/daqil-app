@@ -20,6 +20,7 @@ import IntroCallStepManager from "./intro-call-step-manager";
 import PageTitle from "@/components/page-title";
 import Image from "next/image";
 import { format, isWithinInterval } from "date-fns";
+import { formatInTimeZone } from "date-fns-tz";
 
 const BookAppointmentPage = async ({
   params,
@@ -48,6 +49,12 @@ const BookAppointmentPage = async ({
     await redirectUserIfReservationExist(user.id, ErrorMessages);
   }
 
+  const clientAcceptedIntroTherapist =
+    user?.selectedTherapist?.clientIntroTherapistSelectionStatus ===
+      "ACCEPTED" && user?.selectedTherapist.introCallDone;
+
+  const hasSelectedTherapist = client.selectedTherapistHistory.length > 0;
+
   const pendingSelectedTherapist =
     user?.selectedTherapist?.clientIntroTherapistSelectionStatus ===
       "PENDING" && user?.selectedTherapist.introCallDone;
@@ -55,10 +62,6 @@ const BookAppointmentPage = async ({
   const browseTherapists =
     user?.selectedTherapist?.clientIntroTherapistSelectionStatus ===
       "REJECTED" && user?.selectedTherapist.introCallDone;
-
-  // TODO - Sida / Text för ifall användaren har en intro session som är klar och fick status "canceled"
-
-  // Into meeting was canceled due to host did not show up or similar
 
   const appointmentTypes = await getAppointmentTypesByIDs([
     APPOINTMENT_TYPE_ID_SHORT_SESSION,
@@ -122,7 +125,13 @@ const BookAppointmentPage = async ({
               }
             />
 
-            {OAuthAccountNotFinished ? (
+            {clientAcceptedIntroTherapist || hasSelectedTherapist ? (
+              <SelectedTherapist
+                appointmentTypes={appointmentTypes}
+                selectedTherapistData={JSON.stringify(selectedTherapist)}
+                locale={params.locale}
+              />
+            ) : OAuthAccountNotFinished ? (
               <div className="bg-white p-4 rounded-md mb-6 flex items-center flex-col text-center">
                 <MdEvent className="mr-2 text-destructive mb-4" size={48} />
                 <p className="text-lg mb-4 flex items-center justify-center">
@@ -152,8 +161,9 @@ const BookAppointmentPage = async ({
                 <p className="text-lg mb-4 flex items-center justify-center">
                   {/* Icon with margin and size */}
                   {t("introMeetingIsOngoing", {
-                    endDate: format(
+                    endDate: formatInTimeZone(
                       new Date(confirmedIntroAppointment.endDate),
+                      client.settings.timeZone,
                       "HH:mm"
                     ),
                   })}
@@ -276,12 +286,6 @@ const BookAppointmentPage = async ({
                       </Link>
                     </div>
                   </div>
-                ) : selectedTherapist ? (
-                  <SelectedTherapist
-                    appointmentTypes={appointmentTypes}
-                    selectedTherapistData={JSON.stringify(selectedTherapist)}
-                    locale={params.locale}
-                  />
                 ) : (
                   <IntroCallStepManager />
                 )}

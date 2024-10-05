@@ -161,13 +161,12 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
     );
 
     const tenMinutesPassedAfterStart =
-      timeSinceStart >= 0 &&
-      timeSinceStart <= 10 &&
-      !nextAppointment.hostShowUp;
+      timeSinceStart >= 0 && timeSinceStart <= 10;
 
     const isJoinEnabled =
       ((timeUntilStart <= 20 && timeUntilStart >= 0) ||
-        tenMinutesPassedAfterStart) &&
+        tenMinutesPassedAfterStart ||
+        nextAppointment.hostShowUp) &&
       !hasMeetingEnded;
 
     const isPending = nextAppointment.payment.status === "pending";
@@ -327,14 +326,13 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
                               );
 
                               const tenMinutesPassedAfterStart =
-                                timeSinceStart >= 0 &&
-                                timeSinceStart <= 10 &&
-                                !nextAppointment.hostShowUp;
+                                timeSinceStart >= 0 && timeSinceStart <= 10;
 
                               const isJoinEnabled =
                                 ((timeUntilStart <= 20 &&
                                   timeUntilStart >= 0) ||
-                                  tenMinutesPassedAfterStart) &&
+                                  tenMinutesPassedAfterStart ||
+                                  appointment.hostShowUp) &&
                                 !hasMeetingEnded;
 
                               const disableAccordion =

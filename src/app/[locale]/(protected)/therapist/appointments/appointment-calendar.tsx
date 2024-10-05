@@ -460,13 +460,12 @@ const AppointmentCalendar = ({ appointments }: { appointments: any }) => {
                     );
 
                     const tenMinutesPassedAfterStart =
-                      timeSinceStart >= 0 &&
-                      timeSinceStart <= 10 &&
-                      !selectedAppointment.hostShowUp;
+                      timeSinceStart >= 0 && timeSinceStart <= 10;
 
                     const isJoinEnabled =
                       ((timeUntilStart <= 20 && timeUntilStart >= 0) ||
-                        tenMinutesPassedAfterStart) &&
+                        tenMinutesPassedAfterStart ||
+                        selectedAppointment.hostShowUp) &&
                       !hasMeetingEnded;
 
                     return isJoinEnabled ? (
