@@ -41,6 +41,10 @@ const BookAppointmentPage = async ({
 
   const client = await getClientByIdAppointments(user.id);
 
+  if (!client) {
+    return ErrorMessages("userNotFound");
+  }
+
   const selectedTherapist = user?.selectedTherapist?.therapist
     ? await getTherapistById(user?.selectedTherapist.therapist)
     : null;
@@ -53,7 +57,7 @@ const BookAppointmentPage = async ({
     user?.selectedTherapist?.clientIntroTherapistSelectionStatus ===
       "ACCEPTED" && user?.selectedTherapist.introCallDone;
 
-  const hasSelectedTherapist = client.selectedTherapistHistory.length > 0;
+  const hasSelectedTherapist = client?.selectedTherapistHistory?.length > 0;
   const appointmentTypes = await getAppointmentTypesByIDs([
     APPOINTMENT_TYPE_ID_SHORT_SESSION,
     APPOINTMENT_TYPE_ID_LONG_SESSION,

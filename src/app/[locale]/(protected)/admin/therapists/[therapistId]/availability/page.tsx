@@ -6,7 +6,7 @@ const AvailabilityPage = async ({
   params: { therapistId: string };
 }) => {
   return (
-    <div className="container">
+    <div>
       <AvailabilityWrapper
         adminPageProps={{ therapistId: params.therapistId }}
       />

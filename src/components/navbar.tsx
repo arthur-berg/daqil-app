@@ -12,9 +12,9 @@ export const Navbar = () => {
   return (
     <nav className="bg-secondary flex justify-between items-center p-4 w-full shadow-lg">
       <HamburgerMenuIcon className="h-6 w-6" />
-      <div className="flex gap-x-2 container justify-end">
+      {/*   <div className="flex gap-x-2 container justify-end">
         <LanguageSwitcher />
-      </div>
+      </div> */}
       {/*  <UserButton /> */}
     </nav>
   );

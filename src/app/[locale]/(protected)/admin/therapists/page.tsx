@@ -21,7 +21,6 @@ import SendEmailButton from "@/app/[locale]/(protected)/admin/therapists/send-em
 const AdminTherapistsPage = async () => {
   await connectToMongoDB();
   const therapists = await getTherapistsAdminView();
-  console.log("therapists", therapists);
   return (
     <Card className="w-full md:w-[600px]">
       <CardHeader>

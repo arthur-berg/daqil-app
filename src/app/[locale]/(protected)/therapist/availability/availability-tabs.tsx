@@ -125,6 +125,7 @@ const AvailabilityTabs = ({
           {activeTab === "default-availability" && (
             <div className="p-6">
               <RecurringAvailabilityManager
+                adminPageProps={adminPageProps}
                 appointmentTypes={appointmentTypes}
                 settings={availableTimes?.settings}
                 recurringAvailableTimes={
@@ -136,6 +137,7 @@ const AvailabilityTabs = ({
           {activeTab === "non-recurring-times" && (
             <div className="p-6">
               <NonRecurringAvailabilityForm
+                adminPageProps={adminPageProps}
                 appointmentTypes={appointmentTypes}
                 nonRecurringAvailableTimes={
                   availableTimes?.nonRecurringAvailableTimes
@@ -146,6 +148,7 @@ const AvailabilityTabs = ({
           {activeTab === "block-dates" && (
             <div className="p-6">
               <BlockAvailabilityForm
+                adminPageProps={adminPageProps}
                 appointmentTypes={appointmentTypes}
                 blockedOutTimes={availableTimes?.blockedOutTimes}
               />

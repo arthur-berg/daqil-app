@@ -8,7 +8,7 @@ import {
   getAppointmentTypeById,
   getAppointmentTypesByIDs,
 } from "@/data/appointment-types";
-import { getTherapistById } from "@/data/user";
+import { getTherapistById, getUserById } from "@/data/user";
 import { getTranslations } from "next-intl/server";
 import { FaUser } from "react-icons/fa";
 
@@ -31,13 +31,21 @@ const TherapistUserProfile = async ({
   const t = await getTranslations("TherapistProfilePage");
   const therapistId = params.therapistId;
   const user = await getCurrentUser();
+  if (!user) return "User not found";
   const therapist = (await getTherapistById(therapistId)) as any;
+  const client = await getUserById(user.id);
 
   const locale = params.locale;
 
   if (!therapist) {
     return ErrorMessages("therapistNotExist");
   }
+
+  /*  const clientAcceptedIntroTherapist =
+    client?.selectedTherapist?.clientIntroTherapistSelectionStatus ===
+      "ACCEPTED" && client?.selectedTherapist.introCallDone;
+
+  const hasSelectedTherapist = client?.selectedTherapistHistory.length > 0; */
 
   const showOnlyIntroCalls =
     user?.selectedTherapist && user?.selectedTherapist.introCallDone
