@@ -22,15 +22,12 @@ const getUserAndAvailableTimes = async (
   let userToUpdate;
   let userAvailableTimes;
 
-  if (!!adminPageProps) {
-    const therapist = await User.findById(adminPageProps.therapistId);
-    userToUpdate = therapist._id;
-    userAvailableTimes = therapist.availableTimes;
-  } else {
-    const client = await User.findById(user.id);
-    userToUpdate = user.id;
-    userAvailableTimes = client.availableTimes;
-  }
+  const therapist = await User.findById(
+    !!adminPageProps ? adminPageProps.therapistId : user.id
+  );
+
+  userToUpdate = therapist._id;
+  userAvailableTimes = therapist.availableTimes;
 
   return { userToUpdate, userAvailableTimes };
 };

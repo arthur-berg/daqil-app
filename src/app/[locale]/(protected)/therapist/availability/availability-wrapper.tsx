@@ -36,10 +36,10 @@ const AvailabilityWrapper = async ({
   adminPageProps?: { therapistId: string };
 }) => {
   await connectToMongoDB();
+
   const user = await requireAuth([UserRole.THERAPIST, UserRole.ADMIN]);
   const ErrorMessages = await getTranslations("ErrorMessages");
   if (!user) return <div>{ErrorMessages("userNotFound")}</div>;
-
   const appointmentTypes = await getAllAppointmentTypes();
 
   if (!appointmentTypes) return;

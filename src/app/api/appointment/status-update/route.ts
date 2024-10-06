@@ -62,11 +62,6 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
     const userId = participants[0]?.userId;
 
     const statusUpdate = determineStatusUpdate(hostShowUp, participantShowUp);
-    console.log("statusUpdate", statusUpdate);
-    console.log(
-      "appointmentTypeId.toString() === APPOINTMENT_TYPE_ID_INTRO_SESSION",
-      appointmentTypeId.toString() === APPOINTMENT_TYPE_ID_INTRO_SESSION
-    );
 
     if (
       statusUpdate.status === "completed" &&
@@ -77,10 +72,8 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
       try {
         session.startTransaction();
 
-        // First update the user (mark intro session as done)
         await markIntroSessionComplete(session, userId);
 
-        // Then update the appointment status
         await updateAppointmentStatus(session, appointmentId, statusUpdate);
 
         await session.commitTransaction();

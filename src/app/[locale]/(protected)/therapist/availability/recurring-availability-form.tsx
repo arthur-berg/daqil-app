@@ -24,7 +24,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useTranslations } from "next-intl";
-import { Checkbox } from "@/components/ui/checkbox";
 import { BeatLoader } from "react-spinners";
 
 const generateTimeIntervals = (intervalMinutes = 15) => {
@@ -148,6 +147,8 @@ const RecurringAvailabilityForm = ({
 
   const onSubmitDay = (values: z.infer<typeof RecurringAvailabilitySchema>) => {
     startTransition(async () => {
+      console.log("values", values);
+      console.log("adminPageProps in onSubmitDay", adminPageProps);
       const data = await saveRecurringAvailableTimes(values, adminPageProps);
       responseToast(data);
       if (data?.success) {

@@ -83,7 +83,7 @@ export const Sidebar = forwardRef<
 
   return (
     <>
-      <nav className="bg-secondary justify-between items-center p-4 w-full shadow-lg flex lg:hidden">
+      <nav className="bg-secondary justify-between items-center px-4 py-6 w-full shadow-lg flex lg:hidden">
         <HamburgerMenuIcon
           className="h-6 w-6"
           onClick={() => {
@@ -94,9 +94,9 @@ export const Sidebar = forwardRef<
             }
           }}
         />
-        <div className="inline-flex gap-x-2 container justify-end">
+        {/*   <div className="inline-flex gap-x-2 container justify-end">
           <LanguageSwitcher />
-        </div>
+        </div> */}
       </nav>
       <aside
         ref={sidebarRef}
