@@ -83,6 +83,10 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       return true;
     },
     async session({ token, session }) {
+      if (token.error === "inactive-user") {
+        session.user.error = token.error as any;
+        return session;
+      }
       if (token.sub && session.user) {
         session.user.id = token.sub;
       }
@@ -116,7 +120,10 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 
       const existingUser = await getUserById(token.sub);
 
-      if (!existingUser) return token;
+      if (!existingUser) {
+        token.error = "inactive-user";
+        return token;
+      }
 
       const existingAccount = await getAccountByUserId(existingUser.id);
 

@@ -34,7 +34,8 @@ const BookAppointmentPage = async ({
   const client = await getClientByIdAppointments(user.id);
 
   if (!client) {
-    return (
+    return ErrorMessages("userNotFound");
+    /*  return (
       <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6 flex flex-col items-center">
         {ErrorMessages("thisAccountIsTerminated")}
         <div className="inline-flex mt-4">
@@ -49,7 +50,7 @@ const BookAppointmentPage = async ({
           </LogoutButton>
         </div>
       </div>
-    );
+    ); */
   }
 
   const selectedTherapist = user?.selectedTherapist?.therapist

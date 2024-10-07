@@ -15,6 +15,7 @@ export type ExtendedUser = DefaultSession["user"] & {
     en: string;
     ar: string;
   };
+  error?: "inactive-user";
   isOnboardingDone: boolean;
   isAccountSetupDone: boolean;
   appointments: {

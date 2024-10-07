@@ -5,6 +5,8 @@ import { useEffect, useRef, useState } from "react";
 import { usePathname } from "@/navigation";
 import { clearAllBodyScrollLocks, disableBodyScroll } from "body-scroll-lock";
 import { useMediaQuery } from "react-responsive";
+import { useCurrentUser } from "@/hooks/use-current-user";
+import { logout } from "@/actions/logout";
 
 const routesWithoutSidebar = ["/appointments/[id]"];
 
@@ -28,6 +30,7 @@ export default function AdminPanelLayout({
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
   const sidebarMenuRef = useRef<any>();
+  const user = useCurrentUser();
 
   const shouldRenderWithoutSidebar = routesWithoutSidebar.some((route) =>
     matchesPath(pathname, route)
@@ -62,6 +65,13 @@ export default function AdminPanelLayout({
       clearAllBodyScrollLocks();
     };
   }, [isOpen, isDesktop]);
+
+  useEffect(() => {
+    if (user?.error === "inactive-user") {
+      // Sign out here
+      logout();
+    }
+  }, [user?.error]);
 
   if (shouldRenderWithoutSidebar) {
     return <div>{children}</div>;
