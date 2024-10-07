@@ -11,9 +11,6 @@ import { redirectUserIfReservationExist } from "./helpers";
 import connectToMongoDB from "@/lib/mongoose";
 import PageTitle from "@/components/page-title";
 import IntroMeetingManager from "./intro-meeting-manager";
-import { logout } from "@/actions/logout";
-import { LogoutButton } from "@/components/auth/logout-button";
-import { Button } from "@/components/ui/button";
 
 const BookAppointmentPage = async ({
   params,
@@ -100,6 +97,7 @@ const BookAppointmentPage = async ({
       selectedTherapist={selectedTherapist}
       t={t}
       locale={locale}
+      isOAuth={user.isOAuth}
     />
   );
 };

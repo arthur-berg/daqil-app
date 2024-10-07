@@ -18,6 +18,7 @@ const IntroMeetingManager = async ({
   selectedTherapist,
   t,
   locale,
+  isOAuth,
 }: {
   ErrorMessages: any;
   client: any;
@@ -25,9 +26,9 @@ const IntroMeetingManager = async ({
   selectedTherapist: any;
   t: any;
   locale: string;
+  isOAuth?: boolean;
 }) => {
-  const OAuthAccountNotFinished =
-    !!client?.isOAuth && !client?.isAccountSetupDone;
+  const OAuthAccountNotFinished = !!isOAuth && !client?.isAccountSetupDone;
 
   const pendingSelectedTherapist =
     client?.selectedTherapist?.clientIntroTherapistSelectionStatus ===

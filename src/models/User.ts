@@ -127,7 +127,7 @@ const userSchema = new Schema(
     },
     personalInfo: {
       phoneNumber: { type: String, required: false },
-      sex: { type: String, enum: ["MALE", "FEMALE", "OTHER"] },
+      sex: { type: String, enum: ["MALE", "FEMALE"] },
       dateOfBirth: { type: Date, required: false },
       country: { type: String, required: false },
     },
@@ -188,7 +188,7 @@ const userSchema = new Schema(
       },
       expiryDate: {
         type: Date,
-        required: false
+        required: false,
       },
     },
     emailVerified: {

@@ -5,6 +5,7 @@ import connectToMongoDB from "@/lib/mongoose";
 import User from "@/models/User";
 import { getTranslations } from "next-intl/server";
 import { capitalizeFirstLetter } from "@/utils";
+import { getUserById } from "@/data/user";
 
 export const setupOAuthAccount = async (
   values: z.infer<typeof OAuthAccountSetupSchema>,
@@ -34,6 +35,18 @@ export const setupOAuthAccount = async (
     ar: lastName.ar,
   };
 
+  const updatedPersonalInfo = {
+    ...personalInfo,
+    phoneNumber: personalInfo.phoneNumber.replace(/\s+/g, ""),
+  };
+
+  const existingUser = await getUserById(userId);
+
+  const updatedSettings = {
+    ...existingUser.settings,
+    timeZone: settings.timeZone,
+  };
+
   try {
     // Update the user information with the submitted values
     const updatedUser = await User.findByIdAndUpdate(
@@ -41,9 +54,17 @@ export const setupOAuthAccount = async (
       {
         firstName: capitalizedFirstName,
         lastName: capitalizedLastName,
-        personalInfo,
-        settings,
+        personalInfo: updatedPersonalInfo,
+        settings: updatedSettings,
         isAccountSetupDone: true,
+        therapistWorkProfile: {
+          en: { title: "Psychologist", description: "" },
+          ar: {
+            title:
+              updatedPersonalInfo.sex === "MALE" ? "طبيب نفسي" : "طبيبة نفسية",
+            description: "",
+          },
+        },
       },
       { new: true }
     );
