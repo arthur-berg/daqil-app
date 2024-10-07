@@ -536,6 +536,8 @@
     "goToAppointments": "الذهاب إلى المواعيد"
   },
   "ErrorMessages": {
+    "logout": "تسجيل الخروج",
+    "thisAccountIsTerminated": "This account has been deleted. Please logout.",
     "onlyDaqilEmailsAllowed": "يُسمح فقط باستخدام بريد DAQIL الإلكتروني",
     "refundFailed": "فشل طلب الاسترداد. يرجى التواصل مع الدعم.",
     "noImage": "لا توجد صورة",

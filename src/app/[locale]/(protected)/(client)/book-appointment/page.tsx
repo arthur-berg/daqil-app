@@ -11,6 +11,9 @@ import { redirectUserIfReservationExist } from "./helpers";
 import connectToMongoDB from "@/lib/mongoose";
 import PageTitle from "@/components/page-title";
 import IntroMeetingManager from "./intro-meeting-manager";
+import { logout } from "@/actions/logout";
+import { LogoutButton } from "@/components/auth/logout-button";
+import { Button } from "@/components/ui/button";
 
 const BookAppointmentPage = async ({
   params,
@@ -31,7 +34,22 @@ const BookAppointmentPage = async ({
   const client = await getClientByIdAppointments(user.id);
 
   if (!client) {
-    return ErrorMessages("userNotFound");
+    return (
+      <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6 flex flex-col items-center">
+        {ErrorMessages("thisAccountIsTerminated")}
+        <div className="inline-flex mt-4">
+          <LogoutButton>
+            <Button
+              size="lg"
+              variant="destructive"
+              className="w-full justify-start h-10 mb-1"
+            >
+              {t("logout")}
+            </Button>
+          </LogoutButton>
+        </div>
+      </div>
+    );
   }
 
   const selectedTherapist = user?.selectedTherapist?.therapist

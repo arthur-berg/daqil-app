@@ -259,6 +259,7 @@
   "noPaymentDetails": "No payment details have been saved yet"
   },
   "BookAppointmentPage": {
+    "logout": "Logout",
     "introMeetingWasCanceled": " Your intro appointment was not completed because one or both participants didn't join, or one of the participants canceled. Please book a new intro call.",
     "goBack": "Go back",
     "ourTherapists": "Our psychologists",
@@ -542,6 +543,7 @@
     "goToAppointments": "Go to Appointments"
   },
   "ErrorMessages": {
+    "thisAccountIsTerminated": "This account has been deleted. Please logout.",
     "onlyDaqilEmailsAllowed": "Only DAQIL emails are allowed",
     "refundFailed": "Refund request failed. Please contact support.",
     "noImage": "No image",
