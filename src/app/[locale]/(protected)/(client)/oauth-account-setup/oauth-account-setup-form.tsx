@@ -138,7 +138,7 @@ const OAuthAccountSetupForm = () => {
       </div>
     </div>
   ) : (
-    <div className="py-4 container flex justify-center">
+    <div className="py-4  flex justify-center">
       <Card className="w-full sm:w-[500px] mx-auto">
         <CardHeader>{t("finishSettingUpAccount")}</CardHeader>
         <CardContent>
@@ -373,7 +373,7 @@ const OAuthAccountSetupForm = () => {
                           <Button
                             variant="outline"
                             role="combobox"
-                            className="justify-between sm:w-full"
+                            className="justify-between max-w-[280px] sm:w-full"
                           >
                             <div className="truncate max-w-[calc(100%-24px)]">
                               {field.value && allTimezones[field.value]
@@ -387,11 +387,6 @@ const OAuthAccountSetupForm = () => {
                         </PopoverTrigger>
                         <PopoverContent className="w-[280px] p-0">
                           <Command>
-                            <CommandInput
-                              placeholder={t("searchTimezone")}
-                              value={timezoneSearch}
-                              onValueChange={setTimezoneSearch}
-                            />
                             <CommandList>
                               <CommandEmpty>
                                 {t("noTimezoneFound")}
@@ -416,6 +411,14 @@ const OAuthAccountSetupForm = () => {
                                   ))}
                               </CommandGroup>
                             </CommandList>
+
+                            <div className="border-t p-2">
+                              <CommandInput
+                                placeholder={t("searchTimezone")}
+                                value={timezoneSearch}
+                                onValueChange={setTimezoneSearch}
+                              />
+                            </div>
                           </Command>
                         </PopoverContent>
                       </Popover>
