@@ -60,8 +60,8 @@ const BookIntroCall = ({
 
   const handleSetClosestAvailableDate = async (startingDate: Date) => {
     let currentDate = startingDate;
-    const maxLookAheadDays = 30; // Define how many days ahead to search
-    let foundAvailableSlots = false; // Track if we find available slots
+    const maxLookAheadDays = 30;
+    let foundAvailableSlots = false;
 
     for (let i = 0; i < maxLookAheadDays; i++) {
       const allAvailableSlots = therapists.reduce(
@@ -82,26 +82,24 @@ const BookIntroCall = ({
       );
 
       if (allAvailableSlots.length > 0) {
-        // Found available slots for this date
-        setClosestAvailableDate(currentDate); // Set the closest available date
-        setAvailableTimeSlots(allAvailableSlots); // Set available time slots for this date
+        setClosestAvailableDate(currentDate);
+        setAvailableTimeSlots(allAvailableSlots);
         foundAvailableSlots = true;
-        break; // Stop searching as we've found a date with available slots
+        break;
       }
 
-      currentDate = addDays(currentDate, 1); // Move to the next day
+      currentDate = addDays(currentDate, 1);
     }
 
     if (!foundAvailableSlots) {
-      // No available slots were found within the given days
-      setClosestAvailableDate(null); // No available dates found
+      setClosestAvailableDate(null);
       console.log("No available time slots found within 30 days.");
     }
   };
 
   useEffect(() => {
     handleSetClosestAvailableDate(today);
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const groupTimeSlots = (slots: { start: Date; end: Date }[]) => {
     const morning = slots.filter((slot) => slot.start.getHours() < 12);
@@ -141,6 +139,23 @@ const BookIntroCall = ({
     }
   };
 
+  const selectTherapistWithFewestClients = (therapists: any[]) => {
+    const sortedTherapists = therapists.sort(
+      (a, b) => a.assignedClients.length - b.assignedClients.length
+    );
+
+    const therapistsWithFewestClients = sortedTherapists.filter(
+      (therapist) =>
+        therapist.assignedClients.length ===
+        sortedTherapists[0].assignedClients.length
+    );
+
+    const selectedTherapistIndex = Math.floor(
+      Math.random() * therapistsWithFewestClients.length
+    );
+    return therapistsWithFewestClients[selectedTherapistIndex];
+  };
+
   const handleTimeSlotClicked = () => {
     setBookingDialogOpen(false);
     const combinedDateTime = set(date.justDate as Date, {
@@ -148,8 +163,7 @@ const BookIntroCall = ({
       minutes: date?.dateTime?.getMinutes(),
     });
 
-    const randomTherapistIndex = Math.floor(Math.random() * therapists.length);
-    const selectedTherapist = therapists[randomTherapistIndex];
+    const selectedTherapist = selectTherapistWithFewestClients(therapists);
     const therapistId = selectedTherapist._id;
 
     startTransition(async () => {

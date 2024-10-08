@@ -88,29 +88,29 @@ const CancelAppontmentForm = ({
                 {/* Warning Message for Less Than 24 Hours */}
                 {hoursUntilAppointment < 24 &&
                   selectedAppointment.payment.status === "paid" && (
-                    <p className="text-red-600 font-bold">
+                    <div className="text-red-600 font-bold">
                       {t("warningNoRefund")}
-                    </p>
+                    </div>
                   )}
 
-                <p>
+                <div>
                   <strong>{t("title")}: </strong> {selectedAppointment?.title}
-                </p>
-                <p>
+                </div>
+                <div>
                   <strong>{t("therapist")}: </strong>
                   {getFullName(
                     selectedAppointment.hostUserId.firstName,
                     selectedAppointment.hostUserId.lastName
                   )}
-                </p>
-                <p>
+                </div>
+                <div>
                   <strong>{t("start")}: </strong>
                   {format(new Date(selectedAppointment.startDate), "P HH:mm")}
-                </p>
-                <p>
+                </div>
+                <div>
                   <strong>{t("duration")}: </strong>
                   {selectedAppointment?.durationInMinutes} {t("minutes")}
-                </p>
+                </div>
 
                 <FormField
                   control={form.control}
