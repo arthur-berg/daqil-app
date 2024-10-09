@@ -11,6 +11,7 @@ import VideoSession from "@/models/VideoSession";
 import { getTranslations } from "next-intl/server";
 import connectToMongoDB from "@/lib/mongoose";
 import { getUserById } from "@/data/user";
+import { revalidatePath } from "next/cache";
 
 if (!process.env.VONAGE_APP_ID) {
   throw new Error("Missing config values for env params VONAGE_APP_ID ");
@@ -76,6 +77,7 @@ export const getSessionData = async (appointmentId: string) => {
         await User.findByIdAndUpdate(client._id, {
           $set: { "selectedTherapist.introCallDone": true },
         });
+        revalidatePath("/book-appointment");
       }
     }
 
@@ -98,6 +100,7 @@ export const getSessionData = async (appointmentId: string) => {
         await User.findByIdAndUpdate(client._id, {
           $set: { "selectedTherapist.introCallDone": true },
         });
+        revalidatePath("/book-appointment");
       }
 
       updateOptions.arrayFilters = [{ "elem.userId": client._id }];
