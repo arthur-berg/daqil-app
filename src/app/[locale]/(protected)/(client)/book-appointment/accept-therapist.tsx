@@ -7,26 +7,21 @@ import { useCurrentUser } from "@/hooks/use-current-user";
 import { useTranslations } from "next-intl";
 import { useTransition } from "react";
 
-const AcceptTherapist = () => {
+const AcceptTherapist = ({ therapistId }: { therapistId: string }) => {
   const [isPending, startTransition] = useTransition();
-  const user = useCurrentUser();
   const t = useTranslations("BookAppointmentPage");
   const { responseToast } = useToast();
 
   const handleAccept = () => {
     startTransition(async () => {
-      const data = await acceptTherapist(
-        user?.selectedTherapist?.therapist as any
-      );
+      const data = await acceptTherapist(therapistId);
       responseToast(data);
     });
   };
 
   const handleReject = () => {
     startTransition(async () => {
-      const data = await rejectTherapist(
-        user?.selectedTherapist?.therapist as any
-      );
+      const data = await rejectTherapist(therapistId);
       responseToast(data);
     });
   };

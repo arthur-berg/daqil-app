@@ -23,7 +23,6 @@ export default function MuteAudioButton({
   changeAudioSource,
 }: any) {
   const title = hasAudio ? "Disable Microphone" : "Enable Microphone";
-
   const { deviceInfo } = useDevices();
   const [devicesAvailable, setDevicesAvailable] = useState<any>(null);
   const [options, setOptions] = useState([]);
@@ -91,7 +90,7 @@ export default function MuteAudioButton({
                 {!hasAudio ? (
                   <MdMicOff
                     fontSize="inherit"
-                    className="w-8 h-8 text-white cursor-pointer"
+                    className="w-8 h-8 text-red-500 cursor-pointer"
                   />
                 ) : (
                   <MdMic

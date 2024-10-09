@@ -54,7 +54,6 @@ const AdminTherapistsPage = async () => {
                   <TableCell className="font-medium text-primary underline">
                     <Link href={`/admin/therapists/${therapist._id}`}>
                       {therapist.email}
-                      {console.log("therapist", therapist)}
                     </Link>
                   </TableCell>
                   <TableCell>

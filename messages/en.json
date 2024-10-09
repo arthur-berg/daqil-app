@@ -778,9 +778,11 @@
     "loggingYouOut": "Logging you out..."
   },
   "VideoRoom": {
+    "micMuted": "Microphone is muted",
+    "micMutedDescription": "You have muted your microphone. Tap mic symbtol to unmute.",
     "joinMeeting": "Join meeting",
     "previewRoom": "Preview room:",
-    "testSetup": "Test your audio and video before joining the call. You will not be able to see yourself once in the call.",
+    "testSetup": "Test your audio and video before joining the call.",
     "waitingForOtherUser": "Waiting for other user to join..."
   },
   "DateTimePicker": {

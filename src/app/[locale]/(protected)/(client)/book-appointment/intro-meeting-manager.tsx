@@ -2,10 +2,8 @@ import PageTitle from "@/components/page-title";
 import { Button } from "@/components/ui/button";
 import { APPOINTMENT_TYPE_ID_INTRO_SESSION } from "@/contants/config";
 import { Link } from "@/navigation";
-import { isWithinInterval } from "date-fns";
 import { MdEvent } from "react-icons/md";
 import IntroCallStepManager from "./intro-call-step-manager";
-import { formatInTimeZone } from "date-fns-tz";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Image from "next/image";
 import { getFullName } from "@/utils/formatName";
@@ -72,18 +70,6 @@ const IntroMeetingManager = async ({
   const introMeetingIsBookedButNotFinished =
     !!confirmedIntroAppointment && !client?.selectedTherapist?.introCallDone;
 
-  const isConfirmedAppointmentActiveNow = () => {
-    const isOngoing = isWithinInterval(new Date(), {
-      start: new Date(confirmedIntroAppointment.startDate),
-      end: new Date(confirmedIntroAppointment.endDate),
-    });
-    return isOngoing;
-  };
-
-  const confirmedAppointmentIsCurrentlyOnGoing = confirmedIntroAppointment
-    ? isConfirmedAppointmentActiveNow()
-    : false;
-
   return (
     <>
       <div className="max-w-4xl mx-auto">
@@ -118,28 +104,7 @@ const IntroMeetingManager = async ({
                 </div>
                 <IntroCallStepManager />
               </>
-            ) : introMeetingIsBookedButNotFinished &&
-              confirmedAppointmentIsCurrentlyOnGoing ? (
-              <div className="bg-white p-4 rounded-md mb-6 flex items-center flex-col text-center">
-                <MdEvent className="mr-2 text-destructive mb-4" size={48} />
-                <p className="text-lg mb-4 flex items-center justify-center">
-                  {/* Icon with margin and size */}
-                  {t("introMeetingIsOngoing", {
-                    endDate: formatInTimeZone(
-                      new Date(confirmedIntroAppointment.endDate),
-                      client.settings.timeZone,
-                      "HH:mm"
-                    ),
-                  })}
-                </p>
-                <Link href="/appointments">
-                  <Button className="py-2 text-lg mt-2">
-                    {t("seeAppointments")}
-                  </Button>
-                </Link>
-              </div>
-            ) : introMeetingIsBookedButNotFinished &&
-              !confirmedAppointmentIsCurrentlyOnGoing ? (
+            ) : introMeetingIsBookedButNotFinished ? (
               <div className="bg-white p-4 rounded-md mb-6 flex items-center flex-col text-center">
                 <MdEvent className="mr-2 text-destructive mb-4" size={48} />
                 <p className="text-lg mb-4 flex items-center justify-center">
@@ -230,7 +195,9 @@ const IntroMeetingManager = async ({
                             ?.description || "",
                       }}
                     ></p> */}
-                    <AcceptTherapist />
+                    <AcceptTherapist
+                      therapistId={selectedTherapist._id.toString()}
+                    />
                   </div>
                 ) : browseTherapists ? (
                   <div className="flex justify-center">
@@ -261,5 +228,40 @@ const IntroMeetingManager = async ({
     </>
   );
 };
+
+/*   const isConfirmedAppointmentActiveNow = () => {
+    const isOngoing = isWithinInterval(new Date(), {
+      start: new Date(confirmedIntroAppointment.startDate),
+      end: new Date(confirmedIntroAppointment.endDate),
+    });
+    return isOngoing;
+  };
+
+  const confirmedAppointmentIsCurrentlyOnGoing = confirmedIntroAppointment
+    ? isConfirmedAppointmentActiveNow()
+    : false; */
+
+/*
+introMeetingIsBookedButNotFinished &&
+              confirmedAppointmentIsCurrentlyOnGoing ? (
+              <div className="bg-white p-4 rounded-md mb-6 flex items-center flex-col text-center">
+                <MdEvent className="mr-2 text-destructive mb-4" size={48} />
+                <p className="text-lg mb-4 flex items-center justify-center">
+                
+                  {t("introMeetingIsOngoing", {
+                    endDate: formatInTimeZone(
+                      new Date(confirmedIntroAppointment.endDate),
+                      client.settings.timeZone,
+                      "HH:mm"
+                    ),
+                  })}
+                </p>
+                <Link href="/appointments">
+                  <Button className="py-2 text-lg mt-2">
+                    {t("seeAppointments")}
+                  </Button>
+                </Link>
+              </div>
+            ) */
 
 export default IntroMeetingManager;

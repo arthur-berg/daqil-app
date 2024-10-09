@@ -3,6 +3,7 @@ import MuteAudioButton from "./mute-audio-button";
 import MuteVideoButton from "./mute-video-button";
 import EndCallButton from "./end-call-button";
 import { useRouter } from "@/navigation";
+import { useToast } from "@/components/ui/use-toast";
 
 const ToolBar = ({
   room,
@@ -14,10 +15,13 @@ const ToolBar = ({
   participants,
   localParticipant,
   roomName,
+  t,
 }: any) => {
   const [hasAudio, setHasAudio] = useState(true);
   const [hasVideo, setHasVideo] = useState(true);
   const [areAllMuted, setAllMuted] = useState(false);
+  const { toast, dismiss } = useToast();
+  const [muteToastId, setMuteToastId] = useState<string | null>(null);
   const router = useRouter();
 
   const toggleVideo = () => {
@@ -33,6 +37,7 @@ const ToolBar = ({
       }
     }
   };
+
   const toggleAudio = () => {
     if (room && room.camera) {
       const camera = room.camera;
@@ -40,9 +45,24 @@ const ToolBar = ({
       if (isAudioEnabled) {
         camera.disableAudio();
         setHasAudio(false);
+
+        const toastId = toast({
+          title: t("micMuted"),
+          description: t("micMutedDescription"),
+          variant: "warning",
+          duration: Infinity,
+          position: "top-center",
+        }).id;
+
+        setMuteToastId(toastId);
       } else {
         camera.enableAudio();
         setHasAudio(true);
+
+        if (muteToastId) {
+          dismiss(muteToastId);
+          setMuteToastId(null);
+        }
       }
     }
   };

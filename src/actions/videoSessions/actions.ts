@@ -63,6 +63,17 @@ export const getSessionData = async (appointmentId: string) => {
           updateOptions
         );
       }
+
+      if (
+        !user.selectedTherapist?.introCallDone &&
+        appointment.appointmentTypeId.toString() ===
+          APPOINTMENT_TYPE_ID_INTRO_SESSION &&
+        appointment.participants[0].showUp
+      ) {
+        await User.findByIdAndUpdate(user.id, {
+          $set: { "selectedTherapist.introCallDone": true },
+        });
+      }
     }
 
     if (isClient) {
@@ -75,15 +86,16 @@ export const getSessionData = async (appointmentId: string) => {
         return { error: ErrorMessages("userNotFound") };
       }
 
-      /*  if (
+      if (
         !user.selectedTherapist?.introCallDone &&
         appointment.appointmentTypeId.toString() ===
-          APPOINTMENT_TYPE_ID_INTRO_SESSION
+          APPOINTMENT_TYPE_ID_INTRO_SESSION &&
+        appointment.hostShowUp
       ) {
         await User.findByIdAndUpdate(user.id, {
           $set: { "selectedTherapist.introCallDone": true },
         });
-      } */
+      }
 
       updateOptions.arrayFilters = [{ "elem.userId": user.id }];
 
