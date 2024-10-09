@@ -32,26 +32,10 @@ const BookAppointmentPage = async ({
 
   if (!client) {
     return ErrorMessages("userNotFound");
-    /*  return (
-      <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6 flex flex-col items-center">
-        {ErrorMessages("thisAccountIsTerminated")}
-        <div className="inline-flex mt-4">
-          <LogoutButton>
-            <Button
-              size="lg"
-              variant="destructive"
-              className="w-full justify-start h-10 mb-1"
-            >
-              {t("logout")}
-            </Button>
-          </LogoutButton>
-        </div>
-      </div>
-    ); */
   }
 
-  const selectedTherapist = user?.selectedTherapist?.therapist
-    ? await getTherapistById(user?.selectedTherapist.therapist)
+  const selectedTherapist = client?.selectedTherapist?.therapist
+    ? await getTherapistById(client?.selectedTherapist.therapist)
     : null;
 
   if (client?.appointments?.length > 0) {
@@ -59,14 +43,18 @@ const BookAppointmentPage = async ({
   }
 
   const clientAcceptedIntroTherapist =
-    user?.selectedTherapist?.clientIntroTherapistSelectionStatus ===
-      "ACCEPTED" && user?.selectedTherapist.introCallDone;
+    client?.selectedTherapist?.clientIntroTherapistSelectionStatus ===
+      "ACCEPTED" && client?.selectedTherapist.introCallDone;
 
   const hasSelectedTherapist = client?.selectedTherapistHistory?.length > 0;
   const appointmentTypes = await getAppointmentTypesByIDs([
     APPOINTMENT_TYPE_ID_SHORT_SESSION,
     APPOINTMENT_TYPE_ID_LONG_SESSION,
   ]);
+
+  // TODO Testa nya flödet för att sätta introCallDone till true
+
+  // Gör det tydligare när mic är OFF i video samtal
 
   if (clientAcceptedIntroTherapist || hasSelectedTherapist) {
     return (

@@ -2,28 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { verifySignatureAppRouter } from "@upstash/qstash/nextjs";
 import Appointment from "@/models/Appointment";
 import connectToMongoDB from "@/lib/mongoose";
-import { APPOINTMENT_TYPE_ID_INTRO_SESSION } from "@/contants/config";
 import User from "@/models/User";
-import mongoose from "mongoose";
-
-const markIntroSessionComplete = async (session: any, userId: string) => {
-  return User.findByIdAndUpdate(
-    userId,
-    {
-      $set: { "selectedTherapist.introCallDone": true },
-    },
-    { session }
-  );
-};
 
 const updateAppointmentStatus = async (
-  session: any,
   appointmentId: string,
   statusUpdate: object
 ) => {
-  return Appointment.findByIdAndUpdate(appointmentId, statusUpdate, {
-    session,
-  });
+  return Appointment.findByIdAndUpdate(appointmentId, statusUpdate);
 };
 
 const determineStatusUpdate = (
@@ -57,34 +42,12 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
       );
     }
 
-    const { hostShowUp, participants, appointmentTypeId } = appointment;
+    const { hostShowUp, participants } = appointment;
     const participantShowUp = participants[0]?.showUp;
-    const userId = participants[0]?.userId;
 
     const statusUpdate = determineStatusUpdate(hostShowUp, participantShowUp);
 
-    if (
-      statusUpdate.status === "completed" &&
-      appointmentTypeId.toString() === APPOINTMENT_TYPE_ID_INTRO_SESSION
-    ) {
-      const session = await mongoose.startSession();
-
-      try {
-        session.startTransaction();
-
-        await markIntroSessionComplete(session, userId);
-
-        await updateAppointmentStatus(session, appointmentId, statusUpdate);
-
-        await session.commitTransaction();
-        session.endSession();
-      } catch (error) {
-        await session.abortTransaction();
-        throw error;
-      }
-    } else {
-      await updateAppointmentStatus(null, appointmentId, statusUpdate);
-    }
+    await updateAppointmentStatus(appointmentId, statusUpdate);
 
     return NextResponse.json({
       message: `Appointment ${appointmentId} status updated successfully.`,

@@ -6,13 +6,14 @@ import * as React from "react";
 import type { ToastActionElement, ToastProps } from "@/components/ui/toast";
 
 const TOAST_LIMIT = 1;
-const TOAST_REMOVE_DELAY = 1000000;
+const TOAST_REMOVE_DELAY = 5000;
 
 type ToasterToast = ToastProps & {
   id: string;
   title?: React.ReactNode;
   description?: React.ReactNode;
   action?: ToastActionElement;
+  position?: "top-center" | "default";
 };
 
 const actionTypes = {
@@ -137,9 +138,12 @@ function dispatch(action: Action) {
   });
 }
 
-type Toast = Omit<ToasterToast, "id">;
+type Toast = Omit<ToasterToast, "id"> & {
+  duration?: number | null; // Allow duration customization
+  position?: "top-center" | "default"; // Allow position customization
+};
 
-function toast({ ...props }: Toast) {
+function toast({ duration, position = "default", ...props }: Toast) {
   const id = genId();
 
   const update = (props: ToasterToast) =>
@@ -149,12 +153,18 @@ function toast({ ...props }: Toast) {
     });
   const dismiss = () => dispatch({ type: "DISMISS_TOAST", toastId: id });
 
+  // Handle duration for infinite or custom time
+  const toastDuration =
+    duration === Infinity ? undefined : duration || TOAST_REMOVE_DELAY;
+
   dispatch({
     type: "ADD_TOAST",
     toast: {
       ...props,
       id,
       open: true,
+      duration: toastDuration,
+      position,
       onOpenChange: (open) => {
         if (!open) dismiss();
       },

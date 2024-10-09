@@ -75,18 +75,15 @@ const VideoRoom = ({
 
       if (isLandscape) {
         if (isPreviewing) {
-          // In landscape mode and preview mode, increase height beyond 100vh
-          setContainerHeight("h-[calc(100vh+180px)]"); // Adjust this value as needed
+          setContainerHeight("h-[calc(100vh+180px)]");
         } else {
           if (isIphone) {
             setContainerHeight("h-[calc(100vh-40px)]");
           } else {
             setContainerHeight("h-[100vh]");
           }
-          // In landscape mode but not in preview, increase height by 50px
         }
       } else {
-        // Normal mode
         if (isIphone) {
           setContainerHeight("h-[calc(100vh-110px)]");
         } else {
@@ -102,10 +99,8 @@ const VideoRoom = ({
 
       if (isLandscape) {
         if (isPreviewing) {
-          // In landscape mode and preview mode, increase height beyond 100vh
           setContainerHeight("h-[calc(100vh+180px)]");
         } else {
-          // In landscape mode but not in preview, increase height by 50px
           if (isIphone) {
             setContainerHeight("h-[calc(100vh-40px)]");
           } else {
@@ -278,7 +273,6 @@ const VideoRoom = ({
           </div>
         </div>
 
-        {/* Join Meeting Button Fixed at the Bottom */}
         <div className="w-full p-4 flex justify-center ">
           <Button
             onClick={handleJoinCall}
@@ -314,7 +308,6 @@ const VideoRoom = ({
             className="absolute top-1 right-0 w-[120px] lg:w-[150px] z-10"
           />
         </div>
-        {/* Fix toolbar at the bottom */}
         <div className="absolute bottom-0 left-0  w-full md:max-w-7xl">
           <ToolBar
             roomName={sessionData.roomName}
@@ -326,6 +319,7 @@ const VideoRoom = ({
             isScreenSharing={isScreenSharing}
             startScreenSharing={startScreenSharing}
             stopScreenSharing={stopScreenSharing}
+            t={t}
           />
         </div>
       </div>

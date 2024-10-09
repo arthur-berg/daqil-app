@@ -10,6 +10,7 @@ import User from "@/models/User";
 import VideoSession from "@/models/VideoSession";
 import { getTranslations } from "next-intl/server";
 import connectToMongoDB from "@/lib/mongoose";
+import { getUserById } from "@/data/user";
 
 if (!process.env.VONAGE_APP_ID) {
   throw new Error("Missing config values for env params VONAGE_APP_ID ");
@@ -30,6 +31,8 @@ export const getSessionData = async (appointmentId: string) => {
     if (!appointment) {
       return { error: ErrorMessages("appointmentNotFound") };
     }
+
+    const client = await getUserById(appointment.participants[0].userId);
 
     if (appointment.status !== "confirmed") {
       return { error: ErrorMessages("appointmentNotConfirmed") };
@@ -63,29 +66,41 @@ export const getSessionData = async (appointmentId: string) => {
           updateOptions
         );
       }
+
+      if (
+        !client.selectedTherapist?.introCallDone &&
+        appointment.appointmentTypeId.toString() ===
+          APPOINTMENT_TYPE_ID_INTRO_SESSION &&
+        appointment.participants[0].showUp
+      ) {
+        await User.findByIdAndUpdate(client._id, {
+          $set: { "selectedTherapist.introCallDone": true },
+        });
+      }
     }
 
     if (isClient) {
       const participant = appointment.participants.find(
         (participant: any) =>
-          participant.userId.toString() === user.id.toString()
+          participant.userId.toString() === client._id.toString()
       );
 
       if (!participant) {
         return { error: ErrorMessages("userNotFound") };
       }
 
-      /*  if (
-        !user.selectedTherapist?.introCallDone &&
+      if (
+        !client.selectedTherapist?.introCallDone &&
         appointment.appointmentTypeId.toString() ===
-          APPOINTMENT_TYPE_ID_INTRO_SESSION
+          APPOINTMENT_TYPE_ID_INTRO_SESSION &&
+        appointment.hostShowUp
       ) {
-        await User.findByIdAndUpdate(user.id, {
+        await User.findByIdAndUpdate(client._id, {
           $set: { "selectedTherapist.introCallDone": true },
         });
-      } */
+      }
 
-      updateOptions.arrayFilters = [{ "elem.userId": user.id }];
+      updateOptions.arrayFilters = [{ "elem.userId": client._id }];
 
       if (!participant.showUp) {
         updatePayload["participants.$[elem].showUp"] = true;
