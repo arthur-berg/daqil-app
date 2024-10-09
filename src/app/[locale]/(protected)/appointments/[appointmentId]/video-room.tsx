@@ -13,6 +13,7 @@ import PreviewToolbar from "@/app/[locale]/(protected)/appointments/[appointment
 import { Button } from "@/components/ui/button";
 import { useLocale, useTranslations } from "next-intl";
 import Image from "next/image";
+import { revalidateBookAppointmentCache } from "@/actions/revalidateBookAppointmentCache";
 
 const VideoRoom = ({
   sessionData,
@@ -23,6 +24,7 @@ const VideoRoom = ({
         token?: string;
         appId?: string;
         roomName: string;
+        isIntroCall: boolean;
       }
     | { error: string };
 }) => {
@@ -62,6 +64,10 @@ const VideoRoom = ({
   const [isLandscape, setIsLandscape] = useState(false);
 
   const handleJoinCall = () => {
+    console.log("sessionData", sessionData);
+    if ("isIntroCall" in sessionData && sessionData?.isIntroCall) {
+      revalidateBookAppointmentCache();
+    }
     setIsPreviewing(false);
   };
 

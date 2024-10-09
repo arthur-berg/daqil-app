@@ -52,9 +52,7 @@ const BookAppointmentPage = async ({
     APPOINTMENT_TYPE_ID_LONG_SESSION,
   ]);
 
-  // TODO Testa nya flödet för att sätta introCallDone till true
-
-  // Gör det tydligare när mic är OFF i video samtal
+  // Fixa felet med att revalidatePath i actions för video session inte gör att book-appointment refetchar
 
   if (clientAcceptedIntroTherapist || hasSelectedTherapist) {
     return (

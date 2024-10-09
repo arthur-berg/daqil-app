@@ -8,7 +8,7 @@ import { addMinutes, subMinutes, isBefore, isAfter } from "date-fns";
 import Appointment from "@/models/Appointment";
 import User from "@/models/User";
 import VideoSession from "@/models/VideoSession";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import connectToMongoDB from "@/lib/mongoose";
 import { getUserById } from "@/data/user";
 import { revalidatePath } from "next/cache";
@@ -58,6 +58,10 @@ export const getSessionData = async (appointmentId: string) => {
     let updatePayload: Record<string, unknown> = {};
     const updateOptions: Record<string, unknown> = { new: true };
 
+    const isIntroCall =
+      appointment.appointmentTypeId.toString() ===
+      APPOINTMENT_TYPE_ID_INTRO_SESSION;
+
     if (isTherapist) {
       if (!appointment.hostShowUp) {
         updatePayload.hostShowUp = true;
@@ -70,14 +74,12 @@ export const getSessionData = async (appointmentId: string) => {
 
       if (
         !client.selectedTherapist?.introCallDone &&
-        appointment.appointmentTypeId.toString() ===
-          APPOINTMENT_TYPE_ID_INTRO_SESSION &&
+        isIntroCall &&
         appointment.participants[0].showUp
       ) {
         await User.findByIdAndUpdate(client._id, {
           $set: { "selectedTherapist.introCallDone": true },
         });
-        revalidatePath("/book-appointment");
       }
     }
 
@@ -93,14 +95,12 @@ export const getSessionData = async (appointmentId: string) => {
 
       if (
         !client.selectedTherapist?.introCallDone &&
-        appointment.appointmentTypeId.toString() ===
-          APPOINTMENT_TYPE_ID_INTRO_SESSION &&
+        isIntroCall &&
         appointment.hostShowUp
       ) {
         await User.findByIdAndUpdate(client._id, {
           $set: { "selectedTherapist.introCallDone": true },
         });
-        revalidatePath("/book-appointment");
       }
 
       updateOptions.arrayFilters = [{ "elem.userId": client._id }];
@@ -137,6 +137,7 @@ export const getSessionData = async (appointmentId: string) => {
         token: data.token,
         appId: data.appId,
         roomName: session.roomName,
+        isIntroCall,
       };
     } else {
       console.log("Session not found. Creating a new one...");
@@ -155,6 +156,7 @@ export const getSessionData = async (appointmentId: string) => {
         sessionId: data?.sessionId,
         token: data?.token,
         appId: data?.appId,
+        isIntroCall,
       };
     }
   } catch (error: any) {
