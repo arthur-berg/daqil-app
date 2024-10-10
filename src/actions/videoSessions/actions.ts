@@ -8,10 +8,9 @@ import { addMinutes, subMinutes, isBefore, isAfter } from "date-fns";
 import Appointment from "@/models/Appointment";
 import User from "@/models/User";
 import VideoSession from "@/models/VideoSession";
-import { getLocale, getTranslations } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import connectToMongoDB from "@/lib/mongoose";
 import { getUserById } from "@/data/user";
-import { revalidatePath } from "next/cache";
 
 if (!process.env.VONAGE_APP_ID) {
   throw new Error("Missing config values for env params VONAGE_APP_ID ");

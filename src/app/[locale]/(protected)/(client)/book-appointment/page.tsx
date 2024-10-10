@@ -52,8 +52,6 @@ const BookAppointmentPage = async ({
     APPOINTMENT_TYPE_ID_LONG_SESSION,
   ]);
 
-  // Fixa felet med att revalidatePath i actions för video session inte gör att book-appointment refetchar
-
   if (clientAcceptedIntroTherapist || hasSelectedTherapist) {
     return (
       <div className="max-w-4xl mx-auto">

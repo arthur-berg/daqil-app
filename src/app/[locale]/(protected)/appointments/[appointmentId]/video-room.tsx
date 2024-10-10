@@ -64,7 +64,6 @@ const VideoRoom = ({
   const [isLandscape, setIsLandscape] = useState(false);
 
   const handleJoinCall = () => {
-    console.log("sessionData", sessionData);
     if ("isIntroCall" in sessionData && sessionData?.isIntroCall) {
       revalidateBookAppointmentCache();
     }
