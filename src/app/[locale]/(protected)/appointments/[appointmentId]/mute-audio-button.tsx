@@ -13,6 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useEffect, useRef, useState } from "react";
+
 import useDevices from "@/hooks/use-devices";
 
 export default function MuteAudioButton({
