@@ -91,6 +91,7 @@ export const setupAccount = async (
     currentPassword,
     personalInfo,
     settings,
+    termsAccepted,
   } = validatedFields.data;
 
   const existingUser = await getUserByEmail(email);
@@ -153,7 +154,7 @@ export const setupAccount = async (
     timeZone: settings.timeZone,
   };
 
-  await User.findByIdAndUpdate(existingUser._id, {
+  const updateFields: any = {
     password: hashedPassword,
     isAccountSetupDone: true,
     firstName: capitalizedFirstName,
@@ -167,7 +168,14 @@ export const setupAccount = async (
         description: "",
       },
     },
-  });
+  };
+
+  if (termsAccepted) {
+    updateFields.termsAccepted = true;
+    updateFields.termsAcceptedAt = new Date();
+  }
+
+  await User.findByIdAndUpdate(existingUser._id, updateFields);
 
   await VerificationToken.findByIdAndDelete(existingToken._id);
 

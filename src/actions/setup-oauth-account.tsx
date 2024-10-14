@@ -24,7 +24,8 @@ export const setupOAuthAccount = async (
     return { error: ErrorMessages("invalidFields") };
   }
 
-  const { firstName, lastName, personalInfo, settings } = validatedFields.data;
+  const { firstName, lastName, personalInfo, settings, termsAccepted } =
+    validatedFields.data;
 
   const capitalizedFirstName = {
     en: capitalizeFirstLetter(firstName.en),
@@ -48,27 +49,30 @@ export const setupOAuthAccount = async (
     timeZone: settings.timeZone,
   };
 
-  try {
-    // Update the user information with the submitted values
-    const updatedUser = await User.findByIdAndUpdate(
-      userId,
-      {
-        firstName: capitalizedFirstName,
-        lastName: capitalizedLastName,
-        personalInfo: updatedPersonalInfo,
-        settings: updatedSettings,
-        isAccountSetupDone: true,
-        therapistWorkProfile: {
-          en: { title: "Psychologist", description: "" },
-          ar: {
-            title:
-              updatedPersonalInfo.sex === "MALE" ? "طبيب نفسي" : "طبيبة نفسية",
-            description: "",
-          },
-        },
+  const updateFields: any = {
+    isAccountSetupDone: true,
+    firstName: capitalizedFirstName,
+    lastName: capitalizedLastName,
+    personalInfo: updatedPersonalInfo,
+    settings: updatedSettings,
+    therapistWorkProfile: {
+      en: { title: "Psychologist", description: "" },
+      ar: {
+        title: updatedPersonalInfo.sex === "MALE" ? "طبيب نفسي" : "طبيبة نفسية",
+        description: "",
       },
-      { new: true }
-    );
+    },
+  };
+
+  if (termsAccepted) {
+    updateFields.termsAccepted = true;
+    updateFields.termsAcceptedAt = new Date();
+  }
+
+  try {
+    const updatedUser = await User.findByIdAndUpdate(userId, updateFields, {
+      new: true,
+    });
 
     if (!updatedUser) {
       return { error: ErrorMessages("userNotFound") };

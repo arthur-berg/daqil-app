@@ -44,6 +44,7 @@ import { Label } from "../ui/label";
 import { CaretSortIcon } from "@radix-ui/react-icons";
 import { BeatLoader } from "react-spinners";
 import { useGetCountries } from "@/hooks/use-get-countries";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const getMappedTimezone = (ianaTimezone: string) => {
   return allTimezones[ianaTimezone] ? ianaTimezone : "Asia/Dubai";
@@ -133,6 +134,7 @@ export const SetupForm = () => {
       settings: {
         timeZone: defaultTimezone,
       },
+      termsAccepted: false,
     },
   });
 
@@ -510,6 +512,35 @@ export const SetupForm = () => {
                     <p className="text-xs text-muted-foreground">
                       {t("minimum6Characters")}
                     </p>{" "}
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="termsAccepted"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="flex items-center">
+                      <FormControl>
+                        <Checkbox
+                          className="mr-2"
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                      <FormLabel>
+                        {t("iAcceptThe")}{" "}
+                        <a
+                          href={`${process.env.NEXT_PUBLIC_APP_URL}/terms-and-conditions`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="underline"
+                        >
+                          {t("termsAndConditions")}
+                        </a>
+                      </FormLabel>
+                    </div>
                     <FormMessage />
                   </FormItem>
                 )}
