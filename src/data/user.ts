@@ -104,6 +104,7 @@ export const getClientById = async (id: string) => {
       selectedTherapist: client.selectedTherapist.therapist,
       therapistAppointmentCounts,
       personalInfo: client.personalInfo,
+      appointments: client.appointments,
     };
   } catch (error) {
     console.error("Error fetching client by ID:", error);

@@ -17,7 +17,7 @@ export const POST = async (req: NextRequest) => {
 
     const token = authHeader.split(" ")[1];
 
-    const decoded = jwt.verify(token, SIGNATURE_SECRET, {
+    jwt.verify(token, SIGNATURE_SECRET, {
       algorithms: ["HS256"],
     });
 

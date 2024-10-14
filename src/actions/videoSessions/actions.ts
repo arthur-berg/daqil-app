@@ -220,12 +220,15 @@ export const startVideoRecording = async (
       journalNoteId: data.id,
     });
 
-    await scheduleStopRecording(
+    // Todo, add this back when the recording is stopped
+    // For now we will manually stop it from My Clients for testing purposes
+
+    /*  await scheduleStopRecording(
       sessionId,
       archiveId,
       appointmentData.endDate,
       appointmentData.id
-    );
+    ); */
 
     return { success: SuccessMessages("recordingStarted") };
   } catch (error) {

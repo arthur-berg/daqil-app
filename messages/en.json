@@ -515,15 +515,29 @@
     "close": "Close",
     "deletingDiscountCode": "Deleting discount code..."
   },
-  "MyClientsPage": {
-    "noClientsFound": "No clients found.",
-    "goBackToClients": "Go back to clients overview",
-    "goBackToClient": "Go back to client profile",
-    "myClients": "My Clients",
-    "name":"Name",
-    "email": "Email",
-    "totalAppointments":"Total appointments"
-  },
+ "MyClientsPage": {
+  "generateJournalNote": "Generate Journal Note",
+  "noClientsFound": "No clients found.",
+  "goBackToClients": "Go back to clients overview",
+  "goBackToClient": "Go back to client profile",
+  "myClients": "My Clients",
+  "name": "Name",
+  "email": "Email",
+  "totalAppointments": "Total appointments",
+  "currentTherapist": "Current Therapist",
+  "none": "None",
+  "appointments": "Appointments",
+  "therapist": "Therapist",
+  "time": "Time",
+  "status": "Status",
+  "journalNote": "Journal Note",
+  "summary": "Summary",
+  "therapistHistory": "Therapist History",
+  "therapistPeriod": "Period",
+  "therapistAppointments": "Appointments",
+  "scheduleAppointment": "Schedule Appointment",
+  "period": "Period"
+},
   "PaymentSuccessPage": {
     "paymentLinkSent": "A booking confirmation and a payment link have been sent to the client's email.",
     "paymentExpiryDateClient": "The client will need to complete the payment no later than 1 hour before the appointment starts.",
