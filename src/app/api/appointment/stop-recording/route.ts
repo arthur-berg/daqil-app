@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifySignatureAppRouter } from "@upstash/qstash/nextjs";
 import connectToMongoDB from "@/lib/mongoose";
-import { stopArchive } from "@/lib/vonage"; // import the stopArchive function from your Vonage helper
+import { stopArchive } from "@/lib/vonage";
 
 export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
   try {

@@ -21,12 +21,16 @@ export const POST = async (req: NextRequest) => {
       algorithms: ["HS256"],
     });
 
-    // Token is valid, handle the incoming webhook data
     const body = await req.json();
-    console.log("Incoming data:", body);
+    const { id, status } = body;
 
-    // Process the recording event (e.g., trigger transcription)
-    return NextResponse.json({ message: "Success" }, { status: 200 });
+    console.log(`Received archive event. Archive ID: ${id}, Status: ${status}`);
+
+    if (status === "available") {
+      console.log(`Archive ${id} is ready for download.`);
+    }
+
+    return NextResponse.json({ message: "Callback received" }, { status: 200 });
   } catch (error) {
     console.error("Something went wrong:", error);
     return NextResponse.json(
