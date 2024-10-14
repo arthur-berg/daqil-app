@@ -15,7 +15,7 @@ import {
   schedulePaymentReminders,
   scheduleStatusUpdateJob,
 } from "@/lib/schedule-appointment-jobs";
-import { updateAppointments } from "./utils";
+import { checkTherapistAvailability, updateAppointments } from "./utils";
 import connectToMongoDB from "@/lib/mongoose";
 import { sendNonPaidBookingConfirmationEmail } from "@/lib/mail";
 import { getFullName } from "@/utils/formatName";
@@ -67,6 +67,21 @@ export const scheduleAppointment = async (
     return { error: ErrorMessages("appointmentTypeNotExist") };
   }
 
+  const endDate = new Date(
+    startDate.getTime() + appointmentType.durationInMinutes * 60000
+  );
+
+  const availabilityCheck = await checkTherapistAvailability(
+    therapist,
+    startDate,
+    endDate,
+    appointmentType
+  );
+
+  if (!availabilityCheck.available) {
+    return { error: availabilityCheck.message };
+  }
+
   let appointmentCost: Record<string, unknown> = {};
 
   if ("price" in appointmentType) {
@@ -76,10 +91,6 @@ export const scheduleAppointment = async (
   if ("credits" in appointmentType) {
     appointmentCost.price = appointmentType.price;
   }
-
-  const endDate = new Date(
-    startDate.getTime() + appointmentType.durationInMinutes * 60000
-  );
 
   let transactionCommitted = false;
 

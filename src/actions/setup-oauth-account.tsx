@@ -6,6 +6,7 @@ import User from "@/models/User";
 import { getTranslations } from "next-intl/server";
 import { capitalizeFirstLetter } from "@/utils";
 import { getUserById } from "@/data/user";
+import { revalidatePath } from "next/cache";
 
 export const setupOAuthAccount = async (
   values: z.infer<typeof OAuthAccountSetupSchema>,
@@ -72,6 +73,8 @@ export const setupOAuthAccount = async (
     if (!updatedUser) {
       return { error: ErrorMessages("userNotFound") };
     }
+
+    revalidatePath("/settings");
 
     return { success: SuccessMessages("accountSetupComplete") };
   } catch (error) {

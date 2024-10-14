@@ -87,7 +87,7 @@ export const cancelAppointment = async (
         return { error: ErrorMessages("notAuthorized") };
       }
 
-      // Check if the appointment is eligible for a refund (more than 48 hours away)
+      // Check if the appointment is eligible for a refund (more than 24 hours away)
       const hoursUntilAppointment = differenceInHours(
         new Date(appointment.startDate),
         new Date()
