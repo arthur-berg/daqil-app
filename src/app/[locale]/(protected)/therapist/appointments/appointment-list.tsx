@@ -189,13 +189,13 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
           {t("yourNextAppointment")}
         </h2>
         <div className="text-sm text-gray-700">
-          <p>
+          <div>
             <strong>{t("title")}:</strong> {nextAppointment.title}
-          </p>
-          <p>
+          </div>
+          <div>
             <strong>{t("start")}:</strong>{" "}
             {format(new Date(nextAppointment.startDate), "EEEE, MMMM d, HH:mm")}
-          </p>
+          </div>
           <p>
             <strong>{t("participants")}:</strong>{" "}
             {nextAppointment.participants
@@ -207,12 +207,12 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
 
           {isPending && (
             <div className="mt-4 text-yellow-700">
-              <p>
+              <div>
                 <div> {t("meetingNotPaidMessage")}</div>{" "}
                 {t("meetingPaymentDeadline", {
                   timeLimit: 1, // 1 hour before meeting
                 })}
-              </p>
+              </div>
             </div>
           )}
 
@@ -232,15 +232,15 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
             {!isJoinEnabled && (
               <>
                 {tenMinutesPassedAfterStart ? (
-                  <p className="text-sm text-gray-500 mt-2 text-center">
+                  <div className="text-sm text-gray-500 mt-2 text-center">
                     {t("tooLateToJoin")}
-                  </p>
+                  </div>
                 ) : (
-                  <p className="text-sm text-gray-500 mt-2 text-center">
+                  <div className="text-sm text-gray-500 mt-2 text-center">
                     {t("joinDisabledMessage", { time: 20 })}
                     <br />
                     {t("refreshMessage")}
-                  </p>
+                  </div>
                 )}
               </>
             )}

@@ -20,7 +20,7 @@ import connectToMongoDB from "@/lib/mongoose";
 import { sendNonPaidBookingConfirmationEmail } from "@/lib/mail";
 import { getFullName } from "@/utils/formatName";
 import { formatInTimeZone } from "date-fns-tz";
-import { getUserById } from "@/data/user";
+import { getTherapistById, getUserById } from "@/data/user";
 
 export const scheduleAppointment = async (
   values: z.input<typeof AppointmentSchema>
@@ -39,7 +39,7 @@ export const scheduleAppointment = async (
     };
   }
 
-  const therapist = await getUserById(user.id);
+  const therapist = await getTherapistById(user.id);
 
   const therapistId = therapist._id.toString();
 
@@ -136,8 +136,6 @@ export const scheduleAppointment = async (
       paymentExpiryDate,
       locale
     );
-
-    // Check and update client's selected therapist
 
     if (
       client.selectedTherapist &&
@@ -265,7 +263,7 @@ export const scheduleAppointment = async (
     );
 
     return {
-      appointmentId,
+      appointmentId: appointmentId.toString(),
       success: SuccessMessages("appointmentCreated"),
     };
   } catch (error) {
