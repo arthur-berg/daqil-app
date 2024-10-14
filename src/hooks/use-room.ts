@@ -1,6 +1,7 @@
 "use client";
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useRef, useCallback, useEffect, useTransition } from "react";
 import _ from "lodash";
+import { startVideoRecording } from "@/actions/videoSessions/actions";
 
 interface Credentials {
   appId: string;
@@ -27,6 +28,7 @@ interface PublisherOptions {
 export default function useRoom() {
   let roomRef = useRef<any>(null);
   const publisherOptionsRef = useRef<PublisherOptions>({});
+  const [isPending, startTransition] = useTransition();
   const [camera, setCamera] = useState(null);
   const [screen, setScreen] = useState(null);
   const [localParticipant, setLocalParticipant] = useState<any>(null);
@@ -141,11 +143,26 @@ export default function useRoom() {
     }
   }, []);
 
+  const startRecording = useCallback(
+    async (sessionId: string, appointmentData: any, token: string) => {
+      try {
+        startTransition(async () => {
+          await startVideoRecording(sessionId, appointmentData, token);
+        });
+      } catch (error) {
+        console.error("Error starting recording:", error);
+      }
+    },
+    []
+  );
+
   const createCall = useCallback(
     async (
       { appId, sessionId, token }: Credentials,
       roomContainer: any,
       userName: string,
+      appointmentData?: any,
+      videoRecordingStarted?: boolean,
       videoFilter?: VideoFilter,
       publisherOptions?: PublisherOptions
     ) => {
@@ -154,23 +171,20 @@ export default function useRoom() {
       }
       const VideoExpress = await import("@vonage/video-express");
 
-      // Create a self-video container inside the roomContainer
       const selfVideoContainer = document.createElement("div");
       const isMobile = window.innerWidth <= 768;
 
       if (isMobile) {
-        // Mobile view adjustments: smaller video and centered within the roomContainer
-        selfVideoContainer.style.position = "absolute"; // Change to absolute for positioning relative to roomContainer
+        selfVideoContainer.style.position = "absolute";
         selfVideoContainer.style.bottom = "90px";
         selfVideoContainer.style.right = "0";
-        selfVideoContainer.style.width = "133px"; // Smaller size for mobile
+        selfVideoContainer.style.width = "133px";
         selfVideoContainer.style.height = "105px";
       } else {
-        // Desktop view adjustments: bottom-right corner within the roomContainer
-        selfVideoContainer.style.position = "absolute"; // Change to absolute for positioning relative to roomContainer
+        selfVideoContainer.style.position = "absolute";
         selfVideoContainer.style.bottom = "0";
         selfVideoContainer.style.right = "0";
-        selfVideoContainer.style.width = "207px"; // Adjust size for desktop
+        selfVideoContainer.style.width = "207px";
         selfVideoContainer.style.height = "168px";
       }
 
@@ -179,14 +193,13 @@ export default function useRoom() {
 
       selfVideoContainer.classList.add("self-video-container");
 
-      // Append the selfVideoContainer to the roomContainer
       roomContainer.appendChild(selfVideoContainer);
 
       roomRef.current = new VideoExpress.Room({
         apiKey: appId,
         sessionId: sessionId,
         token: token,
-        roomContainer: "roomContainer", // This is the parent container
+        roomContainer: "roomContainer",
         maxVideoParticipantsOnScreen: 2,
         participantName: userName,
         managedLayoutOptions: {
@@ -241,6 +254,9 @@ export default function useRoom() {
           setCamera(roomRef.current!.camera);
           setScreen(roomRef.current!.screen);
           addLocalParticipant({ room: roomRef.current! });
+          if (!videoRecordingStarted) {
+            startRecording(sessionId, appointmentData, token);
+          }
         })
         .catch((error: any) => console.log(error));
     },

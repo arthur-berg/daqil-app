@@ -538,6 +538,7 @@
     "goToAppointments": "الذهاب إلى المواعيد"
   },
   "ErrorMessages": {
+    "recordingFailed": "فشل بدء التسجيل",
     "logout": "تسجيل الخروج",
     "thisAccountIsTerminated": "This account has been deleted. Please logout.",
     "onlyDaqilEmailsAllowed": "يُسمح فقط باستخدام بريد DAQIL الإلكتروني",
@@ -583,6 +584,7 @@
     "appointmentNotConfirmed": "لم يتم تأكيد الموعد."
   },
   "SuccessMessages": {
+    "recordingStarted": "تم بدء التسجيل بنجاح",
     "therapistCreated": "تم إنشاء حساب الأخصائي النفسي بنجاح",
     "paymentSettingsSaved": "تم حفظ إعدادات الدفع",
     "accountSetupComplete": "اكتمل إعداد الحساب",

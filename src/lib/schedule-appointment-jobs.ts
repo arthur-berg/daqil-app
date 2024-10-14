@@ -1,6 +1,37 @@
 import { qstashClient, scheduleTask } from "@/lib/qstash";
 import ScheduledTask from "@/models/ScheduledTask";
-import { addMinutes, isAfter, subHours, subMinutes } from "date-fns";
+import {
+  addMinutes,
+  addSeconds,
+  isAfter,
+  subHours,
+  subMinutes,
+} from "date-fns";
+
+export const scheduleStopRecording = async (
+  sessionId: string,
+  archiveId: string,
+  appointmentEndTime: Date,
+  appointmentId: string
+) => {
+  const now = new Date();
+  const tenSecondsAfter = addSeconds(new Date(now), 10);
+  const unixTimestampInSeconds = Math.floor(
+    appointmentEndTime.getTime() / 1000
+  );
+
+  const taskId = await scheduleTask(
+    `${process.env.QSTASH_API_URL}/stop-video-recording`,
+    { sessionId, archiveId },
+    Math.floor(tenSecondsAfter.getTime() / 1000)
+  );
+
+  await ScheduledTask.create({
+    appointmentId: appointmentId,
+    type: "stopRecording",
+    taskId,
+  });
+};
 
 export const schedulePaymentReminders = async (
   appointmentId: string,

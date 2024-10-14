@@ -16,6 +16,11 @@ const appointmentSchema = new Schema(
       required: true,
       index: true,
     },
+    journalNoteId: {
+      type: Schema.Types.ObjectId,
+      ref: "JournalNote",
+      required: false,
+    },
     hostUserId: {
       type: Schema.Types.ObjectId,
       ref: "User",

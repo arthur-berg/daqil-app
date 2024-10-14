@@ -21,6 +21,7 @@ import { sendNonPaidBookingConfirmationEmail } from "@/lib/mail";
 import { getFullName } from "@/utils/formatName";
 import { formatInTimeZone } from "date-fns-tz";
 import { getTherapistById, getUserById } from "@/data/user";
+import { revalidatePath } from "next/cache";
 
 export const scheduleAppointment = async (
   values: z.input<typeof AppointmentSchema>
@@ -261,6 +262,8 @@ export const scheduleAppointment = async (
       client.email,
       appointmentDetails
     );
+
+    revalidatePath("/therapist/appointments");
 
     return {
       appointmentId: appointmentId.toString(),

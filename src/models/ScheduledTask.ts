@@ -15,6 +15,7 @@ const scheduledTask = new Schema(
         "smsReminder",
         "paymentReminder",
         "meetingLink",
+        "stopRecording",
       ],
     },
     taskId: { type: String },

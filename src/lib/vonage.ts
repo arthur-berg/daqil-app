@@ -10,7 +10,7 @@ if (!apiKey || !apiSecret || !appId || !privateKey) {
 }
 
 import { Auth } from "@vonage/auth";
-import { MediaMode, Video } from "@vonage/video";
+import { ArchiveOutputMode, MediaMode, Video } from "@vonage/video";
 
 const credentials = new Auth({
   apiKey: apiKey,
@@ -26,7 +26,7 @@ const videoClient = new Video(credentials, options);
 export const createSessionAndToken = async () => {
   try {
     const session = await videoClient.createSession({
-      mediaMode: MediaMode.RELAYED,
+      mediaMode: MediaMode.ROUTED,
     });
 
     const token = videoClient.generateClientToken(session.sessionId);
@@ -48,4 +48,42 @@ export const generateToken = (sessionId: string) => {
     token: token,
     appId: appId,
   };
+};
+
+export const startArchive = async (
+  sessionId: string,
+  options: {
+    hasAudio: boolean;
+    hasVideo: boolean;
+    outputMode?: ArchiveOutputMode;
+  }
+) => {
+  try {
+    const archiveOptions = {
+      name: `Archive for session ${sessionId}`,
+      hasAudio: options.hasAudio,
+      hasVideo: options.hasVideo,
+      outputMode: options.outputMode || ArchiveOutputMode.COMPOSED,
+    };
+
+    const archive = await videoClient.startArchive(sessionId, archiveOptions);
+
+    console.log("Archive started successfully:", archive.id);
+
+    return archive;
+  } catch (error) {
+    console.error("Error starting archive:", error);
+    throw new Error("Failed to start archive");
+  }
+};
+
+export const stopArchive = async (archiveId: string) => {
+  try {
+    const archive = await videoClient.stopArchive(archiveId);
+    console.log("Archive stopped successfully:", archive);
+    return archive;
+  } catch (error) {
+    console.error("Error stopping archive:", error);
+    throw new Error("Failed to stop archive");
+  }
 };

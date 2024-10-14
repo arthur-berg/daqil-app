@@ -25,6 +25,8 @@ const VideoRoom = ({
         appId?: string;
         roomName: string;
         isIntroCall: boolean;
+        appointmentData?: any;
+        videoRecordingStarted?: boolean;
       }
     | { error: string };
 }) => {
@@ -193,7 +195,13 @@ const VideoRoom = ({
         sessionId: sessionData.sessionId,
         token: sessionData.token,
       } as any;
-      createCall(credentials, roomContainer.current, userName);
+      createCall(
+        credentials,
+        roomContainer.current,
+        userName,
+        sessionData.appointmentData,
+        sessionData.videoRecordingStarted
+      );
     }
 
     return () => {
