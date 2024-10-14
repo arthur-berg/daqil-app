@@ -106,7 +106,7 @@ export default function MuteVideoButton({
               <TooltipContent>{title}</TooltipContent>
             </Tooltip>
 
-            <DropdownMenu>
+            {/* <DropdownMenu>
               <DropdownMenuTrigger onClick={handleToggle}>
                 <MdArrowDropDown className="w-8 h-8 text-white cursor-pointer" />
               </DropdownMenuTrigger>
@@ -120,7 +120,7 @@ export default function MuteVideoButton({
                   </DropdownMenuItem>
                 ))}
               </DropdownMenuContent>
-            </DropdownMenu>
+            </DropdownMenu> */}
           </div>
         </TooltipProvider>
       </>

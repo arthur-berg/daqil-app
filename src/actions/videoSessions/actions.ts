@@ -10,6 +10,7 @@ import User from "@/models/User";
 import VideoSession from "@/models/VideoSession";
 import { getTranslations } from "next-intl/server";
 import connectToMongoDB from "@/lib/mongoose";
+import { getUserById } from "@/data/user";
 
 if (!process.env.VONAGE_APP_ID) {
   throw new Error("Missing config values for env params VONAGE_APP_ID ");
@@ -30,6 +31,8 @@ export const getSessionData = async (appointmentId: string) => {
     if (!appointment) {
       return { error: ErrorMessages("appointmentNotFound") };
     }
+
+    const client = await getUserById(appointment.participants[0].userId);
 
     if (appointment.status !== "confirmed") {
       return { error: ErrorMessages("appointmentNotConfirmed") };
@@ -54,6 +57,10 @@ export const getSessionData = async (appointmentId: string) => {
     let updatePayload: Record<string, unknown> = {};
     const updateOptions: Record<string, unknown> = { new: true };
 
+    const isIntroCall =
+      appointment.appointmentTypeId.toString() ===
+      APPOINTMENT_TYPE_ID_INTRO_SESSION;
+
     if (isTherapist) {
       if (!appointment.hostShowUp) {
         updatePayload.hostShowUp = true;
@@ -65,12 +72,11 @@ export const getSessionData = async (appointmentId: string) => {
       }
 
       if (
-        !user.selectedTherapist?.introCallDone &&
-        appointment.appointmentTypeId.toString() ===
-          APPOINTMENT_TYPE_ID_INTRO_SESSION &&
+        !client.selectedTherapist?.introCallDone &&
+        isIntroCall &&
         appointment.participants[0].showUp
       ) {
-        await User.findByIdAndUpdate(user.id, {
+        await User.findByIdAndUpdate(client._id, {
           $set: { "selectedTherapist.introCallDone": true },
         });
       }
@@ -79,7 +85,7 @@ export const getSessionData = async (appointmentId: string) => {
     if (isClient) {
       const participant = appointment.participants.find(
         (participant: any) =>
-          participant.userId.toString() === user.id.toString()
+          participant.userId.toString() === client._id.toString()
       );
 
       if (!participant) {
@@ -87,17 +93,16 @@ export const getSessionData = async (appointmentId: string) => {
       }
 
       if (
-        !user.selectedTherapist?.introCallDone &&
-        appointment.appointmentTypeId.toString() ===
-          APPOINTMENT_TYPE_ID_INTRO_SESSION &&
+        !client.selectedTherapist?.introCallDone &&
+        isIntroCall &&
         appointment.hostShowUp
       ) {
-        await User.findByIdAndUpdate(user.id, {
+        await User.findByIdAndUpdate(client._id, {
           $set: { "selectedTherapist.introCallDone": true },
         });
       }
 
-      updateOptions.arrayFilters = [{ "elem.userId": user.id }];
+      updateOptions.arrayFilters = [{ "elem.userId": client._id }];
 
       if (!participant.showUp) {
         updatePayload["participants.$[elem].showUp"] = true;
@@ -131,6 +136,7 @@ export const getSessionData = async (appointmentId: string) => {
         token: data.token,
         appId: data.appId,
         roomName: session.roomName,
+        isIntroCall,
       };
     } else {
       console.log("Session not found. Creating a new one...");
@@ -149,6 +155,7 @@ export const getSessionData = async (appointmentId: string) => {
         sessionId: data?.sessionId,
         token: data?.token,
         appId: data?.appId,
+        isIntroCall,
       };
     }
   } catch (error: any) {

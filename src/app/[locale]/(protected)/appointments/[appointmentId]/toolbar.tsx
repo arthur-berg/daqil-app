@@ -5,18 +5,7 @@ import EndCallButton from "./end-call-button";
 import { useRouter } from "@/navigation";
 import { useToast } from "@/components/ui/use-toast";
 
-const ToolBar = ({
-  room,
-  connected,
-  cameraPublishing,
-  isScreenSharing,
-  startScreenSharing,
-  stopScreenSharing,
-  participants,
-  localParticipant,
-  roomName,
-  t,
-}: any) => {
+const ToolBar = ({ room, connected, cameraPublishing, t }: any) => {
   const [hasAudio, setHasAudio] = useState(true);
   const [hasVideo, setHasVideo] = useState(true);
   const [areAllMuted, setAllMuted] = useState(false);

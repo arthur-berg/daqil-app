@@ -50,7 +50,7 @@ export default async function LocaleLayout({
             <SpeedInsights />
           </>
         )}
-        {/*   <TidioChat /> */}
+        <TidioChat />
       </body>
     </html>
   );

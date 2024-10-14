@@ -13,6 +13,7 @@ import PreviewToolbar from "@/app/[locale]/(protected)/appointments/[appointment
 import { Button } from "@/components/ui/button";
 import { useLocale, useTranslations } from "next-intl";
 import Image from "next/image";
+import { revalidateBookAppointmentCache } from "@/actions/revalidateBookAppointmentCache";
 
 const VideoRoom = ({
   sessionData,
@@ -23,6 +24,7 @@ const VideoRoom = ({
         token?: string;
         appId?: string;
         roomName: string;
+        isIntroCall: boolean;
       }
     | { error: string };
 }) => {
@@ -62,6 +64,9 @@ const VideoRoom = ({
   const [isLandscape, setIsLandscape] = useState(false);
 
   const handleJoinCall = () => {
+    if ("isIntroCall" in sessionData && sessionData?.isIntroCall) {
+      revalidateBookAppointmentCache();
+    }
     setIsPreviewing(false);
   };
 
@@ -170,7 +175,7 @@ const VideoRoom = ({
         previewPublisherRef.current.destroy();
       }
     };
-  }, [isPreviewing, toast]);
+  }, [isPreviewing, toast]); // eslint-disable-line
 
   useEffect(() => {
     if (!isPreviewing && sessionData && !effectRun.current) {
@@ -267,8 +272,21 @@ const VideoRoom = ({
                   return newState;
                 });
               }}
+              changeAudioSource={(audioDeviceId: any) => {
+                if (previewPublisherRef.current) {
+                  previewPublisherRef.current.setAudioDevice(audioDeviceId);
+                }
+              }}
+              getAudioSource={async () => {
+                if (previewPublisherRef.current) {
+                  const audioDevice =
+                    await previewPublisherRef.current.getAudioDevice();
+                  return audioDevice.deviceId;
+                }
+              }}
               hasAudio={hasAudio}
               hasVideo={hasVideo}
+              cameraPublishing={cameraPublishing}
             />
           </div>
         </div>
@@ -310,15 +328,9 @@ const VideoRoom = ({
         </div>
         <div className="absolute bottom-0 left-0  w-full md:max-w-7xl">
           <ToolBar
-            roomName={sessionData.roomName}
             room={room}
-            participants={participants}
-            localParticipant={localParticipant}
             connected={connected}
             cameraPublishing={cameraPublishing}
-            isScreenSharing={isScreenSharing}
-            startScreenSharing={startScreenSharing}
-            stopScreenSharing={stopScreenSharing}
             t={t}
           />
         </div>
