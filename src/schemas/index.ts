@@ -239,6 +239,9 @@ export const SetupAccountSchema = z.object({
     message: "Minimum 6 characters required",
   }),
   currentPassword: z.optional(z.string().min(6)),
+  termsAccepted: z.boolean().refine((val) => val === true, {
+    message: "You must accept the Terms and Conditions.",
+  }),
   firstName: z.object({
     en: z.string().min(1, {
       message: "First name (English) is required",
@@ -283,6 +286,9 @@ export const OAuthAccountSetupSchema = z.object({
       message: "Last name (English) is required",
     }),
     ar: z.string().optional(),
+  }),
+  termsAccepted: z.boolean().refine((val) => val === true, {
+    message: "You must accept the Terms and Conditions.",
   }),
   personalInfo: z.object({
     phoneNumber: z.string(),

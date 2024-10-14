@@ -45,6 +45,7 @@ import { useCurrentUser } from "@/hooks/use-current-user";
 import { useRouter } from "@/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import { useGetCountries } from "@/hooks/use-get-countries";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const getGmtOffset = (timezone: string) => {
   const now = new Date();
@@ -109,6 +110,7 @@ const OAuthAccountSetupForm = () => {
       settings: {
         timeZone: defaultTimezone,
       },
+      termsAccepted: false,
     },
   });
 
@@ -422,6 +424,35 @@ const OAuthAccountSetupForm = () => {
                           </Command>
                         </PopoverContent>
                       </Popover>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="termsAccepted"
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="flex items-center">
+                        <FormControl>
+                          <Checkbox
+                            className="mr-2"
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </FormControl>
+                        <FormLabel>
+                          {t("iAcceptThe")}{" "}
+                          <a
+                            href={`${process.env.NEXT_PUBLIC_APP_URL}/terms-and-conditions`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="underline"
+                          >
+                            {t("termsAndConditions")}
+                          </a>
+                        </FormLabel>
+                      </div>
                       <FormMessage />
                     </FormItem>
                   )}

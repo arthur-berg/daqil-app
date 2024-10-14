@@ -131,6 +131,16 @@ const userSchema = new Schema(
       dateOfBirth: { type: Date, required: false },
       country: { type: String, required: false },
     },
+    termsAccepted: {
+      type: Boolean,
+      default: false,
+    },
+    termsAcceptedAt: {
+      type: Date,
+      required: function (this: any) {
+        return this.termsAccepted === true;
+      },
+    },
     therapistWorkProfile: {
       type: {
         en: {
