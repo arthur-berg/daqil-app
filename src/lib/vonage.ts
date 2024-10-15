@@ -82,8 +82,38 @@ export const stopArchive = async (archiveId: string) => {
     const archive = await videoClient.stopArchive(archiveId);
     console.log("Archive stopped successfully:", archive);
     return archive;
+  } catch (error: any) {
+    // Log more specific error details
+    if (error.response) {
+      // If there is a response from the API
+      console.error(
+        `Error stopping archive. Status: ${error.response.status}, Message: ${error.response.statusText}`
+      );
+      console.error("Error details:", error.response.data);
+    } else if (error.request) {
+      // If there was no response, but the request was made
+      console.error(
+        "No response received when stopping archive:",
+        error.request
+      );
+    } else {
+      // General error that occurred in setting up the request
+      console.error("Unexpected error stopping archive:", error.message);
+    }
+
+    throw new Error(
+      `Failed to stop archive: ${error.message || "Unknown error"}`
+    );
+  }
+};
+
+export const retrieveArchive = async (archiveId: string) => {
+  try {
+    const archive = await videoClient.getArchive(archiveId);
+    console.log("Archive retrieved successfully:", archive);
+    return archive;
   } catch (error) {
-    console.error("Error stopping archive:", error);
-    throw new Error("Failed to stop archive");
+    console.error("Error retrieving archive:", error);
+    throw new Error("Failed to retrieve the archive");
   }
 };

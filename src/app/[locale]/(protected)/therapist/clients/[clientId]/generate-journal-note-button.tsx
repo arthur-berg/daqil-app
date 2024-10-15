@@ -8,15 +8,25 @@ import { BeatLoader } from "react-spinners";
 
 const GenerateJournalNoteButton = ({
   journalNoteId,
+  archiveId,
+  appointmentId,
 }: {
   journalNoteId: string;
+  archiveId: string;
+  appointmentId: string;
 }) => {
   const [isPending, startTransition] = useTransition();
   const t = useTranslations("MyClientsPage");
 
+  console.log("archiveId", archiveId);
+
   const handleGenerateJournalNote = () => {
     startTransition(async () => {
-      const data = await generateJournalNote(journalNoteId);
+      const data = await generateJournalNote(
+        journalNoteId,
+        archiveId,
+        appointmentId
+      );
     });
     console.log(`Generate journal note for ID: ${journalNoteId}`);
   };

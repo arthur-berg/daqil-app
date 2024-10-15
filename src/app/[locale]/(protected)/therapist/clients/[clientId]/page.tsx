@@ -119,6 +119,7 @@ const ClientPage = async ({ params }: { params: { clientId: string } }) => {
                       key={appointment._id}
                       className="p-4 border rounded-lg shadow-sm bg-gray-50"
                     >
+                      {console.log("appointment", appointment)}
                       <div className="text-gray-800">
                         <strong>{t("time")}:</strong>{" "}
                         {`${formatAppointmentTime(
@@ -150,6 +151,8 @@ const ClientPage = async ({ params }: { params: { clientId: string } }) => {
                             <div>
                               <GenerateJournalNoteButton
                                 journalNoteId={appointment.journalNoteId._id.toString()}
+                                archiveId={appointment.journalNoteId.archiveId}
+                                appointmentId={appointment._id.toString()}
                               />
                             </div>
                           )}
