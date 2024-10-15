@@ -2,6 +2,7 @@ import connectToMongoDB from "@/lib/mongoose";
 import { UserRole } from "@/generalTypes";
 import Appointment from "@/models/Appointment";
 import User from "@/models/User";
+import JournalNote from "@/models/JournalNote";
 
 export const getUserByEmail = async (email: string) => {
   try {
@@ -47,6 +48,9 @@ export const getClientById = async (id: string) => {
   try {
     if (!Appointment.schema) {
       throw new Error("Appointment schema is not registered.");
+    }
+    if (!JournalNote.schema) {
+      throw new Error("JournalNote schema is not registered.");
     }
     const client = await User.findById(id)
       .select(

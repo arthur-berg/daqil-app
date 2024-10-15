@@ -5,12 +5,10 @@ import { getTranslations } from "next-intl/server";
 import { getFullName } from "@/utils/formatName";
 import connectToMongoDB from "@/lib/mongoose";
 import GenerateJournalNoteButton from "@/app/[locale]/(protected)/therapist/clients/[clientId]/generate-journal-note-button";
+import { format } from "date-fns";
 
 const formatAppointmentTime = (date: any) => {
-  return new Date(date).toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  return format(new Date(date), "HH:mm");
 };
 
 const ClientPage = async ({ params }: { params: { clientId: string } }) => {
@@ -66,7 +64,6 @@ const ClientPage = async ({ params }: { params: { clientId: string } }) => {
         </div>
       </div>
 
-      {/* Display Past Therapist History */}
       {pastTherapistsHistory.length > 0 && (
         <div className="mt-6">
           <h2 className="text-lg sm:text-xl font-semibold mb-4">
@@ -101,7 +98,6 @@ const ClientPage = async ({ params }: { params: { clientId: string } }) => {
         </div>
       )}
 
-      {/* Display Journal with Appointments */}
       <div className="mt-6">
         <h2 className="text-lg sm:text-xl font-semibold mb-4">
           {t("appointments")}
@@ -119,7 +115,6 @@ const ClientPage = async ({ params }: { params: { clientId: string } }) => {
                       key={appointment._id}
                       className="p-4 border rounded-lg shadow-sm bg-gray-50"
                     >
-                      {console.log("appointment", appointment)}
                       <div className="text-gray-800">
                         <strong>{t("time")}:</strong>{" "}
                         {`${formatAppointmentTime(

@@ -23,46 +23,17 @@ export const generateJournalNote = async (
   try {
     const user = await requireAuth([UserRole.THERAPIST]);
 
-    /*  await cancelPaymentRelatedJobsForAppointment(appointmentId);
-   
+    await cancelPaymentRelatedJobsForAppointment(appointmentId);
+    console.log("archiveId", archiveId);
 
-     await stopArchive(archiveId);
+    await stopArchive(archiveId);
 
     await Appointment.findByIdAndUpdate(appointmentId, {
       status: "completed",
-    }); */
-
-    // Step 1: Retrieve archive details from Vonage
-    const archive = await retrieveArchive(archiveId);
-    console.log("finished retrieving archive");
-
-    console.log("archive", archive);
-
-    // Step 2: Ensure the archive status is "available" before proceeding
-    if (archive.status !== "available") {
-      console.error(
-        `Archive is not available. Current status: ${archive.status}`
-      );
-      throw new Error("Archive is not available yet");
-    }
-
-    const audioUrl = archive.url;
-
-    if (!audioUrl) {
-      throw new Error(
-        "No archive URL available. Unable to proceed with transcription."
-      );
-    }
-
-    console.log("Retrieved archive audio URL:", audioUrl);
-
-    // Step 3: Send audio URL to Rev.ai for transcription
-    const revJobId = await sendToRevAI(audioUrl);
-
-    console.log(`Rev.ai Job created. Job ID: ${revJobId}`);
+    });
 
     return {
-      success: SuccessMessages("journalNoteGenerated"),
+      success: SuccessMessages("journalNoteGenerationInProgress"),
     };
   } catch (error) {
     console.error("Internal Error: ", error);

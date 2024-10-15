@@ -597,6 +597,7 @@
     "appointmentNotConfirmed": "لم يتم تأكيد الموعد."
   },
   "SuccessMessages": {
+    "journalNoteGenerationInProgress": "جاري توليد الملاحظة الخاصة بالجلسة",
     "recordingStarted": "تم بدء التسجيل بنجاح",
     "therapistCreated": "تم إنشاء حساب الأخصائي النفسي بنجاح",
     "paymentSettingsSaved": "تم حفظ إعدادات الدفع",

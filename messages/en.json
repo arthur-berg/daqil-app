@@ -604,6 +604,7 @@
     "appointmentNotConfirmed": "The appointment is not confirmed."
   },
   "SuccessMessages": {
+    "journalNoteGenerationInProgress": "Journal note generation in progress",
     "recordingStarted": "Recording successfully started",
     "paymentSettingsSaved":"Payment settings saved",
     "accountSetupComplete": "Account setup completed",

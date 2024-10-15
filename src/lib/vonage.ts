@@ -80,7 +80,7 @@ export const startArchive = async (
 export const stopArchive = async (archiveId: string) => {
   try {
     const archive = await videoClient.stopArchive(archiveId);
-    console.log("Archive stopped successfully:", archive);
+    console.log("Archive stopped successfully");
     return archive;
   } catch (error: any) {
     // Log more specific error details
@@ -110,7 +110,6 @@ export const stopArchive = async (archiveId: string) => {
 export const retrieveArchive = async (archiveId: string) => {
   try {
     const archive = await videoClient.getArchive(archiveId);
-    console.log("Archive retrieved successfully:", archive);
     return archive;
   } catch (error) {
     console.error("Error retrieving archive:", error);

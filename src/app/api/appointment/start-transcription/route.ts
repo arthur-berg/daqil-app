@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import connectToMongoDB from "@/lib/mongoose";
 import jwt from "jsonwebtoken";
+import { retrieveArchive } from "@/lib/vonage";
+import { sendToRevAI } from "@/lib/rev-ai";
 const SIGNATURE_SECRET = process.env.VONAGE_SIGNATURE_SECRET as string;
 
 export const POST = async (req: NextRequest) => {
   try {
     await connectToMongoDB();
-    console.log("ARCHIVE WAS MADE");
-    console.log("INSIDE transcribe and summarize");
     const requestHeaders = new Headers(req.headers);
     const authHeader = requestHeaders.get("authorization");
 
@@ -27,10 +27,25 @@ export const POST = async (req: NextRequest) => {
     console.log(`Received archive event. Archive ID: ${id}, Status: ${status}`);
 
     if (status === "available") {
-      console.log(`Archive ${id} is ready for download.`);
+      const archive = await retrieveArchive(id);
+
+      const audioUrl = archive.url;
+
+      if (!audioUrl) {
+        throw new Error(
+          "No archive URL available. Unable to proceed with transcription."
+        );
+      }
+
+      const revJobId = await sendToRevAI(audioUrl, id);
+
+      console.log(`Rev.ai Job created. Job ID: ${revJobId}`);
     }
 
-    return NextResponse.json({ message: "Callback received" }, { status: 200 });
+    return NextResponse.json(
+      { message: "Start transcription success" },
+      { status: 200 }
+    );
   } catch (error) {
     console.error("Something went wrong:", error);
     return NextResponse.json(
