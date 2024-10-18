@@ -4,7 +4,7 @@ import { generateJournalNote } from "@/actions/generateJournalNote";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { useTranslations } from "next-intl";
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { BeatLoader } from "react-spinners";
 
 const GenerateJournalNoteButton = ({
@@ -18,9 +18,8 @@ const GenerateJournalNoteButton = ({
 }) => {
   const [isPending, startTransition] = useTransition();
   const { responseToast } = useToast();
+  const [generationInProgress, setGenerationInProgress] = useState(false);
   const t = useTranslations("MyClientsPage");
-
-  console.log("archiveId", archiveId);
 
   const handleGenerateJournalNote = () => {
     startTransition(async () => {
@@ -29,12 +28,22 @@ const GenerateJournalNoteButton = ({
         archiveId,
         appointmentId
       );
+
       responseToast(data);
+
+      if (data.success) {
+        setGenerationInProgress(true);
+      }
     });
-    console.log(`Generate journal note for ID: ${journalNoteId}`);
   };
 
-  return (
+  return generationInProgress ? (
+    <>
+      <p className="italic text-sm text-gray-600">
+        {t("journalNoteInProgress")}
+      </p>
+    </>
+  ) : (
     <Button
       variant="success"
       onClick={() => handleGenerateJournalNote()}

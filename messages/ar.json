@@ -526,7 +526,8 @@
   "therapistPeriod": "الفترة",
   "therapistAppointments": "المواعيد",
   "scheduleAppointment": "جدولة موعد",
-  "period": "الفترة"
+  "period": "الفترة",
+  "journalNoteInProgress": "جاري إنشاء الملاحظة الخاصة بالمذكرة"
 },
   "PaymentSuccessPage": {
     "paymentLinkSent": "تم إرسال تأكيد الحجز ورابط الدفع إلى بريد العميل الإلكتروني.",

@@ -134,12 +134,21 @@ const ClientPage = async ({ params }: { params: { clientId: string } }) => {
                       {appointment.journalNoteId && (
                         <div className="mt-4 bg-white border-l-4 border-gray-400 p-4">
                           <strong>{t("journalNote")}:</strong>
-                          {appointment.journalNoteId.summarized ? (
+
+                          {appointment.journalNoteId.summaryStatus ===
+                          "completed" ? (
                             <>
                               <p>{appointment.journalNoteId.note}</p>
                               <p className="italic text-sm text-gray-600">
                                 {t("summary")}:{" "}
                                 {appointment.journalNoteId.summary}
+                              </p>
+                            </>
+                          ) : appointment.journalNoteId.summaryStatus ===
+                            "pending" ? (
+                            <>
+                              <p className="italic text-sm text-gray-600">
+                                {t("journalNoteInProgress")}:{" "}
                               </p>
                             </>
                           ) : (

@@ -169,6 +169,7 @@ export default function useRoom() {
       if (!appId || !sessionId || !token) {
         throw new Error("Check your credentials");
       }
+      console.log("create call called");
       const VideoExpress = await import("@vonage/video-express");
 
       const selfVideoContainer = document.createElement("div");

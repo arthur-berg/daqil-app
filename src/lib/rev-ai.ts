@@ -22,7 +22,7 @@ export const sendToRevAI = async (audioUrl: string, archiveId: string) => {
           Authorization: `Bearer ${REV_WEBHOOK_AUTH}`,
         }, */
       },
-      custom_metadata: JSON.stringify({ archiveId }), // Embed your archiveId for reference
+      metadata: `archiveId:${archiveId}`,
     }),
   });
 
@@ -36,22 +36,74 @@ export const sendToRevAI = async (audioUrl: string, archiveId: string) => {
 
 export const getTranscriptionDetails = async (jobId: string) => {
   try {
-    const response = await fetch(`${REV_BASE_URL}/${jobId}/transcript`, {
+    // First, retrieve the job details
+    const jobDetailsResponse = await fetch(`${REV_BASE_URL}/${jobId}`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${REV_API_KEY}`,
-        Accept: "application/vnd.rev.transcript.v1.0+json",
+        Accept: "application/json",
       },
     });
 
-    if (!response.ok) {
+    if (!jobDetailsResponse.ok) {
       console.error(
-        `Failed to fetch transcription details. Status: ${response.status}`
+        `Failed to fetch job details. Status: ${jobDetailsResponse.status}`
       );
       return null;
     }
 
-    const transcriptionData = await response.json();
+    const jobDetails = await jobDetailsResponse.json();
+    console.log("jobDetails", jobDetails);
+
+    // Extract the archiveId from the metadata string
+    const metadata = jobDetails.metadata;
+    let archiveId: string | undefined;
+    if (metadata) {
+      const match = metadata.match(/archiveId:([a-f0-9-]+)/);
+      if (match && match[1]) {
+        archiveId = match[1];
+      }
+    }
+
+    if (!archiveId) {
+      console.error(`Failed to extract archiveId from metadata: ${metadata}`);
+      return null;
+    }
+
+    // Fetch the transcription details separately
+    const transcriptResponse = await fetch(
+      `${REV_BASE_URL}/${jobId}/transcript`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${REV_API_KEY}`,
+          Accept: "application/vnd.rev.transcript.v1.0+json",
+        },
+      }
+    );
+
+    if (!transcriptResponse.ok) {
+      console.error(
+        `Failed to fetch transcription details. Status: ${transcriptResponse.status}`
+      );
+      return null;
+    }
+
+    const transcriptionData = await transcriptResponse.json();
+
+    console.log("transcriptionData", transcriptionData);
+
+    if (
+      !transcriptionData.monologues ||
+      !Array.isArray(transcriptionData.monologues)
+    ) {
+      console.error(
+        `Unexpected transcription data format: ${JSON.stringify(
+          transcriptionData
+        )}`
+      );
+      return null;
+    }
 
     const transcript = transcriptionData.monologues
       .map((mono: any) =>
@@ -66,7 +118,7 @@ export const getTranscriptionDetails = async (jobId: string) => {
 
     return {
       transcript,
-      archiveId: transcriptionData.metadata?.custom_metadata?.archiveId, // Assuming this is set when creating the job
+      archiveId,
     };
   } catch (error) {
     console.error("Error retrieving transcription details:", error);

@@ -23,8 +23,17 @@ if (!process.env.VONAGE_APP_ID) {
   throw new Error("Missing config values for env params VONAGE_APP_ID ");
 }
 
+let sessionCreationInProgress = false; // Prevents multiple concurrent session creations
+
 export const getSessionData = async (appointmentId: string) => {
+  if (sessionCreationInProgress) {
+    console.log("Session creation already in progress. Skipping request.");
+    return; // Exit early to prevent duplicate creation
+  }
+
+  sessionCreationInProgress = true; // Set flag to indicate session creation has started
   await connectToMongoDB();
+
   const [SuccessMessages, ErrorMessages] = await Promise.all([
     getTranslations("SuccessMessages"),
     getTranslations("ErrorMessages"),
@@ -36,12 +45,14 @@ export const getSessionData = async (appointmentId: string) => {
 
     const appointment = await Appointment.findById(appointmentId);
     if (!appointment) {
+      sessionCreationInProgress = false;
       return { error: ErrorMessages("appointmentNotFound") };
     }
 
     const client = await getUserById(appointment.participants[0].userId);
 
     if (appointment.status !== "confirmed") {
+      sessionCreationInProgress = false;
       return { error: ErrorMessages("appointmentNotConfirmed") };
     }
 
@@ -96,6 +107,7 @@ export const getSessionData = async (appointmentId: string) => {
       );
 
       if (!participant) {
+        sessionCreationInProgress = false;
         return { error: ErrorMessages("userNotFound") };
       }
 
@@ -122,7 +134,6 @@ export const getSessionData = async (appointmentId: string) => {
     }
 
     let session = await VideoSession.findOne({ appointmentId });
-
     const videoRecordingStarted = !!appointment.journalNoteId;
 
     if (session) {
@@ -135,11 +146,13 @@ export const getSessionData = async (appointmentId: string) => {
       );
 
       if (!userAuthorized) {
+        sessionCreationInProgress = false;
         throw new Error("User is not authorized");
       }
 
       const data = generateToken(session.sessionId);
 
+      sessionCreationInProgress = false;
       return {
         sessionId: session.sessionId,
         token: data.token,
@@ -164,6 +177,7 @@ export const getSessionData = async (appointmentId: string) => {
         participants: appointment.participants,
       });
 
+      sessionCreationInProgress = false;
       return {
         roomName: appointment.title,
         sessionId: data?.sessionId,
@@ -178,6 +192,7 @@ export const getSessionData = async (appointmentId: string) => {
       };
     }
   } catch (error: any) {
+    sessionCreationInProgress = false;
     throw new Error("Error getting credentials: " + error.message);
   }
 };
@@ -212,7 +227,7 @@ export const startVideoRecording = async (
       appointmentId: appointmentData.id,
       note: "",
       summary: "",
-      summarized: false,
+      summaryStatus: "notStarted",
       archiveId: archiveId,
     });
 

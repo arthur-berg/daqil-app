@@ -536,7 +536,8 @@
   "therapistPeriod": "Period",
   "therapistAppointments": "Appointments",
   "scheduleAppointment": "Schedule Appointment",
-  "period": "Period"
+  "period": "Period",
+  "journalNoteInProgress": "Journal note generation is in progress"
 },
   "PaymentSuccessPage": {
     "paymentLinkSent": "A booking confirmation and a payment link have been sent to the client's email.",

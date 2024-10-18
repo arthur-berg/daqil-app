@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import connectToMongoDB from "@/lib/mongoose";
 import JournalNote from "@/models/JournalNote";
 import { getTranscriptionDetails } from "@/lib/rev-ai";
+import { revalidatePath } from "next/cache";
 
 export const POST = async (req: NextRequest) => {
   try {
@@ -48,7 +49,7 @@ export const POST = async (req: NextRequest) => {
 
     const updatedJournalNote = await JournalNote.findOneAndUpdate(
       { archiveId },
-      { summary: transcript, summarized: true },
+      { summary: transcript, summaryStatus: "completed" },
       { new: true }
     );
 
@@ -63,6 +64,8 @@ export const POST = async (req: NextRequest) => {
     console.log(
       `Successfully updated JournalNote for archive ID: ${archiveId}`
     );
+
+    revalidatePath("/therapist/clients/[clientId]", "page");
 
     return NextResponse.json(
       { message: "Transcription successfully processed and saved" },

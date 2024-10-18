@@ -72,8 +72,8 @@ export const getClientById = async (id: string) => {
             select: "firstName lastName status appointmentTypeId",
           },
           {
-            path: "journalNoteId", // Populate the journalNoteId to get full details
-            select: "note summary summarized archiveId", // Specify the fields you want from journalNote
+            path: "journalNoteId",
+            select: "note summary summaryStatus archiveId",
           },
         ],
         match: { status: { $ne: "canceled" } },

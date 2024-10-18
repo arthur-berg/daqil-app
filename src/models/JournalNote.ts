@@ -13,10 +13,12 @@ const journalNote = new Schema(
       type: String,
       required: false,
     },
-    summarized: {
-      type: Boolean,
-      default: false,
+    summaryStatus: {
+      type: String,
+      enum: ["notStarted", "pending", "completed"],
+      default: "pending",
     },
+
     archiveId: {
       type: String,
       required: false,
