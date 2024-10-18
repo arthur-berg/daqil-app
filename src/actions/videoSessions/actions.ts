@@ -16,8 +16,17 @@ if (!process.env.VONAGE_APP_ID) {
   throw new Error("Missing config values for env params VONAGE_APP_ID ");
 }
 
+let sessionCreationInProgress = false;
+
 export const getSessionData = async (appointmentId: string) => {
+  if (sessionCreationInProgress) {
+    console.log("Session creation already in progress. Skipping request.");
+    return;
+  }
+
+  sessionCreationInProgress = true;
   await connectToMongoDB();
+
   const [SuccessMessages, ErrorMessages] = await Promise.all([
     getTranslations("SuccessMessages"),
     getTranslations("ErrorMessages"),
@@ -29,12 +38,14 @@ export const getSessionData = async (appointmentId: string) => {
 
     const appointment = await Appointment.findById(appointmentId);
     if (!appointment) {
+      sessionCreationInProgress = false;
       return { error: ErrorMessages("appointmentNotFound") };
     }
 
     const client = await getUserById(appointment.participants[0].userId);
 
     if (appointment.status !== "confirmed") {
+      sessionCreationInProgress = false;
       return { error: ErrorMessages("appointmentNotConfirmed") };
     }
 
@@ -89,6 +100,7 @@ export const getSessionData = async (appointmentId: string) => {
       );
 
       if (!participant) {
+        sessionCreationInProgress = false;
         return { error: ErrorMessages("userNotFound") };
       }
 
@@ -115,6 +127,7 @@ export const getSessionData = async (appointmentId: string) => {
     }
 
     let session = await VideoSession.findOne({ appointmentId });
+    const videoRecordingStarted = !!appointment.journalNoteId;
 
     if (session) {
       console.log("Session found. Generating new token...");
@@ -126,17 +139,24 @@ export const getSessionData = async (appointmentId: string) => {
       );
 
       if (!userAuthorized) {
+        sessionCreationInProgress = false;
         throw new Error("User is not authorized");
       }
 
       const data = generateToken(session.sessionId);
 
+      sessionCreationInProgress = false;
       return {
         sessionId: session.sessionId,
         token: data.token,
         appId: data.appId,
         roomName: session.roomName,
         isIntroCall,
+        appointmentData: {
+          id: appointment._id.toString(),
+          endDate: appointment.endDate,
+          videoRecordingStarted,
+        },
       };
     } else {
       console.log("Session not found. Creating a new one...");
@@ -150,15 +170,22 @@ export const getSessionData = async (appointmentId: string) => {
         participants: appointment.participants,
       });
 
+      sessionCreationInProgress = false;
       return {
         roomName: appointment.title,
         sessionId: data?.sessionId,
         token: data?.token,
         appId: data?.appId,
         isIntroCall,
+        appointmentData: {
+          id: appointment._id.toString(),
+          endDate: appointment.endDate,
+          videoRecordingStarted,
+        },
       };
     }
   } catch (error: any) {
+    sessionCreationInProgress = false;
     throw new Error("Error getting credentials: " + error.message);
   }
 };
