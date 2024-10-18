@@ -169,7 +169,6 @@ export default function useRoom() {
       if (!appId || !sessionId || !token) {
         throw new Error("Check your credentials");
       }
-      console.log("create call called");
       const VideoExpress = await import("@vonage/video-express");
 
       const selfVideoContainer = document.createElement("div");
@@ -258,6 +257,23 @@ export default function useRoom() {
           if (!videoRecordingStarted) {
             startRecording(sessionId, appointmentData, token);
           }
+
+          const hideArchivingIndicator = () => {
+            const archivingElement = document.querySelector(
+              ".OT_archiving"
+            ) as any;
+            if (archivingElement) {
+              archivingElement.style.display = "none";
+            }
+          };
+
+          hideArchivingIndicator();
+
+          /*   const observer = new MutationObserver(() => hideArchivingIndicator());
+          observer.observe(document.body, {
+            childList: true,
+            subtree: true,
+          }); */
         })
         .catch((error: any) => console.log(error));
     },

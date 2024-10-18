@@ -13,7 +13,6 @@ import { format } from "date-fns";
 import {
   schedulePayAfterPaymentExpiredStatusUpdateJobs,
   schedulePaymentReminders,
-  scheduleStatusUpdateJob,
 } from "@/lib/schedule-appointment-jobs";
 import { checkTherapistAvailability, updateAppointments } from "./utils";
 import connectToMongoDB from "@/lib/mongoose";

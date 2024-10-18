@@ -3,6 +3,7 @@ import connectToMongoDB from "@/lib/mongoose";
 import JournalNote from "@/models/JournalNote";
 import { getTranscriptionDetails } from "@/lib/rev-ai";
 import { revalidatePath } from "next/cache";
+import { summarizeTranscribedText } from "@/lib/openai";
 
 export const POST = async (req: NextRequest) => {
   try {
@@ -46,10 +47,14 @@ export const POST = async (req: NextRequest) => {
     }
 
     const { transcript, archiveId } = transcriptionResult;
+    console.log("transcriptionResult", transcriptionResult);
+    const summary = await summarizeTranscribedText(transcript);
+
+    console.log("finished summary after chatgpt", summary);
 
     const updatedJournalNote = await JournalNote.findOneAndUpdate(
       { archiveId },
-      { summary: transcript, summaryStatus: "completed" },
+      { summary: summary, summaryStatus: "review" },
       { new: true }
     );
 

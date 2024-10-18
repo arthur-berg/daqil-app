@@ -37,7 +37,22 @@ const GenerateJournalNoteButton = ({
     });
   };
 
-  return generationInProgress ? (
+  return (
+    <Button
+      variant="success"
+      onClick={() => handleGenerateJournalNote()}
+      className="mt-2"
+      disabled={isPending}
+    >
+      {isPending ? (
+        <BeatLoader size={8} color={"#fff"} />
+      ) : (
+        t("generateJournalNote")
+      )}
+    </Button>
+  );
+
+  /*  return generationInProgress ? (
     <>
       <p className="italic text-sm text-gray-600">
         {t("journalNoteInProgress")}
@@ -56,7 +71,7 @@ const GenerateJournalNoteButton = ({
         t("generateJournalNote")
       )}
     </Button>
-  );
+  ); */
 };
 
 export default GenerateJournalNoteButton;

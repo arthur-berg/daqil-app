@@ -537,7 +537,9 @@
   "therapistAppointments": "Appointments",
   "scheduleAppointment": "Schedule Appointment",
   "period": "Period",
-  "journalNoteInProgress": "Journal note generation is in progress"
+  "journalNoteInProgress": "Journal note generation is in progress",
+  "journalNoteIsReadyForReview": "Journal note is ready for review",
+  "edit": "Edit"
 },
   "PaymentSuccessPage": {
     "paymentLinkSent": "A booking confirmation and a payment link have been sent to the client's email.",
@@ -560,6 +562,7 @@
     "goToAppointments": "Go to Appointments"
   },
   "ErrorMessages": {
+    "journalNoteNotFound": "Journal note not found",
     "recordingFailed": "Recording failed to start",
     "thisAccountIsTerminated": "This account has been deleted. Please logout.",
     "onlyDaqilEmailsAllowed": "Only DAQIL emails are allowed",
@@ -605,6 +608,7 @@
     "appointmentNotConfirmed": "The appointment is not confirmed."
   },
   "SuccessMessages": {
+    "journalNoteUpdated": "Journal note updated",
     "journalNoteGenerationInProgress": "Journal note generation in progress",
     "recordingStarted": "Recording successfully started",
     "paymentSettingsSaved":"Payment settings saved",

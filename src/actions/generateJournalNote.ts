@@ -37,7 +37,10 @@ export const generateJournalNote = async (
       status: "completed",
     });
 
-    revalidatePath("/[locale]/therapist/clients/[clientId]", "page");
+    revalidatePath(
+      "/[locale]/(protected)/therapist/clients/[clientId]",
+      "page"
+    );
 
     return {
       success: SuccessMessages("journalNoteGenerationInProgress"),

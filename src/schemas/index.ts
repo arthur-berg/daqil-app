@@ -21,6 +21,13 @@ export const TherapistMyProfileSchema = z.object({
   }),
 });
 
+export const JournalNoteSchema = z.object({
+  summary: z.string().min(1, {
+    message: "Summary is required",
+  }),
+  note: z.string().optional(),
+});
+
 export const DiscountCodeSchema = z
   .object({
     code: z.string().min(1, {

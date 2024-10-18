@@ -527,7 +527,9 @@
   "therapistAppointments": "المواعيد",
   "scheduleAppointment": "جدولة موعد",
   "period": "الفترة",
-  "journalNoteInProgress": "جاري إنشاء الملاحظة الخاصة بالمذكرة"
+  "journalNoteInProgress": "جاري إنشاء الملاحظة الخاصة بالمذكرة",
+  "journalNoteIsReadyForReview": "الملاحظة الجلسة جاهزة للمراجعة",
+  "edit": "تعديل"
 },
   "PaymentSuccessPage": {
     "paymentLinkSent": "تم إرسال تأكيد الحجز ورابط الدفع إلى بريد العميل الإلكتروني.",
@@ -552,6 +554,7 @@
     "goToAppointments": "الذهاب إلى المواعيد"
   },
   "ErrorMessages": {
+    "journalNoteNotFound": "لم يتم العثور على ملاحظة الجلسة",
     "recordingFailed": "فشل بدء التسجيل",
     "logout": "تسجيل الخروج",
     "thisAccountIsTerminated": "This account has been deleted. Please logout.",
@@ -598,6 +601,7 @@
     "appointmentNotConfirmed": "لم يتم تأكيد الموعد."
   },
   "SuccessMessages": {
+    "journalNoteUpdated": "تم تحديث ملاحظة الجلسة",
     "journalNoteGenerationInProgress": "جاري توليد الملاحظة الخاصة بالجلسة",
     "recordingStarted": "تم بدء التسجيل بنجاح",
     "therapistCreated": "تم إنشاء حساب الأخصائي النفسي بنجاح",

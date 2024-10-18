@@ -105,7 +105,24 @@
     align-items: center;
 
   }
+  
+  /* Scoped styles inside the journal note editor */
+.journal-note-editor .ql-editor h3 {
+  font-size: 1.75rem; /* Larger font size */
+  font-weight: bold; /* Bold */
+  margin-bottom: 1rem; /* Add margin below */
+}
 
+.journal-note-editor .ql-editor h4 {
+  font-size: 1.5rem; /* Smaller than h3 */
+  font-weight: bold; /* Bold */
+  margin-bottom: 0.75rem;
+}
+
+.journal-note-editor .ql-editor p {
+  margin-bottom: 1rem; /* Add margin to paragraphs */
+  line-height: 1.6; /* Better line spacing */
+}
 
  
 
