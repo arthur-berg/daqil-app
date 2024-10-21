@@ -83,7 +83,7 @@ const InviteTherapistForm = () => {
         <FormError message={error} />
         <FormSuccess message={success} />
         <Button type="submit" className="w-full" disabled={isPending}>
-          {t("sendInvite")}
+          {t("addTherapist")}
         </Button>
       </form>
     </Form>

@@ -77,10 +77,10 @@ const CancelAppontmentForm = ({
             <DialogHeader>
               <DialogTitle>{t("areYouSure")}</DialogTitle>
               <DialogDescription>
-                <p>
+                <div>
                   <strong>{t("title")}: </strong> {selectedAppointment?.title}
-                </p>
-                <p>
+                </div>
+                <div>
                   <strong>{t("participants")}: </strong>{" "}
                   {selectedAppointment.participants.map((participant: any) => (
                     <div key={participant.userId}>
@@ -88,15 +88,15 @@ const CancelAppontmentForm = ({
                       ({participant.email})
                     </div>
                   ))}
-                </p>
-                <p>
+                </div>
+                <div>
                   <strong>{t("start")}: </strong>
                   {format(new Date(selectedAppointment.startDate), "P HH:mm")}
-                </p>
-                <p>
+                </div>
+                <div>
                   <strong>{t("duration")}: </strong>
                   {selectedAppointment?.durationInMinutes} {t("minutes")}
-                </p>
+                </div>
                 <FormField
                   control={form.control}
                   name="reason"

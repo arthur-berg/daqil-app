@@ -8,6 +8,7 @@ import { FormEvent, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { BeatLoader } from "react-spinners";
 import { useTranslations } from "next-intl";
+import { useToast } from "@/components/ui/use-toast";
 
 const Checkout = ({
   amount,
@@ -22,6 +23,7 @@ const Checkout = ({
   const elements = useElements();
   const [errorMessage, setErrorMessage] = useState<string>();
   const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
   const t = useTranslations("Checkout");
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -51,6 +53,10 @@ const Checkout = ({
     if (error) {
       // This point is only reached if there's an immediate error when confirming the payment
       setErrorMessage(error.message);
+      toast({
+        title: error.message,
+        variant: "destructive",
+      });
       setLoading(false);
     } else {
       // The payment UI automatically closes with a success animation.
@@ -74,9 +80,10 @@ const Checkout = ({
   return (
     <>
       <form onSubmit={handleSubmit} className="bg-white p-2 rounded-md">
+        {errorMessage && (
+          <div className="text-destructive mb-4 mt-4">{errorMessage}</div>
+        )}
         {clientSecret && <PaymentElement />}
-
-        {errorMessage && <div>{errorMessage}</div>}
 
         <div className="w-32 mx-auto">
           <Button disabled={!stripe || loading} className="mt-4 w-full">
