@@ -10,10 +10,6 @@ export const POST = async (req: NextRequest) => {
     await connectToMongoDB();
     const body = await req.json();
 
-    console.log("INSIDE TRANSCRIPTION-COMPLETED WEBHOOK");
-    console.log("Received Webhook Body:", JSON.stringify(body, null, 2));
-
-    // Extract job details correctly from the body
     const { id: jobId, status } = body.job;
 
     if (!jobId || !status) {
@@ -47,10 +43,8 @@ export const POST = async (req: NextRequest) => {
     }
 
     const { transcript, archiveId } = transcriptionResult;
-    console.log("transcriptionResult", transcriptionResult);
-    const summary = await summarizeTranscribedText(transcript);
 
-    console.log("finished summary after chatgpt", summary);
+    const summary = await summarizeTranscribedText(transcript);
 
     const updatedJournalNote = await JournalNote.findOneAndUpdate(
       { archiveId },

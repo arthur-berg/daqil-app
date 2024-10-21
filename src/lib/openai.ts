@@ -5,6 +5,10 @@ import { OpenAI } from "openai";
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 export const summarizeTranscribedText = async (transcript: string) => {
+  const sampleTranscript = `
+I've been feeling really overwhelmed lately, especially with work... 
+  `;
+
   const messages = [
     {
       role: "system",
@@ -14,31 +18,28 @@ export const summarizeTranscribedText = async (transcript: string) => {
     {
       role: "user",
       content: `
-      Please summarize the following therapy session transcript by focusing on the most important aspects and formatting it as structured content that fits into predefined sections:
-      1. Summarize the emotional state of the client and any significant emotional changes.
-      2. List the main topics discussed by the client (e.g., mental health concerns, relationships, work stress).
-      3. Describe any therapeutic techniques or exercises used by the therapist.
-      4. Mention the client's progress, goals set, or milestones achieved.
-      5. Note challenges or concerns raised by the client that require attention in future sessions.
-      6. Summarize the therapist's recommendations or advice to the client.
-      Please provide each section clearly so it can be inserted into predefined HTML sections.
+The following transcript is a therapy session between a client and a therapist. The conversation alternates between them, and the therapist typically provides guidance, techniques, or suggestions, while the client expresses feelings, concerns, or experiences. Please summarize the transcript by focusing on the most important aspects and formatting it as structured content using the following sections:
+1. Emotional State of the Client
+2. Main Topics Discussed
+3. Therapeutic Techniques Used
+4. Client's Progress and Goals
+5. Challenges and Concerns
+6. Therapist's Recommendations
+Please return the summary in plain text format, **without using a colon after the section labels**, and ensure that each section begins directly with the relevant content.
       `,
     },
     {
       role: "user",
-      content: transcript,
+      content: sampleTranscript,
     },
   ];
 
   try {
-    console.log("starting openai chat request");
-    console.log("transcript before chatgpt", transcript);
     const response = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages: messages as any,
       max_tokens: 500,
     });
-    console.log("finished openai chat request");
 
     if (!response.choices || response.choices.length === 0) {
       throw new Error("No response choices returned from OpenAI.");
@@ -49,21 +50,24 @@ export const summarizeTranscribedText = async (transcript: string) => {
       throw new Error("Empty response content from OpenAI.");
     }
 
+    // Add the HTML structure after extracting the plain text sections
     const htmlContent = `
       <div><h3>Therapy Session Summary</h3>
       <h4>Emotional State of the Client</h4>
-      <p>${extractSection(content, "1.")}</p>
+      <p>${extractSection(content, "Emotional State of the Client")}</p>
       <h4>Main Topics Discussed</h4>
-      <p>${extractSection(content, "2.")}</p>
+      <p>${extractSection(content, "Main Topics Discussed")}</p>
       <h4>Therapeutic Techniques Used</h4>
-      <p>${extractSection(content, "3.")}</p>
-      <h4>Progress and Goals</h4>
-      <p>${extractSection(content, "4.")}</p>
+      <p>${extractSection(content, "Therapeutic Techniques Used")}</p>
+      <h4>Client's Progress and Goals</h4>
+      <p>${extractSection(content, "Client's Progress and Goals")}</p>
       <h4>Challenges and Concerns</h4>
-      <p>${extractSection(content, "5.")}</p>
+      <p>${extractSection(content, "Challenges and Concerns")}</p>
       <h4>Therapist's Recommendations</h4>
-      <p>${extractSection(content, "6.")}</p></div>
+      <p>${extractSection(content, "Therapist's Recommendations")}</p></div>
     `;
+
+    console.log("htmlContent", htmlContent);
 
     return htmlContent;
   } catch (error) {
@@ -72,11 +76,20 @@ export const summarizeTranscribedText = async (transcript: string) => {
   }
 };
 
-// Helper function to extract content for each section based on numbering
-function extractSection(content: string, section: string): string {
-  const regex = new RegExp(`${section}\\s*(.*?)\\s*(?=\\d+\\.)`, "s");
+// Helper function to extract content based on labeled sections
+function extractSection(content: string, sectionTitle: string): string {
+  const regex = new RegExp(`${sectionTitle}\\s*(.*?)(?=\\d\\.|$)`, "s"); // Extract until next numbered section or end
   const match = content.match(regex);
-  return match
-    ? match[1].trim()
-    : "No valuable information from the client was provided for this section.";
+  console.log("Extracting content for:", sectionTitle, "Match:", match);
+
+  if (match) {
+    let extractedContent = match[1].trim();
+
+    // Remove any instances of markdown formatting like ** or unnecessary symbols
+    extractedContent = extractedContent.replace(/\*\*/g, "").trim();
+
+    return extractedContent;
+  }
+
+  return "No valuable information was provided for this section.";
 }

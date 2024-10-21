@@ -50,6 +50,16 @@ export const generateToken = (sessionId: string) => {
   };
 };
 
+export const getArchiveBySessionId = async (sessionId: string) => {
+  const archives = await videoClient.getArchive(sessionId);
+  return archives;
+};
+
+/* export const resumeArchive = async (archiveId: string) => {
+  const archive = await videoClient.arc(archiveId);
+  return archive;
+};
+ */
 export const startArchive = async (
   sessionId: string,
   options: {

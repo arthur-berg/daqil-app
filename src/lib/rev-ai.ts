@@ -26,12 +26,14 @@ export const sendToRevAI = async (audioUrl: string, archiveId: string) => {
     }),
   });
 
+  console.log("callbackUrl", callbackUrl);
+
   if (!response.ok) {
     throw new Error(`Failed to send audio to Rev.ai: ${response.status}`);
   }
 
   const data = await response.json();
-  return data.id; // Job ID returned from Rev.ai
+  return data.id;
 };
 
 export const getTranscriptionDetails = async (jobId: string) => {
