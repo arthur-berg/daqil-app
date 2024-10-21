@@ -476,6 +476,7 @@
     "selectAppointmentType": "اختر نوع الموعد"
   },
   "AdminPage": {
+    "addTherapist": "إضافة معالج",
   "clientOverview": "نظرة عامة على العملاء",
     "inviteTherapists": "دعوة الأخصائيين النفسيين",
     "email": "البريد الإلكتروني",
