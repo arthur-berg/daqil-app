@@ -11,7 +11,7 @@ const ClientPage = async ({ params }: { params: { clientId: string } }) => {
   const client = await getClientById(clientId);
   const t = await getTranslations("MyClientsPage");
 
-  if (!client) return <div>No client found</div>;
+  if (!client) return <div>{t("noClientFound")}</div>;
 
   const currentTherapistHistory = client.therapistAppointmentCounts.find(
     (history: any) => history.current
@@ -32,20 +32,20 @@ const ClientPage = async ({ params }: { params: { clientId: string } }) => {
       </h1>
       <div className="space-y-2 text-center">
         <p className="text-gray-700">
-          <strong>Email:</strong> {client.email}
+          <strong>{t("emailLabel")}:</strong> {client.email}
         </p>
         <p className="text-gray-700">
-          <strong>Current Therapist:</strong>{" "}
+          <strong>{t("currentTherapist")}:</strong>{" "}
           {client.selectedTherapist
             ? `${await getFullName(
                 client.selectedTherapist.firstName,
                 client.selectedTherapist.lastName
               )}`
-            : "None"}
+            : t("none")}
         </p>
         {currentTherapistHistory && (
           <p className="text-gray-700">
-            <strong>Total Appointments:</strong>{" "}
+            <strong>{t("totalAppointments")}:</strong>{" "}
             {currentTherapistHistory.appointmentCount}
           </p>
         )}
@@ -55,7 +55,7 @@ const ClientPage = async ({ params }: { params: { clientId: string } }) => {
       {pastTherapistsHistory.length > 0 && (
         <div className="mt-6">
           <h2 className="text-lg sm:text-xl font-semibold mb-4">
-            Therapist History
+            {t("therapistHistory")}
           </h2>
           <div className="space-y-4">
             {pastTherapistsHistory.map(async (history: any, index: number) => (
@@ -64,7 +64,7 @@ const ClientPage = async ({ params }: { params: { clientId: string } }) => {
                 className="p-4 border rounded-lg shadow-sm bg-gray-50"
               >
                 <p className="text-gray-800">
-                  <strong>Therapist:</strong>{" "}
+                  <strong>{t("therapistLabel")}:</strong>{" "}
                   {await getFullName(
                     history.therapist.firstName,
                     history.therapist.lastName
@@ -72,12 +72,13 @@ const ClientPage = async ({ params }: { params: { clientId: string } }) => {
                   ({history.therapist.email})
                 </p>
                 <p className="text-gray-800">
-                  <strong>Appointments:</strong> {history.appointmentCount}
+                  <strong>{t("appointmentsLabel")}:</strong>{" "}
+                  {history.appointmentCount}
                 </p>
                 <p className="text-gray-800">
-                  <strong>Period:</strong>{" "}
+                  <strong>{t("periodLabel")}:</strong>{" "}
                   {history.startDate.toLocaleDateString()} -{" "}
-                  {history.endDate?.toLocaleDateString() || "Current"}
+                  {history.endDate?.toLocaleDateString() || t("current")}
                 </p>
               </div>
             ))}
@@ -87,15 +88,10 @@ const ClientPage = async ({ params }: { params: { clientId: string } }) => {
 
       <div className="mt-6 flex flex-col sm:flex-row sm:space-x-4 space-y-4 justify-center sm:space-y-0">
         <Link href={`/therapist/clients/${clientId}/schedule-appointment`}>
-          <Button className="w-full sm:w-auto">Schedule Appointment</Button>
+          <Button className="w-full sm:w-auto">
+            {t("scheduleAppointment")}
+          </Button>
         </Link>
-        {/*  {client.selectedTherapist && (
-          <Link href={`/therapist/${client.selectedTherapist._id}`}>
-            <Button variant="secondary" className="w-full sm:w-auto">
-              View Therapist Profile
-            </Button>
-          </Link>
-        )} */}
       </div>
     </div>
   );

@@ -221,6 +221,10 @@ export const getTherapists = async () => {
     const therapists = await User.find({
       role: UserRole.THERAPIST,
       isAccountSetupDone: true,
+      $or: [
+        { "settings.hiddenProfile": { $exists: false } },
+        { "settings.hiddenProfile": false }, 
+      ],
     }).lean();
 
     return therapists;
