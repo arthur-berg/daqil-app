@@ -15,7 +15,11 @@ import {
   schedulePaymentReminders,
   scheduleStatusUpdateJob,
 } from "@/lib/schedule-appointment-jobs";
-import { checkTherapistAvailability, updateAppointments } from "./utils";
+import {
+  checkTherapistAvailability,
+  checkTherapistBookedTimeSlotsAvailability,
+  updateAppointments,
+} from "./utils";
 import connectToMongoDB from "@/lib/mongoose";
 import { sendNonPaidBookingConfirmationEmail } from "@/lib/mail";
 import { getFullName } from "@/utils/formatName";
@@ -72,11 +76,10 @@ export const scheduleAppointment = async (
     startDate.getTime() + appointmentType.durationInMinutes * 60000
   );
 
-  const availabilityCheck = await checkTherapistAvailability(
+  const availabilityCheck = await checkTherapistBookedTimeSlotsAvailability(
     therapist,
     startDate,
-    endDate,
-    appointmentType
+    endDate
   );
 
   if (!availabilityCheck.available) {

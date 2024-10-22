@@ -523,7 +523,17 @@
     "myClients": "My Clients",
     "name":"Name",
     "email": "Email",
-    "totalAppointments":"Total appointments"
+  "noClientFound": "No client found",
+  "emailLabel": "Email",
+  "currentTherapist": "Current Therapist",
+  "none": "None",
+  "totalAppointments": "Total Appointments",
+  "therapistHistory": "Therapist History",
+  "therapistLabel": "Therapist",
+  "appointmentsLabel": "Appointments",
+  "periodLabel": "Period",
+  "current": "Current",
+  "scheduleAppointment": "Schedule Appointment"
   },
   "PaymentSuccessPage": {
     "paymentLinkSent": "A booking confirmation and a payment link have been sent to the client's email.",
@@ -657,6 +667,7 @@
     "subject": "Confirm Your Email Address",
     "subjectTherapist": "Welcome to DAQIL! Please confirm your email adress.",
     "welcomeMessage": "Welcome to DAQIL!",
+    "acceptInviteButton": "Accept Invite",
     "therapistMessage": "You have been invited to DAQIL as a psychologist.",
     "temporaryPasswordMessage": "Here is your temporary password: {password}",
     "confirmEmailMessage": "Please confirm your email address to complete the registration process.",

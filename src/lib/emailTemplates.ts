@@ -47,6 +47,13 @@ export const verificationEmailTemplate = async (
     days: 3,
   })}</p>`;
 
+  const buttonLabel = isTherapist
+    ? t("acceptInviteButton")
+    : t("confirmEmailButton");
+  const buttonColor = isTherapist
+    ? "#28a745" /* green success color */
+    : "#007bff"; /* default blue color */
+
   return `
   <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
     <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
@@ -59,9 +66,7 @@ export const verificationEmailTemplate = async (
     
         
         <p>${t("confirmEmailMessage")}</p> 
-        <a href="${confirmLink}" style="display: inline-block; padding: 12px 24px; margin: 20px 0; background-color: #007bff; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: bold; text-align: center;">${t(
-    "confirmEmailButton"
-  )}</a>
+        <a href="${confirmLink}" style="display: inline-block; padding: 12px 24px; margin: 20px 0; background-color: ${buttonColor}; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: bold; text-align: center;">${buttonLabel}</a>
         ${expirationMessage} 
       </div>
       <div style="margin-top: 20px; font-size: 12px; color: #888888; text-align: center;">
