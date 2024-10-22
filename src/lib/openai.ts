@@ -67,8 +67,6 @@ Please return the summary in plain text format, **without using a colon after th
       <p>${extractSection(content, "Therapist's Recommendations")}</p></div>
     `;
 
-    console.log("htmlContent", htmlContent);
-
     return htmlContent;
   } catch (error) {
     console.error("Error summarizing transcribed text:", error);
@@ -80,7 +78,6 @@ Please return the summary in plain text format, **without using a colon after th
 function extractSection(content: string, sectionTitle: string): string {
   const regex = new RegExp(`${sectionTitle}\\s*(.*?)(?=\\d\\.|$)`, "s"); // Extract until next numbered section or end
   const match = content.match(regex);
-  console.log("Extracting content for:", sectionTitle, "Match:", match);
 
   if (match) {
     let extractedContent = match[1].trim();

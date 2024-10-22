@@ -254,9 +254,7 @@ export default function useRoom() {
           setCamera(roomRef.current!.camera);
           setScreen(roomRef.current!.screen);
           addLocalParticipant({ room: roomRef.current! });
-          if (!videoRecordingStarted) {
-            startRecording(sessionId, appointmentData, token);
-          }
+          startRecording(sessionId, appointmentData, token);
 
           const hideArchivingIndicator = () => {
             const archivingElement = document.querySelector(

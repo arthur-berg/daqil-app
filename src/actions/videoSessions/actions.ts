@@ -6,6 +6,7 @@ import { getCurrentRole, requireAuth } from "@/lib/auth";
 import {
   createSessionAndToken,
   generateToken,
+  getArchiveBySessionId,
   startArchive,
 } from "@/lib/vonage";
 import { addMinutes, subMinutes, isBefore, isAfter } from "date-fns";
@@ -134,7 +135,10 @@ export const getSessionData = async (appointmentId: string) => {
     }
 
     let session = await VideoSession.findOne({ appointmentId });
-    const videoRecordingStarted = !!appointment.journalNoteId;
+    let journalNote;
+    if (!!appointment.journalNoteId) {
+      journalNote = await JournalNotes.findById(appointment.journalNoteId);
+    }
 
     if (session) {
       console.log("Session found. Generating new token...");
@@ -162,7 +166,7 @@ export const getSessionData = async (appointmentId: string) => {
         appointmentData: {
           id: appointment._id.toString(),
           endDate: appointment.endDate,
-          videoRecordingStarted,
+          archiveId: journalNote?.archiveId || null,
         },
       };
     } else {
@@ -187,7 +191,7 @@ export const getSessionData = async (appointmentId: string) => {
         appointmentData: {
           id: appointment._id.toString(),
           endDate: appointment.endDate,
-          videoRecordingStarted,
+          archiveId: journalNote?.archiveId || null,
         },
       };
     }
@@ -202,6 +206,7 @@ export const startVideoRecording = async (
   appointmentData: {
     id: string;
     endDate: Date;
+    archiveId: string;
   },
   token: string
 ) => {
@@ -215,13 +220,24 @@ export const startVideoRecording = async (
   try {
     await requireAuth(["THERAPIST", "CLIENT"]);
 
-    const archive = await startArchive(sessionId, {
+    let existingArchive;
+
+    if (!!appointmentData.archiveId) {
+      existingArchive = await getArchiveBySessionId(appointmentData.archiveId);
+
+      if (existingArchive && existingArchive.status === "started") {
+        console.log("Archive is already started, doing nothing.");
+        return;
+      }
+    }
+
+    const newArchive = await startArchive(sessionId, {
       hasAudio: true,
       hasVideo: false,
       outputMode: ArchiveOutputMode.COMPOSED,
     });
 
-    const archiveId = archive.id;
+    const archiveId = newArchive.id;
 
     const data = await JournalNotes.create({
       appointmentId: appointmentData.id,
@@ -235,19 +251,12 @@ export const startVideoRecording = async (
       journalNoteId: data.id,
     });
 
-    // Todo, add this back when the recording is stopped
-    // For now we will manually stop it from My Clients for testing purposes
-
-    /*  await scheduleStopRecording(
-      sessionId,
-      archiveId,
-      appointmentData.endDate,
-      appointmentData.id
-    ); */
+    // Optionally, schedule stopping the recording at the end time
+    // await scheduleStopRecording(sessionId, archiveId, appointmentData.endDate, appointmentData.id);
 
     return { success: SuccessMessages("recordingStarted") };
   } catch (error) {
-    console.error("Error starting recording:", error);
+    console.error("Error starting/resuming recording:", error);
     return { error: ErrorMessages("recordingFailed") };
   }
 };

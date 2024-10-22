@@ -25,29 +25,6 @@ const ReactQuill = dynamic(() => import("react-quill") as any, {
 import "react-quill/dist/quill.snow.css";
 import { JournalNoteSchema } from "@/schemas";
 import { updateJournalNote } from "@/actions/updateJournalNote";
-import sanitizeHtml from "sanitize-html";
-
-function cleanHtmlContent(html: any) {
-  // Define allowed tags and attributes
-  const clean = sanitizeHtml(html, {
-    allowedTags: [
-      "h3",
-      "h4",
-      "p",
-      "b",
-      "i",
-      "strong",
-      "em",
-      "ul",
-      "ol",
-      "li",
-      "br",
-    ],
-    allowedAttributes: {},
-  });
-
-  return clean;
-}
 
 const JournalNoteForm = ({
   journalNote,
@@ -59,8 +36,6 @@ const JournalNoteForm = ({
   const [isPending, startTransition] = useTransition();
   const { responseToast } = useToast();
 
-  const cleanSummary = cleanHtmlContent(journalNote?.summary || "");
-
   const form = useForm<z.infer<typeof JournalNoteSchema>>({
     resolver: zodResolver(JournalNoteSchema),
     defaultValues: {
@@ -68,8 +43,6 @@ const JournalNoteForm = ({
       note: journalNote?.note || "",
     },
   });
-
-  console.log("cleanSummary", cleanSummary);
 
   const handleCancel = () => {
     form.reset();

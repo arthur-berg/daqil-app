@@ -50,8 +50,8 @@ export const generateToken = (sessionId: string) => {
   };
 };
 
-export const getArchiveBySessionId = async (sessionId: string) => {
-  const archives = await videoClient.getArchive(sessionId);
+export const getArchiveBySessionId = async (archiveId: string) => {
+  const archives = await videoClient.getArchive(archiveId);
   return archives;
 };
 

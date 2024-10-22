@@ -3,6 +3,7 @@ import connectToMongoDB from "@/lib/mongoose";
 import jwt from "jsonwebtoken";
 import { retrieveArchive } from "@/lib/vonage";
 import { sendToRevAI } from "@/lib/rev-ai";
+import JournalNote from "@/models/JournalNote";
 const SIGNATURE_SECRET = process.env.VONAGE_SIGNATURE_SECRET as string;
 
 export const POST = async (req: NextRequest) => {
@@ -31,10 +32,15 @@ export const POST = async (req: NextRequest) => {
 
       const audioUrl = archive.url;
 
-      if (!audioUrl) {
-        throw new Error(
-          "No archive URL available. Unable to proceed with transcription."
+      if (!audioUrl || archive.duration < 2) {
+        await JournalNote.findOneAndUpdate(
+          { archiveId: id },
+          { summaryStatus: "error" }
         );
+        console.log(
+          "Archive duration too short or no audio URL available. Marked as error."
+        );
+        return;
       }
 
       const revJobId = await sendToRevAI(audioUrl, id);

@@ -15,7 +15,7 @@ const journalNote = new Schema(
     },
     summaryStatus: {
       type: String,
-      enum: ["notStarted", "pending", "review", "completed"],
+      enum: ["notStarted", "pending", "review", "completed", "error"],
       default: "pending",
     },
 

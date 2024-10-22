@@ -516,6 +516,8 @@
     "deletingDiscountCode": "Deleting discount code..."
   },
  "MyClientsPage": {
+  "errorGeneratingJournalNote": "Couldn't generate journal note, please add it manually.",
+  "createJournalNote": "Create Journal Note",
   "generateJournalNote": "Generate Journal Note",
   "noClientsFound": "No clients found.",
   "goBackToClients": "Go back to clients overview",

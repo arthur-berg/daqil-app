@@ -1,12 +1,10 @@
 "use client";
-
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { getClientById } from "@/data/user";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/navigation";
 import GenerateJournalNoteButton from "@/app/[locale]/(protected)/therapist/clients/[clientId]/generate-journal-note-button";
@@ -18,6 +16,11 @@ import JournalNoteForm from "./journal-note-form";
 
 const formatAppointmentTime = (date: any) => {
   return format(new Date(date), "HH:mm");
+};
+
+const truncateText = (text: string, maxLength: number) => {
+  if (text.length <= maxLength) return text;
+  return text.slice(0, maxLength) + "...";
 };
 
 const ClientDetailPageBody = ({
@@ -32,7 +35,9 @@ const ClientDetailPageBody = ({
   clientId: string;
 }) => {
   const t = useTranslations("MyClientsPage");
-  const [isEditing, setIsEditing] = useState(false);
+  const [editingJournalNoteId, setEditingJournalNoteId] = useState<
+    string | null
+  >(null); // Track the ID of the note being edited
   const clientData = JSON.parse(clientDataJson);
   const { firstName, lastName, email, appointments, selectedTherapist } =
     clientData;
@@ -156,28 +161,45 @@ const ClientDetailPageBody = ({
                         {appointment.journalNoteId.summaryStatus ===
                         "completed" ? (
                           <>
-                            {isEditing ? (
+                            {editingJournalNoteId ===
+                            appointment.journalNoteId._id ? (
                               <JournalNoteForm
-                                setIsEditing={setIsEditing}
+                                setIsEditing={() =>
+                                  setEditingJournalNoteId(null)
+                                }
                                 journalNote={appointment.journalNoteId}
                               />
                             ) : (
                               <>
                                 <div>
-                                  <strong> Note:</strong>{" "}
-                                  <p>{appointment.journalNoteId.note}</p>
+                                  <strong>Note:</strong>
+                                  <p>
+                                    {truncateText(
+                                      appointment.journalNoteId.note,
+                                      100
+                                    )}
+                                  </p>
                                 </div>
                                 <div>
-                                  <strong> {t("summary")}:</strong>
+                                  <strong>{t("summary")}:</strong>
                                   <div
                                     className="italic text-sm text-gray-600"
                                     dangerouslySetInnerHTML={{
-                                      __html: appointment.journalNoteId.summary,
+                                      __html: truncateText(
+                                        appointment.journalNoteId.summary,
+                                        200
+                                      ),
                                     }}
                                   />
                                 </div>
 
-                                <Button onClick={() => setIsEditing(true)}>
+                                <Button
+                                  onClick={() =>
+                                    setEditingJournalNoteId(
+                                      appointment.journalNoteId._id
+                                    )
+                                  }
+                                >
                                   {t("edit")}
                                 </Button>
                               </>
@@ -185,26 +207,63 @@ const ClientDetailPageBody = ({
                           </>
                         ) : appointment.journalNoteId.summaryStatus ===
                           "pending" ? (
-                          <>
-                            <p className="italic text-sm text-gray-600">
-                              {t("journalNoteInProgress")}
-                            </p>
-                          </>
+                          <p className="italic text-sm text-gray-600">
+                            {t("journalNoteInProgress")}
+                          </p>
                         ) : appointment.journalNoteId.summaryStatus ===
                           "review" ? (
                           <>
-                            {isEditing ? (
+                            {editingJournalNoteId ===
+                            appointment.journalNoteId._id ? (
                               <JournalNoteForm
-                                setIsEditing={setIsEditing}
+                                setIsEditing={() =>
+                                  setEditingJournalNoteId(null)
+                                }
                                 journalNote={appointment.journalNoteId}
                               />
                             ) : (
                               <div>
-                                <Button onClick={() => setIsEditing(true)}>
+                                <Button
+                                  variant="success"
+                                  onClick={() =>
+                                    setEditingJournalNoteId(
+                                      appointment.journalNoteId._id
+                                    )
+                                  }
+                                >
                                   {t("journalNoteIsReadyForReview")}
                                 </Button>
                               </div>
                             )}
+                          </>
+                        ) : appointment.journalNoteId.summaryStatus ===
+                          "error" ? (
+                          <>
+                            <p className="text-red-600 mb-2">
+                              {t("errorGeneratingJournalNote")}
+                            </p>
+                            <div>
+                              {editingJournalNoteId ===
+                              appointment.journalNoteId._id ? (
+                                <JournalNoteForm
+                                  setIsEditing={() =>
+                                    setEditingJournalNoteId(null)
+                                  }
+                                  journalNote={appointment.journalNoteId}
+                                />
+                              ) : (
+                                <Button
+                                  variant="success"
+                                  onClick={() =>
+                                    setEditingJournalNoteId(
+                                      appointment.journalNoteId._id
+                                    )
+                                  }
+                                >
+                                  {t("createJournalNote")}
+                                </Button>
+                              )}
+                            </div>
                           </>
                         ) : (
                           <div>
