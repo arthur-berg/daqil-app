@@ -1,9 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import connectToMongoDB from "@/lib/mongoose";
-import JournalNote from "@/models/JournalNote";
-import { getTranscriptionDetails } from "@/lib/rev-ai";
-import { revalidatePath } from "next/cache";
-import { summarizeTranscribedText } from "@/lib/openai";
+import { addTranscriptionJobToQueue } from "@/lib/qstash";
 
 export const POST = async (req: NextRequest) => {
   try {
@@ -30,21 +27,9 @@ export const POST = async (req: NextRequest) => {
       );
     }
 
-    const transcriptionResult = await getTranscriptionDetails(jobId);
+    await addTranscriptionJobToQueue(jobId);
 
-    if (!transcriptionResult) {
-      console.error(
-        `Failed to retrieve transcription result for job ID: ${jobId}`
-      );
-      return NextResponse.json(
-        { error: "Failed to retrieve transcription result" },
-        { status: 500 }
-      );
-    }
-
-    const { transcript, archiveId } = transcriptionResult;
-
-    const summary = await summarizeTranscribedText(transcript);
+    /* const summary = await summarizeTranscribedText(transcript);
 
     const updatedJournalNote = await JournalNote.findOneAndUpdate(
       { archiveId },
@@ -58,13 +43,9 @@ export const POST = async (req: NextRequest) => {
         { error: "No matching JournalNote found" },
         { status: 404 }
       );
-    }
+    } */
 
-    console.log(
-      `Successfully updated JournalNote for archive ID: ${archiveId}`
-    );
-
-    revalidatePath("/therapist/clients/[clientId]", "page");
+    console.log(`Successfully updated JournalNote for archive ID: ${jobId}`);
 
     return NextResponse.json(
       { message: "Transcription successfully processed and saved" },

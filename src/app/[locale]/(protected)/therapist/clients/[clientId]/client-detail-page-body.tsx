@@ -224,7 +224,6 @@ const ClientDetailPageBody = ({
                             ) : (
                               <div>
                                 <Button
-                                  variant="success"
                                   onClick={() =>
                                     setEditingJournalNoteId(
                                       appointment.journalNoteId._id

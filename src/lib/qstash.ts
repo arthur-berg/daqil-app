@@ -27,3 +27,40 @@ export const scheduleTask = async (
     throw error;
   }
 };
+
+export const addTranscriptionJobToQueue = async (jobId: any) => {
+  try {
+    const response = await qstashClient.publishJSON({
+      url: `${process.env.QSTASH_API_URL}/process-transcription-job`,
+      body: {
+        jobId: jobId,
+      },
+      retries: 3,
+      method: "POST",
+      rateLimit: 15,
+      backoff: "exponential",
+    });
+
+    console.log(`Published job for archiveId: ${jobId}`);
+    return response.messageId;
+  } catch (error) {
+    console.error("Error adding to QStash queue:", error);
+    throw error;
+  }
+};
+
+// rateLimits we should use for different tiers in OpenAI's API
+// Tier 2
+// rateLimit: 25 (RPM estimated around 25 requests per minute)
+
+// Tier 3
+// rateLimit: 40 (RPM estimated around 40 requests per minute)
+
+// Tier 4
+// rateLimit: 80 (RPM estimated around 80 requests per minute)
+
+// Tier 5
+// rateLimit: 150 (RPM estimated around 150 requests per minute)
+
+// Note: These are estimated rate limits based on the typical RPM for each tier.
+// Check OpenAI's dashboard for your actual limits and adjust accordingly.

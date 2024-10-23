@@ -93,8 +93,6 @@ export const getTranscriptionDetails = async (jobId: string) => {
 
     const transcriptionData = await transcriptResponse.json();
 
-    console.log("transcriptionData", transcriptionData);
-
     if (
       !transcriptionData.monologues ||
       !Array.isArray(transcriptionData.monologues)
