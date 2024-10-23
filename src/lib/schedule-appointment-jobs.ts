@@ -208,7 +208,7 @@ export const scheduleReminderJobs = async (
     taskId: meetingLinkTaskId,
   });
 
-  const smsReminderTaskId = await scheduleTask(
+  /*  const smsReminderTaskId = await scheduleTask(
     `${process.env.QSTASH_API_URL}/sms-reminder`,
     { clientPhone: appointment.clientPhone, appointmentId: appointmentId },
     Math.floor(twentyMinutesBefore.getTime() / 1000),
@@ -219,7 +219,7 @@ export const scheduleReminderJobs = async (
     appointmentId: appointmentId,
     type: "smsReminder",
     taskId: smsReminderTaskId,
-  });
+  }); */
 };
 
 export const cancelAllScheduledJobsForAppointment = async (

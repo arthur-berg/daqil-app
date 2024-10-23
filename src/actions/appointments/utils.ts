@@ -4,7 +4,10 @@ import {
 } from "@/lib/schedule-appointment-jobs";
 import Appointment from "@/models/Appointment";
 import User from "@/models/User";
-import { getTherapistAvailableTimeSlots } from "@/utils/therapistAvailability";
+import {
+  getTherapistAvailableTimeSlots,
+  getTherapistBookedTimeSlots,
+} from "@/utils/therapistAvailability";
 import { format, isAfter, isBefore, isEqual } from "date-fns";
 import { startSession } from "mongoose";
 import { getLocale } from "next-intl/server";
@@ -108,6 +111,39 @@ export const checkForOverlappingAppointments = (
   return false;
 };
 
+export const checkTherapistBookedTimeSlotsAvailability = async (
+  therapist: any,
+  startDate: any,
+  endDate: any
+) => {
+  const bookedTimeSlots = getTherapistBookedTimeSlots(
+    startDate,
+    therapist.appointments
+  );
+
+  // Check if the requested time slot overlaps with any booked time slots
+  const requestedStart = new Date(startDate);
+  const requestedEnd = new Date(endDate);
+
+  const isSlotBooked = bookedTimeSlots.some((slot) => {
+    return (
+      // Check if requested start or end falls within an existing booked time
+      (requestedStart >= slot.start && requestedStart < slot.end) ||
+      (requestedEnd > slot.start && requestedEnd <= slot.end) ||
+      // Check if an existing booked time falls within the requested time
+      (requestedStart <= slot.start && requestedEnd >= slot.end)
+    );
+  });
+
+  if (isSlotBooked) {
+    return {
+      available: false,
+      message: "This time slot is already booked.",
+    };
+  }
+
+  return { available: true };
+};
 export const checkTherapistAvailability = async (
   therapist: any,
   startDate: any,

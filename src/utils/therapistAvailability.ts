@@ -288,3 +288,54 @@ export const getTherapistAvailableTimeSlots = (
 
   return timeBlocks;
 };
+
+export const getTherapistBookedTimeSlots = (
+  selectedDate: Date,
+  appointments: any[]
+): TimeSlot[] => {
+  const appointmentDate = format(selectedDate, "yyyy-MM-dd");
+
+  const selectedAppointment = appointments.find(
+    (appointment) => appointment.date === appointmentDate
+  );
+
+  const bookedAppointments = selectedAppointment
+    ? selectedAppointment.bookedAppointments.filter(
+        (appointment: any) => appointment.status !== "canceled"
+      )
+    : [];
+
+  const validTemporarilyReservedAppointments = selectedAppointment
+    ? selectedAppointment.temporarilyReservedAppointments.filter(
+        (appointment: any) =>
+          appointment?.payment?.paymentExpiryDate &&
+          new Date(appointment.payment.paymentExpiryDate) > new Date()
+      )
+    : [];
+
+  const allAppointmentsForDate = [
+    ...bookedAppointments,
+    ...validTemporarilyReservedAppointments,
+  ];
+
+  const appointmentsForDate = allAppointmentsForDate.map((appointment: any) => {
+    const start = new Date(appointment.startDate);
+    const end = new Date(appointment.endDate);
+
+    return {
+      startTime: safeFormat(start, "HH:mm"),
+      endTime: safeFormat(end, "HH:mm"),
+    };
+  });
+
+  const timeBlocks = appointmentsForDate.map((range) => {
+    const startTime = new Date(`${appointmentDate}T${range.startTime}:00`);
+    const endTime = new Date(`${appointmentDate}T${range.endTime}:00`);
+    return {
+      start: startTime,
+      end: endTime,
+    };
+  });
+
+  return timeBlocks;
+};

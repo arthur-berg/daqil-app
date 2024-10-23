@@ -57,11 +57,8 @@ const BrowseTherapistsPage = async ({
                   </AvatarFallback>
                 </Avatar>
               </div>
-              <div className="font-bold text-lg sm:text-xl mb-1 text-center mt-2">
+              <div className="font-bold text-lg sm:text-xl mb-4 text-center mt-2">
                 {await getFullName(therapist.firstName, therapist.lastName)}
-              </div>
-              <div className="text-gray-600 mb-4 text-center text-sm sm:text-base">
-                {therapist.email}
               </div>
               {therapist.therapistWorkProfile && (
                 <div className="text-sm text-gray-700 mb-4 text-center">

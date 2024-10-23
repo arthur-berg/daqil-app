@@ -16,54 +16,54 @@ const intlMiddleware = createMiddleware({
 const authMiddleware = auth(async (req) => {
   const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
+  try {
+    const pathnameParts = nextUrl.pathname.split("/");
 
-  const pathnameParts = nextUrl.pathname.split("/");
+    const locale = (
+      locales.includes(pathnameParts[1] as any) ? pathnameParts[1] : "en"
+    ) as (typeof locales)[number];
 
-  const locale = (
-    locales.includes(pathnameParts[1] as any) ? pathnameParts[1] : "en"
-  ) as (typeof locales)[number];
+    const pathWithoutLocale = locales.includes(pathnameParts[1] as any)
+      ? `/${pathnameParts.slice(2).join("/")}`
+      : nextUrl.pathname;
 
-  const pathWithoutLocale = locales.includes(pathnameParts[1] as any)
-    ? `/${pathnameParts.slice(2).join("/")}`
-    : nextUrl.pathname;
+    const isPublicRoute = publicRoutes.includes(pathWithoutLocale);
+    const isAuthRoute = authRoutes.includes(pathWithoutLocale);
 
-  const isPublicRoute = publicRoutes.includes(pathWithoutLocale);
-  const isAuthRoute = authRoutes.includes(pathWithoutLocale);
+    const isApiRoute = nextUrl.pathname.startsWith("/api");
 
-  const isApiRoute = nextUrl.pathname.startsWith("/api");
+    if (isApiRoute) {
+      // Skip locale handling for API routes
 
-  if (isApiRoute) {
-    // Skip locale handling for API routes
+      return;
+    }
 
-    return;
-  }
+    if (isAuthRoute) {
+      if (isLoggedIn) {
+        return Response.redirect(
+          new URL(`/${locale}/${DEFAULT_LOGIN_REDIRECT}`, nextUrl)
+        );
+      }
+      return intlMiddleware(req);
+    }
 
-  if (isAuthRoute) {
-    if (isLoggedIn) {
+    if (!isLoggedIn && !isPublicRoute) {
+      let callbackUrl = nextUrl.pathname;
+      if (nextUrl.search) {
+        callbackUrl += nextUrl.search;
+      }
+
+      const encodedCallbackUrl = encodeURIComponent(callbackUrl);
+
+      // TODO , fix this , now we need to set redirectTo in signOut to make it work
       return Response.redirect(
-        new URL(`/${locale}/${DEFAULT_LOGIN_REDIRECT}`, nextUrl)
+        new URL(
+          `/${locale}/auth/login?callbackUrl=${encodedCallbackUrl}`,
+          nextUrl
+        )
       );
-    }
-    return intlMiddleware(req);
-  }
 
-  if (!isLoggedIn && !isPublicRoute) {
-    let callbackUrl = nextUrl.pathname;
-    if (nextUrl.search) {
-      callbackUrl += nextUrl.search;
-    }
-
-    const encodedCallbackUrl = encodeURIComponent(callbackUrl);
-
-    // TODO , fix this , now we need to set redirectTo in signOut to make it work
-    return Response.redirect(
-      new URL(
-        `/${locale}/auth/login?callbackUrl=${encodedCallbackUrl}`,
-        nextUrl
-      )
-    );
-
-    /*  if (!callbackUrl.startsWith(`/${locale}/auth/login`)) {
+      /*  if (!callbackUrl.startsWith(`/${locale}/auth/login`)) {
       return Response.redirect(
         new URL(
           `/${locale}/auth/login?callbackUrl=${encodedCallbackUrl}`,
@@ -71,13 +71,17 @@ const authMiddleware = auth(async (req) => {
         )
       );
     } */
-  }
+    }
 
-  if (isLoggedIn) {
-    return intlMiddleware(req); // Apply internationalization for logged-in users
-  }
+    if (isLoggedIn) {
+      return intlMiddleware(req); // Apply internationalization for logged-in users
+    }
 
-  return intlMiddleware(req);
+    return intlMiddleware(req);
+  } catch (error) {
+    console.error("Middleware error:", error);
+    return new Response("Internal Server Error", { status: 500 });
+  }
 });
 
 export default function middleware(req: NextRequest) {

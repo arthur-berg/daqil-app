@@ -242,7 +242,7 @@ const VideoRoom = ({
               alt="daqil-logo"
               width={300}
               height={200}
-              className="absolute top-1 right-0 w-[120px] lg:w-[150px] z-10"
+              className="absolute top-2 right-2 w-[120px] lg:w-[150px] z-10"
             />
             <div id="previewContainer" className="w-full h-full"></div>
           </div>
@@ -331,7 +331,7 @@ const VideoRoom = ({
             alt="daqil-logo"
             width={300}
             height={200}
-            className="absolute top-1 right-0 w-[120px] lg:w-[150px] z-10"
+            className="absolute top-2 right-2 w-[120px] lg:w-[150px] z-10"
           />
         </div>
         <div className="absolute bottom-0 left-0  w-full md:max-w-7xl">

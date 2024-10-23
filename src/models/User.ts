@@ -295,6 +295,10 @@ const userSchema = new Schema(
         required: false,
         default: "America/New_York",
       },
+      hiddenProfile: {
+        type: Boolean,
+        required: false,
+      },
     },
     paymentSettings: {
       type: { type: String, enum: ["personal", "company"] },
