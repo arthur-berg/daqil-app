@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import connectToMongoDB from "@/lib/mongoose";
 import { addTranscriptionJobToQueue } from "@/lib/qstash";
+import JournalNote from "@/models/JournalNote";
 
 export const POST = async (req: NextRequest) => {
   try {
@@ -21,6 +22,11 @@ export const POST = async (req: NextRequest) => {
       console.error(
         `Transcription job ${jobId} did not complete successfully. Status: ${status}`
       );
+
+      await JournalNote.findOneAndUpdate(
+        { revJobId: jobId },
+        { summaryStatus: "error" }
+      );
       return NextResponse.json(
         { error: "Transcription job was not successful" },
         { status: 400 }
@@ -29,23 +35,7 @@ export const POST = async (req: NextRequest) => {
 
     await addTranscriptionJobToQueue(jobId);
 
-    /* const summary = await summarizeTranscribedText(transcript);
-
-    const updatedJournalNote = await JournalNote.findOneAndUpdate(
-      { archiveId },
-      { summary: summary, summaryStatus: "review" },
-      { new: true }
-    );
-
-    if (!updatedJournalNote) {
-      console.error(`No JournalNote found with archiveId: ${archiveId}`);
-      return NextResponse.json(
-        { error: "No matching JournalNote found" },
-        { status: 404 }
-      );
-    } */
-
-    console.log(`Successfully updated JournalNote for archive ID: ${jobId}`);
+    console.log(`Successfully updated JournalNote for revJobId: ${jobId}`);
 
     return NextResponse.json(
       { message: "Transcription successfully processed and saved" },

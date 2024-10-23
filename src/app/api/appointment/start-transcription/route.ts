@@ -43,7 +43,12 @@ export const POST = async (req: NextRequest) => {
         return;
       }
 
-      const revJobId = await sendToRevAI(audioUrl, id);
+      const revJobId = await sendToRevAI(audioUrl);
+
+      await JournalNote.findOneAndUpdate(
+        { archiveId: id },
+        { revJobId: revJobId }
+      );
 
       console.log(`Rev.ai Job created. Job ID: ${revJobId}`);
     }

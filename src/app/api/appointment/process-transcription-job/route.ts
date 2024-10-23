@@ -9,17 +9,16 @@ export const POST = async (req: NextRequest) => {
   try {
     await connectToMongoDB();
 
-    console.log("inside process-transcription-job");
-
     const body = await req.json();
     const { jobId } = body;
-
-    console.log("body", JSON.stringify(body));
-
     console.log("jobId", jobId);
 
     if (!jobId) {
       console.error("Missing archiveId or transcript in the request.");
+      await JournalNote.findOneAndUpdate(
+        { revJobId: jobId },
+        { summaryStatus: "error" }
+      );
       return NextResponse.json(
         { error: "Missing archiveId or transcript" },
         { status: 400 }
@@ -32,31 +31,31 @@ export const POST = async (req: NextRequest) => {
       console.error(
         `Failed to retrieve transcription result for job ID: ${jobId}`
       );
+      await JournalNote.findOneAndUpdate(
+        { revJobId: jobId },
+        { summaryStatus: "error" }
+      );
       return NextResponse.json(
         { error: "Failed to retrieve transcription result" },
         { status: 500 }
       );
     }
 
-    const { transcript, archiveId } = transcriptionResult;
-
-    console.log("Processing job for archiveId:", archiveId);
+    const { transcript } = transcriptionResult;
 
     const summary = await summarizeTranscribedText(transcript);
 
-    console.log("Generated summary for archiveId:", archiveId);
-
     const updatedJournalNote = await JournalNote.findOneAndUpdate(
-      { archiveId },
+      { revJobId: jobId },
       { summary, summaryStatus: "review" },
       { new: true }
     );
 
     if (!updatedJournalNote) {
-      throw new Error(`No JournalNote found with archiveId: ${archiveId}`);
+      throw new Error(`No JournalNote found with jobId: ${jobId}`);
     }
 
-    console.log(`Updated JournalNote for archiveId: ${archiveId}`);
+    console.log(`Updated JournalNote for revJobId: ${jobId}`);
 
     revalidatePath("/therapist/clients/[clientId]", "page");
 

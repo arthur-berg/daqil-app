@@ -2,7 +2,7 @@ const REV_API_KEY = process.env.REV_API_KEY;
 const callbackUrl = process.env.REVAI_WEBHOOK_URL;
 const REV_BASE_URL = "https://api.rev.ai/speechtotext/v1/jobs";
 
-export const sendToRevAI = async (audioUrl: string, archiveId: string) => {
+export const sendToRevAI = async (audioUrl: string) => {
   const response = await fetch(REV_BASE_URL, {
     method: "POST",
     headers: {
@@ -22,11 +22,8 @@ export const sendToRevAI = async (audioUrl: string, archiveId: string) => {
           Authorization: `Bearer ${REV_WEBHOOK_AUTH}`,
         }, */
       },
-      metadata: `archiveId:${archiveId}`,
     }),
   });
-
-  console.log("callbackUrl", callbackUrl);
 
   if (!response.ok) {
     throw new Error(`Failed to send audio to Rev.ai: ${response.status}`);
@@ -56,21 +53,6 @@ export const getTranscriptionDetails = async (jobId: string) => {
 
     const jobDetails = await jobDetailsResponse.json();
     console.log("jobDetails", jobDetails);
-
-    // Extract the archiveId from the metadata string
-    const metadata = jobDetails.metadata;
-    let archiveId: string | undefined;
-    if (metadata) {
-      const match = metadata.match(/archiveId:([a-f0-9-]+)/);
-      if (match && match[1]) {
-        archiveId = match[1];
-      }
-    }
-
-    if (!archiveId) {
-      console.error(`Failed to extract archiveId from metadata: ${metadata}`);
-      return null;
-    }
 
     // Fetch the transcription details separately
     const transcriptResponse = await fetch(
@@ -118,7 +100,6 @@ export const getTranscriptionDetails = async (jobId: string) => {
 
     return {
       transcript,
-      archiveId,
     };
   } catch (error) {
     console.error("Error retrieving transcription details:", error);
