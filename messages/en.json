@@ -142,7 +142,7 @@
     "calendar": "Calendar",
     "bookSession": "Book therapy session",
     "forAllUsers": "For all users",
-    "forTherapists": "For therapists",
+    "forTherapists": "For psychologists",
     "appointments": "Appointments",
     "payment": "Subscription & Credits",
     "settings": "Settings",
@@ -296,7 +296,7 @@
     "reject": "Reject",
     "accept": "Accept",
     "awaitingApproval": "Do you wish to proceed with this therapist?",
-    "browseTherapistsDescriptionOnlyOption": "Browse through our therapists and select the one you'd like to book an appointment with.",
+    "browseTherapistsDescriptionOnlyOption": "Browse through our psychologists and select the one you'd like to book an appointment with.",
     "introMeetingIsPending": " You already have an introductory meeting booked in. If you wish to choose another time, please cancel your appointment to book a new one.",
 "introMeetingIsOngoing": "You already have an introductory meeting in progress. Please wait until the meeting is finished, which is at {endDate}.",
     "seeAppointments": "See Appointments",
@@ -792,9 +792,11 @@
       "content": "Your privacy is important to us. Our Privacy Policy explains how we collect, use, and protect your personal information. By agreeing to these Terms, you also agree to our Privacy Policy. We implement robust security measures, including data encryption, to protect your information."
     },
     "useOfServices": {
-      "heading": "5. Use of Services",
-      "content": "Therapy Services: Our platform provides access to licensed therapists who offer therapy services. These services are provided directly by the therapists, and we act as a facilitator for connecting you with these professionals."
-    },
+  "heading": "5. Use of Services",
+  "content": "Therapy Services: Our platform provides access to licensed therapists who offer therapy services. These services are provided directly by the therapists, and we act as a facilitator for connecting you with these professionals.",
+  "sessionRecording": "Session Recording: Therapy sessions may be audio recorded for quality control, training, and to enable certain AI-powered features such as automated journaling. By using our services, you consent to the recording of your therapy sessions. You can choose to opt out of AI-driven features in your account settings.",
+  "healthDisclaimer": "Health Disclaimer: Our platform is not intended to provide medical diagnosis or treatment. Therapy provided through our platform is intended as a form of mental health support and should not replace medical advice from a licensed healthcare provider."
+},
     "consentToRecording": {
       "heading": "6. Consent to Recording",
       "content": "By agreeing to these Terms, you consent to the recording of your therapy sessions. These recordings are confidential and will only be used to improve our services and provide additional features, such as AI-driven journaling. We do not share your data with third parties unless required by law. You can review and manage your consent in your account settings."
@@ -805,15 +807,15 @@
     },
     "therapistConduct": {
       "heading": "8. Therapist Conduct",
-      "content": "We work with licensed and qualified therapists to provide the services. However, we do not supervise, direct, or control the professional judgment of therapists. If you have concerns about the services provided, please contact us at hello@daqil.com."
+      "content": "We work with licensed and qualified psychologists to provide the services. However, we do not supervise, direct, or control the professional judgment of psychologists. If you have concerns about the services provided, please contact us at hello@daqil.com."
     },
     "disclaimerOfLiability": {
       "heading": "9. Disclaimer of Liability",
-      "content": "Zakina Medtech Global provides a platform to connect users with licensed therapists. However, we do not supervise, direct, or control the professional judgment, actions, or advice provided by the therapists..."
+      "content": "Zakina Medtech Global provides a platform to connect users with licensed psychologists. However, we do not supervise, direct, or control the professional judgment, actions, or advice provided by the psychologists..."
     },
     "userResponsibilities": {
       "heading": "10. User Responsibilities",
-      "content": "You agree to provide accurate and complete information when creating your account. Respect the confidentiality of your therapy sessions and any communications with therapists."
+      "content": "You agree to provide accurate and complete information when creating your account. Respect the confidentiality of your therapy sessions and any communications with psychologists."
     },
     "securityAndAccountProtection": {
       "heading": "11. Security and Account Protection",
@@ -821,7 +823,7 @@
     },
     "intellectualProperty": {
       "heading": "12. Intellectual Property",
-      "content": "All content, logos, and material provided on the platform are the intellectual property of Zakina Medtech Global or the therapists providing services."
+      "content": "All content, logos, and material provided on the platform are the intellectual property of Zakina Medtech Global or the psychologists providing services."
     },
     "limitationOfLiability": {
       "heading": "13. Limitation of Liability",

@@ -38,6 +38,16 @@ const TermsAndConditionsPage = async () => {
             {t("useOfServices.heading")}
           </h2>
           <p>{t("useOfServices.content")}</p>
+
+          <h3 className="text-lg font-semibold mt-4">
+            {t("useOfServices.sessionRecording")}
+          </h3>
+          <p>{t("useOfServices.sessionRecording")}</p>
+
+          <h3 className="text-lg font-semibold mt-4">
+            {t("useOfServices.healthDisclaimer")}
+          </h3>
+          <p>{t("useOfServices.healthDisclaimer")}</p>
         </section>
 
         <section className="mb-8">
