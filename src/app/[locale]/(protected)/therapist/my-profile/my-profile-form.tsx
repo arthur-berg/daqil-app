@@ -26,6 +26,7 @@ const ReactQuill = dynamic(() => import("react-quill") as any, {
 }) as React.ComponentType<ReactQuillProps>;
 
 import "react-quill/dist/quill.snow.css";
+import { useCurrentRole } from "@/hooks/use-current-role";
 
 const MyProfileForm = ({
   therapist,
@@ -41,9 +42,7 @@ const MyProfileForm = ({
   const form = useForm<z.infer<typeof TherapistMyProfileSchema>>({
     resolver: zodResolver(TherapistMyProfileSchema),
     defaultValues: {
-      workTitleEn: therapist?.therapistWorkProfile?.en?.title || "",
       workDescriptionEn: therapist?.therapistWorkProfile?.en?.description || "",
-      workTitleAr: therapist?.therapistWorkProfile?.ar?.title || "",
       workDescriptionAr: therapist?.therapistWorkProfile?.ar?.description || "",
     },
   });
@@ -72,20 +71,12 @@ const MyProfileForm = ({
         {/* English Section */}
         <div className="space-y-6">
           <h2 className="text-2xl font-bold mb-4">{t("englishSection")}</h2>
-
-          <FormField
-            control={form.control}
-            name="workTitleEn"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>{t("workTitleLabelEn")}</FormLabel>
-                <FormControl>
-                  <Input {...field} disabled={isPending} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <div className="mt-0 mb-0">
+            <FormLabel>{t("workTitleLabelEn")}</FormLabel>
+            <p className="text-lg font-bold mb-4">
+              {therapist?.therapistWorkProfile?.en?.title}
+            </p>
+          </div>
 
           <FormField
             control={form.control}
@@ -105,24 +96,16 @@ const MyProfileForm = ({
             )}
           />
         </div>
-        <Separator className="my-6" /> {/* Divider between sections */}
+        <Separator className="my-6" />
         {/* Arabic Section */}
         <div className="space-y-6">
           <h2 className="text-2xl font-bold mb-4">{t("arabicSection")}</h2>
-
-          <FormField
-            control={form.control}
-            name="workTitleAr"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>{t("workTitleLabelAr")}</FormLabel>
-                <FormControl>
-                  <Input {...field} disabled={isPending} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <div className="mt-0 mb-0">
+            <FormLabel>{t("workTitleLabelAr")}</FormLabel>
+            <p className="text-lg font-bold mb-4">
+              {therapist?.therapistWorkProfile?.ar?.title}
+            </p>
+          </div>
 
           <FormField
             control={form.control}

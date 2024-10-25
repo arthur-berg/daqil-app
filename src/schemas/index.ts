@@ -7,14 +7,8 @@ export const CancelAppointmentSchema = z.object({
 });
 
 export const TherapistMyProfileSchema = z.object({
-  workTitleEn: z.string().min(1, {
-    message: "Title is required",
-  }),
   workDescriptionEn: z.string().min(1, {
     message: "Description is required",
-  }),
-  workTitleAr: z.string().min(1, {
-    message: "Title is required",
   }),
   workDescriptionAr: z.string().min(1, {
     message: "Description is required",

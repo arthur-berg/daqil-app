@@ -54,15 +54,9 @@ export const updateTherapistProfile = async (
     }
 
     await User.findByIdAndUpdate(userToUpdate, {
-      therapistWorkProfile: {
-        en: {
-          title: data.workTitleEn,
-          description: sanitizedWorkDescriptionEn,
-        },
-        ar: {
-          title: data.workTitleAr,
-          description: sanitizedWorkDescriptionAr,
-        },
+      $set: {
+        "therapistWorkProfile.en.description": sanitizedWorkDescriptionEn,
+        "therapistWorkProfile.ar.description": sanitizedWorkDescriptionAr,
       },
     });
 

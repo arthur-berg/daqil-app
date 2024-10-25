@@ -18,6 +18,7 @@ import Image from "next/image";
 import { useUserName } from "@/hooks/use-user-name";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { useCurrentRole } from "@/hooks/use-current-role";
 
 const MyProfileInfo = ({
   therapistJson,
@@ -33,6 +34,7 @@ const MyProfileInfo = ({
   const { responseToast } = useToast();
   const locale = useLocale();
   const { getFullName } = useUserName();
+  const { isAdmin } = useCurrentRole();
 
   const therapist = JSON.parse(therapistJson);
   const [imageUrl, setImageUrl] = useState(therapist?.image);
@@ -147,11 +149,13 @@ const MyProfileInfo = ({
                     }}
                   />
                 </div>
-                <div className="flex justify-center">
-                  <Button onClick={() => setIsEditing(true)} className="mb-6">
-                    {t("edit")}
-                  </Button>
-                </div>
+                {isAdmin && (
+                  <div className="flex justify-center">
+                    <Button onClick={() => setIsEditing(true)} className="mb-6">
+                      {t("edit")}
+                    </Button>
+                  </div>
+                )}
               </div>
               <Separator className="my-6" /> {/* Divider between sections */}
               {/* Arabic Work Profile */}
@@ -185,9 +189,11 @@ const MyProfileInfo = ({
                 </div>
               </div>
               {/* Edit Button */}
-              <Button onClick={() => setIsEditing(true)} className="mt-6">
-                {t("edit")}
-              </Button>
+              {isAdmin && (
+                <Button onClick={() => setIsEditing(true)} className="mt-6">
+                  {t("edit")}
+                </Button>
+              )}
             </>
           )}
         </div>

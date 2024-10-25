@@ -19,7 +19,7 @@ export const twoFactorTokenTemplate = async (token: string, t: any) => {
       <div style="text-align: center; margin-bottom: 20px;">
         <img src="${daqilLogoUrl}" alt="daqil" style="width: 50%; max-width: 100%; height: auto;" />
       </div>
-      <div style="margin-top: 20px;">
+      <div style="margin-top: 40px;">
         <p>${t("message")}</p>
         <h2 style="text-align: center; font-size: 28px; color: #333333;">${token}</h2>
       </div>
@@ -43,16 +43,20 @@ export const verificationEmailTemplate = async (
 
   const therapistMessage = isTherapist ? `<p>${t("therapistMessage")}</p>` : "";
 
+  const therapistHumbly = isTherapist ? `<p>${t("therapistHumbly")}</p>` : "";
+
+  const therapistSupportChat = isTherapist
+    ? `<p>${t("therapistSupportChat")}</p>`
+    : "";
+
   const expirationMessage = `<p>${t("expirationMessage", {
     days: 3,
   })}</p>`;
 
   const buttonLabel = isTherapist
-    ? t("acceptInviteButton")
+    ? t("startTheJourney")
     : t("confirmEmailButton");
-  const buttonColor = isTherapist
-    ? "#28a745" /* green success color */
-    : "#007bff"; /* default blue color */
+  const buttonColor = isTherapist ? "#28a745" : "#007bff";
 
   return `
   <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
@@ -60,11 +64,13 @@ export const verificationEmailTemplate = async (
       <div style="text-align: center; margin-bottom: 20px;">
         <img src="${daqilLogoUrl}" alt="daqil" style="width: 50%; max-width: 100%; height: auto;" />
       </div>
-      <div style="margin-top: 20px;">
+      <div style="margin-top: 40px;">
         <p>${t("welcomeMessage")}</p>
         ${therapistMessage}
-    
-        
+        ${therapistHumbly}
+        ${therapistSupportChat}
+
+
         <p>${t("confirmEmailMessage")}</p> 
         <a href="${confirmLink}" style="display: inline-block; padding: 12px 24px; margin: 20px 0; background-color: ${buttonColor}; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: bold; text-align: center;">${buttonLabel}</a>
         ${expirationMessage} 
@@ -92,7 +98,7 @@ export const passwordResetEmailTemplate = async (
         <div style="text-align: center; margin-bottom: 20px;">
           <img src="${daqilLogoUrl}" alt="daqil" style="width: 50%; max-width: 100%; height: auto;" />
         </div>
-        <div style="margin-top: 20px;">
+        <div style="margin-top: 40px;">
           <p>${t("resetMessage")}</p>
           <a href="${resetLink}" style="display: inline-block; padding: 12px 24px; margin: 20px 0; background-color: #007bff; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: bold; text-align: center;">${t(
     "resetButton"
@@ -145,7 +151,7 @@ export const appointmentCancellationTemplate = async (
         <div style="text-align: center; margin-bottom: 20px;">
           <img src="${daqilLogoUrl}" alt="daqil" style="width: 50%; max-width: 100%; height: auto;" />
         </div>
-        <div style="margin-top: 20px;">
+        <div style="margin-top: 40px;">
           <p>${subject}</p>
           <p><strong>${t("therapistLabel")}</strong> ${
     appointmentDetails.therapistName
@@ -241,7 +247,7 @@ export const invoicePaidTemplate = async (
         <div style="text-align: center; margin-bottom: 20px;">
           <img src="${daqilLogoUrl}" alt="daqil" style="width: 50%; max-width: 100%; height: auto;" />
         </div>
-        <div style="margin-top: 20px;">
+        <div style="margin-top: 40px;">
           <p>${subject}</p>
           <p><strong>${t("therapistLabel")}</strong> ${
     appointmentDetails.therapistName
@@ -336,7 +342,7 @@ export const paidAppointmentConfirmationTemplate = async (
           <img src="${daqilLogoUrl}" alt="daqil" style="width: 50%; max-width: 100%; height: auto;" />
         </div>
        
-        <div style="margin-top: 20px;">
+        <div style="margin-top: 40px;">
           <p>${subject}</p>
           <p><strong>${t("therapistLabel")}</strong> ${
     appointmentDetails.therapistName
@@ -397,7 +403,7 @@ export const introBookingConfirmationTemplate = async (
         <div style="text-align: center; margin-bottom: 20px;">
           <img src="${daqilLogoUrl}" alt="daqil" style="width: 50%; max-width: 100%; height: auto;" />
         </div>
-        <div style="margin-top: 20px;">
+        <div style="margin-top: 40px;">
           <p>${subject}</p>
           <p><strong>${t("therapistLabel")}</strong> ${
     appointmentDetails.therapistName
@@ -476,7 +482,7 @@ export const nonPaidAppointmentConfirmationTemplate = async (
         <div style="text-align: center; margin-bottom: 20px;">
             <img src="${daqilLogoUrl}" alt="daqil" style="width: 50%; max-width: 100%; height: auto;" />
         </div>
-        <div style="margin-top: 20px;">
+        <div style="margin-top: 40px;">
           <p>${subject}</p>
           <p><strong>${t("therapistLabel")}</strong> ${
     appointmentDetails.therapistName
@@ -520,7 +526,7 @@ export const paymentReminderTemplate = async (
         <div style="text-align: center; margin-bottom: 20px;">
           <img src="${daqilLogoUrl}" alt="daqil" style="width: 50%; max-width: 100%; height: auto;" />
         </div>
-        <div style="margin-top: 20px;">
+        <div style="margin-top: 40px;">
           <p>${t("greeting", { clientFirstName })}</p>
           <p>${t("reminderText", { appointmentStartTime })}</p>
           <p>${t("paymentInstructions")}</p>
@@ -550,7 +556,7 @@ export const reminderEmailTemplate = async (
         <div style="text-align: center; margin-bottom: 20px;">
           <img src="${daqilLogoUrl}" alt="daqil" style="width: 50%; max-width: 100%; height: auto;" />
         </div>
-        <div style="margin-top: 20px;">
+        <div style="margin-top: 40px;">
           <p>${t("greeting", { name: appointmentDetails.clientName })}</p>
           <p>${t("message", {
             therapistName: appointmentDetails.therapistName,
@@ -585,7 +591,7 @@ export const clientNotPaidInTimeTemplate = async (
         <div style="text-align: center; margin-bottom: 20px;">
           <img src="${daqilLogoUrl}" alt="daqil" style="width: 50%; max-width: 100%; height: auto;" />
         </div>
-        <div style="margin-top: 20px;">
+        <div style="margin-top: 40px;">
           <p>${t("clientSubject")}</p>
           <p><strong>${t("therapistLabel")}</strong> ${
     appointmentDetails.therapistName
@@ -630,7 +636,7 @@ export const therapistNotPaidInTimeTemplate = async (
         <div style="text-align: center; margin-bottom: 20px;">
           <img src="${daqilLogoUrl}" alt="daqil" style="width: 50%; max-width: 100%; height: auto;" />
         </div>
-        <div style="margin-top: 20px;">
+        <div style="margin-top: 40px;">
           <p>${t("therapistSubject")}</p>
           <p><strong>${t("therapistLabel")}</strong> ${
     appointmentDetails.therapistName
@@ -678,7 +684,7 @@ export const meetingLinkEmailTemplate = async ({
         <div style="text-align: center; margin-bottom: 20px;">
           <img src="${daqilLogoUrl}" alt="daqil" style="width: 50%; max-width: 100%; height: auto;" />
         </div>
-        <div style="margin-top: 20px;">
+        <div style="margin-top: 40px;">
           <p>${t("greeting")}</p>
           <p>${t("message", {
             hostFirstName,

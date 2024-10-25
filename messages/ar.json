@@ -655,17 +655,19 @@
     "footer": "إذا لم تطلب هذا الرمز، يرجى تجاهل هذه الرسالة."
   },
   "VerificationEmail": {
-    "acceptInviteButton": "قبول الدعوة",
+    "startTheJourney": "ابدأ الرحلة",
     "daqil": "زاكينا",
     "subject": "تأكيد عنوان بريدك الإلكتروني",
-    "subjectTherapist": " يرجى تأكيد عنوان بريدك الإلكتروني ! DAQIL مرحبًا بك في ",
-    "welcomeMessage": " ! مرحبًا بك في زاكينا",
-    "therapistMessage": "لقد تمت دعوتك إلى زاكينا كأخصائي نفسي",
+    "subjectTherapist": "يرجى تأكيد عنوان بريدك الإلكتروني! مرحبًا بك في داقيل",
+    "welcomeMessage": "ترحيب حار إلى عائلة داقيل!",
+    "therapistMessage": "يشرفنا انضمامك إلى فريقنا من الأخصائيين النفسيين.",
     "temporaryPasswordMessage": "هنا كلمة المرور المؤقتة الخاصة بك: <strong>{password}</strong>",
     "confirmEmailMessage": "يرجى تأكيد عنوان بريدك الإلكتروني لإكمال عملية التسجيل.",
     "confirmEmailButton": "تأكيد البريد الإلكتروني",
     "ignoreMessage": "إذا لم تقم بالتسجيل لهذا الحساب، يرجى تجاهل هذا البريد الإلكتروني.",
-    "expirationMessage": "رابط التحقق هذا صالح لمدة {days} أيام."
+    "expirationMessage": "رابط التحقق هذا صالح لمدة {days} أيام.",
+    "therapistHumbly": "نطلب منك بلطف مراجعة وتصحيح جدولك الذي تم إعداده مسبقًا لك على المنصة.",
+    "therapistSupportChat": "لا تتردد في استخدام دردشة الدعم المتوفرة على مدار الساعة إذا كان لديك أي أسئلة."
   },
   "PasswordResetEmail": {
     "daqil": "زاكينا",
