@@ -94,7 +94,7 @@ const IntroBookingSuccessPage = async ({
           </p>
           <div className="mb-6">
             <p className="text-xl font-bold">{t("addToCalendar")}</p>
-            <div className="flex flex-col sm:flex-row justify-center sm:space-x-4 space-y-2 sm:space-y-0 mt-4">
+            <div className="flex flex-col sm:flex-row justify-center sm:space-x-4 rtl:space-x-reverse space-y-2 sm:space-y-0 mt-4">
               <a
                 href={googleCalendarUrl}
                 target="_blank"

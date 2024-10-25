@@ -115,7 +115,7 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
       case "no-show-host":
         return t("noShowHost");
       case "no-show-participant":
-        return t("noShowParticipant");
+        return t("noShowClient");
       case "no-show-both":
         return t("noShowBoth");
       case "not-paid-in-time":
@@ -445,26 +445,27 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
                                               : t("no")}
                                           </p>
                                         </div>
-                                        {(appointment.status === "pending" ||
-                                          appointment.status ===
-                                            "confirmed") && (
-                                          <div className="mb-8 inline-flex justify-center sm:justify-end w-full">
-                                            <Button
-                                              disabled={
-                                                isPending || disableAccordion
-                                              }
-                                              variant="secondary"
-                                              onClick={() => {
-                                                setSelectedAppointment(
-                                                  appointment
-                                                );
-                                                setIsCancelDialogOpen(true);
-                                              }}
-                                            >
-                                              {t("cancelAppointment")}
-                                            </Button>
-                                          </div>
-                                        )}
+                                        {filterType === "upcoming" &&
+                                          (appointment.status === "pending" ||
+                                            appointment.status ===
+                                              "confirmed") && (
+                                            <div className="mb-8 inline-flex justify-center sm:justify-end w-full">
+                                              <Button
+                                                disabled={
+                                                  isPending || disableAccordion
+                                                }
+                                                variant="secondary"
+                                                onClick={() => {
+                                                  setSelectedAppointment(
+                                                    appointment
+                                                  );
+                                                  setIsCancelDialogOpen(true);
+                                                }}
+                                              >
+                                                {t("cancelAppointment")}
+                                              </Button>
+                                            </div>
+                                          )}
                                       </div>
                                       <div className="mt-4">
                                         <h4 className="text-md font-semibold">

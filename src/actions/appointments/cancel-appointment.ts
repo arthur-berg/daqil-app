@@ -66,9 +66,7 @@ export const cancelAppointment = async (
     }
 
     if (isTherapist) {
-      const isAuthorized =
-        user.id === appointment.hostUserId._id.toString() ||
-        user.role === UserRole.ADMIN;
+      const isAuthorized = user.id === appointment.hostUserId._id.toString();
 
       if (!isAuthorized) {
         return { error: ErrorMessages("notAuthorized") };
@@ -86,35 +84,39 @@ export const cancelAppointment = async (
       if (!participant) {
         return { error: ErrorMessages("notAuthorized") };
       }
+    }
 
-      // Check if the appointment is eligible for a refund (more than 24 hours away)
-      const hoursUntilAppointment = differenceInHours(
-        new Date(appointment.startDate),
-        new Date()
+    // Check if the appointment is eligible for a refund (more than 24 hours away)
+    const hoursUntilAppointment = differenceInHours(
+      new Date(appointment.startDate),
+      new Date()
+    );
+
+    if (
+      isTherapist ||
+      (hoursUntilAppointment > 24 && appointment.payment.status === "paid")
+    ) {
+      // Fetch the payment intent using the appointmentId as metadata
+
+      const paymentIntents = await stripe.paymentIntents.list({
+        customer: appointment.participants[0].userId.stripeCustomerId,
+        limit: 100, // Adjust the limit as needed
+      });
+
+      const paymentIntent = paymentIntents.data.find(
+        (pi) => pi.metadata && pi.metadata.appointmentId === appointmentId
       );
 
-      if (hoursUntilAppointment > 24 && appointment.payment.status === "paid") {
-        // Fetch the payment intent using the appointmentId as metadata
-        const paymentIntents = await stripe.paymentIntents.list({
-          customer: appointment.participants[0].userId.stripeCustomerId,
-          limit: 100, // Adjust the limit as needed
-        });
-
-        const paymentIntent = paymentIntents.data.find(
-          (pi) => pi.metadata && pi.metadata.appointmentId === appointmentId
-        );
-
-        if (paymentIntent) {
-          try {
-            const refund = await stripe.refunds.create({
-              payment_intent: paymentIntent.id,
-            });
-            refundIssued = true;
-            refundAmount = refund.amount / 100;
-          } catch (refundError) {
-            console.error("Error processing refund:", refundError);
-            return { error: ErrorMessages("refundFailed") };
-          }
+      if (paymentIntent) {
+        try {
+          const refund = await stripe.refunds.create({
+            payment_intent: paymentIntent.id,
+          });
+          refundIssued = true;
+          refundAmount = refund.amount / 100;
+        } catch (refundError) {
+          console.error("Error processing refund:", refundError);
+          return { error: ErrorMessages("refundFailed") };
         }
       }
     }

@@ -13,6 +13,30 @@ export const getUserByEmail = async (email: string) => {
   }
 };
 
+export const getAllClientsAdmin = async () => {
+  try {
+    const clients = await User.find(
+      { role: "CLIENT" },
+      {
+        _id: 1,
+        email: 1,
+        "settings.timeZone": 1,
+        "personalInfo.phoneNumber": 1,
+        "firstName.en": 1,
+        "lastName.en": 1,
+        createdAt: 1,
+      }
+    ).lean();
+
+    return clients.map((client: any) => ({
+      ...client,
+      _id: client._id.toString(),
+    }));
+  } catch {
+    return null;
+  }
+};
+
 export const getAllClients = async () => {
   try {
     const clients = await User.find({ role: UserRole.CLIENT }).lean();
@@ -48,6 +72,7 @@ export const getClientById = async (id: string) => {
     if (!Appointment.schema) {
       throw new Error("Appointment schema is not registered.");
     }
+    console.log("id", id);
     const client = await User.findById(id)
       .select(
         "firstName lastName email selectedTherapist.therapist selectedTherapistHistory appointments personalInfo"
@@ -223,7 +248,7 @@ export const getTherapists = async () => {
       isAccountSetupDone: true,
       $or: [
         { "settings.hiddenProfile": { $exists: false } },
-        { "settings.hiddenProfile": false }, 
+        { "settings.hiddenProfile": false },
       ],
     }).lean();
 

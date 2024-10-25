@@ -130,7 +130,7 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
       case "no-show-host":
         return t("noShowHost");
       case "no-show-participant":
-        return t("noShowParticipant");
+        return t("noShowClient");
       case "no-show-both":
         return t("noShowBoth");
       case "not-paid-in-time":
@@ -421,7 +421,7 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
 
                                   return (
                                     <AccordionItem
-                                      className={`bg-white ${
+                                      className={`bg-white border rounded-md mb-2 ${
                                         disableAccordion ? "opacity-50" : ""
                                       } ${
                                         appointment.status === "canceled"
@@ -431,7 +431,7 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
                                       key={appointment._id.toString()}
                                       value={appointment._id.toString()}
                                     >
-                                      <AccordionTrigger className="flex justify-between p-4 bg-gray-100 rounded flex-col md:flex-row">
+                                      <AccordionTrigger className="flex justify-between  p-4 rounded flex-col md:flex-row">
                                         <span>
                                           {format(
                                             new Date(appointment.startDate),
@@ -501,23 +501,24 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
                                                 : t("no")}
                                             </p>
                                           </div>
-                                          {(appointment.status === "pending" ||
-                                            appointment.status ===
-                                              "confirmed") && (
-                                            <div className="mb-8 inline-flex justify-center sm:justify-end w-full">
-                                              <Button
-                                                variant="secondary"
-                                                onClick={() => {
-                                                  setSelectedAppointment(
-                                                    appointment
-                                                  );
-                                                  setIsCancelDialogOpen(true);
-                                                }}
-                                              >
-                                                {t("cancelAppointment")}
-                                              </Button>
-                                            </div>
-                                          )}
+                                          {filterType === "upcoming" &&
+                                            (appointment.status === "pending" ||
+                                              appointment.status ===
+                                                "confirmed") && (
+                                              <div className="mb-8 inline-flex justify-center sm:justify-end w-full">
+                                                <Button
+                                                  variant="secondary"
+                                                  onClick={() => {
+                                                    setSelectedAppointment(
+                                                      appointment
+                                                    );
+                                                    setIsCancelDialogOpen(true);
+                                                  }}
+                                                >
+                                                  {t("cancelAppointment")}
+                                                </Button>
+                                              </div>
+                                            )}
                                         </div>
                                         <div className="mt-4">
                                           <h4 className="text-md font-semibold">

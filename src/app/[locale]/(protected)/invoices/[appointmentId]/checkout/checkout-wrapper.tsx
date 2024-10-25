@@ -110,7 +110,7 @@ const CheckoutWrapper = ({
             e.preventDefault();
             handleApplyDiscount();
           }}
-          className="inline-flex justify-center space-x-2 mt-4"
+          className="inline-flex justify-center space-x-2 rtl:space-x-reverse mt-4"
         >
           <Input
             id="discountCode"

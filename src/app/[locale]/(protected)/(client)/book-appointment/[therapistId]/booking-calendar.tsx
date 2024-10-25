@@ -28,7 +28,6 @@ import { useToast } from "@/components/ui/use-toast";
 import { BeatLoader } from "react-spinners";
 import { APPOINTMENT_TYPE_ID_INTRO_SESSION } from "@/contants/config";
 import { reserveAppointment } from "@/actions/appointments/reserve-appointment";
-import AddToCalendarDialog from "@/app/[locale]/(protected)/(client)/book-appointment/[therapistId]/add-to-calendar-dialog";
 import { cn } from "@/lib/utils";
 
 type DateType = {
@@ -393,13 +392,14 @@ const BookingCalendar = ({
           <DialogFooter>
             <Button
               variant="outline"
+              className="rtl:ml-2"
               onClick={() => setBookingDialogOpen(false)}
             >
               {t("close")}
             </Button>
             <Button
               onClick={() => handleTimeSlotClicked()}
-              className="rtl:ml-2 mb-4 sm:mb-0"
+              className="mb-4 sm:mb-0"
             >
               {t("bookAppointment")}
             </Button>

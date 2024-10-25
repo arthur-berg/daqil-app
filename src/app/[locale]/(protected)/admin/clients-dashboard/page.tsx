@@ -9,6 +9,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Link } from "@/navigation";
+import { Button } from "@/components/ui/button";
 
 const AdminDashboardPage = async () => {
   await connectToMongoDB();
@@ -22,10 +24,8 @@ const AdminDashboardPage = async () => {
       </div>
     );
 
-  // Total number of clients
   const totalClients = clients.length;
 
-  // Group new clients by yyyy-mm-dd format (based on createdAt date)
   const groupedNewClients = clients.reduce((acc: any, client: any) => {
     const createdDate = format(new Date(client.createdAt), "yyyy-MM-dd");
 
@@ -42,9 +42,14 @@ const AdminDashboardPage = async () => {
       <h1 className="text-2xl font-bold mb-4">Admin Dashboard</h1>
 
       {/* Total Clients */}
-      <div className="mb-6">
+      <div className="mb-2">
         <h2 className="text-xl font-semibold">Total Clients</h2>
         <p>{totalClients}</p>
+      </div>
+      <div className="mb-6">
+        <Link href="/admin/clients">
+          <Button variant="secondary">See all clients</Button>
+        </Link>
       </div>
 
       {/* Grouped New Clients by Date */}
