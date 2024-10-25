@@ -867,7 +867,8 @@
     "joinMeeting": "Join meeting",
     "previewRoom": "Preview room:",
     "testSetup": "Test your audio and video before joining the call.",
-    "waitingForOtherUser": "Waiting for other user to join..."
+    "waitingForClient": "Waiting for the client to join...",
+    "waitingForPsychologist": "Please wait. Your psychologist will be with you shortly."
   },
   "DateTimePicker": {
     "ok": "Ok"

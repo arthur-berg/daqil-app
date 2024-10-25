@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import useRoom from "@/hooks/use-room";
 import { useCurrentUser } from "@/hooks/use-current-user";
-import useScreenSharing from "@/hooks/use-screen-sharing";
+/* import useScreenSharing from "@/hooks/use-screen-sharing"; */
 import ToolBar from "@/app/[locale]/(protected)/appointments/[appointmentId]/toolbar";
 import { useToast } from "@/components/ui/use-toast";
 import { useCurrentRole } from "@/hooks/use-current-role";
@@ -37,8 +37,8 @@ const VideoRoom = ({
     cameraPublishing,
     localParticipant,
   } = useRoom();
-  const { isScreenSharing, startScreenSharing, stopScreenSharing } =
-    useScreenSharing({ room });
+  /*   const { isScreenSharing, startScreenSharing, stopScreenSharing } =
+    useScreenSharing({ room }); */
   const [containerHeight, setContainerHeight] = useState<string>(
     "h-[calc(100vh-90px)]"
   );
@@ -315,7 +315,18 @@ const VideoRoom = ({
         <div id="roomContainer" className="w-full h-full" ref={roomContainer}>
           {participants.length === 0 && (
             <div className="absolute inset-0 flex justify-center items-center text-white text-lg w-full h-full">
-              {t("waitingForOtherUser")}
+              <div className="flex flex-col items-center mb-[90px] px-4 text-center">
+                <Image
+                  src={logoSrc}
+                  alt="daqil-logo"
+                  width={300}
+                  height={200}
+                  className="mb-4"
+                />
+                {user?.role === "CLIENT"
+                  ? t("waitingForPsychologist")
+                  : t("waitingForClient")}
+              </div>
             </div>
           )}
           <Image
