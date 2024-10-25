@@ -333,6 +333,11 @@ const userSchema = new Schema(
         },
       },
     },
+    accountStatus: {
+      type: String,
+      enum: ["ACTIVE", "DELETED", "INACTIVE"],
+      default: "ACTIVE",
+    },
   },
   {
     timestamps: true,

@@ -6,7 +6,14 @@ import { SettingsSchema } from "@/schemas";
 import { useTransition, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useTimezoneSelect, allTimezones } from "react-timezone-select";
-
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { settings } from "@/actions/settings";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
@@ -39,6 +46,10 @@ import {
 } from "@/components/ui/command";
 import { CaretSortIcon } from "@radix-ui/react-icons";
 import PageTitle from "@/components/page-title";
+import { useToast } from "./ui/use-toast";
+import { deleteAccount } from "@/actions/delete-account";
+import { logout } from "@/actions/logout";
+import { UserRole } from "@/generalTypes";
 
 const getGmtOffset = (timezone: string) => {
   const now = new Date();
@@ -68,6 +79,9 @@ const SettingsForm = ({ hidePageTitle }: { hidePageTitle?: boolean }) => {
   const [success, setSuccess] = useState<string | undefined>();
   const [isPending, startTransition] = useTransition();
   const { update } = useSession();
+  const { responseToast } = useToast();
+  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+  const [confirmationInput, setConfirmationInput] = useState("");
 
   const t = useTranslations("SettingsPage");
   const { options: timezoneOptions, parseTimezone } = useTimezoneSelect({
@@ -91,6 +105,20 @@ const SettingsForm = ({ hidePageTitle }: { hidePageTitle?: boolean }) => {
       },
     },
   });
+
+  const handleDeleteAccount = () => {
+    startTransition(async () => {
+      try {
+        const data = await deleteAccount();
+        responseToast(data);
+        if (data.success) {
+          await logout();
+        }
+      } catch {
+        console.error("Error deleting account");
+      }
+    });
+  };
 
   const onSubmit = (values: z.infer<typeof SettingsSchema>) => {
     startTransition(async () => {
@@ -288,9 +316,51 @@ const SettingsForm = ({ hidePageTitle }: { hidePageTitle?: boolean }) => {
                 </Button>
               </form>
             </Form>
+            <div className="mt-8">
+              <Button
+                size="sm"
+                variant="destructive"
+                onClick={() => setIsConfirmDialogOpen(true)}
+                disabled={isPending}
+              >
+                {t("deleteAccount")}
+              </Button>
+            </div>
           </CardContent>
         </Card>
       </div>
+      <Dialog open={isConfirmDialogOpen} onOpenChange={setIsConfirmDialogOpen}>
+        <DialogContent>
+          <DialogTitle>{t("areYouSureTitle")}</DialogTitle>
+          <DialogDescription>{t("areYouSureDescription")}</DialogDescription>
+          <Input
+            placeholder="Type 'delete-account' to confirm"
+            value={confirmationInput}
+            onChange={(e) => setConfirmationInput(e.target.value)}
+            className="mt-4"
+          />
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setIsConfirmDialogOpen(false)}
+            >
+              {t("cancel")}
+            </Button>
+            {user?.role === UserRole.CLIENT && (
+              <Button
+                variant="destructive"
+                onClick={() => {
+                  setIsConfirmDialogOpen(false);
+                  handleDeleteAccount();
+                }}
+                disabled={confirmationInput !== "delete-account"}
+              >
+                {t("confirmDelete")}
+              </Button>
+            )}
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

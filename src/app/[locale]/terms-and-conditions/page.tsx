@@ -31,6 +31,12 @@ const TermsAndConditionsPage = async () => {
             {t("privacyAndDataProtection.heading")}
           </h2>
           <p>{t("privacyAndDataProtection.content")}</p>
+          <ul className="list-disc list-inside mt-4">
+            <li>{t("privacyAndDataProtection.rightToAccessCorrectErase")}</li>
+            <li>{t("privacyAndDataProtection.dataPortability")}</li>
+            <li>{t("privacyAndDataProtection.consentWithdrawal")}</li>
+            <li>{t("privacyAndDataProtection.accountDeletion")}</li>
+          </ul>
         </section>
 
         <section className="mb-8">

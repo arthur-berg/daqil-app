@@ -151,6 +151,11 @@
     "myProfile": "My Profile"
   },
   "SettingsPage": {
+    "deleteAccount": "Delete Account",
+    "areYouSureTitle": "Are You Sure?",
+    "areYouSureDescription": "Please type 'delete-account' to confirm you want to delete your account. This action is irreversible.",
+    "cancel": "Cancel",
+    "confirmDelete": "Confirm Delete",
     "bankName": "Bank Name",
     "clearingNumber": "Clearing Number",
     "accountNumber": "Account Number",
@@ -556,6 +561,7 @@
     "goToAppointments": "Go to Appointments"
   },
   "ErrorMessages": {
+    "accountDeletionFailed": "Account deletion failed",
     "thisAccountIsTerminated": "This account has been deleted. Please logout.",
     "onlyDaqilEmailsAllowed": "Only DAQIL emails are allowed",
     "refundFailed": "Refund request failed. Please contact support.",
@@ -600,6 +606,7 @@
     "appointmentNotConfirmed": "The appointment is not confirmed."
   },
   "SuccessMessages": {
+    "accountDeleted": "Account successfully deleted",
     "paymentSettingsSaved": "Payment settings saved",
     "accountSetupComplete": "Account setup completed",
     "activateLinkSent": "A link to activate your account has been emailed to the address provided",
@@ -671,7 +678,7 @@
     "therapistMessage": "We are honored to have you join our team of psychologists.",
     "temporaryPasswordMessage": "Here is your temporary password: {password}",
     "confirmEmailMessage": "Please confirm your email address to complete the registration process.",
-   "therapistHumbly": "We kindly ask you to review and correct your schedule, which has already been prepared for you on the platform.",
+    "therapistHumbly": "We kindly ask you to review and correct your schedule, which has already been prepared for you on the platform.",
     "therapistSupportChat": "Don't hesitate to use our 24/7 support chat if you have any questions.",
     "confirmEmailButton": "Confirm Email",
     "ignoreMessage": "If you did not sign up for this account, please ignore this email.",
@@ -791,7 +798,11 @@
     },
     "privacyAndDataProtection": {
       "heading": "4. Privacy and Data Protection",
-      "content": "Your privacy is important to us. Our Privacy Policy explains how we collect, use, and protect your personal information. By agreeing to these Terms, you also agree to our Privacy Policy. We implement robust security measures, including data encryption, to protect your information."
+      "content": "We are committed to protecting your personal information in compliance with GDPR. You have the following rights regarding your data:",
+      "rightToAccessCorrectErase": "Right to Access, Correct, and Erase Data: You may request access to or correction of your data at any time. You may also request deletion of your data, including therapy session recordings, by contacting us at hello@daqil.com.",
+      "dataPortability": "Data Portability: You can request a copy of your data in a structured format for transfer to another service provider.",
+      "consentWithdrawal": "Consent Withdrawal: You may withdraw consent for data processing, including session recordings, in your account settings. Upon withdrawal, any recordings will be deleted following our data retention policy.",
+      "accountDeletion": "Account Deletion: You have the right to delete your profile, and we will remove your data from our system unless otherwise required by law or healthcare regulations."
     },
     "useOfServices": {
       "heading": "5. Use of Services",
