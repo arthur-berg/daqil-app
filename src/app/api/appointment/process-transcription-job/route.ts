@@ -72,8 +72,9 @@ export const POST = async (req: NextRequest) => {
 
     const appointment = (await Appointment.findById(appointmentId)) as any;
     const clientId = appointment.participants[0].userId.toString();
+    const therapistId = appointment.hostUserId.toString();
 
-    await upsertToPinecone(clientId, summary, appointmentId);
+    await upsertToPinecone(clientId, summary, appointmentId, therapistId);
 
     console.log(`Updated JournalNote for revJobId: ${jobId}`);
 

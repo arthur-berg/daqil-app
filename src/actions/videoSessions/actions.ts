@@ -225,8 +225,12 @@ export const startVideoRecording = async (
     if (!!appointmentData.archiveId) {
       existingArchive = await getArchiveBySessionId(appointmentData.archiveId);
 
-      if (existingArchive && existingArchive.status === "started") {
-        console.log("Archive is already started, doing nothing.");
+      if (
+        existingArchive &&
+        (existingArchive.status === "started" ||
+          existingArchive.status === "paused")
+      ) {
+        console.log("Archive already exists, doing nothing.");
         return;
       }
     }

@@ -7,6 +7,7 @@ import { getTranslations } from "next-intl/server";
 import { capitalizeFirstLetter } from "@/utils";
 import { getUserById } from "@/data/user";
 import { revalidatePath } from "next/cache";
+import { UserRole } from "@/generalTypes";
 
 export const setupOAuthAccount = async (
   values: z.infer<typeof OAuthAccountSetupSchema>,
@@ -55,14 +56,17 @@ export const setupOAuthAccount = async (
     lastName: capitalizedLastName,
     personalInfo: updatedPersonalInfo,
     settings: updatedSettings,
-    therapistWorkProfile: {
+  };
+
+  if (existingUser.role === UserRole.THERAPIST) {
+    updateFields.therapistWorkProfile = {
       en: { title: "Psychologist", description: "" },
       ar: {
         title: updatedPersonalInfo.sex === "MALE" ? "طبيب نفسي" : "طبيبة نفسية",
         description: "",
       },
-    },
-  };
+    };
+  }
 
   if (termsAccepted) {
     updateFields.termsAccepted = true;

@@ -8,19 +8,21 @@ const pc = new Pinecone({
 export const upsertToPinecone = async (
   clientId: string,
   text: string,
-  appointmentId: string
+  appointmentId: string,
+  therapistId: string
 ) => {
   try {
     const embedding = await embedText(text);
-    const index = pc.Index("journal-notes");
+    const journalNotesIndex = pc.Index("journal-notes");
 
-    await index.upsert([
+    await journalNotesIndex.upsert([
       {
         id: `journal_${clientId}_${Date.now()}`,
         values: embedding,
         metadata: {
           clientId,
-          appointmentId: appointmentId,
+          therapistId,
+          appointmentId,
           date: new Date().toISOString(),
           type: "journal_summary",
         },
