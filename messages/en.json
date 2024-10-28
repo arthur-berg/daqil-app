@@ -150,6 +150,10 @@
     "myClients": "My Clients",
     "myProfile": "My Profile"
   },
+  "AppointmentEndedPage": {
+    "callEnded": "Call Ended",
+    "goToAppointments": "Go to my appointments"
+  },
   "SettingsPage": {
     "deleteAccount": "Delete Account",
     "areYouSureTitle": "Are You Sure?",

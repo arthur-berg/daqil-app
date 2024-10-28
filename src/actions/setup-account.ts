@@ -13,6 +13,7 @@ import { addUserNameToSubscriberProfile } from "@/lib/mail";
 import { getTranslations } from "next-intl/server";
 import connectToMongoDB from "@/lib/mongoose";
 import { capitalizeFirstLetter } from "@/utils";
+import { UserRole } from "@/generalTypes";
 
 const verifyPasswordAndLogin = async ({
   existingUser,
@@ -161,14 +162,17 @@ export const setupAccount = async (
     lastName: capitalizedLastName,
     personalInfo: updatedPersonalInfo,
     settings: updatedSettings,
-    therapistWorkProfile: {
+  };
+
+  if (existingUser.role === UserRole.THERAPIST) {
+    updateFields.therapistWorkProfile = {
       en: { title: "Psychologist", description: "" },
       ar: {
         title: updatedPersonalInfo.sex === "MALE" ? "طبيب نفسي" : "طبيبة نفسية",
         description: "",
       },
-    },
-  };
+    };
+  }
 
   if (termsAccepted) {
     updateFields.termsAccepted = true;

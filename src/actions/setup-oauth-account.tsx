@@ -55,13 +55,6 @@ export const setupOAuthAccount = async (
     lastName: capitalizedLastName,
     personalInfo: updatedPersonalInfo,
     settings: updatedSettings,
-    therapistWorkProfile: {
-      en: { title: "Psychologist", description: "" },
-      ar: {
-        title: updatedPersonalInfo.sex === "MALE" ? "طبيب نفسي" : "طبيبة نفسية",
-        description: "",
-      },
-    },
   };
 
   if (termsAccepted) {

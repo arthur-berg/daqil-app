@@ -95,6 +95,10 @@
     "myClients": "عملائي",
     "myProfile": "ملفي الشخصي"
   },
+  "AppointmentEndedPage": {
+    "callEnded": "انتهت المكالمة",
+    "goToAppointments": "الذهاب إلى مواعيدي"
+  },
   "AppointmentList": {
     "meetingNotPaid": "الموعد في انتظار الدفع",
     "upcoming": "المواعيد القادمة",
