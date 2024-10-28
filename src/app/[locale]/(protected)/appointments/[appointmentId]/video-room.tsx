@@ -340,6 +340,7 @@ const VideoRoom = ({
             connected={connected}
             cameraPublishing={cameraPublishing}
             t={t}
+            appointmentId={sessionData.appointmentData.id}
           />
         </div>
       </div>

@@ -25,9 +25,20 @@ export const POST = async (req: NextRequest) => {
     const body = await req.json();
     const { id, status } = body;
 
-    console.log(`Received archive event. Archive ID: ${id}, Status: ${status}`);
+    const journalNote = await JournalNote.findOne({ archiveId: id });
 
-    if (status === "available") {
+    if (!journalNote) {
+      console.error("Journal Note not found");
+      return NextResponse.json(
+        { error: "Journal Note not found" },
+        { status: 404 }
+      );
+    }
+
+    console.log(`Received archive event. Archive ID: ${id}, Status: ${status}`);
+    console.log("Journal note has summaryStatus: ", journalNote.summaryStatus);
+
+    if (status === "available" && journalNote.summaryStatus === "pending") {
       const archive = await retrieveArchive(id);
 
       const audioUrl = archive.url;

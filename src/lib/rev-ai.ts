@@ -33,6 +33,31 @@ export const sendToRevAI = async (audioUrl: string) => {
   return data.id;
 };
 
+export const getRevJobStatus = async (jobId: string) => {
+  try {
+    const jobDetailsResponse = await fetch(`${REV_BASE_URL}/${jobId}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${REV_API_KEY}`,
+        Accept: "application/json",
+      },
+    });
+
+    if (!jobDetailsResponse.ok) {
+      console.error(
+        `Failed to fetch job status. Status: ${jobDetailsResponse.status}`
+      );
+      return { status: "not_started" };
+    }
+
+    const jobDetails = await jobDetailsResponse.json();
+    return { status: jobDetails.status };
+  } catch (error) {
+    console.error("Error retrieving job status:", error);
+    return { status: "error" };
+  }
+};
+
 export const getTranscriptionDetails = async (jobId: string) => {
   try {
     // First, retrieve the job details
@@ -52,6 +77,7 @@ export const getTranscriptionDetails = async (jobId: string) => {
     }
 
     const jobDetails = await jobDetailsResponse.json();
+
     console.log("jobDetails", jobDetails);
 
     // Fetch the transcription details separately

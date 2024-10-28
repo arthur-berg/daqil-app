@@ -41,7 +41,6 @@ const GenerateJournalNoteButton = ({
     <Button
       variant="success"
       onClick={() => handleGenerateJournalNote()}
-      className="mt-2"
       disabled={isPending}
     >
       {isPending ? (

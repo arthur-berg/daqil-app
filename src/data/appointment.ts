@@ -19,6 +19,18 @@ const getStructuredParticipantData = (appointment: any) => {
   return transformedParticipants;
 };
 
+export const getAppointmentWithJournalById = async (id: string) => {
+  try {
+    const appointment = await Appointment.findById(id).populate(
+      "journalNoteId"
+    );
+    return appointment;
+  } catch (error) {
+    console.error("Error fetching appointment with journal:", error);
+    return null;
+  }
+};
+
 export const getAppointmentById = async (id: string) => {
   try {
     const appointment = await Appointment.findById(id);

@@ -11,7 +11,7 @@ import GenerateJournalNoteButton from "@/app/[locale]/(protected)/therapist/clie
 import { format } from "date-fns";
 import { useTranslations } from "next-intl";
 import { useUserName } from "@/hooks/use-user-name";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import JournalNoteForm from "./journal-note-form";
 
 const formatAppointmentTime = (date: any) => {
@@ -21,6 +21,73 @@ const formatAppointmentTime = (date: any) => {
 const truncateText = (text: string, maxLength: number) => {
   if (text.length <= maxLength) return text;
   return text.slice(0, maxLength) + "...";
+};
+
+const renderJournalNoteActions = (
+  appointment: any,
+  editingJournalNoteId: string | null,
+  setEditingJournalNoteId: Function,
+  t: any
+) => {
+  const note = appointment.journalNoteId;
+  switch (note.summaryStatus) {
+    case "completed":
+      return (
+        <div>
+          {editingJournalNoteId === note._id ? (
+            <JournalNoteForm
+              setIsEditing={() => setEditingJournalNoteId(null)}
+              journalNote={note}
+            />
+          ) : (
+            <div>
+              <p>{truncateText(note.note, 100)}</p>
+              <Button onClick={() => setEditingJournalNoteId(note._id)}>
+                {t("edit")}
+              </Button>
+            </div>
+          )}
+        </div>
+      );
+    case "pending":
+      return (
+        <p className="italic text-sm text-gray-600">
+          {t("journalNoteInProgress")}
+        </p>
+      );
+    case "review":
+      return (
+        <div>
+          {editingJournalNoteId === note._id ? (
+            <JournalNoteForm
+              setIsEditing={() => setEditingJournalNoteId(null)}
+              journalNote={note}
+            />
+          ) : (
+            <Button onClick={() => setEditingJournalNoteId(note._id)}>
+              {t("journalNoteIsReadyForReview")}
+            </Button>
+          )}
+        </div>
+      );
+    case "error":
+      return (
+        <Button
+          variant="success"
+          onClick={() => setEditingJournalNoteId(note._id)}
+        >
+          {t("createJournalNote")}
+        </Button>
+      );
+    default:
+      return (
+        <GenerateJournalNoteButton
+          journalNoteId={note._id.toString()}
+          archiveId={note.archiveId}
+          appointmentId={appointment._id.toString()}
+        />
+      );
+  }
 };
 
 const ClientDetailPageBody = ({
@@ -43,6 +110,26 @@ const ClientDetailPageBody = ({
     clientData;
   const { getFullName } = useUserName();
 
+  const generateJournalNotes = useMemo(
+    () =>
+      appointments.flatMap((appointment: any) =>
+        appointment.bookedAppointments.filter(
+          (app: any) => app.journalNoteId?.summaryStatus === "notStarted"
+        )
+      ),
+    [appointments]
+  );
+
+  const reviewJournalNotes = useMemo(
+    () =>
+      appointments.flatMap((appointment: any) =>
+        appointment.bookedAppointments.filter(
+          (app: any) => app.journalNoteId?.summaryStatus === "review"
+        )
+      ),
+    [appointments]
+  );
+
   return (
     <div className="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-6">
       <div className="mb-4 flex items-center flex-col sm:items-start">
@@ -50,68 +137,82 @@ const ClientDetailPageBody = ({
           <Button variant="secondary">{t("goBackToClients")}</Button>
         </Link>
       </div>
+
       <h1 className="text-xl sm:text-2xl font-semibold mb-4 text-center">
         {getFullName(firstName, lastName)}
       </h1>
-      <div className="space-y-2 text-center">
-        <p className="text-gray-700">
+      <div className="space-y-2 text-center text-gray-700">
+        <p>
           <strong>{t("email")}:</strong> {email}
         </p>
-        <p className="text-gray-700">
+        <p>
           <strong>{t("currentTherapist")}:</strong>{" "}
           {selectedTherapist
-            ? `${getFullName(
+            ? getFullName(
                 selectedTherapist.firstName,
                 selectedTherapist.lastName
-              )}`
+              )
             : t("none")}
         </p>
         {currentTherapistHistory && (
-          <p className="text-gray-700">
+          <p>
             <strong>{t("totalAppointments")}:</strong>{" "}
             {currentTherapistHistory.appointmentCount}
           </p>
         )}
-        <div className="mt-6 flex flex-col sm:flex-row sm:space-x-4 space-y-4 justify-center sm:space-y-0">
-          <Link href={`/therapist/clients/${clientId}/schedule-appointment`}>
-            <Button className="w-full sm:w-auto">
-              {t("scheduleAppointment")}
-            </Button>
-          </Link>
-        </div>
       </div>
 
-      {pastTherapistsHistory.length > 0 && (
-        <div className="mt-6">
-          <h2 className="text-lg sm:text-xl font-semibold mb-4">
-            {t("therapistHistory")}
-          </h2>
-          <div className="space-y-4">
-            {pastTherapistsHistory.map((history: any, index: number) => (
-              <div
-                key={index}
-                className="p-4 border rounded-lg shadow-sm bg-gray-50"
+      <div className="mt-6 flex flex-col sm:flex-row sm:space-x-4 space-y-4 justify-center sm:space-y-0">
+        <Link href={`/therapist/clients/${clientId}/schedule-appointment`}>
+          <Button className="w-full sm:w-auto">
+            {t("scheduleAppointment")}
+          </Button>
+        </Link>
+      </div>
+
+      {/* Notifications for Generate and Review Journal Notes */}
+      {generateJournalNotes.length > 0 && (
+        <div className="mt-6 p-4 rounded-lg bg-red-100 text-red-800 border-l-4 border-red-500">
+          <h3 className="font-semibold">{t("actionRequiredGenerateTitle")}</h3>
+          <ul>
+            {generateJournalNotes.map((appointment: any) => (
+              <li
+                key={appointment._id}
+                className="flex justify-between items-center mt-2"
               >
-                <p className="text-gray-800">
-                  <strong>{t("therapist")}:</strong>{" "}
-                  {getFullName(
-                    history.therapist.firstName,
-                    history.therapist.lastName
-                  )}{" "}
-                  ({history.therapist.email})
-                </p>
-                <p className="text-gray-800">
-                  <strong>{t("therapistAppointments")}:</strong>{" "}
-                  {history.appointmentCount}
-                </p>
-                <p className="text-gray-800">
-                  <strong>{t("therapistPeriod")}:</strong>{" "}
-                  {history.startDate.toLocaleDateString()} -{" "}
-                  {history.endDate?.toLocaleDateString() || t("current")}
-                </p>
-              </div>
+                <span>
+                  {t("appointmentDateTime", {
+                    date: new Date(appointment.startDate).toLocaleDateString(),
+                    time: formatAppointmentTime(appointment.startDate),
+                  })}
+                </span>
+                <GenerateJournalNoteButton
+                  journalNoteId={appointment.journalNoteId._id.toString()}
+                  archiveId={appointment.journalNoteId.archiveId}
+                  appointmentId={appointment._id.toString()}
+                />
+              </li>
             ))}
-          </div>
+          </ul>
+        </div>
+      )}
+
+      {reviewJournalNotes.length > 0 && (
+        <div className="mt-6 p-4 rounded-lg bg-yellow-100 text-yellow-800 border-l-4 border-yellow-500">
+          <h3 className="font-semibold">{t("actionRequiredReviewTitle")}</h3>
+          <p>{t("reviewNotePromptHeader")}</p>
+          <ul>
+            {reviewJournalNotes.map((appointment: any) => (
+              <li key={appointment._id} className="mt-2">
+                <span>
+                  {t("appointmentDateTime", {
+                    date: new Date(appointment.startDate).toLocaleDateString(),
+                    time: formatAppointmentTime(appointment.startDate),
+                  })}
+                </span>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
 
@@ -157,121 +258,11 @@ const ClientDetailPageBody = ({
                         <div className="mb-2">
                           <strong>{t("journalNote")}:</strong>
                         </div>
-
-                        {appointment.journalNoteId.summaryStatus ===
-                        "completed" ? (
-                          <>
-                            {editingJournalNoteId ===
-                            appointment.journalNoteId._id ? (
-                              <JournalNoteForm
-                                setIsEditing={() =>
-                                  setEditingJournalNoteId(null)
-                                }
-                                journalNote={appointment.journalNoteId}
-                              />
-                            ) : (
-                              <>
-                                <div>
-                                  <strong>Note:</strong>
-                                  <p>
-                                    {truncateText(
-                                      appointment.journalNoteId.note,
-                                      100
-                                    )}
-                                  </p>
-                                </div>
-                                <div>
-                                  <strong>{t("summary")}:</strong>
-                                  <div
-                                    className="italic text-sm text-gray-600"
-                                    dangerouslySetInnerHTML={{
-                                      __html: truncateText(
-                                        appointment.journalNoteId.summary,
-                                        200
-                                      ),
-                                    }}
-                                  />
-                                </div>
-
-                                <Button
-                                  onClick={() =>
-                                    setEditingJournalNoteId(
-                                      appointment.journalNoteId._id
-                                    )
-                                  }
-                                >
-                                  {t("edit")}
-                                </Button>
-                              </>
-                            )}
-                          </>
-                        ) : appointment.journalNoteId.summaryStatus ===
-                          "pending" ? (
-                          <p className="italic text-sm text-gray-600">
-                            {t("journalNoteInProgress")}
-                          </p>
-                        ) : appointment.journalNoteId.summaryStatus ===
-                          "review" ? (
-                          <>
-                            {editingJournalNoteId ===
-                            appointment.journalNoteId._id ? (
-                              <JournalNoteForm
-                                setIsEditing={() =>
-                                  setEditingJournalNoteId(null)
-                                }
-                                journalNote={appointment.journalNoteId}
-                              />
-                            ) : (
-                              <div>
-                                <Button
-                                  onClick={() =>
-                                    setEditingJournalNoteId(
-                                      appointment.journalNoteId._id
-                                    )
-                                  }
-                                >
-                                  {t("journalNoteIsReadyForReview")}
-                                </Button>
-                              </div>
-                            )}
-                          </>
-                        ) : appointment.journalNoteId.summaryStatus ===
-                          "error" ? (
-                          <>
-                            <p className="text-red-600 mb-2">
-                              {t("errorGeneratingJournalNote")}
-                            </p>
-                            <div>
-                              {editingJournalNoteId ===
-                              appointment.journalNoteId._id ? (
-                                <JournalNoteForm
-                                  setIsEditing={() =>
-                                    setEditingJournalNoteId(null)
-                                  }
-                                  journalNote={appointment.journalNoteId}
-                                />
-                              ) : (
-                                <Button
-                                  variant="success"
-                                  onClick={() =>
-                                    setEditingJournalNoteId(
-                                      appointment.journalNoteId._id
-                                    )
-                                  }
-                                >
-                                  {t("createJournalNote")}
-                                </Button>
-                              )}
-                            </div>
-                          </>
-                        ) : (
-                          <div>
-                            <GenerateJournalNoteButton
-                              journalNoteId={appointment.journalNoteId._id.toString()}
-                              archiveId={appointment.journalNoteId.archiveId}
-                              appointmentId={appointment._id.toString()}
-                            />
-                          </div>
+                        {renderJournalNoteActions(
+                          appointment,
+                          editingJournalNoteId,
+                          setEditingJournalNoteId,
+                          t
                         )}
                       </div>
                     )}

@@ -95,6 +95,13 @@
     "myClients": "عملائي",
     "myProfile": "ملفي الشخصي"
   },
+  "AppointmentEndedPage": {
+    "title": "تم إنهاء الجلسة",
+    "description": "تم تحديد الجلسة مع العميل على أنها منتهية. إذا تم ذلك عن طريق الخطأ، يمكنك إعادة الانضمام إلى الاجتماع للاستمرار. لإكمال الجلسة، انتقل إلى صفحة سجل العميل حيث يمكنك إنشاء ملاحظة ملخصة ومراجعة تفاصيل الجلسة.",
+    "goToJournalButton": "الانتقال إلى سجل العميل",
+    "rejoinMeetingButton": "إعادة الانضمام إلى الاجتماع",
+    "goToAppointmentsButton": "الانتقال إلى صفحة مواعيدي"
+  },
   "AppointmentList": {
     "meetingNotPaid": "الموعد في انتظار الدفع",
     "upcoming": "المواعيد القادمة",
@@ -532,7 +539,13 @@
     "period": "الفترة",
     "journalNoteInProgress": "جاري إنشاء الملاحظة الخاصة بالمذكرة",
     "journalNoteIsReadyForReview": "الملاحظة الجلسة جاهزة للمراجعة",
-    "edit": "تعديل"
+    "edit": "تعديل",
+    "journalNoteNotificationTitle": "ملاحظات الجلسة في انتظار المراجعة",
+    "journalNoteNotificationDescription": "لديك {count} ملاحظة جلسة تنتظر المراجعة أو الإكمال. يرجى متابعتها في صفحة ملاحظات العميل.",
+    "actionRequiredGenerateTitle": "الإجراء المطلوب: إنشاء ملاحظات الجلسات",
+    "actionRequiredReviewTitle": "الإجراء المطلوب: مراجعة ملاحظات الجلسات",
+    "appointmentDateTime": "{date} في {time}",
+    "reviewNotePromptHeader": "يرجى مراجعة وإكمال ملاحظات الجلسات للمواعيد أدناه:"
   },
   "PaymentSuccessPage": {
     "paymentLinkSent": "تم إرسال تأكيد الحجز ورابط الدفع إلى بريد العميل الإلكتروني",
@@ -557,6 +570,9 @@
     "goToAppointments": "الذهاب إلى المواعيد"
   },
   "ErrorMessages": {
+    "archiveAlreadyAvailable": "الأرشيف متاح بالفعل. يرجى الانتظار حتى يتم إنشاء ملاحظة الجلسة.",
+    "archiveAlreadyStopped": "تم إيقاف الأرشيف بالفعل. يرجى الانتظار حتى يتم إنشاء ملاحظة الجلسة.",
+    "appointmentTooShortForJournalNote": "مدة الجلسة قصيرة جدًا لإنشاء ملاحظة الجلسة",
     "journalNoteNotFound": "لم يتم العثور على ملاحظة الجلسة",
     "recordingFailed": "فشل بدء التسجيل",
     "logout": "تسجيل الخروج",

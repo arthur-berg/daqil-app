@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifySignatureAppRouter } from "@upstash/qstash/nextjs";
 import connectToMongoDB from "@/lib/mongoose";
-import { stopArchive } from "@/lib/vonage";
+import { stopArchive, retrieveArchive } from "@/lib/vonage";
 
 export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
   try {
@@ -17,13 +17,28 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
       );
     }
 
-    const archive = await stopArchive(archiveId);
+    // Retrieve the current status of the archive
+    const archive = await retrieveArchive(archiveId);
 
-    console.log("response from stop archive", archive);
+    if (!archive) {
+      return NextResponse.json({ error: "Archive not found" }, { status: 404 });
+    }
+
+    // Check if the archive is already stopped or completed
+    if (["stopped", "available"].includes(archive.status)) {
+      return NextResponse.json({
+        message: `Archive is already in a final state: ${archive.status}`,
+      });
+    }
+
+    // If the archive is in a stoppable state, proceed to stop it
+    const stopResponse = await stopArchive(archiveId);
+
+    console.log("Response from stop archive:", stopResponse);
 
     return NextResponse.json({
       message: `Success`,
-      archive,
+      stopResponse,
     });
   } catch (error) {
     console.error("Error stopping archive:", error);

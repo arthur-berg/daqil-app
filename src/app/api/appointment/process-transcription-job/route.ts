@@ -4,6 +4,8 @@ import JournalNote from "@/models/JournalNote";
 import { revalidatePath } from "next/cache";
 import { summarizeTranscribedText } from "@/lib/openai";
 import { getTranscriptionDetails } from "@/lib/rev-ai";
+import Appointment from "@/models/Appointment";
+import { upsertToPinecone } from "@/lib/pincecone";
 
 export const POST = async (req: NextRequest) => {
   try {
@@ -45,6 +47,17 @@ export const POST = async (req: NextRequest) => {
 
     const summary = await summarizeTranscribedText(transcript);
 
+    if (!summary) {
+      await JournalNote.findOneAndUpdate(
+        { revJobId: jobId },
+        { summaryStatus: "error" }
+      );
+      return NextResponse.json(
+        { error: "Failed to retrieve summary from chatgpt" },
+        { status: 500 }
+      );
+    }
+
     const updatedJournalNote = await JournalNote.findOneAndUpdate(
       { revJobId: jobId },
       { summary, summaryStatus: "review" },
@@ -54,6 +67,13 @@ export const POST = async (req: NextRequest) => {
     if (!updatedJournalNote) {
       throw new Error(`No JournalNote found with jobId: ${jobId}`);
     }
+
+    const appointmentId = updatedJournalNote.appointmentId;
+
+    const appointment = (await Appointment.findById(appointmentId)) as any;
+    const clientId = appointment.participants[0].userId.toString();
+
+    await upsertToPinecone(clientId, summary, appointmentId);
 
     console.log(`Updated JournalNote for revJobId: ${jobId}`);
 

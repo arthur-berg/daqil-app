@@ -1,5 +1,3 @@
-"use server";
-
 import { OpenAI } from "openai";
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
@@ -70,7 +68,7 @@ Please return the summary in plain text format, **without using a colon after th
     return htmlContent;
   } catch (error) {
     console.error("Error summarizing transcribed text:", error);
-    return `<p>Unable to generate a summary at this time. Please try again later.</p>`;
+    return null;
   }
 };
 
@@ -90,3 +88,5 @@ function extractSection(content: string, sectionTitle: string): string {
 
   return "No valuable information was provided for this section.";
 }
+
+export default openai;

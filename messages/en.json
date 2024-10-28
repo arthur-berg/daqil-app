@@ -150,6 +150,13 @@
     "myClients": "My Clients",
     "myProfile": "My Profile"
   },
+ "AppointmentEndedPage": {
+  "title": "Session Concluded",
+  "description": "The session with your client has been marked as ended. If this was done by mistake, you can rejoin the meeting to continue. To complete the session, navigate to the client’s journal page, where you can generate a summary note and review the session details.",
+  "goToJournalButton": "Go to Client's Journal",
+  "rejoinMeetingButton": "Rejoin Meeting",
+  "goToAppointmentsButton": "Go to My Appointments Page"
+},
   "SettingsPage": {
     "bankName": "Bank Name",
     "clearingNumber": "Clearing Number",
@@ -542,7 +549,13 @@
     "period": "Period",
     "journalNoteInProgress": "Journal note generation is in progress",
     "journalNoteIsReadyForReview": "Journal note is ready for review",
-    "edit": "Edit"
+    "edit": "Edit",
+     "journalNoteNotificationTitle": "Journal Notes Pending Review",
+    "journalNoteNotificationDescription": "You have {count} journal notes pending review or completion. Please attend to them in the client's journal page.",
+    "actionRequiredGenerateTitle": "Action Required: Generate Journal Notes",
+    "actionRequiredReviewTitle": "Action Required: Review Journal Notes",
+    "appointmentDateTime": "{date} at {time}",
+      "reviewNotePromptHeader": "Please review and complete the journal notes for the appointments below:"
   },
   "PaymentSuccessPage": {
     "paymentLinkSent": "A booking confirmation and a payment link have been sent to the client's email.",
@@ -565,6 +578,9 @@
     "goToAppointments": "Go to Appointments"
   },
   "ErrorMessages": {
+    "archiveAlreadyAvailable": "Archive already available. Please wait for the journal note to be generated.",
+    "archiveAlreadyStopped": "Archive already stopped. Please wait for the journal note to be generated.",
+    "appointmentTooShortForJournalNote": "Appointment too short to generate journal note",
     "journalNoteNotFound": "Journal note not found",
     "recordingFailed": "Recording failed to start",
     "thisAccountIsTerminated": "This account has been deleted. Please logout.",
