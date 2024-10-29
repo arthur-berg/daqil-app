@@ -138,12 +138,16 @@ export const generateJournalNote = async (
     await requireAuth([UserRole.THERAPIST]);
     await cancelPaymentRelatedJobsForAppointment(appointmentId);
 
-    await handleArchiveStatus(
+    const response = await handleArchiveStatus(
       archiveId,
       journalNoteId,
       appointmentId,
       ErrorMessages
     );
+
+    if (response?.error) {
+      return { error: response.error };
+    }
 
     revalidatePath(
       "/[locale]/(protected)/therapist/clients/[clientId]",

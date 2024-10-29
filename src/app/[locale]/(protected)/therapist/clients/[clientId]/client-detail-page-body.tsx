@@ -122,7 +122,7 @@ const ClientDetailPageBody = ({
   const t = useTranslations("MyClientsPage");
   const [editingJournalNoteId, setEditingJournalNoteId] = useState<
     string | null
-  >(null); // Track the ID of the note being edited
+  >(null);
   const clientData = JSON.parse(clientDataJson);
   const { firstName, lastName, email, appointments, selectedTherapist } =
     clientData;

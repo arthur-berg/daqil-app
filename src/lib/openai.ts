@@ -12,40 +12,30 @@ export const summarizeTranscribedText = async (
 ) => {
   const sampleTranscript = TEST_SAMPLE_TRANSCRIPT;
 
-  const formattedSentiments = TEST_SAMPLE_SENTIMENT_ANALYSIS.map(
-    (message: any) =>
-      `- "${message.content}" (Sentiment: ${message.sentiment}, Score: ${message.score})`
-  ).join("\n");
+  const { tone: overallTone, score: overallScore } =
+    determineOverallTone(sentimentAnalysis);
 
   const messages = [
     {
       role: "system",
       content:
-        "You are an expert evaluator of therapy sessions. Your task is to assess and summarize the session based on the provided transcript and sentiment analysis.",
+        "You are an expert evaluator of therapy sessions. Your task is to assess and summarize the session based on the provided transcript.",
     },
     {
       role: "user",
       content: `
-      The following transcript is a therapy session between a client and a therapist. The conversation alternates between them, and the therapist typically provides guidance, techniques, or suggestions, while the client expresses feelings, concerns, or experiences. 
-      
-      The sentiment analysis uses a scoring system to represent the emotional intensity or strength of the sentiment. This score is in the range [-1, 1]:
-      - A score below -0.3 indicates a negative (sad/angry) sentiment.
-      - A score above 0.3 indicates a positive (joyful/happy) sentiment.
-      - Scores between -0.3 and 0.3 indicate a neutral sentiment.
-      
-      Based on the transcript and sentiment indicators, please summarize the session with the following structured sections:
-      1. Patient's Mood and Emotional Tone (based on sentiment analysis)
-      2. Emotional State of the Client
-      3. Main Topics Discussed
-      4. Therapeutic Techniques Used
-      5. Client's Progress and Goals
-      6. Challenges and Concerns
-      7. Therapist's Recommendations
-      
-      Use the following sentiment data for reference:
-      ${formattedSentiments}
-      
-      Please return the summary in plain text format, **without using a colon after the section labels**, and ensure that each section begins directly with the relevant content.
+The following transcript is a therapy session between a client and a therapist. The conversation alternates between them, with the therapist providing guidance, techniques, or suggestions, while the client expresses feelings, concerns, or experiences.
+
+1. Emotional State of the Client (This section should be based on the content of what the client expressed, highlighting how the client feels about themselves and their experiences.)
+2. Main Topics Discussed
+3. Therapeutic Techniques Used
+4. Client's Progress and Goals
+5. Challenges and Concerns
+6. Therapist's Recommendations
+
+Each section should start with the title on a new line. The summary should be clear and concise, addressing only relevant information.
+
+Please return the summary in plain text format, with each section title clearly separated from its content.
             `,
     },
     {
@@ -71,22 +61,24 @@ export const summarizeTranscribedText = async (
     }
 
     const htmlContent = `
-      <div><h3>Therapy Session Summary</h3>
-      <h4>Patient's Mood and Emotional Tone</h4>
-      <p>${extractSection(content, "Patient's Mood and Emotional Tone")}</p>
-      <h4>Emotional State of the Client</h4>
-      <p>${extractSection(content, "Emotional State of the Client")}</p>
-      <h4>Main Topics Discussed</h4>
-      <p>${extractSection(content, "Main Topics Discussed")}</p>
-      <h4>Therapeutic Techniques Used</h4>
-      <p>${extractSection(content, "Therapeutic Techniques Used")}</p>
-      <h4>Client's Progress and Goals</h4>
-      <p>${extractSection(content, "Client's Progress and Goals")}</p>
-      <h4>Challenges and Concerns</h4>
-      <p>${extractSection(content, "Challenges and Concerns")}</p>
-      <h4>Therapist's Recommendations</h4>
-      <p>${extractSection(content, "Therapist's Recommendations")}</p></div>
-    `;
+    <div><h3>Therapy Session Summary</h3>
+    <h4>Client's Emotional Tone</h4>
+    <p><em>This score represents the client's overall emotional tone on a scale from 1 to 100, where: 1-30 indicates a negative tone, 31-70 indicates a neutral tone and 71-100 indicates a positive tone.</em></p>
+    <p>${overallTone} (Score: ${overallScore}/100)</p>
+    
+    <h4>Emotional State of the Client</h4>
+    <p>${extractSection(content, "Emotional State of the Client")}</p>
+    <h4>Main Topics Discussed</h4>
+    <p>${extractSection(content, "Main Topics Discussed")}</p>
+    <h4>Therapeutic Techniques Used</h4>
+    <p>${extractSection(content, "Therapeutic Techniques Used")}</p>
+    <h4>Client's Progress and Goals</h4>
+    <p>${extractSection(content, "Client's Progress and Goals")}</p>
+    <h4>Challenges and Concerns</h4>
+    <p>${extractSection(content, "Challenges and Concerns")}</p>
+    <h4>Therapist's Recommendations</h4>
+    <p>${extractSection(content, "Therapist's Recommendations")}</p></div>
+  `;
 
     return htmlContent;
   } catch (error) {
@@ -94,16 +86,38 @@ export const summarizeTranscribedText = async (
     return null;
   }
 };
+
+function determineOverallTone(sentimentAnalysis: any) {
+  const averageScore =
+    sentimentAnalysis.reduce(
+      (sum: any, message: any) => sum + message.score,
+      0
+    ) / sentimentAnalysis.length;
+
+  // Transform score from [-1, 1] range to [1, 100] range
+  const transformedScore = ((averageScore + 1) / 2) * 99 + 1;
+
+  let tone;
+  if (averageScore > 0.3) tone = "Positive";
+  else if (averageScore < -0.3) tone = "Negative";
+  else tone = "Neutral";
+
+  return { tone, score: transformedScore.toFixed(0) };
+}
+
 // Helper function to extract content based on labeled sections
 function extractSection(content: string, sectionTitle: string): string {
-  const regex = new RegExp(`${sectionTitle}\\s*(.*?)(?=\\d\\.|$)`, "s"); // Extract until next numbered section or end
+  const regex = new RegExp(
+    `${sectionTitle}\\s*:?\\s*(.*?)(?=\\n\\d\\.|\\nTherapist's Recommendations|$)`,
+    "s"
+  );
   const match = content.match(regex);
 
   if (match) {
     let extractedContent = match[1].trim();
 
-    // Remove any instances of markdown formatting like ** or unnecessary symbols
-    extractedContent = extractedContent.replace(/\*\*/g, "").trim();
+    // Clean up any leading colons or extra whitespace
+    extractedContent = extractedContent.replace(/^:+\s*/, "").trim();
 
     return extractedContent;
   }

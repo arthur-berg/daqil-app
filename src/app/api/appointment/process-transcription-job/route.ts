@@ -6,6 +6,7 @@ import { summarizeTranscribedText } from "@/lib/openai";
 import { getTranscriptionDetails } from "@/lib/rev-ai";
 import Appointment from "@/models/Appointment";
 import { upsertJournalNoteToPinecone } from "@/lib/pincecone";
+import { stripHtmlTags } from "@/utils";
 
 export const POST = async (req: NextRequest) => {
   try {
@@ -79,9 +80,13 @@ export const POST = async (req: NextRequest) => {
     const clientId = appointment.participants[0].userId.toString();
     const therapistId = appointment.hostUserId.toString();
 
+    const summaryText = stripHtmlTags(summary);
+
+    console.log("summaryText without html for pinecone", summaryText);
+
     await upsertJournalNoteToPinecone(
       clientId,
-      summary,
+      summaryText,
       appointmentId,
       therapistId
     );

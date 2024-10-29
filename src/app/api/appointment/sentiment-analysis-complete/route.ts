@@ -13,26 +13,38 @@ export const POST = async (req: NextRequest) => {
 
     if (status !== "completed") {
       console.error(
-        `Sentiment analysis job ${sentimentJobId} failed or is not completed.`
+        `Sentiment analysis job ${sentimentJobId} failed or is not completed. Current status: ${status}`
       );
+
+      // Additional log to capture potential causes or reasons for failure
+      console.error(
+        `Possible reasons: job might still be processing, encountered an error during analysis, or the status is unexpected.`
+      );
+
+      // Log full job object for detailed debugging
+      console.log("Full job object received:", job);
+
+      await JournalNote.findOneAndUpdate(
+        { sentimentJobId },
+        { summaryStatus: "error" }
+      );
+
       return NextResponse.json(
-        { error: "Sentiment analysis job not successful" },
+        {
+          error: "Sentiment analysis job not successful",
+          details: `Job ID: ${sentimentJobId}, Status: ${status}`,
+        },
         { status: 400 }
       );
     }
 
-    /*  const sentimentResult = await fetchSentimentResults(sentimentJobId);
-
-    if (!sentimentResult) {
-      return NextResponse.json(
-        { error: "Failed to retrieve sentiment analysis result" },
-        { status: 500 }
-      );
-    } */
-
     const journalNote = await JournalNote.findOne({ sentimentJobId });
 
     if (!journalNote) {
+      await JournalNote.findOneAndUpdate(
+        { sentimentJobId },
+        { summaryStatus: "error" }
+      );
       return NextResponse.json(
         { error: "Failed to retrieve journalNote result" },
         { status: 500 }
