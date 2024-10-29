@@ -5,7 +5,7 @@ const pc = new Pinecone({
   apiKey: process.env.PINECONE_API_KEY as string,
 });
 
-export const upsertToPinecone = async (
+export const upsertJournalNoteToPinecone = async (
   clientId: string,
   text: string,
   appointmentId: string,
@@ -13,18 +13,17 @@ export const upsertToPinecone = async (
 ) => {
   try {
     const embedding = await embedText(text);
-    const journalNotesIndex = pc.Index("journal-notes");
+    const clientInsightsIndex = pc.Index("client-insights");
 
-    await journalNotesIndex.upsert([
+    await clientInsightsIndex.namespace(clientId).upsert([
       {
-        id: `journal_${clientId}_${Date.now()}`,
+        id: `journal_note_${appointmentId}_${Date.now()}`,
         values: embedding,
         metadata: {
-          clientId,
           therapistId,
           appointmentId,
           date: new Date().toISOString(),
-          type: "journal_summary",
+          type: "journal_note",
         },
       },
     ]);
@@ -37,9 +36,9 @@ export const upsertToPinecone = async (
 export const queryPinecone = async (clientId: string, queryText: string) => {
   try {
     const queryEmbedding = await embedText(queryText);
-    const index = pc.Index("journal-notes");
+    const clientInsightsIndex = pc.Index("client-insights");
 
-    const response = await index.namespace(clientId).query({
+    const response = await clientInsightsIndex.namespace(clientId).query({
       topK: 5,
       includeValues: false,
       includeMetadata: true,
