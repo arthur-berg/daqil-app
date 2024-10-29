@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { summarizeTranscribedText } from "@/lib/openai";
 import { getTranscriptionDetails } from "@/lib/rev-ai";
 import Appointment from "@/models/Appointment";
-import { upsertToPinecone } from "@/lib/pincecone";
+import { upsertJournalNoteToPinecone } from "@/lib/pincecone";
 
 export const POST = async (req: NextRequest) => {
   try {
@@ -74,7 +74,12 @@ export const POST = async (req: NextRequest) => {
     const clientId = appointment.participants[0].userId.toString();
     const therapistId = appointment.hostUserId.toString();
 
-    await upsertToPinecone(clientId, summary, appointmentId, therapistId);
+    await upsertJournalNoteToPinecone(
+      clientId,
+      summary,
+      appointmentId,
+      therapistId
+    );
 
     console.log(`Updated JournalNote for revJobId: ${jobId}`);
 
