@@ -14,6 +14,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { checkDiscountCodeValidity } from "@/actions/discount-code";
+import Image from "next/image";
 
 if (process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY === undefined) {
   throw new Error("NEXT_PUBLIC_STRIPE_PUBLIC_KEY is not defined");
@@ -27,7 +28,7 @@ const CheckoutWrapper = ({
   appointmentId,
   paymentExpiryDate,
 }: {
-  date: Date; // Specify that date is of type Date
+  date: Date;
   appointmentType: any;
   appointmentId: any;
   paymentExpiryDate: Date;
@@ -162,6 +163,14 @@ const CheckoutWrapper = ({
         ) : (
           <>
             {renderDiscountCodeForm()}
+            <div className="flex justify-center mb-4">
+              <Image
+                src="https://zakina-images.s3.eu-north-1.amazonaws.com/stripe-payment.png"
+                width={150}
+                height={150}
+                alt="Pay securely with Stripe"
+              />
+            </div>
             <Elements
               stripe={stripePromise}
               options={{

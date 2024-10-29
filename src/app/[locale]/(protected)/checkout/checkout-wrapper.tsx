@@ -19,6 +19,7 @@ import { createPaymentIntent } from "@/actions/stripe";
 import { cancelTempReservation } from "@/actions/appointments/cancel-temp-reservation";
 import { confirmBookingPayLater } from "@/actions/appointments/confirm-booking-pay-later";
 import { useCurrentUser } from "@/hooks/use-current-user";
+import Image from "next/image";
 
 if (process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY === undefined) {
   throw new Error("NEXT_PUBLIC_STRIPE_PUBLIC_KEY is not defined");
@@ -272,6 +273,14 @@ const CheckoutWrapper = ({
         ) : (
           <>
             {renderDiscountCodeForm()}
+            <div className="flex justify-center mb-4">
+              <Image
+                src="https://zakina-images.s3.eu-north-1.amazonaws.com/stripe-payment.png"
+                width={150}
+                height={150}
+                alt="Pay securely with Stripe"
+              />
+            </div>
             <Elements
               stripe={stripePromise}
               options={{
