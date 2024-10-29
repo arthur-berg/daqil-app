@@ -8,6 +8,10 @@ const journalNote = new Schema(
       type: String,
       required: false,
     },
+    sentimentJobId: {
+      type: String,
+      required: false,
+    },
     appointmentId: { type: mongoose.Schema.Types.ObjectId, ref: "Appointment" },
     note: {
       type: String,

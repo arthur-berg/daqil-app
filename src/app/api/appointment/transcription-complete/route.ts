@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import connectToMongoDB from "@/lib/mongoose";
 import { addTranscriptionJobToQueue } from "@/lib/qstash";
 import JournalNote from "@/models/JournalNote";
+import { submitSentimentAnalysisJob } from "@/lib/rev-ai";
 
 export const POST = async (req: NextRequest) => {
   try {
@@ -33,7 +34,24 @@ export const POST = async (req: NextRequest) => {
       );
     }
 
-    await addTranscriptionJobToQueue(jobId);
+    const sentimentJobId = await submitSentimentAnalysisJob(jobId);
+
+    if (!sentimentJobId) {
+      console.error("Failed to submit sentiment analysis job.");
+      await JournalNote.findOneAndUpdate(
+        { revJobId: jobId },
+        { summaryStatus: "error" }
+      );
+      return NextResponse.json(
+        { error: "Failed to submit sentiment analysis job" },
+        { status: 500 }
+      );
+    }
+
+    await JournalNote.findOneAndUpdate(
+      { revJobId: jobId },
+      { sentimentJobId: sentimentJobId }
+    );
 
     console.log(`Successfully updated JournalNote for revJobId: ${jobId}`);
 

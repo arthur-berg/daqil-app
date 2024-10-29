@@ -1,6 +1,10 @@
+import { TEST_SAMPLE_TRANSCRIPT } from "@/contants/sampleTranscript";
+
 const REV_API_KEY = process.env.REV_API_KEY;
-const callbackUrl = process.env.REVAI_WEBHOOK_URL;
+const transcriptionCallbackUrl = process.env.REVAI_TRANSCRIPTION_WEBHOOK_URL;
+const sentimentCallbackUrl = process.env.REVAI_SENTIMENT_WEBHOOK_URL;
 const REV_BASE_URL = "https://api.rev.ai/speechtotext/v1/jobs";
+const REV_SENTIMENT_BASE_URL = "https://api.rev.ai/sentiment_analysis/v1/jobs";
 
 export const sendToRevAI = async (audioUrl: string) => {
   const response = await fetch(REV_BASE_URL, {
@@ -17,7 +21,7 @@ export const sendToRevAI = async (audioUrl: string) => {
         }, */
       },
       notification_config: {
-        url: callbackUrl,
+        url: transcriptionCallbackUrl,
         /*     auth_headers: {
           Authorization: `Bearer ${REV_WEBHOOK_AUTH}`,
         }, */
@@ -58,7 +62,10 @@ export const getRevJobStatus = async (jobId: string) => {
   }
 };
 
-export const getTranscriptionDetails = async (jobId: string) => {
+export const getTranscriptionDetails = async (
+  jobId: string,
+  sentimentJobId?: string
+) => {
   try {
     // First, retrieve the job details
     const jobDetailsResponse = await fetch(`${REV_BASE_URL}/${jobId}`, {
@@ -122,13 +129,118 @@ export const getTranscriptionDetails = async (jobId: string) => {
       )
       .join("\n");
 
-    console.log("Transcription retrieved:", transcript);
-
-    return {
+    // Initialize result with transcription details
+    const result: any = {
       transcript,
     };
+
+    // If a sentimentJobId is provided, fetch the sentiment analysis results
+    if (sentimentJobId) {
+      const sentimentResults = await fetchSentimentResults(sentimentJobId);
+      if (sentimentResults) {
+        result.sentimentAnalysis = sentimentResults;
+      } else {
+        console.error(
+          `Failed to retrieve sentiment analysis for job: ${sentimentJobId}`
+        );
+      }
+    }
+    return result;
   } catch (error) {
     console.error("Error retrieving transcription details:", error);
     return null;
   }
+};
+
+export const submitSentimentAnalysisJob = async (jobId: string) => {
+  const transcriptionDetails = await getTranscriptionDetails(jobId);
+  if (!transcriptionDetails) {
+    throw new Error(
+      `Failed to retrieve transcription details for job ID: ${jobId}`
+    );
+  }
+
+  const { transcript } = transcriptionDetails;
+
+  const hardcodedTranscript = TEST_SAMPLE_TRANSCRIPT;
+
+  const response = await fetch(
+    "https://api.rev.ai/sentiment_analysis/v1/jobs",
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.REV_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        text: hardcodedTranscript,
+        metadata: "Sentiment analysis for transcription",
+        notification_config: {
+          url: sentimentCallbackUrl,
+        },
+      }),
+    }
+  );
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.error(
+      `Failed to submit sentiment analysis job: ${response.status}\nDetails: ${errorText}`
+    );
+    return null;
+  }
+
+  const data = await response.json();
+  console.log(`Sentiment analysis job submitted with ID: ${data.id}`);
+
+  return data.id;
+};
+
+/* export const getTranscriptionDetailsAndAnalyzeSentiment = async (
+  jobId: string
+) => {
+  const transcriptionResult = await getTranscriptionDetails(jobId);
+  if (!transcriptionResult) return null;
+
+  const { transcript } = transcriptionResult;
+
+  const jsonTranscript = {
+    monologues: transcriptionResult.monologues,
+  };
+
+  const sentimentJobId = await submitSentimentAnalysisJob(jsonTranscript);
+
+  return {
+    transcript,
+    sentimentJobId,
+  };
+};
+ */
+
+export const fetchSentimentResults = async (sentimentJobId: string) => {
+  const response = await fetch(
+    `${REV_SENTIMENT_BASE_URL}/${sentimentJobId}/result`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${REV_API_KEY}`,
+        Accept: "application/vnd.rev.sentiment.v1.0+json",
+      },
+    }
+  );
+
+  if (!response.ok) {
+    console.error(
+      `Failed to fetch sentiment results for job: ${sentimentJobId}`
+    );
+    return null;
+  }
+
+  const data = await response.json();
+  return data.messages.map((message: any) => ({
+    content: message.content,
+    score: message.score,
+    sentiment: message.sentiment,
+    timestamp: { start: message.ts, end: message.end_ts },
+  }));
 };

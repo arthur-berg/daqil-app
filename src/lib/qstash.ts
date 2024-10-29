@@ -28,12 +28,16 @@ export const scheduleTask = async (
   }
 };
 
-export const addTranscriptionJobToQueue = async (jobId: any) => {
+export const addTranscriptionJobToQueue = async (
+  jobId: string,
+  sentimentJobId: string
+) => {
   try {
     const response = await qstashClient.publishJSON({
       url: `${process.env.QSTASH_API_URL}/process-transcription-job`,
       body: {
         jobId: jobId,
+        sentimentJobId: sentimentJobId,
       },
       retries: 3,
       method: "POST",

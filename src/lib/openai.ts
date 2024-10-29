@@ -1,30 +1,52 @@
+import {
+  TEST_SAMPLE_SENTIMENT_ANALYSIS,
+  TEST_SAMPLE_TRANSCRIPT,
+} from "@/contants/sampleTranscript";
 import { OpenAI } from "openai";
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-export const summarizeTranscribedText = async (transcript: string) => {
-  const sampleTranscript = `
-I've been feeling really overwhelmed lately, especially with work... 
-  `;
+export const summarizeTranscribedText = async (
+  transcript: string,
+  sentimentAnalysis: any
+) => {
+  const sampleTranscript = TEST_SAMPLE_TRANSCRIPT;
+
+  const formattedSentiments = TEST_SAMPLE_SENTIMENT_ANALYSIS.map(
+    (message: any) =>
+      `- "${message.content}" (Sentiment: ${message.sentiment}, Score: ${message.score})`
+  ).join("\n");
 
   const messages = [
     {
       role: "system",
       content:
-        "You are an expert evaluator of therapy sessions. Your task is to assess and summarize the session based on the provided transcript.",
+        "You are an expert evaluator of therapy sessions. Your task is to assess and summarize the session based on the provided transcript and sentiment analysis.",
     },
     {
       role: "user",
       content: `
-The following transcript is a therapy session between a client and a therapist. The conversation alternates between them, and the therapist typically provides guidance, techniques, or suggestions, while the client expresses feelings, concerns, or experiences. Please summarize the transcript by focusing on the most important aspects and formatting it as structured content using the following sections:
-1. Emotional State of the Client
-2. Main Topics Discussed
-3. Therapeutic Techniques Used
-4. Client's Progress and Goals
-5. Challenges and Concerns
-6. Therapist's Recommendations
-Please return the summary in plain text format, **without using a colon after the section labels**, and ensure that each section begins directly with the relevant content.
-      `,
+      The following transcript is a therapy session between a client and a therapist. The conversation alternates between them, and the therapist typically provides guidance, techniques, or suggestions, while the client expresses feelings, concerns, or experiences. 
+      
+      The sentiment analysis uses a scoring system to represent the emotional intensity or strength of the sentiment. This score is in the range [-1, 1]:
+      - A score below -0.3 indicates a negative (sad/angry) sentiment.
+      - A score above 0.3 indicates a positive (joyful/happy) sentiment.
+      - Scores between -0.3 and 0.3 indicate a neutral sentiment.
+      
+      Based on the transcript and sentiment indicators, please summarize the session with the following structured sections:
+      1. Patient's Mood and Emotional Tone (based on sentiment analysis)
+      2. Emotional State of the Client
+      3. Main Topics Discussed
+      4. Therapeutic Techniques Used
+      5. Client's Progress and Goals
+      6. Challenges and Concerns
+      7. Therapist's Recommendations
+      
+      Use the following sentiment data for reference:
+      ${formattedSentiments}
+      
+      Please return the summary in plain text format, **without using a colon after the section labels**, and ensure that each section begins directly with the relevant content.
+            `,
     },
     {
       role: "user",
@@ -36,7 +58,7 @@ Please return the summary in plain text format, **without using a colon after th
     const response = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages: messages as any,
-      max_tokens: 500,
+      max_tokens: 700,
     });
 
     if (!response.choices || response.choices.length === 0) {
@@ -48,9 +70,10 @@ Please return the summary in plain text format, **without using a colon after th
       throw new Error("Empty response content from OpenAI.");
     }
 
-    // Add the HTML structure after extracting the plain text sections
     const htmlContent = `
       <div><h3>Therapy Session Summary</h3>
+      <h4>Patient's Mood and Emotional Tone</h4>
+      <p>${extractSection(content, "Patient's Mood and Emotional Tone")}</p>
       <h4>Emotional State of the Client</h4>
       <p>${extractSection(content, "Emotional State of the Client")}</p>
       <h4>Main Topics Discussed</h4>
@@ -71,7 +94,6 @@ Please return the summary in plain text format, **without using a colon after th
     return null;
   }
 };
-
 // Helper function to extract content based on labeled sections
 function extractSection(content: string, sectionTitle: string): string {
   const regex = new RegExp(`${sectionTitle}\\s*(.*?)(?=\\d\\.|$)`, "s"); // Extract until next numbered section or end

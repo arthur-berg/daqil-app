@@ -41,7 +41,11 @@ const renderJournalNoteActions = (
             />
           ) : (
             <div>
-              <p>{truncateText(note.note, 100)}</p>
+              <p
+                dangerouslySetInnerHTML={{
+                  __html: truncateText(note.summary, 100),
+                }}
+              ></p>
               <Button onClick={() => setEditingJournalNoteId(note._id)}>
                 {t("edit")}
               </Button>
@@ -72,12 +76,26 @@ const renderJournalNoteActions = (
       );
     case "error":
       return (
-        <Button
-          variant="success"
-          onClick={() => setEditingJournalNoteId(note._id)}
-        >
-          {t("createJournalNote")}
-        </Button>
+        <div>
+          {editingJournalNoteId === note._id ? (
+            <JournalNoteForm
+              setIsEditing={() => setEditingJournalNoteId(null)}
+              journalNote={note}
+            />
+          ) : (
+            <>
+              <p className="text-destructive mb-2">
+                {t("errorGeneratingJournalNote")}
+              </p>
+              <Button
+                variant="success"
+                onClick={() => setEditingJournalNoteId(note._id)}
+              >
+                {t("createJournalNote")}
+              </Button>
+            </>
+          )}
+        </div>
       );
     default:
       return (

@@ -12,8 +12,7 @@ export const POST = async (req: NextRequest) => {
     await connectToMongoDB();
 
     const body = await req.json();
-    const { jobId } = body;
-    console.log("jobId", jobId);
+    const { jobId, sentimentJobId } = body;
 
     if (!jobId) {
       console.error("Missing archiveId or transcript in the request.");
@@ -27,7 +26,10 @@ export const POST = async (req: NextRequest) => {
       );
     }
 
-    const transcriptionResult = await getTranscriptionDetails(jobId);
+    const transcriptionResult = await getTranscriptionDetails(
+      jobId,
+      sentimentJobId
+    );
 
     if (!transcriptionResult) {
       console.error(
@@ -43,9 +45,12 @@ export const POST = async (req: NextRequest) => {
       );
     }
 
-    const { transcript } = transcriptionResult;
+    const { transcript, sentimentAnalysis } = transcriptionResult;
 
-    const summary = await summarizeTranscribedText(transcript);
+    const summary = await summarizeTranscribedText(
+      transcript,
+      sentimentAnalysis
+    );
 
     if (!summary) {
       await JournalNote.findOneAndUpdate(
