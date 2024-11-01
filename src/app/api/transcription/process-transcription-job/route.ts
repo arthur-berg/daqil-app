@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import connectToMongoDB from "@/lib/mongoose";
 import JournalNote from "@/models/JournalNote";
 import { revalidatePath } from "next/cache";
-import { summarizeTranscribedText } from "@/lib/openai";
+import { generateValidatedSummary } from "@/lib/openai";
 import { getTranscriptionDetails } from "@/lib/rev-ai";
 import Appointment from "@/models/Appointment";
 import { upsertJournalNoteToPinecone } from "@/lib/pincecone";
@@ -48,7 +48,7 @@ export const POST = async (req: NextRequest) => {
 
     const { transcript, sentimentAnalysis } = transcriptionResult;
 
-    const summary = await summarizeTranscribedText(
+    const summary = await generateValidatedSummary(
       transcript,
       sentimentAnalysis
     );

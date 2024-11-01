@@ -6,6 +6,56 @@ import { OpenAI } from "openai";
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
+const REQUIRED_SECTIONS = [
+  "Emotional State of the Client",
+  "Main Topics Discussed",
+  "Therapeutic Techniques Used",
+  "Client's Progress and Goals",
+  "Challenges and Concerns",
+  "Therapist's Recommendations",
+];
+
+export async function generateValidatedSummary(
+  transcript: string,
+  sentimentAnalysis: any | undefined
+) {
+  try {
+    return await validateAndRetrySummary(transcript, sentimentAnalysis);
+  } catch (error) {
+    console.error("Error generating validated summary:", error);
+    return null;
+  }
+}
+
+async function validateAndRetrySummary(
+  transcript: string,
+  sentimentAnalysis: any | undefined,
+  retryLimit: number = 2
+) {
+  for (let attempt = 0; attempt <= retryLimit; attempt++) {
+    const summaryContent = await summarizeTranscribedText(
+      transcript,
+      sentimentAnalysis
+    );
+
+    if (!summaryContent) {
+      throw new Error("Failed to generate summary content.");
+    }
+
+    const isValid = REQUIRED_SECTIONS.every((section) =>
+      summaryContent.includes(section)
+    );
+
+    if (isValid) {
+      return summaryContent;
+    }
+
+    console.warn(`Validation failed on attempt ${attempt + 1}, retrying...`);
+  }
+
+  throw new Error("Failed to generate a valid summary after retries.");
+}
+
 export const summarizeTranscribedText = async (
   transcript: string,
   sentimentAnalysis: any | undefined
@@ -79,19 +129,11 @@ Transcript (may be in Arabic or English): ${transcript}
         ? `<h4>Client's Emotional Tone</h4><p>${toneAndScore.tone} (Score: ${toneAndScore.score}/100)</p>`
         : ""
     }
-    <h4>Emotional State of the Client</h4>
-    <p>${extractSection(content, "Emotional State of the Client")}</p>
-    <h4>Main Topics Discussed</h4>
-    <p>${extractSection(content, "Main Topics Discussed")}</p>
-    <h4>Therapeutic Techniques Used</h4>
-    <p>${extractSection(content, "Therapeutic Techniques Used")}</p>
-    <h4>Client's Progress and Goals</h4>
-    <p>${extractSection(content, "Client's Progress and Goals")}</p>
-    <h4>Challenges and Concerns</h4>
-    <p>${extractSection(content, "Challenges and Concerns")}</p>
-    <h4>Therapist's Recommendations</h4>
-    <p>${extractSection(content, "Therapist's Recommendations")}</p></div>
-  `;
+    ${REQUIRED_SECTIONS.map(
+      (section) =>
+        `<h4>${section}</h4><p>${extractSection(content, section)}</p>`
+    ).join("")}
+  </div>`;
 
     return htmlContent;
   } catch (error) {
@@ -121,7 +163,9 @@ function determineOverallTone(sentimentAnalysis: any) {
 // Helper function to extract content based on labeled sections
 function extractSection(content: string, sectionTitle: string): string {
   const regex = new RegExp(
-    `${sectionTitle}\\s*:?\\s*(.*?)(?=\\n\\d\\.|\\nTherapist's Recommendations|$)`,
+    `${sectionTitle}\\s*:?\\s*(.*?)(?=\\n\\d\\.|\\n${REQUIRED_SECTIONS.join(
+      "|"
+    )}|$)`,
     "s"
   );
   const match = content.match(regex);
