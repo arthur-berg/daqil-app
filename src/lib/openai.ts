@@ -8,12 +8,19 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 export const summarizeTranscribedText = async (
   transcript: string,
-  sentimentAnalysis: any
+  sentimentAnalysis: any | undefined
 ) => {
   const sampleTranscript = TEST_SAMPLE_TRANSCRIPT;
 
-  const { tone: overallTone, score: overallScore } =
-    determineOverallTone(sentimentAnalysis);
+  const toneAndScore = sentimentAnalysis
+    ? determineOverallTone(sentimentAnalysis)
+    : null;
+
+  const sentimentAnalysisSection = toneAndScore
+    ? `
+Client's Emotional Tone: ${toneAndScore.tone} (Score: ${toneAndScore.score}/100)
+The following section uses sentiment analysis to provide an overview of the client's emotional tone throughout the session.`
+    : "";
 
   const messages = [
     {
@@ -26,17 +33,22 @@ export const summarizeTranscribedText = async (
       content: `
 The following transcript is a therapy session between a client and a therapist. The conversation alternates between them, with the therapist providing guidance, techniques, or suggestions, while the client expresses feelings, concerns, or experiences.
 
-1. Emotional State of the Client (This section should be based on the content of what the client expressed, highlighting how the client feels about themselves and their experiences.)
+${sentimentAnalysisSection}
+
+Please summarize the session in a structured format, without using Markdown symbols like * or **, and respond only in plain text.
+
+Summary Structure:
+1. Emotional State of the Client (Highlight how the client feels about themselves and their experiences.)
 2. Main Topics Discussed
 3. Therapeutic Techniques Used
 4. Client's Progress and Goals
 5. Challenges and Concerns
 6. Therapist's Recommendations
 
-Each section should start with the title on a new line. The summary should be clear and concise, addressing only relevant information.
+Each section should begin with its title, followed by a summary of relevant information. The summary should be concise, clear, and in English.
 
-Please return the summary in plain text format, with each section title clearly separated from its content.
-            `,
+Transcript (may be in Arabic or English): ${transcript}
+  `,
     },
     {
       role: "user",
@@ -62,10 +74,11 @@ Please return the summary in plain text format, with each section title clearly 
 
     const htmlContent = `
     <div><h3>Therapy Session Summary</h3>
-    <h4>Client's Emotional Tone</h4>
-    <p><em>This score represents the client's overall emotional tone on a scale from 1 to 100, where: 1-30 indicates a negative tone, 31-70 indicates a neutral tone and 71-100 indicates a positive tone.</em></p>
-    <p>${overallTone} (Score: ${overallScore}/100)</p>
-    
+    ${
+      toneAndScore
+        ? `<h4>Client's Emotional Tone</h4><p>${toneAndScore.tone} (Score: ${toneAndScore.score}/100)</p>`
+        : ""
+    }
     <h4>Emotional State of the Client</h4>
     <p>${extractSection(content, "Emotional State of the Client")}</p>
     <h4>Main Topics Discussed</h4>

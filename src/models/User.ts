@@ -300,6 +300,12 @@ const userSchema = new Schema(
         required: false,
       },
     },
+    enabledFeatures: {
+      sentimentAnalysis: {
+        type: Boolean,
+        required: false,
+      },
+    },
     paymentSettings: {
       type: { type: String, enum: ["personal", "company"] },
       personal: {

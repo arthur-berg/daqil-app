@@ -3,6 +3,7 @@ import connectToMongoDB from "@/lib/mongoose";
 import { addTranscriptionJobToQueue } from "@/lib/qstash";
 import JournalNote from "@/models/JournalNote";
 import { submitSentimentAnalysisJob } from "@/lib/rev-ai";
+import { getCurrentUser } from "@/lib/auth";
 
 export const POST = async (req: NextRequest) => {
   try {
@@ -10,6 +11,8 @@ export const POST = async (req: NextRequest) => {
     const body = await req.json();
 
     const { id: jobId, status } = body.job;
+
+    const user = await getCurrentUser();
 
     if (!jobId || !status) {
       console.error("Missing job ID or status in the webhook payload.");
@@ -34,29 +37,43 @@ export const POST = async (req: NextRequest) => {
       );
     }
 
-    const sentimentJobId = await submitSentimentAnalysisJob(jobId);
+    if (user?.enabledFeatures?.sentimentAnalysis) {
+      const sentimentJobId = await submitSentimentAnalysisJob(jobId);
 
-    if (!sentimentJobId) {
-      console.error("Failed to submit sentiment analysis job.");
+      if (!sentimentJobId) {
+        console.error("Failed to submit sentiment analysis job.");
+        await JournalNote.findOneAndUpdate(
+          { revJobId: jobId },
+          { summaryStatus: "error" }
+        );
+        return NextResponse.json(
+          { error: "Failed to submit sentiment analysis job" },
+          { status: 500 }
+        );
+      }
+
       await JournalNote.findOneAndUpdate(
         { revJobId: jobId },
-        { summaryStatus: "error" }
+        { sentimentJobId: sentimentJobId }
       );
+      console.log(`Successfully updated JournalNote for revJobId: ${jobId}`);
+
       return NextResponse.json(
-        { error: "Failed to submit sentiment analysis job" },
-        { status: 500 }
+        {
+          message:
+            "Transcription successfully processed and saved. Sentiment analysis started",
+        },
+        { status: 200 }
       );
     }
 
-    await JournalNote.findOneAndUpdate(
-      { revJobId: jobId },
-      { sentimentJobId: sentimentJobId }
-    );
-
-    console.log(`Successfully updated JournalNote for revJobId: ${jobId}`);
+    await addTranscriptionJobToQueue(jobId);
 
     return NextResponse.json(
-      { message: "Transcription successfully processed and saved" },
+      {
+        message:
+          "Transcription successfully processed and saved. OpenAI processing queued",
+      },
       { status: 200 }
     );
   } catch (error) {

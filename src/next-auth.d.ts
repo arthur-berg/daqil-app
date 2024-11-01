@@ -11,6 +11,9 @@ export type ExtendedUser = DefaultSession["user"] & {
     en: string;
     ar: string;
   };
+  enabledFeatures: {
+    sentimentAnalysis: boolean;
+  };
   lastName: {
     en: string;
     ar: string;

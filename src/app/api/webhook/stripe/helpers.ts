@@ -185,7 +185,6 @@ async function handlePayBeforeBooking(
   const appointmentDate = format(new Date(appointment.startDate), "yyyy-MM-dd");
   await updateAppointments(appointment, appointmentDate);
 
-  // Convert amountPaid to a number (removing the '$' sign and parsing as float)
   const amountPaidNumber = parseFloat(
     appointmentDetails.amountPaid.replace("$", "")
   );
@@ -193,7 +192,7 @@ async function handlePayBeforeBooking(
   await Appointment.findByIdAndUpdate(appointment._id, {
     status: "confirmed",
     "payment.status": "paid",
-    amountPaid: amountPaidNumber, // Store it as a number
+    amountPaid: amountPaidNumber,
   });
 
   const t = await getTranslations({

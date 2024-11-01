@@ -152,7 +152,7 @@
   },
  "AppointmentEndedPage": {
   "title": "Session Concluded",
-  "description": "The session with your client has been marked as ended. If this was done by mistake, you can rejoin the meeting to continue. To complete the session, navigate to the client’s journal page, where you can generate a summary note and review the session details.",
+  "description": "Rejoin the meeting if you left by accident. Alternatively, navigate to the client's journal page where you can generate a journal summary note and review the session details.",
   "goToJournalButton": "Go to Client's Journal",
   "rejoinMeetingButton": "Rejoin Meeting",
   "goToAppointmentsButton": "Go to My Appointments Page"
@@ -524,6 +524,8 @@
     "deletingDiscountCode": "Deleting discount code..."
   },
   "MyClientsPage": {
+    "readFullNote": "Read full note",
+    "showLess": "Show less",
     "errorGeneratingJournalNote": "Couldn't generate journal note, please add it manually.",
     "createJournalNote": "Create Journal Note",
     "generateJournalNote": "Generate Journal Note",

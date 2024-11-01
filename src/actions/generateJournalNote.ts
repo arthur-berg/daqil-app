@@ -26,11 +26,29 @@ async function handleArchiveStatus(
 
   if (archive.status === "stopped" || archive.status === "available") {
     console.log(`Archive is already in a final state: ${archive.status}`);
-    /* MAYBE CALL
+
+    const journalNote = await JournalNote.findOne({ archiveId });
+    if (
+      journalNote.summaryStatus === "notStarted" &&
+      archive.status === "available"
+    ) {
+      startRevJob(archiveId, ErrorMessages);
+      await Appointment.findByIdAndUpdate(appointmentId, {
+        status: "completed",
+      });
+      return null;
+    }
+
+    if (
+      archive.status === "stopped" &&
+      journalNote.summaryStatus === "notStarted"
+    ) {
       await JournalNote.findOneAndUpdate(
-      { archiveId },
-      { summaryStatus: "error" }
-    ); instead of error message?*/
+        { archiveId },
+        { summaryStatus: "pending" }
+      );
+      return null;
+    }
     return {
       error:
         archive.status === "stopped"
@@ -91,13 +109,13 @@ async function handleRevJobStatus(
       { summaryStatus: "error" }
     );
   } else {
-    return startRevJobIfNeeded(archiveId, ErrorMessages);
+    return startRevJob(archiveId, ErrorMessages);
   }
 
   return null;
 }
 
-async function startRevJobIfNeeded(archiveId: string, ErrorMessages: any) {
+async function startRevJob(archiveId: string, ErrorMessages: any) {
   const archive = await retrieveArchive(archiveId);
   const audioUrl = archive.url;
 

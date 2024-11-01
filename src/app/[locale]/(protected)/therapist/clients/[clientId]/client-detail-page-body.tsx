@@ -27,9 +27,13 @@ const renderJournalNoteActions = (
   appointment: any,
   editingJournalNoteId: string | null,
   setEditingJournalNoteId: Function,
-  t: any
+  t: any,
+  setExpandedNotes: any,
+  expandedNotes: any
 ) => {
   const note = appointment.journalNoteId;
+  const isExpanded = expandedNotes[note._id] || false;
+
   switch (note.summaryStatus) {
     case "completed":
       return (
@@ -43,10 +47,28 @@ const renderJournalNoteActions = (
             <div>
               <p
                 dangerouslySetInnerHTML={{
-                  __html: truncateText(note.summary, 100),
+                  __html: isExpanded
+                    ? note.summary // Show full note if expanded
+                    : truncateText(note.summary, 100), // Truncated version if not expanded
                 }}
+                className="mb-2"
               ></p>
-              <Button onClick={() => setEditingJournalNoteId(note._id)}>
+              <Button
+                variant="link"
+                onClick={() =>
+                  setExpandedNotes((prev: any) => ({
+                    ...prev,
+                    [note._id]: !isExpanded,
+                  }))
+                }
+              >
+                {isExpanded ? t("showLess") : t("readFullNote")}
+              </Button>
+              <Button
+                variant="secondary"
+                className="ml-4"
+                onClick={() => setEditingJournalNoteId(note._id)}
+              >
                 {t("edit")}
               </Button>
             </div>
@@ -123,6 +145,7 @@ const ClientDetailPageBody = ({
   const [editingJournalNoteId, setEditingJournalNoteId] = useState<
     string | null
   >(null);
+  const [expandedNotes, setExpandedNotes] = useState({});
   const clientData = JSON.parse(clientDataJson);
   const { firstName, lastName, email, appointments, selectedTherapist } =
     clientData;
@@ -280,7 +303,9 @@ const ClientDetailPageBody = ({
                           appointment,
                           editingJournalNoteId,
                           setEditingJournalNoteId,
-                          t
+                          t,
+                          setExpandedNotes,
+                          expandedNotes
                         )}
                       </div>
                     )}

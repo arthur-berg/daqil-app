@@ -30,15 +30,18 @@ export const scheduleTask = async (
 
 export const addTranscriptionJobToQueue = async (
   jobId: string,
-  sentimentJobId: string
+  sentimentJobId?: string
 ) => {
   try {
+    const body: Record<string, unknown> = {
+      jobId: jobId,
+    };
+    if (sentimentJobId) {
+      body["sentimentJobId"] = sentimentJobId;
+    }
     const response = await qstashClient.publishJSON({
-      url: `${process.env.QSTASH_API_URL}/process-transcription-job`,
-      body: {
-        jobId: jobId,
-        sentimentJobId: sentimentJobId,
-      },
+      url: `${process.env.QSTASH_TRANSCRIPTION_API_URL}/process-transcription-job`,
+      body: body,
       retries: 3,
       method: "POST",
       rateLimit: 15,
