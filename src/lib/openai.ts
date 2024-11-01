@@ -6,7 +6,7 @@ import { OpenAI } from "openai";
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-const REQUIRED_SECTIONS = [
+const REQUIRED_SECTIONS_BASE = [
   "Emotional State of the Client",
   "Main Topics Discussed",
   "Therapeutic Techniques Used",
@@ -14,6 +14,12 @@ const REQUIRED_SECTIONS = [
   "Challenges and Concerns",
   "Therapist's Recommendations",
 ];
+
+function getRequiredSections(sentimentAnalysis: any | undefined) {
+  return sentimentAnalysis
+    ? ["Client's Emotional Tone", ...REQUIRED_SECTIONS_BASE]
+    : REQUIRED_SECTIONS_BASE;
+}
 
 export async function generateValidatedSummary(
   transcript: string,
@@ -42,7 +48,7 @@ async function validateAndRetrySummary(
       throw new Error("Failed to generate summary content.");
     }
 
-    const isValid = REQUIRED_SECTIONS.every((section) =>
+    const isValid = getRequiredSections(sentimentAnalysis).every((section) =>
       summaryContent.includes(section)
     );
 
@@ -61,6 +67,7 @@ export const summarizeTranscribedText = async (
   sentimentAnalysis: any | undefined
 ) => {
   const sampleTranscript = TEST_SAMPLE_TRANSCRIPT;
+  const requiredSections = getRequiredSections(sentimentAnalysis);
 
   const toneAndScore = sentimentAnalysis
     ? determineOverallTone(sentimentAnalysis)
@@ -71,6 +78,13 @@ export const summarizeTranscribedText = async (
 Client's Emotional Tone: ${toneAndScore.tone} (Score: ${toneAndScore.score}/100)
 The following section uses sentiment analysis to provide an overview of the client's emotional tone throughout the session.`
     : "";
+
+  const summaryStructure = requiredSections
+    .map(
+      (section, index) =>
+        `${index + 1}. ${section} (Summarize relevant details)`
+    )
+    .join("\n");
 
   const messages = [
     {
@@ -88,12 +102,7 @@ ${sentimentAnalysisSection}
 Please summarize the session in a structured format, without using Markdown symbols like * or **, and respond only in plain text.
 
 Summary Structure:
-1. Emotional State of the Client (Highlight how the client feels about themselves and their experiences.)
-2. Main Topics Discussed
-3. Therapeutic Techniques Used
-4. Client's Progress and Goals
-5. Challenges and Concerns
-6. Therapist's Recommendations
+${summaryStructure}
 
 Each section should begin with its title, followed by a summary of relevant information. The summary should be concise, clear, and in English.
 
@@ -129,10 +138,12 @@ Transcript (may be in Arabic or English): ${transcript}
         ? `<h4>Client's Emotional Tone</h4><p>${toneAndScore.tone} (Score: ${toneAndScore.score}/100)</p>`
         : ""
     }
-    ${REQUIRED_SECTIONS.map(
-      (section) =>
-        `<h4>${section}</h4><p>${extractSection(content, section)}</p>`
-    ).join("")}
+    ${requiredSections
+      .map(
+        (section) =>
+          `<h4>${section}</h4><p>${extractSection(content, section)}</p>`
+      )
+      .join("")}
   </div>`;
 
     return htmlContent;
@@ -163,7 +174,7 @@ function determineOverallTone(sentimentAnalysis: any) {
 // Helper function to extract content based on labeled sections
 function extractSection(content: string, sectionTitle: string): string {
   const regex = new RegExp(
-    `${sectionTitle}\\s*:?\\s*(.*?)(?=\\n\\d\\.|\\n${REQUIRED_SECTIONS.join(
+    `${sectionTitle}\\s*:?\\s*(.*?)(?=\\n\\d\\.|\\n${REQUIRED_SECTIONS_BASE.join(
       "|"
     )}|$)`,
     "s"

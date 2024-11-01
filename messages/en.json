@@ -153,9 +153,10 @@
  "AppointmentEndedPage": {
   "title": "Session Concluded",
   "description": "Rejoin the meeting if you left by accident. Alternatively, navigate to the client's journal page where you can generate a journal summary note and review the session details.",
+  "descriptionForClient": "Rejoin the meeting if you left by accident. Alternatively, go to your appointments page.",
   "goToJournalButton": "Go to Client's Journal",
   "rejoinMeetingButton": "Rejoin Meeting",
-  "goToAppointmentsButton": "Go to My Appointments Page"
+  "goToAppointmentsButton": "Go to Appointments"
 },
   "SettingsPage": {
     "bankName": "Bank Name",

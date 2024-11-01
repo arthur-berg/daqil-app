@@ -74,11 +74,7 @@ const ToolBar = ({
   const endCall = () => {
     if (room) {
       room.leave();
-      router.push(
-        isTherapist
-          ? `/appointments/ended/${appointmentId}`
-          : `/appointments/ended`
-      );
+      router.push(`/appointments/ended/${appointmentId}`);
     }
   };
 

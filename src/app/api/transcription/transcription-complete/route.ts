@@ -1,9 +1,9 @@
+import Appointment from "@/models/Appointment";
 import { NextRequest, NextResponse } from "next/server";
 import connectToMongoDB from "@/lib/mongoose";
 import { addTranscriptionJobToQueue } from "@/lib/qstash";
 import JournalNote from "@/models/JournalNote";
 import { submitSentimentAnalysisJob } from "@/lib/rev-ai";
-import { getCurrentUser } from "@/lib/auth";
 
 export const POST = async (req: NextRequest) => {
   try {
@@ -11,8 +11,6 @@ export const POST = async (req: NextRequest) => {
     const body = await req.json();
 
     const { id: jobId, status } = body.job;
-
-    const user = await getCurrentUser();
 
     if (!jobId || !status) {
       console.error("Missing job ID or status in the webhook payload.");
@@ -37,7 +35,18 @@ export const POST = async (req: NextRequest) => {
       );
     }
 
-    if (user?.enabledFeatures?.sentimentAnalysis) {
+    const journalNote = await JournalNote.findOne({ revJobId: jobId });
+    const appointment = await Appointment.findById(
+      journalNote.appointmentId
+    ).populate("hostUserId");
+
+    if (!appointment || !appointment.hostUserId) {
+      throw new Error("Host user not found.");
+    }
+    const sentimentAnalysisEnabled =
+      appointment.hostUserId.enabledFeatures?.sentimentAnalysis;
+
+    if (sentimentAnalysisEnabled) {
       const sentimentJobId = await submitSentimentAnalysisJob(jobId);
 
       if (!sentimentJobId) {
@@ -56,7 +65,9 @@ export const POST = async (req: NextRequest) => {
         { revJobId: jobId },
         { sentimentJobId: sentimentJobId }
       );
-      console.log(`Successfully updated JournalNote for revJobId: ${jobId}`);
+      console.log(
+        `Successfully updated JournalNote for revJobId and started sentiment analysis: ${jobId}`
+      );
 
       return NextResponse.json(
         {

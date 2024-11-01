@@ -255,8 +255,12 @@ export const startVideoRecording = async (
       journalNoteId: data.id,
     });
 
-    // Optionally, schedule stopping the recording at the end time
-    // await scheduleStopRecording(sessionId, archiveId, appointmentData.endDate, appointmentData.id);
+    await scheduleStopRecording(
+      sessionId,
+      archiveId,
+      appointmentData.endDate,
+      appointmentData.id
+    );
 
     return { success: SuccessMessages("recordingStarted") };
   } catch (error) {

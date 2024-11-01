@@ -12,7 +12,8 @@ export type ExtendedUser = DefaultSession["user"] & {
     ar: string;
   };
   enabledFeatures: {
-    sentimentAnalysis: boolean;
+    sentimentAnalysis?: boolean;
+    automaticJournalNoteGeneration?: boolean;
   };
   lastName: {
     en: string;

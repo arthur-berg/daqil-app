@@ -15,15 +15,11 @@ export const scheduleStopRecording = async (
   appointmentId: string
 ) => {
   const now = new Date();
-  const tenSecondsAfter = addSeconds(new Date(now), 10);
-  const unixTimestampInSeconds = Math.floor(
-    appointmentEndTime.getTime() / 1000
-  );
 
   const taskId = await scheduleTask(
-    `${process.env.QSTASH_API_URL}/stop-video-recording`,
+    `${process.env.QSTASH_TRANSCRIPTION_API_URL}/stop-video-recording`,
     { sessionId, archiveId },
-    Math.floor(tenSecondsAfter.getTime() / 1000)
+    Math.floor(appointmentEndTime.getTime() / 1000)
   );
 
   await ScheduledTask.create({

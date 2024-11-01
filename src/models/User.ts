@@ -301,6 +301,10 @@ const userSchema = new Schema(
       },
     },
     enabledFeatures: {
+      automaticJournalNoteGeneration: {
+        type: Boolean,
+        required: false,
+      },
       sentimentAnalysis: {
         type: Boolean,
         required: false,

@@ -13,6 +13,7 @@ import { useTranslations } from "next-intl";
 import { useUserName } from "@/hooks/use-user-name";
 import { useMemo, useState } from "react";
 import JournalNoteForm from "./journal-note-form";
+import { useCurrentUser } from "@/hooks/use-current-user";
 
 const formatAppointmentTime = (date: any) => {
   return format(new Date(date), "HH:mm");
@@ -150,6 +151,7 @@ const ClientDetailPageBody = ({
   const { firstName, lastName, email, appointments, selectedTherapist } =
     clientData;
   const { getFullName } = useUserName();
+  const user = useCurrentUser();
 
   const generateJournalNotes = useMemo(
     () =>
@@ -210,112 +212,124 @@ const ClientDetailPageBody = ({
           </Button>
         </Link>
       </div>
-
-      {/* Notifications for Generate and Review Journal Notes */}
-      {generateJournalNotes.length > 0 && (
-        <div className="mt-6 p-4 rounded-lg bg-red-100 text-red-800 border-l-4 border-red-500">
-          <h3 className="font-semibold">{t("actionRequiredGenerateTitle")}</h3>
-          <ul>
-            {generateJournalNotes.map((appointment: any) => (
-              <li
-                key={appointment._id}
-                className="flex justify-between items-center mt-2"
-              >
-                <span>
-                  {t("appointmentDateTime", {
-                    date: new Date(appointment.startDate).toLocaleDateString(),
-                    time: formatAppointmentTime(appointment.startDate),
-                  })}
-                </span>
-                <GenerateJournalNoteButton
-                  journalNoteId={appointment.journalNoteId._id.toString()}
-                  archiveId={appointment.journalNoteId.archiveId}
-                  appointmentId={appointment._id.toString()}
-                />
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {reviewJournalNotes.length > 0 && (
-        <div className="mt-6 p-4 rounded-lg bg-yellow-100 text-yellow-800 border-l-4 border-yellow-500">
-          <h3 className="font-semibold">{t("actionRequiredReviewTitle")}</h3>
-          <p>{t("reviewNotePromptHeader")}</p>
-          <ul>
-            {reviewJournalNotes.map((appointment: any) => (
-              <li key={appointment._id} className="mt-2">
-                <span>
-                  {t("appointmentDateTime", {
-                    date: new Date(appointment.startDate).toLocaleDateString(),
-                    time: formatAppointmentTime(appointment.startDate),
-                  })}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {/* Appointments Accordion */}
-      <div className="mt-6">
-        <h2 className="text-lg sm:text-xl font-semibold mb-4">
-          {t("appointments")}
-        </h2>
-
-        <Accordion type="single" collapsible className="w-full">
-          {appointments.map((appointmentDate: any) => (
-            <AccordionItem
-              key={appointmentDate._id}
-              value={appointmentDate._id}
-            >
-              <AccordionTrigger>
-                {new Date(appointmentDate.date).toLocaleDateString()}
-              </AccordionTrigger>
-              <AccordionContent>
-                {appointmentDate.bookedAppointments.map((appointment: any) => (
-                  <div
+      {user?.enabledFeatures?.automaticJournalNoteGeneration && (
+        <>
+          {generateJournalNotes.length > 0 && (
+            <div className="mt-6 p-4 rounded-lg bg-red-100 text-red-800 border-l-4 border-red-500">
+              <h3 className="font-semibold">
+                {t("actionRequiredGenerateTitle")}
+              </h3>
+              <ul>
+                {generateJournalNotes.map((appointment: any) => (
+                  <li
                     key={appointment._id}
-                    className="p-4 border rounded-lg shadow-sm bg-gray-50"
+                    className="flex justify-between items-center mt-2"
                   >
-                    <div className="text-gray-800">
-                      <strong>{t("time")}:</strong>{" "}
-                      {`${formatAppointmentTime(
-                        appointment.startDate
-                      )} - ${formatAppointmentTime(appointment.endDate)}`}
-                    </div>
-                    <div className="text-gray-800">
-                      <strong>{t("status")}:</strong> {appointment.status}
-                    </div>
-                    <div className="text-gray-800">
-                      <strong>{t("therapist")}:</strong>{" "}
-                      {getFullName(
-                        appointment.hostUserId.firstName,
-                        appointment.hostUserId.lastName
-                      )}
-                    </div>
-                    {appointment.journalNoteId && (
-                      <div className="mt-4 bg-white border-l-4 border-gray-400 p-4">
-                        <div className="mb-2">
-                          <strong>{t("journalNote")}:</strong>
-                        </div>
-                        {renderJournalNoteActions(
-                          appointment,
-                          editingJournalNoteId,
-                          setEditingJournalNoteId,
-                          t,
-                          setExpandedNotes,
-                          expandedNotes
-                        )}
-                      </div>
-                    )}
-                  </div>
+                    <span>
+                      {t("appointmentDateTime", {
+                        date: new Date(
+                          appointment.startDate
+                        ).toLocaleDateString(),
+                        time: formatAppointmentTime(appointment.startDate),
+                      })}
+                    </span>
+                    <GenerateJournalNoteButton
+                      journalNoteId={appointment.journalNoteId._id.toString()}
+                      archiveId={appointment.journalNoteId.archiveId}
+                      appointmentId={appointment._id.toString()}
+                    />
+                  </li>
                 ))}
-              </AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
-      </div>
+              </ul>
+            </div>
+          )}
+
+          {reviewJournalNotes.length > 0 && (
+            <div className="mt-6 p-4 rounded-lg bg-yellow-100 text-yellow-800 border-l-4 border-yellow-500">
+              <h3 className="font-semibold">
+                {t("actionRequiredReviewTitle")}
+              </h3>
+              <p>{t("reviewNotePromptHeader")}</p>
+              <ul>
+                {reviewJournalNotes.map((appointment: any) => (
+                  <li key={appointment._id} className="mt-2">
+                    <span>
+                      {t("appointmentDateTime", {
+                        date: new Date(
+                          appointment.startDate
+                        ).toLocaleDateString(),
+                        time: formatAppointmentTime(appointment.startDate),
+                      })}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {/* Appointments Accordion */}
+          <div className="mt-6">
+            <h2 className="text-lg sm:text-xl font-semibold mb-4">
+              {t("appointments")}
+            </h2>
+
+            <Accordion type="single" collapsible className="w-full">
+              {appointments.map((appointmentDate: any) => (
+                <AccordionItem
+                  key={appointmentDate._id}
+                  value={appointmentDate._id}
+                >
+                  <AccordionTrigger>
+                    {new Date(appointmentDate.date).toLocaleDateString()}
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    {appointmentDate.bookedAppointments.map(
+                      (appointment: any) => (
+                        <div
+                          key={appointment._id}
+                          className="p-4 border rounded-lg shadow-sm bg-gray-50"
+                        >
+                          <div className="text-gray-800">
+                            <strong>{t("time")}:</strong>{" "}
+                            {`${formatAppointmentTime(
+                              appointment.startDate
+                            )} - ${formatAppointmentTime(appointment.endDate)}`}
+                          </div>
+                          <div className="text-gray-800">
+                            <strong>{t("status")}:</strong> {appointment.status}
+                          </div>
+                          <div className="text-gray-800">
+                            <strong>{t("therapist")}:</strong>{" "}
+                            {getFullName(
+                              appointment.hostUserId.firstName,
+                              appointment.hostUserId.lastName
+                            )}
+                          </div>
+                          {appointment.journalNoteId && (
+                            <div className="mt-4 bg-white border-l-4 border-gray-400 p-4">
+                              <div className="mb-2">
+                                <strong>{t("journalNote")}:</strong>
+                              </div>
+                              {renderJournalNoteActions(
+                                appointment,
+                                editingJournalNoteId,
+                                setEditingJournalNoteId,
+                                t,
+                                setExpandedNotes,
+                                expandedNotes
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      )
+                    )}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </div>
+        </>
+      )}
     </div>
   );
 };

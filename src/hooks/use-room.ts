@@ -2,6 +2,8 @@
 import { useState, useRef, useCallback, useEffect, useTransition } from "react";
 import _ from "lodash";
 import { startVideoRecording } from "@/actions/videoSessions/actions";
+import { useCurrentUser } from "./use-current-user";
+import { UserRole } from "@/generalTypes";
 
 interface Credentials {
   appId: string;
@@ -37,6 +39,7 @@ export default function useRoom() {
   const [networkStatus, setNetworkStatus] = useState("");
   const [publisherIsSpeaking, setPublisherIsSpeaking] = useState(false);
   const [cameraPublishing, setCameraPublishing] = useState(false);
+  const user = useCurrentUser();
 
   const addParticipants = ({ participant }: any) => {
     setParticipants((prev: any) => [...prev, participant]);
@@ -254,7 +257,12 @@ export default function useRoom() {
           setCamera(roomRef.current!.camera);
           setScreen(roomRef.current!.screen);
           addLocalParticipant({ room: roomRef.current! });
-          startRecording(sessionId, appointmentData, token);
+          if (
+            user?.role === UserRole.THERAPIST &&
+            user?.enabledFeatures?.automaticJournalNoteGeneration
+          ) {
+            startRecording(sessionId, appointmentData, token);
+          }
 
           const hideArchivingIndicator = () => {
             const archivingElement = document.querySelector(

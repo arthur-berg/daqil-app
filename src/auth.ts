@@ -110,6 +110,10 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         if (session.user.role === "CLIENT") {
           session.user.selectedTherapist = token.selectedTherapist as any;
         }
+
+        if (session.user.role === "THERAPIST") {
+          session.user.enabledFeatures = token.enabledFeatures as any;
+        }
       }
 
       return session;
@@ -142,6 +146,10 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 
       if (existingUser.role === "CLIENT") {
         token.selectedTherapist = existingUser.selectedTherapist;
+      }
+
+      if (existingUser.role === "THERAPIST") {
+        token.enabledFeatures = existingUser.enabledFeatures;
       }
 
       return token;

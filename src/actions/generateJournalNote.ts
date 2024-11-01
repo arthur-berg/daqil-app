@@ -6,7 +6,7 @@ import { retrieveArchive, stopArchive } from "@/lib/vonage";
 import { getRevJobStatus, sendToRevAI } from "@/lib/rev-ai";
 import { UserRole } from "@/generalTypes";
 import { getTranslations } from "next-intl/server";
-import { cancelPaymentRelatedJobsForAppointment } from "@/lib/schedule-appointment-jobs";
+import { cancelAllScheduledJobsForAppointment } from "@/lib/schedule-appointment-jobs";
 import Appointment from "@/models/Appointment";
 import { revalidatePath } from "next/cache";
 import JournalNote from "@/models/JournalNote";
@@ -154,7 +154,7 @@ export const generateJournalNote = async (
 
   try {
     await requireAuth([UserRole.THERAPIST]);
-    await cancelPaymentRelatedJobsForAppointment(appointmentId);
+    await cancelAllScheduledJobsForAppointment(appointmentId);
 
     const response = await handleArchiveStatus(
       archiveId,

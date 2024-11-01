@@ -48,6 +48,8 @@ export const POST = async (req: NextRequest) => {
 
     const { transcript, sentimentAnalysis } = transcriptionResult;
 
+    console.log("sentimentAnalysis", sentimentAnalysis);
+
     const summary = await generateValidatedSummary(
       transcript,
       sentimentAnalysis
@@ -81,8 +83,6 @@ export const POST = async (req: NextRequest) => {
     const therapistId = appointment.hostUserId.toString();
 
     const summaryText = stripHtmlTags(summary);
-
-    console.log("summaryText without html for pinecone", summaryText);
 
     await upsertJournalNoteToPinecone(
       clientId,
