@@ -124,6 +124,13 @@ const TermsAndConditionsPage = async () => {
           <p>{t("changesToTerms.content")}</p>
         </section>
 
+        <section className="mb-8">
+          <h2 className="text-xl font-semibold">
+            {t("notificationConsent.heading")}
+          </h2>
+          <p>{t("notificationConsent.content")}</p>
+        </section>
+
         <section>
           <h2 className="text-xl font-semibold">{t("contactUs.heading")}</h2>
           <p>{t("contactUs.content")}</p>

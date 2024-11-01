@@ -854,8 +854,12 @@
       "heading": "15. Changes to Terms",
       "content": "We reserve the right to modify these Terms and Conditions at any time."
     },
+    "notificationConsent": {
+      "heading": "16. Consent to Receive Notifications",
+      "content": "By registering an account and using our services, you consent to receive SMS notifications regarding your appointments, account updates, and other relevant service-related information. These notifications are intended to enhance your experience and ensure you stay informed about your scheduled sessions. You may opt out of these notifications at any time by updating your preferences in your account settings or contacting us at hello@daqil.com."
+    },
     "contactUs": {
-      "heading": "16. Contact Us",
+      "heading": "17. Contact Us",
       "content": "If you have any questions or concerns about these Terms and Conditions, please contact us at hello@daqil.com."
     }
   },
