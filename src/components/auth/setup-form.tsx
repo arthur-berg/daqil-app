@@ -145,6 +145,10 @@ export const SetupForm = () => {
       const data = await setupAccount(values, locale, token);
       if ("success" in data && data.success) {
         setSuccess(data?.success);
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+          event: "accountCreation",
+        });
         await login({ email: values.email, password: values.password }, locale);
       }
       /*   if ("error" in data && data.error) {
