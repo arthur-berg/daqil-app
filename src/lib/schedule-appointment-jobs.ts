@@ -1,6 +1,12 @@
 import { qstashClient, scheduleTask } from "@/lib/qstash";
 import ScheduledTask from "@/models/ScheduledTask";
-import { addMinutes, isAfter, subHours, subMinutes } from "date-fns";
+import {
+  addMinutes,
+  addSeconds,
+  isAfter,
+  subHours,
+  subMinutes,
+} from "date-fns";
 
 export const schedulePaymentReminders = async (
   appointmentId: string,
@@ -132,7 +138,7 @@ export const scheduleReminderJobs = async (
   const twoHoursBefore = subHours(new Date(appointment.startDate), 2);
   /* const thirtyMinutesBefore = subMinutes(new Date(appointment.startDate), 30); */
   const twentyMinutesBefore = subMinutes(new Date(appointment.startDate), 20);
-  /* const tenSecondsAfter = addSeconds(new Date(now), 10); */
+  const tenSecondsAfter = addSeconds(new Date(now), 10);
 
   /*  if (isAfter(oneDayBefore, addMinutes(now, 1))) {
     const emailReminderTaskIdOneDay = await scheduleTask(
@@ -177,10 +183,10 @@ export const scheduleReminderJobs = async (
     taskId: meetingLinkTaskId,
   });
 
-  /*  const smsReminderTaskId = await scheduleTask(
+  const smsReminderTaskId = await scheduleTask(
     `${process.env.QSTASH_API_URL}/sms-reminder`,
     { clientPhone: appointment.clientPhone, appointmentId: appointmentId },
-    Math.floor(twentyMinutesBefore.getTime() / 1000),
+    Math.floor(tenSecondsAfter.getTime() / 1000),
     locale
   );
 
@@ -188,7 +194,7 @@ export const scheduleReminderJobs = async (
     appointmentId: appointmentId,
     type: "smsReminder",
     taskId: smsReminderTaskId,
-  }); */
+  });
 };
 
 export const cancelAllScheduledJobsForAppointment = async (
