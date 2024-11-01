@@ -12,7 +12,7 @@ import Script from "next/script";
 
 const dmSans = DM_Sans({ subsets: ["latin"], weight: ["400", "600"] });
 
-const GTM_ID = "GTM-WWNR5RVB";
+const GTM_ID = "GTM-TWX3CWJJ";
 
 export const metadata: Metadata = {
   title: "Daqil",
@@ -40,10 +40,10 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale} dir={direction}>
-      {/* {process.env.NODE_ENV === "production" && (
-        <GoogleTagManager gtmId="GTM-WWNR5RVB" />
-      )} */}
       {process.env.NODE_ENV === "production" && (
+        <GoogleTagManager gtmId={GTM_ID} />
+      )}
+      {/* {process.env.NODE_ENV === "production" && (
         <Script id="google-tag-manager" strategy="afterInteractive">
           {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
         new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -51,7 +51,7 @@ export default async function LocaleLayout({
         'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
         })(window,document,'script','dataLayer','${GTM_ID}');`}
         </Script>
-      )}
+      )} */}
       <body className={dmSans.className}>
         <Toaster />
 
@@ -60,6 +60,14 @@ export default async function LocaleLayout({
           <>
             <Analytics />
             <SpeedInsights />
+            <noscript>
+              <iframe
+                src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
+                height="0"
+                width="0"
+                style={{ display: "none", visibility: "hidden" }}
+              ></iframe>
+            </noscript>
           </>
         )}
         <TidioChat />
