@@ -80,6 +80,7 @@ export const SetupForm = () => {
   const [showArabicNameFields, setShowArabicNameFields] = useState(false);
   const [countryPopoverOpen, setCountryPopoverOpen] = useState(false);
   const [countrySearch, setCountrySearch] = useState("");
+
   const countries = useGetCountries();
   const searchParams = useSearchParams();
 

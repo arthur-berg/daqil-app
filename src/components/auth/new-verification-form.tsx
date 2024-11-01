@@ -26,6 +26,7 @@ export const NewVerificationForm = () => {
 
     if (!token) {
       setError(tError("missingToken"));
+      router.push("/auth/login");
       return;
     }
     newVerification(token)
@@ -41,13 +42,14 @@ export const NewVerificationForm = () => {
           return;
         }
         if (data.error) {
+          router.push("/auth/login");
           setError(data.error);
         }
       })
       .catch(() => {
         setError(tError("somethingWentWrong"));
       });
-  }, [token, success, error]);
+  }, [token, success, error, router, tError]);
 
   useEffect(() => {
     onSubmit();
