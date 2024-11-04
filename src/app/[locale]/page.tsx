@@ -16,7 +16,7 @@ export default async function Home({ params }: { params: { locale: string } }) {
           height={173}
           src={
             locale === "en"
-              ? "https://zakina-images.s3.eu-north-1.amazonaws.com/daqil-logo-white-en.png"
+              ? "https://zakina-images.s3.eu-north-1.amazonaws.com/daqil-logo-white-v2-en.png"
               : "https://zakina-images.s3.eu-north-1.amazonaws.com/daqil-logo-white-ar.png"
           }
           alt="daqil"
