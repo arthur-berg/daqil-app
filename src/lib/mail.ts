@@ -349,10 +349,10 @@ export const sendIntroBookingConfirmationMail = async (
 
   const adminMessage = {
     from_email: "no-reply@daqilhealth.com",
-    subject: t("clientSubject"),
+    subject: t("therapistSubject"),
     html: await introBookingConfirmationTemplate(
       appointmentDetails,
-      false,
+      true,
       t,
       locale
     ),
@@ -550,10 +550,10 @@ export const sendPaidBookingConfirmationEmail = async (
 
   const adminMessage = {
     from_email: "no-reply@daqilhealth.com",
-    subject: t("clientSubject"),
+    subject: t("therapistSubject"),
     html: await paidAppointmentConfirmationTemplate(
       appointmentDetails,
-      false,
+      true,
       t,
       locale
     ),
