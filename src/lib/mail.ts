@@ -347,10 +347,28 @@ export const sendIntroBookingConfirmationMail = async (
     ],
   };
 
+  const adminMessage = {
+    from_email: "no-reply@daqilhealth.com",
+    subject: t("clientSubject"),
+    html: await introBookingConfirmationTemplate(
+      appointmentDetails,
+      false,
+      t,
+      locale
+    ),
+    to: [
+      {
+        email: "hello@daqil.com",
+        type: "to",
+      },
+    ],
+  };
+
   try {
     await Promise.all([
       mailchimpTx.messages.send({ message: therapistMessage as any }),
       mailchimpTx.messages.send({ message: clientMessage as any }),
+      mailchimpTx.messages.send({ message: adminMessage as any }),
     ]);
   } catch (error) {
     console.error("Error sending intro booking confirmation email:", error);
@@ -530,10 +548,28 @@ export const sendPaidBookingConfirmationEmail = async (
     ],
   };
 
+  const adminMessage = {
+    from_email: "no-reply@daqilhealth.com",
+    subject: t("clientSubject"),
+    html: await paidAppointmentConfirmationTemplate(
+      appointmentDetails,
+      false,
+      t,
+      locale
+    ),
+    to: [
+      {
+        email: "hello@daqil.com",
+        type: "to",
+      },
+    ],
+  };
+
   try {
     await Promise.all([
       mailchimpTx.messages.send({ message: therapistMessage as any }),
       mailchimpTx.messages.send({ message: clientMessage as any }),
+      mailchimpTx.messages.send({ message: adminMessage as any }),
     ]);
   } catch (error) {
     console.error(
