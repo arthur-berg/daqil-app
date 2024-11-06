@@ -347,29 +347,33 @@ export const sendIntroBookingConfirmationMail = async (
     ],
   };
 
-  const adminMessage = {
-    from_email: "no-reply@daqilhealth.com",
-    subject: t("therapistSubject"),
-    html: await introBookingConfirmationTemplate(
-      appointmentDetails,
-      true,
-      t,
-      locale
-    ),
-    to: [
-      {
-        email: "hello@daqil.com",
-        type: "to",
-      },
-    ],
-  };
+  const messages = [
+    mailchimpTx.messages.send({ message: therapistMessage as any }),
+    mailchimpTx.messages.send({ message: clientMessage as any }),
+  ];
+
+  if (process.env.NODE_ENV === "production") {
+    const adminMessage = {
+      from_email: "no-reply@daqilhealth.com",
+      subject: t("therapistSubject"),
+      html: await introBookingConfirmationTemplate(
+        appointmentDetails,
+        true,
+        t,
+        locale
+      ),
+      to: [
+        {
+          email: "hello@daqil.com",
+          type: "to",
+        },
+      ],
+    };
+    messages.push(mailchimpTx.messages.send({ message: adminMessage as any }));
+  }
 
   try {
-    await Promise.all([
-      mailchimpTx.messages.send({ message: therapistMessage as any }),
-      mailchimpTx.messages.send({ message: clientMessage as any }),
-      mailchimpTx.messages.send({ message: adminMessage as any }),
-    ]);
+    await Promise.all(messages);
   } catch (error) {
     console.error("Error sending intro booking confirmation email:", error);
   }
@@ -548,29 +552,33 @@ export const sendPaidBookingConfirmationEmail = async (
     ],
   };
 
-  const adminMessage = {
-    from_email: "no-reply@daqilhealth.com",
-    subject: t("therapistSubject"),
-    html: await paidAppointmentConfirmationTemplate(
-      appointmentDetails,
-      true,
-      t,
-      locale
-    ),
-    to: [
-      {
-        email: "hello@daqil.com",
-        type: "to",
-      },
-    ],
-  };
+  const messages = [
+    mailchimpTx.messages.send({ message: therapistMessage as any }),
+    mailchimpTx.messages.send({ message: clientMessage as any }),
+  ];
+
+  if (process.env.NODE_ENV === "production") {
+    const adminMessage = {
+      from_email: "no-reply@daqilhealth.com",
+      subject: t("therapistSubject"),
+      html: await paidAppointmentConfirmationTemplate(
+        appointmentDetails,
+        true,
+        t,
+        locale
+      ),
+      to: [
+        {
+          email: "hello@daqil.com",
+          type: "to",
+        },
+      ],
+    };
+    messages.push(mailchimpTx.messages.send({ message: adminMessage as any }));
+  }
 
   try {
-    await Promise.all([
-      mailchimpTx.messages.send({ message: therapistMessage as any }),
-      mailchimpTx.messages.send({ message: clientMessage as any }),
-      mailchimpTx.messages.send({ message: adminMessage as any }),
-    ]);
+    await Promise.all(messages);
   } catch (error) {
     console.error(
       "Error sending appointment booking confirmation email:",
