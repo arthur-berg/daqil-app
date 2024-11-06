@@ -10,7 +10,7 @@ import User from "@/models/User";
 import { format } from "date-fns";
 import mongoose from "mongoose";
 import { getLocale, getTranslations } from "next-intl/server";
-import { updateAppointments } from "./utils";
+import { checkTherapistAvailability, updateAppointments } from "./utils";
 import { revalidatePath } from "next/cache";
 import connectToMongoDB from "@/lib/mongoose";
 import { formatInTimeZone } from "date-fns-tz";
@@ -48,14 +48,25 @@ export const bookIntroAppointment = async (
     return { error: ErrorMessages("invalidFields") };
   }
 
+  const endDate = new Date(
+    startDate.getTime() + appointmentType.durationInMinutes * 60000
+  );
+
+  const availabilityCheck = await checkTherapistAvailability(
+    therapist,
+    startDate,
+    endDate,
+    appointmentType
+  );
+
+  if (!availabilityCheck.available) {
+    return { error: availabilityCheck.message };
+  }
+
   let transactionCommitted = false;
 
   const session = await mongoose.startSession();
   session.startTransaction();
-
-  const endDate = new Date(
-    startDate.getTime() + appointmentType.durationInMinutes * 60000
-  );
 
   try {
     const client = await requireAuth([UserRole.CLIENT]);
