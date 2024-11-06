@@ -287,9 +287,14 @@ const BookIntroCall = ({
                       setTimeSlots(date);
                     }
                   }}
-                  disabled={(date) =>
-                    isBefore(date, today) || isAfter(date, maxDate)
-                  }
+                  disabled={(date) => {
+                    const november11th2024 = new Date(2024, 10, 11);
+                    return (
+                      isBefore(date, today) ||
+                      isAfter(date, maxDate) ||
+                      isBefore(date, november11th2024)
+                    );
+                  }}
                   className="w-full sm:max-w-none max-w-xs sm:w-auto overflow-hidden rounded-md border h-auto"
                   classNames={{
                     months:
