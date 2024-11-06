@@ -293,7 +293,6 @@ const userSchema = new Schema(
       timeZone: {
         type: String,
         required: false,
-        default: "America/New_York",
       },
       hiddenProfile: {
         type: Boolean,

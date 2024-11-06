@@ -88,11 +88,6 @@ const OAuthAccountSetupForm = () => {
   const [timezonePopoverOpen, setTimezonePopoverOpen] = useState(false);
   const [timezoneSearch, setTimezoneSearch] = useState("");
 
-  const detectedTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  const defaultTimezone = allTimezones[detectedTimezone]
-    ? detectedTimezone
-    : "Asia/Dubai";
-
   const form = useForm<z.infer<typeof OAuthAccountSetupSchema>>({
     resolver: zodResolver(OAuthAccountSetupSchema),
     defaultValues: {
@@ -108,7 +103,7 @@ const OAuthAccountSetupForm = () => {
         country: undefined,
       },
       settings: {
-        timeZone: defaultTimezone,
+        timeZone: "",
       },
       termsAccepted: false,
     },

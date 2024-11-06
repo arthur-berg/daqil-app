@@ -115,9 +115,6 @@ export const SetupForm = () => {
     }
   }, [email]);
 
-  const detectedTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  const defaultTimezone = getMappedTimezone(detectedTimezone);
-
   const form = useForm<z.infer<typeof SetupAccountSchema>>({
     resolver: zodResolver(SetupAccountSchema),
     defaultValues: {
@@ -133,7 +130,7 @@ export const SetupForm = () => {
         country: undefined,
       },
       settings: {
-        timeZone: defaultTimezone,
+        timeZone: "",
       },
       termsAccepted: false,
     },
