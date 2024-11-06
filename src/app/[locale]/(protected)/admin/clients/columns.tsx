@@ -62,6 +62,10 @@ export const columns: ColumnDef<Client>[] = [
     },
   },
   {
+    accessorKey: "isAccountSetupDone",
+    header: "Is account setup done?",
+  },
+  {
     accessorKey: "settings.timeZone",
     header: "Time Zone",
   },
