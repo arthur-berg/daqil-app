@@ -129,7 +129,7 @@ const VideoRoom = ({
 
   const logoSrc =
     locale === "en"
-      ? "https://zakina-images.s3.eu-north-1.amazonaws.com/daqil-logo-white-v2-en.pngg"
+      ? "https://zakina-images.s3.eu-north-1.amazonaws.com/daqil-logo-white-v2-en.png"
       : "https://zakina-images.s3.eu-north-1.amazonaws.com/daqil-logo-white-ar.png";
 
   useEffect(() => {
