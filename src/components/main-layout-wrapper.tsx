@@ -92,7 +92,7 @@ export default function AdminPanelLayout({
   );
 
   useEffect(() => {
-    if (timeZoneMismatch) {
+    if (timeZoneMismatch && !!user?.settings?.timeZone) {
       setShowTimezoneDialog(true);
     }
   }, [timeZoneMismatch]);

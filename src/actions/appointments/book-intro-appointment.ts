@@ -14,7 +14,10 @@ import { checkTherapistAvailability, updateAppointments } from "./utils";
 import { revalidatePath } from "next/cache";
 import connectToMongoDB from "@/lib/mongoose";
 import { formatInTimeZone } from "date-fns-tz";
-import { sendIntroBookingConfirmationMail } from "@/lib/mail";
+import {
+  addTagToMailchimpUser,
+  sendIntroBookingConfirmationMail,
+} from "@/lib/mail";
 import {
   scheduleReminderJobs,
   scheduleStatusUpdateJob,
@@ -195,6 +198,8 @@ export const bookIntroAppointment = async (
 
     await scheduleReminderJobs(fetchedAppointment, locale);
     await scheduleStatusUpdateJob(fetchedAppointment);
+
+    await addTagToMailchimpUser(client.email, "intro-call-booked");
 
     return {
       success: SuccessMessages("bookingConfirmed"),

@@ -43,8 +43,6 @@ const BookIntroCall = ({
 
   const user = useCurrentUser();
 
-  const userTimeZone = user?.settings?.timeZone as string;
-
   const [availableTimeSlots, setAvailableTimeSlots] = useState<
     { start: Date; end: Date }[]
   >([]);

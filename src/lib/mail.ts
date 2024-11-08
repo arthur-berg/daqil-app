@@ -154,6 +154,29 @@ export const addUserNameToSubscriberProfile = async (
   }
 };
 
+export const addTagToMailchimpUser = async (email: string, tag: string) => {
+  try {
+    await mailchimpMarketing.lists.updateListMemberTags(
+      process.env.MAILCHIMP_LIST_ID as string,
+      email,
+      {
+        tags: [
+          {
+            name: tag,
+            status: "active",
+          },
+        ],
+      }
+    );
+
+    console.log(`Tag "${tag}" added to Mailchimp user: ${email}`);
+    return { success: `Tag "${tag}" added successfully` };
+  } catch (error) {
+    console.error("Error adding tag to Mailchimp user:", error);
+    return { error: "Failed to add tag to Mailchimp user" };
+  }
+};
+
 export const sendTwoFactorTokenEmail = async (email: string, token: string) => {
   const t = await getTranslations("TwoFactorEmail");
   const message = {

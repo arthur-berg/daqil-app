@@ -4,6 +4,7 @@ import CodeRedemption from "@/models/CodeRedemption";
 import Stripe from "stripe";
 import { format } from "date-fns";
 import {
+  addTagToMailchimpUser,
   sendInvoicePaidEmail,
   sendPaidBookingConfirmationEmail,
 } from "@/lib/mail";
@@ -50,10 +51,14 @@ export async function handlePaymentIntentSucceeded(
 
   await processAppointmentPayment(appointment, paymentDetails, locale);
 
-  await updateUserPaymentMethod(
+  const user = await updateUserPaymentMethod(
     appointment.participants[0].userId,
     paymentMethodId
   );
+
+  if (!user.stripePaymentMethodId) {
+    await addTagToMailchimpUser(user.email, "has-paid-for-appointment");
+  }
 }
 
 async function findAppointmentById(appointmentId: string) {
@@ -279,9 +284,10 @@ async function updateUserPaymentMethod(
   paymentMethodId: string
 ) {
   try {
-    await User.findByIdAndUpdate(userId, {
+    const user = await User.findByIdAndUpdate(userId, {
       $set: { stripePaymentMethodId: paymentMethodId },
     });
+    return user;
   } catch (error) {
     console.error(
       `Error updating user payment method for user ${userId}:`,
