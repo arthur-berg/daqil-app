@@ -152,6 +152,8 @@ async function processAppointmentPayment(
     amountPaid: `$${amountPaid}`,
     paymentMethod,
     transactionId,
+    therapistTimeZone,
+    clientTimeZone,
   };
 
   await cancelPaymentRelatedJobsForAppointment(appointment._id);

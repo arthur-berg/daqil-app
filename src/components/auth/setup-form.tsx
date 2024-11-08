@@ -45,6 +45,7 @@ import { CaretSortIcon } from "@radix-ui/react-icons";
 import { BeatLoader } from "react-spinners";
 import { useGetCountries } from "@/hooks/use-get-countries";
 import { Checkbox } from "@/components/ui/checkbox";
+import { formatTimeZoneWithOffset } from "@/utils/timeZoneUtils";
 
 const getMappedTimezone = (ianaTimezone: string) => {
   return allTimezones[ianaTimezone] ? ianaTimezone : "Asia/Dubai";
@@ -88,6 +89,7 @@ export const SetupForm = () => {
   const t = useTranslations("AuthPage");
   const { options: timezoneOptions } = useTimezoneSelect({
     timezones: allTimezones,
+    displayValue: "UTC",
   });
   const [timezonePopoverOpen, setTimezonePopoverOpen] = useState(false);
   const [timezoneSearch, setTimezoneSearch] = useState("");
@@ -159,6 +161,10 @@ export const SetupForm = () => {
   };
 
   if (!token) return "Token is missing";
+
+  const browserTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+  const formattedTimeZone = formatTimeZoneWithOffset(browserTimeZone);
 
   return isPending ? (
     <div className="flex flex-col items-center justify-center h-screen space-y-4">
@@ -420,6 +426,13 @@ export const SetupForm = () => {
                 name="settings.timeZone"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
+                    <div className="bg-gray-100 p-3 rounded-md border border-gray-300 text-sm text-gray-700">
+                      {t("timeZoneNoticePart1")}{" "}
+                      <strong>
+                        {t("timeZoneNoticePart2")}{" "}
+                        <span className="underline">{formattedTimeZone}</span>
+                      </strong>
+                    </div>
                     <FormLabel>{t("selectTimezone")}</FormLabel>
                     <Popover
                       open={timezonePopoverOpen}

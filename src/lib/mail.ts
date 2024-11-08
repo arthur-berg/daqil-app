@@ -238,6 +238,8 @@ export const sendAppointmentCancellationEmail = async (
     clientTime: string;
     therapistDate: string;
     therapistTime: string;
+    clientTimeZone: string;
+    therapistTimeZone: string;
     reason: string;
     therapistName: string;
     clientName: string;
@@ -309,6 +311,8 @@ export const sendIntroBookingConfirmationMail = async (
     therapistName: string;
     clientName: string;
     durationInMinutes: number;
+    clientTimeZone: string;
+    therapistTimeZone: string;
   }
 ) => {
   const t = await getTranslations("BookingConfirmedIntroCall");
@@ -392,6 +396,8 @@ export const sendNonPaidBookingConfirmationEmail = async (
     clientName: string;
     appointmentId: string;
     appointmentTypeId: string;
+    therapistTimeZone: string;
+    clientTimeZone: string;
   }
 ) => {
   const t = await getTranslations("NonPaidAppointmentConfirmationEmail");
@@ -457,6 +463,8 @@ export const sendInvoicePaidEmail = async (
     clientTime: string;
     therapistDate: string;
     therapistTime: string;
+    therapistTimeZone: string;
+    clientTimeZone: string;
   },
   t: any,
   locale: string
@@ -514,6 +522,8 @@ export const sendPaidBookingConfirmationEmail = async (
     amountPaid: string;
     paymentMethod: string;
     transactionId: string;
+    therapistTimeZone: string;
+    clientTimeZone: string;
   },
   t: any,
   locale: string
@@ -629,6 +639,7 @@ export const sendReminderEmail = async (
     time: string;
     therapistName: string;
     clientName: string;
+    clientTimeZone: string;
   },
   t: any,
   locale: string

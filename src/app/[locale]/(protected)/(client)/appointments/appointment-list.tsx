@@ -27,6 +27,7 @@ import { BeatLoader } from "react-spinners";
 
 import { useUserName } from "@/hooks/use-user-name";
 import PageTitle from "@/components/page-title";
+import { formatTimeZoneWithOffset } from "@/utils/timeZoneUtils";
 
 const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
   const [filterType, setFilterType] = useState("upcoming");
@@ -319,6 +320,10 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
     );
   };
 
+  const browserTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+  const browserTimeZoneFormatted = formatTimeZoneWithOffset(browserTimeZone);
+
   return (
     <>
       <div className="w-full xl:w-9/12 mx-auto">
@@ -357,6 +362,13 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
                       {t("history")}
                     </Button>
                   </div>
+                </div>
+                <div className="flex justify-center mb-4">
+                  <p className="text-gray-600 text-md">
+                    {t("timezoneNotice", {
+                      timeZone: `${browserTimeZoneFormatted}`,
+                    })}
+                  </p>
                 </div>
                 {sortedStatuses.length ? (
                   sortedStatuses.map((status) => (

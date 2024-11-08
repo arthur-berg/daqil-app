@@ -86,6 +86,7 @@ const SettingsForm = ({ hidePageTitle }: { hidePageTitle?: boolean }) => {
   const t = useTranslations("SettingsPage");
   const { options: timezoneOptions, parseTimezone } = useTimezoneSelect({
     timezones: allTimezones,
+    displayValue: "UTC",
   });
   const [timezonePopoverOpen, setTimezonePopoverOpen] = useState(false);
   const [timezoneSearch, setTimezoneSearch] = useState("");

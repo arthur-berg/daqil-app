@@ -5,19 +5,11 @@ import {
   APPOINTMENT_TYPE_ID_LONG_SESSION,
   APPOINTMENT_TYPE_ID_SHORT_SESSION,
 } from "@/contants/config";
-import {
-  getAppointmentTypeById,
-  getAppointmentTypesByIDs,
-} from "@/data/appointment-types";
+import { getAppointmentTypesByIDs } from "@/data/appointment-types";
 import { getTherapistById } from "@/data/user";
 import { getTranslations } from "next-intl/server";
-import { FaUser } from "react-icons/fa";
-
-import { getCurrentUser } from "@/lib/auth";
 import { getFullName } from "@/utils/formatName";
 import connectToMongoDB from "@/lib/mongoose";
-import { Button } from "@/components/ui/button";
-import { Link } from "@/navigation";
 import Image from "next/image";
 
 const TherapistsCalendarPage = async ({

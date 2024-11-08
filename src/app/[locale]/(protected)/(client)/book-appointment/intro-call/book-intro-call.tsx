@@ -19,6 +19,8 @@ import {
 import { currencyToSymbol } from "@/utils";
 import { getTherapistAvailableTimeSlots } from "@/utils/therapistAvailability";
 import { bookIntroAppointment } from "@/actions/appointments/book-intro-appointment";
+import { useCurrentUser } from "@/hooks/use-current-user";
+import { formatTimeZoneWithOffset } from "@/utils/timeZoneUtils";
 
 type DateType = {
   justDate: Date | undefined;
@@ -39,6 +41,10 @@ const BookIntroCall = ({
     null
   );
 
+  const user = useCurrentUser();
+
+  const userTimeZone = user?.settings?.timeZone as string;
+
   const [availableTimeSlots, setAvailableTimeSlots] = useState<
     { start: Date; end: Date }[]
   >([]);
@@ -57,6 +63,10 @@ const BookIntroCall = ({
     seconds: 0,
     milliseconds: 0,
   });
+
+  const browserTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+  const browserTimeZoneFormatted = formatTimeZoneWithOffset(browserTimeZone);
 
   const handleSetClosestAvailableDate = async (startingDate: Date) => {
     let currentDate = startingDate;
@@ -237,6 +247,14 @@ const BookIntroCall = ({
                   >
                     {t("changeDate")}
                   </Button>
+
+                  <div className="flex justify-center mb-4">
+                    <p className="text-gray-600 text-md">
+                      {t("timezoneNotice", {
+                        timeZone: `${browserTimeZoneFormatted}`,
+                      })}
+                    </p>
+                  </div>
 
                   {Object.entries(groupTimeSlots(availableTimeSlots)).map(
                     ([timeOfDay, slots], idx) => (

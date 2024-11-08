@@ -46,6 +46,7 @@ import { useRouter } from "@/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import { useGetCountries } from "@/hooks/use-get-countries";
 import { Checkbox } from "@/components/ui/checkbox";
+import { formatTimeZoneWithOffset } from "@/utils/timeZoneUtils";
 
 const getGmtOffset = (timezone: string) => {
   const now = new Date();
@@ -84,6 +85,7 @@ const OAuthAccountSetupForm = () => {
 
   const { options: timezoneOptions } = useTimezoneSelect({
     timezones: allTimezones,
+    displayValue: "UTC",
   });
   const [timezonePopoverOpen, setTimezonePopoverOpen] = useState(false);
   const [timezoneSearch, setTimezoneSearch] = useState("");
@@ -126,6 +128,10 @@ const OAuthAccountSetupForm = () => {
       }
     });
   };
+
+  const browserTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+  const formattedTimeZone = formatTimeZoneWithOffset(browserTimeZone);
 
   return isPending ? (
     <div className="flex flex-col items-center justify-center h-screen space-y-4">
@@ -359,6 +365,13 @@ const OAuthAccountSetupForm = () => {
                   name="settings.timeZone"
                   render={({ field }) => (
                     <FormItem className="flex flex-col">
+                      <div className="bg-gray-100 p-3 rounded-md border border-gray-300 text-sm text-gray-700">
+                        {t("timeZoneNoticePart1")}{" "}
+                        <strong>
+                          {t("timeZoneNoticePart2")}{" "}
+                          <span className="underline">{formattedTimeZone}</span>
+                        </strong>
+                      </div>
                       <FormLabel>{t("selectTimezone")}</FormLabel>
                       <Popover
                         open={timezonePopoverOpen}

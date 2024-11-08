@@ -59,8 +59,16 @@ export const SettingsSchema = z
     isTwoFactorEnabled: z.optional(z.boolean()),
     role: z.enum([UserRole.ADMIN, UserRole.CLIENT, UserRole.THERAPIST]),
     email: z.optional(z.string().email()),
-    password: z.optional(z.string().min(6)),
-    newPassword: z.optional(z.string().min(6)),
+    password: z
+      .string()
+      .min(6, "String must contain at least 6 characters")
+      .optional()
+      .or(z.literal("")), // Allow an empty string
+    newPassword: z
+      .string()
+      .min(6, "String must contain at least 6 characters")
+      .optional()
+      .or(z.literal("")), // Allow an empty string
     settings: z.object({
       timeZone: z.string().min(1, {
         message: "Timezone is required",
@@ -72,7 +80,6 @@ export const SettingsSchema = z
       if (data.password && !data.newPassword) {
         return false;
       }
-
       return true;
     },
     {
@@ -85,7 +92,6 @@ export const SettingsSchema = z
       if (data.newPassword && !data.password) {
         return false;
       }
-
       return true;
     },
     {

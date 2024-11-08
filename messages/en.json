@@ -6,6 +6,8 @@
     "signUp": "Sign up"
   },
   "AuthPage": {
+     "timeZoneNoticePart1": "To make sure your schedule is correct, the time zone in your browser should match the one you select below.",
+  "timeZoneNoticePart2": "Your current browser time zone is:",
     "iAcceptThe": "I accept the",
     "termsAndConditions": "Terms and Conditions",
     "minimum6Characters": "Minimum 6 characters",
@@ -74,6 +76,7 @@
     "finishAccountSetup": "Finish account setup"
   },
   "AppointmentList": {
+    "timezoneNotice":  "You are viewing times in your browsers timezone: {timeZone}",
     "meetingNotPaid": "Appointment is waiting for payment",
     "meetingNotPaidMessage": "The meeting is not paid yet by the client.",
     "meetingPaymentDeadline": "They have up to {timeLimit} hour before the meeting start to pay, otherwise the meeting will be canceled.",
@@ -313,7 +316,13 @@
     "goToProfilePage": "Go to profile page",
     "noImage": "No image"
   },
+  "TimezoneWarningDialog": {
+    "title": "Timezone Mismatch Detected",
+    "description": "Your browser's timezone ({browserTimeZone}) does not match your saved timezone ({userTimeZone}). Please update your timezone in your settings or adjust your browser's timezone.",
+    "goToSettings": "Go to Settings"
+},
   "BookingCalendar": {
+    "timezoneNotice": "You are viewing times in the timezone: {timeZone}",
     "closestAvailableDate": "Closest date that has available time slots: {date}",
     "addToCalendar": "Add to calendar",
     "addThisEventToYourCalendar": "Add this event to your calendar",
@@ -383,6 +392,7 @@
     "cancelReservation": "Cancel reservation"
   },
   "AvailabilityPage": {
+    "timezoneNotice":  "You are viewing times in your browsers timezone: {timeZone}",
     "savingTimeSlots": "Saving time slots...",
     "recurringAvailableTimes": "Recurring available times",
     "nonRecurringAvailableTimes": "Non-recurring available times",
@@ -392,7 +402,8 @@
     "noIntervalFound": "No interval found.",
     "intervalDescription": "The interval determines the time gaps between each available slot. For example, if you set the interval to 15 minutes, your available slots will be at 9:00, 9:15, 9:30, etc. We don't recommend an interval of less than 15 minutes to ensure you have enough time between sessions.",
     "saveSettings": "Save settings",
-    "clientsWillSee": "Clients will see your available times four weeks in the future",
+    "clientsWillSee": "These available times can be booked with you 30 minutes in advance up to 4 weeks ahead.",
+    "scheduleInYourTimezone": "Please schedule the times in your own timezone: {browserTimeZone}. The system will automatically convert these times so that clients see them in their respective timezones.",
     "noRecurringSet": "No recurring available times set",
     "noTimeFound": "No time found.",
     "selectTime": "Select time",
@@ -651,7 +662,7 @@
     "daqil": "DAQIL",
     "subject": "Upcoming Appointment Reminder",
     "greeting": "Dear {name},",
-    "message": "This is a friendly reminder that you have an upcoming appointment with {therapistName} on {date} at {time}. Please ensure that you are prepared and that your microphone and camera are functioning properly.",
+    "message": "This is a friendly reminder that you have an upcoming appointment with {therapistName} on {date} at {time} ({timeZone}). Please ensure that you are prepared and that your microphone and camera are functioning properly.",
     "footer": "Thank you for using DAQIL."
   },
   "PaymentReminderEmail": {

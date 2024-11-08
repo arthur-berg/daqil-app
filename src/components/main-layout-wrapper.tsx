@@ -7,6 +7,9 @@ import { clearAllBodyScrollLocks, disableBodyScroll } from "body-scroll-lock";
 import { useMediaQuery } from "react-responsive";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { logout } from "@/actions/logout";
+import { getTimezoneOffset } from "date-fns-tz";
+
+import TimezoneWarningDialog from "@/components/timezone-warning-dialog";
 
 const routesWithoutSidebar = ["/appointments/[id]"];
 
@@ -28,6 +31,8 @@ export default function AdminPanelLayout({
   children: React.ReactNode;
 }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [showTimezoneDialog, setShowTimezoneDialog] = useState(false);
+
   const pathname = usePathname();
   const sidebarMenuRef = useRef<any>();
   const user = useCurrentUser();
@@ -37,6 +42,60 @@ export default function AdminPanelLayout({
   );
 
   const isDesktop = useMediaQuery({ query: "(min-width: 1024px)" });
+
+  const browserTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const userTimeZone = user?.settings?.timeZone || "UTC";
+
+  const areTimeZonesEquivalent = (tz1: string, tz2: string) => {
+    const datesToCheck = [
+      new Date(),
+      new Date(Date.UTC(2024, 0, 1)),
+      new Date(Date.UTC(2024, 6, 1)),
+    ];
+
+    const getOffset = (date: Date, timeZone: string) => {
+      try {
+        const formatter = new Intl.DateTimeFormat("en-US", {
+          timeZone,
+          timeZoneName: "shortOffset",
+        });
+        const parts = formatter.formatToParts(date);
+        const offsetPart = parts.find((part) => part.type === "timeZoneName");
+
+        if (offsetPart) {
+          const match = offsetPart.value.match(
+            /(?:UTC|GMT)([+-]\d{1,2})(?::(\d{2}))?/
+          );
+          if (match) {
+            const hours = parseInt(match[1], 10);
+            const minutes = match[2] ? parseInt(match[2], 10) : 0;
+            return hours * 60 + minutes;
+          }
+        }
+      } catch (error) {
+        console.error("Error calculating offset:", error);
+      }
+      return NaN;
+    };
+
+    return datesToCheck.every((date) => {
+      const offset1 = getOffset(date, tz1);
+      const offset2 = getOffset(date, tz2);
+
+      return offset1 === offset2;
+    });
+  };
+
+  const timeZoneMismatch = !areTimeZonesEquivalent(
+    browserTimeZone,
+    userTimeZone
+  );
+
+  useEffect(() => {
+    if (timeZoneMismatch) {
+      setShowTimezoneDialog(true);
+    }
+  }, [timeZoneMismatch]);
 
   useEffect(() => {
     if (!isDesktop) {
@@ -90,6 +149,14 @@ export default function AdminPanelLayout({
       >
         <div className="container mx-auto px-4">{children}</div>
       </div>
+      {showTimezoneDialog && (
+        <TimezoneWarningDialog
+          userTimeZone={userTimeZone}
+          browserTimeZone={browserTimeZone}
+          showTimezoneDialog={showTimezoneDialog}
+          setShowTimezoneDialog={setShowTimezoneDialog}
+        />
+      )}
     </>
   );
 }

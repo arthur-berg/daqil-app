@@ -146,6 +146,8 @@ export const confirmBookingPayLater = async (
       clientTime: clientAppointmentTime,
       therapistDate: therapistAppointmentDate,
       therapistTime: therapistAppointmentTime,
+      therapistTimeZone,
+      clientTimeZone,
       therapistName: `${await getFullName(
         therapist.firstName,
         therapist.lastName

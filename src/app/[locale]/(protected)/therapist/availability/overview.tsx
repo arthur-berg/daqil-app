@@ -1,3 +1,4 @@
+import { formatTimeZoneWithOffset } from "@/utils/timeZoneUtils";
 import BlockedOutTimes from "./blocked-out-times";
 import NonRecurringTimes from "./non-recurring-times";
 import RecurringTimes from "./recurring-times";
@@ -23,8 +24,19 @@ const Overview = ({
       dayOrder.indexOf(b.day.toLowerCase())
   );
 
+  const browserTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+  const browserTimeZoneFormatted = formatTimeZoneWithOffset(browserTimeZone);
+
   return (
     <div className="p-4 space-y-6">
+      <div className="flex justify-center mb-4">
+        <p className="text-gray-600 text-lg">
+          {t("timezoneNotice", {
+            timeZone: `${browserTimeZoneFormatted}`,
+          })}
+        </p>
+      </div>
       <RecurringTimes
         appointmentTypes={appointmentTypes}
         recurringAvailableTimes={sortedRecurringAvailableTimes}

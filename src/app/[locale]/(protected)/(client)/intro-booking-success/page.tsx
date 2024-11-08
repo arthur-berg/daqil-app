@@ -7,6 +7,7 @@ import { getTranslations } from "next-intl/server";
 import { formatInTimeZone } from "date-fns-tz";
 import { getAppointmentById } from "@/data/appointment";
 import { MdCheckCircle } from "react-icons/md";
+import { formatTimeZoneWithOffset } from "@/utils/timeZoneUtils";
 
 const IntroBookingSuccessPage = async ({
   searchParams: { appointmentId },
@@ -22,20 +23,23 @@ const IntroBookingSuccessPage = async ({
 
   const userTimeZone = user?.settings?.timeZone || "UTC";
 
-  // Format appointment dates in the user's timezone
   const formattedStartDate = formatInTimeZone(
     new Date(appointment.startDate),
     userTimeZone,
-    "MMMM dd, yyyy - HH:mm"
+    "EEEE, dd MMMM"
   );
 
-  const formattedEndDate = formatInTimeZone(
+  const formattedStartTime = formatInTimeZone(
+    new Date(appointment.startDate),
+    userTimeZone,
+    "HH:mm"
+  );
+  const formattedEndTime = formatInTimeZone(
     new Date(appointment.endDate),
     userTimeZone,
     "HH:mm"
   );
 
-  // Create formatted start and end dates for calendar links
   const calendarStartDate = format(
     new Date(appointment.startDate),
     "yyyyMMdd'T'HHmmss"
@@ -45,7 +49,6 @@ const IntroBookingSuccessPage = async ({
     "yyyyMMdd'T'HHmmss"
   );
 
-  // Include timezone offset explicitly for Outlook
   const calendarStartDateWithTimeZone = formatInTimeZone(
     new Date(appointment.startDate),
     userTimeZone,
@@ -57,14 +60,12 @@ const IntroBookingSuccessPage = async ({
     "yyyy-MM-dd'T'HH:mm:ssXXX"
   );
 
-  // Google Calendar Link remains the same
   const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(
     appointment.title
   )}&dates=${calendarStartDate}/${calendarEndDate}&details=${encodeURIComponent(
     appointment.description || ""
   )}&location=${encodeURIComponent(appointment.location || "")}`;
 
-  // Outlook Calendar Link with time zone
   const outlookCalendarUrl = `https://outlook.office.com/calendar/0/deeplink/compose?subject=${encodeURIComponent(
     appointment.title
   )}&startdt=${calendarStartDateWithTimeZone}&enddt=${calendarEndDateWithTimeZone}&body=${encodeURIComponent(
@@ -72,6 +73,8 @@ const IntroBookingSuccessPage = async ({
   )}&location=${encodeURIComponent(
     appointment.location || ""
   )}&allday=false&timezone=${encodeURIComponent(userTimeZone)}`;
+
+  const userTimeZoneFormatted = formatTimeZoneWithOffset(userTimeZone);
 
   return (
     <div className="bg-white shadow-lg rounded-lg p-8 max-w-4xl mx-auto text-center lg:mt-12">
@@ -86,7 +89,8 @@ const IntroBookingSuccessPage = async ({
           </p>
           <p className="mb-2">
             <span className="font-semibold">{t("date")}</span>{" "}
-            {formattedStartDate} - {formattedEndDate}
+            {formattedStartDate}: {formattedStartTime} - {formattedEndTime} (
+            {userTimeZoneFormatted})
           </p>
           <p className="mb-2">
             <span className="font-semibold">{t("duration")}</span>{" "}

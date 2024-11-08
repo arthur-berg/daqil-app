@@ -1,5 +1,6 @@
 import { DateTimes, TimeRange } from "@/generalTypes";
 import { formatDateTime } from "@/utils";
+import { formatTimeZoneWithOffset } from "@/utils/timeZoneUtils";
 import { format } from "date-fns";
 import { FaBan, FaTrash } from "react-icons/fa";
 
@@ -14,11 +15,24 @@ const BlockedOutTimes = ({
   overview?: boolean;
   handleRemoveBlockedDate?: any;
 }) => {
+  const browserTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+  const browserTimeZoneFormatted = formatTimeZoneWithOffset(browserTimeZone);
   return (
     <div>
       <h2 className="text-xl md:text-2xl font-bold text-red-600 flex items-center mb-4">
         <FaBan className="mr-2" /> {t("blockedOutTimes")}
       </h2>
+      {!overview && (
+        <div className="mt-4 mb-4">
+          <p className="text-gray-700 text-md font-medium bg-gray-50 px-4 py-2 rounded-md border border-gray-300 inline-block max-w-2xl">
+            {t("scheduleInYourTimezone", {
+              browserTimeZone: browserTimeZoneFormatted,
+            })}
+          </p>
+        </div>
+      )}
+
       <div className="space-y-4 md:inline-flex md:space-y-0 md:space-x-4">
         {blockedOutTimes.length === 0 ? (
           <p className="text-red-800">{t("noTimeSlotsFound")}</p>

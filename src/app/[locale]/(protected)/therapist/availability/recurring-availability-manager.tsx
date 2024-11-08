@@ -29,10 +29,16 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
+import {
+  CaretSortIcon,
+  CheckIcon,
+  ExclamationTriangleIcon,
+} from "@radix-ui/react-icons";
 import { addMinutes, format, isBefore, set } from "date-fns";
 import { FaClock } from "react-icons/fa";
 import { useTranslations } from "next-intl";
+import { MdWarning } from "react-icons/md";
+import { formatTimeZoneWithOffset } from "@/utils/timeZoneUtils";
 
 const daysOfWeek = [
   "monday",
@@ -165,6 +171,10 @@ const DefaultAvailabilityManager = ({
 
   const intervalOptions = ["15", "30", "45", "60"];
 
+  const browserTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+  const browserTimeZoneFormatted = formatTimeZoneWithOffset(browserTimeZone);
+
   return timeRangeInputs ? (
     <div className="bg-white rounded-lg">
       {/* <Form {...form}>
@@ -239,10 +249,20 @@ const DefaultAvailabilityManager = ({
         </form>
       </Form> */}
       <div
-        className="bg-blue-100 border mt-4 border-blue-400 text-blue-700 px-4 py-3 rounded inline-flex text-sm"
+        className="bg-blue-100 border sm:mt-4 border-blue-400 text-blue-700 px-4 py-3 rounded inline-flex flex-col sm:flex-row text-sm items-center"
         role="alert"
       >
+        <ExclamationTriangleIcon className="mr-2 text-blue-700" />
+
         <span>{t("clientsWillSee")}</span>
+      </div>
+
+      <div className="mt-4 mb-4">
+        <p className="text-gray-700 text-md font-medium bg-gray-50 px-4 py-2 rounded-md border border-gray-300 inline-block max-w-2xl">
+          {t("scheduleInYourTimezone", {
+            browserTimeZone: browserTimeZoneFormatted,
+          })}
+        </p>
       </div>
       <h2 className="text-xl md:text-2xl font-bold text-blue-600 flex items-center mb-4 mt-4">
         <FaClock className="mr-2" /> {t("recurringAvailableTimes")}

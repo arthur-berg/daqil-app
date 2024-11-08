@@ -180,6 +180,8 @@ export const bookIntroAppointment = async (
       therapistName: therapistName,
       clientName: clientName,
       durationInMinutes: fetchedAppointment.durationInMinutes,
+      clientTimeZone: clientTimeZone,
+      therapistTimeZone: therapistTimeZone,
     };
 
     await sendIntroBookingConfirmationMail(

@@ -5,7 +5,7 @@ import { addDays, format, isAfter, isBefore, set } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { bookIntroAppointment } from "@/actions/appointments/book-intro-appointment";
 import { Link, useRouter } from "@/navigation";
-import { convertToUtcWithTime, currencyToSymbol } from "@/utils";
+import { currencyToSymbol } from "@/utils";
 import { getTherapistAvailableTimeSlots } from "@/utils/therapistAvailability";
 import { useTranslations } from "next-intl";
 import {
@@ -29,6 +29,8 @@ import { BeatLoader } from "react-spinners";
 import { APPOINTMENT_TYPE_ID_INTRO_SESSION } from "@/contants/config";
 import { reserveAppointment } from "@/actions/appointments/reserve-appointment";
 import { cn } from "@/lib/utils";
+import { useCurrentUser } from "@/hooks/use-current-user";
+import { formatTimeZoneWithOffset } from "@/utils/timeZoneUtils";
 
 type DateType = {
   justDate: Date | undefined;
@@ -73,6 +75,14 @@ const BookingCalendar = ({
     null
   );
 
+  const user = useCurrentUser();
+
+  const userTimeZone = user?.settings?.timeZone as string;
+
+  const browserTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+  const browserTimeZoneFormatted = formatTimeZoneWithOffset(browserTimeZone);
+
   const handleSetClosestAvailableDate = async (startingDate: Date) => {
     let currentDate = startingDate;
     const maxLookAheadDays = 30; // Define how many days ahead to search
@@ -108,7 +118,7 @@ const BookingCalendar = ({
     if (!!appointmentType) {
       handleSetClosestAvailableDate(today);
     }
-  }, [appointmentType]);
+  }, [appointmentType]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const setTimeSlots = (selectedDate: Date) => {
     if (!selectedDate) return [];
@@ -268,6 +278,14 @@ const BookingCalendar = ({
                       >
                         {t("changeDate")}
                       </Button>
+
+                      <div className="flex justify-center mb-4">
+                        <p className="text-gray-600 text-md">
+                          {t("timezoneNotice", {
+                            timeZone: `${browserTimeZoneFormatted}`,
+                          })}
+                        </p>
+                      </div>
 
                       {Object.entries(groupTimeSlots(availableTimeSlots)).map(
                         ([timeOfDay, slots], idx) => (

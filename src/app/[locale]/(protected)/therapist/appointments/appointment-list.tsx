@@ -25,6 +25,7 @@ import BeatLoader from "react-spinners/BeatLoader";
 import CancelAppontmentForm from "./cancel-appointment-form";
 
 import { useUserName } from "@/hooks/use-user-name";
+import { formatTimeZoneWithOffset } from "@/utils/timeZoneUtils";
 
 const AppointmentList = ({ appointments }: { appointments: any }) => {
   const [filterType, setFilterType] = useState("upcoming");
@@ -250,6 +251,10 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
     );
   };
 
+  const browserTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+  const browserTimeZoneFormatted = formatTimeZoneWithOffset(browserTimeZone);
+
   return (
     <Card className="w-full xl:w-9/12">
       <CardContent>
@@ -277,6 +282,14 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
                   {t("history")}
                 </Button>
               </div>
+            </div>
+
+            <div className="flex justify-center mb-4">
+              <p className="text-gray-600 text-md">
+                {t("timezoneNotice", {
+                  timeZone: `${browserTimeZoneFormatted}`,
+                })}
+              </p>
             </div>
 
             {sortedStatuses.length ? (
@@ -340,7 +353,7 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
                                 hasMeetingEnded;
                               return (
                                 <AccordionItem
-                                  className={`bg-white ${
+                                  className={`bg-white border rounded-md mb-2 ${
                                     disableAccordion ? "opacity-50" : ""
                                   } ${
                                     appointment.status === "canceled"
@@ -350,7 +363,7 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
                                   key={appointment._id.toString()}
                                   value={appointment._id.toString()}
                                 >
-                                  <AccordionTrigger className="flex justify-between p-4 bg-gray-100 rounded flex-col md:flex-row">
+                                  <AccordionTrigger className="flex justify-between  p-4 rounded flex-col md:flex-row">
                                     <span>
                                       {format(
                                         new Date(appointment.startDate),

@@ -1,3 +1,4 @@
+import { formatTimeZoneWithOffset } from "@/utils/timeZoneUtils";
 import { getLocale } from "next-intl/server";
 
 const primaryColor = "#0d1a36"; // Hex color converted from HSL
@@ -118,6 +119,8 @@ export const appointmentCancellationTemplate = async (
     clientTime: string;
     therapistDate: string;
     therapistTime: string;
+    clientTimeZone: string;
+    therapistTimeZone: string;
     reason: string;
     therapistName: string;
     clientName: string;
@@ -145,6 +148,12 @@ export const appointmentCancellationTemplate = async (
     ? appointmentDetails.therapistTime
     : appointmentDetails.clientTime;
 
+  const timeZone = isTherapist
+    ? appointmentDetails.therapistTimeZone
+    : appointmentDetails.clientTimeZone;
+
+  const formattedTimeZone = formatTimeZoneWithOffset(timeZone);
+
   return `
     <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
@@ -160,7 +169,9 @@ export const appointmentCancellationTemplate = async (
     appointmentDetails.clientName
   }</p>
           <p><strong>${t("dateLabel")}</strong> ${date}</p>
-          <p><strong>${t("timeLabel")}</strong> ${time}</p>
+          <p><strong>${t(
+            "timeLabel"
+          )}</strong> ${time} (${formattedTimeZone})</p>
           <p><strong>${t("reasonLabel")}</strong> ${
     appointmentDetails.reason
   }</p>
@@ -191,6 +202,8 @@ export const invoicePaidTemplate = async (
     therapistTime?: string;
     clientDate?: string;
     clientTime?: string;
+    therapistTimeZone?: string;
+    clientTimeZone?: string;
   },
   isTherapist: boolean,
   t: any,
@@ -240,6 +253,11 @@ export const invoicePaidTemplate = async (
   const time = isTherapist
     ? appointmentDetails.therapistTime
     : appointmentDetails.clientTime;
+  const timeZone = isTherapist
+    ? appointmentDetails.therapistTimeZone
+    : appointmentDetails.clientTimeZone;
+
+  const formattedTimeZone = formatTimeZoneWithOffset(timeZone as string);
 
   return `
     <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
@@ -256,7 +274,9 @@ export const invoicePaidTemplate = async (
     appointmentDetails.clientName
   }</p>
           <p><strong>${t("dateLabel")}</strong> ${date}</p>
-          <p><strong>${t("timeLabel")}</strong> ${time}</p>
+          <p><strong>${t(
+            "timeLabel"
+          )}</strong> ${time} (${formattedTimeZone})</p>
           <p><strong>${t("durationLabel")}</strong> ${
     appointmentDetails.durationInMinutes
   } ${t("minutesLabel")}</p>
@@ -290,6 +310,8 @@ export const paidAppointmentConfirmationTemplate = async (
     clientTime?: string;
     therapistDate?: string;
     therapistTime?: string;
+    therapistTimeZone?: string;
+    clientTimeZone?: string;
   },
   isTherapist: boolean,
   t: any,
@@ -335,6 +357,12 @@ export const paidAppointmentConfirmationTemplate = async (
     ? appointmentDetails.therapistTime
     : appointmentDetails.clientTime;
 
+  const timeZone = isTherapist
+    ? appointmentDetails.therapistTimeZone
+    : appointmentDetails.clientTimeZone;
+
+  const formattedTimeZone = formatTimeZoneWithOffset(timeZone as string);
+
   return `
     <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
@@ -351,7 +379,9 @@ export const paidAppointmentConfirmationTemplate = async (
     appointmentDetails.clientName
   }</p>
           <p><strong>${t("dateLabel")}</strong> ${date}</p>
-          <p><strong>${t("timeLabel")}</strong> ${time}</p>
+          <p><strong>${t(
+            "timeLabel"
+          )}</strong> ${time} (${formattedTimeZone})</p>
           <p><strong>${t("durationLabel")}</strong> ${
     appointmentDetails.durationInMinutes
   } ${t("minutesLabel")}</p>
@@ -382,6 +412,8 @@ export const introBookingConfirmationTemplate = async (
     therapistName: string;
     clientName: string;
     durationInMinutes: number;
+    clientTimeZone: string;
+    therapistTimeZone: string;
   },
   isTherapist: boolean,
   t: any,
@@ -396,6 +428,12 @@ export const introBookingConfirmationTemplate = async (
   const time = isTherapist
     ? appointmentDetails.therapistTime
     : appointmentDetails.clientTime;
+
+  const timeZone = isTherapist
+    ? appointmentDetails.therapistTimeZone
+    : appointmentDetails.clientTimeZone;
+
+  const formattedTimeZone = formatTimeZoneWithOffset(timeZone);
 
   return `
     <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
@@ -412,7 +450,9 @@ export const introBookingConfirmationTemplate = async (
     appointmentDetails.clientName
   }</p>
           <p><strong>${t("dateLabel")}</strong> ${date}</p>
-          <p><strong>${t("timeLabel")}</strong> ${time}</p>
+          <p><strong>${t(
+            "timeLabel"
+          )}</strong> ${time} (${formattedTimeZone})</p>
           <p><strong>${t("durationLabel")}</strong> ${
     appointmentDetails.durationInMinutes
   } ${t("minutesLabel")}</p>
@@ -436,6 +476,8 @@ export const nonPaidAppointmentConfirmationTemplate = async (
     clientName: string;
     appointmentId: string;
     appointmentTypeId: string;
+    therapistTimeZone: string;
+    clientTimeZone: string;
   },
   isTherapist: boolean,
   t: any,
@@ -449,12 +491,20 @@ export const nonPaidAppointmentConfirmationTemplate = async (
     : `${process.env.NEXT_PUBLIC_APP_URL}/${locale}/appointments`;
 
   const encodedDate = encodeURIComponent(appointmentDetails.date.toString());
+
   const date = isTherapist
     ? appointmentDetails.therapistDate
     : appointmentDetails.clientDate;
+
   const time = isTherapist
     ? appointmentDetails.therapistTime
     : appointmentDetails.clientTime;
+
+  const timeZone = isTherapist
+    ? appointmentDetails.therapistTimeZone
+    : appointmentDetails.clientTimeZone;
+
+  const formattedTimeZone = formatTimeZoneWithOffset(timeZone);
 
   const paymentLink = `${process.env.NEXT_PUBLIC_APP_URL}/${locale}/invoices/${appointmentDetails.appointmentId}/checkout?appointmentTypeId=${appointmentDetails.appointmentTypeId}&date=${encodedDate}`;
 
@@ -491,7 +541,9 @@ export const nonPaidAppointmentConfirmationTemplate = async (
     appointmentDetails.clientName
   }</p>
           <p><strong>${t("dateLabel")}</strong> ${date}</p>
-          <p><strong>${t("timeLabel")}</strong> ${time}</p>
+          <p><strong>${t(
+            "timeLabel"
+          )}</strong> ${time} (${formattedTimeZone})</p>
         </div>
         <div style="margin-top: 20px; font-size: 16px; color: #333333;">
           <p>${additionalMessage}</p>
@@ -550,6 +602,9 @@ export const reminderEmailTemplate = async (
   locale: string
 ) => {
   const daqilLogoUrl = await getDaqilLogoUrl(locale);
+  const formattedTimeZone = formatTimeZoneWithOffset(
+    appointmentDetails.timeZone
+  );
   return `
     <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
@@ -562,6 +617,7 @@ export const reminderEmailTemplate = async (
             therapistName: appointmentDetails.therapistName,
             date: appointmentDetails.date,
             time: appointmentDetails.time,
+            timeZone: formattedTimeZone,
           })}</p>
         </div>
         <div style="margin-top: 20px; font-size: 12px; color: #888888; text-align: center;">

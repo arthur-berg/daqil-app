@@ -63,6 +63,8 @@ const TherapistUserProfile = async ({
     return ErrorMessages("appointmentTypeNotExist");
   }
 
+  console.log("client.settings", client.settings);
+
   return (
     <div className="p-4 max-w-4xl mx-auto bg-white shadow-md rounded-lg">
       <div className="flex justify-start">

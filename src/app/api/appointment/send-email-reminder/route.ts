@@ -64,6 +64,7 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
         appointment.participants[0].userId.firstName,
         locale
       )}`,
+      clientTimeZone,
     };
 
     await sendReminderEmail(clientEmail, appointmentDetails, t, locale);

@@ -258,6 +258,8 @@ export const scheduleAppointment = async (
       clientName: `${await getFullName(client.firstName, client.lastName)}`,
       appointmentId: appointmentId,
       appointmentTypeId: appointmentTypeId,
+      therapistTimeZone,
+      clientTimeZone,
     };
 
     await sendNonPaidBookingConfirmationEmail(

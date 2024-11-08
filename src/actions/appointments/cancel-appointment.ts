@@ -165,6 +165,8 @@ export const cancelAppointment = async (
       clientTime: clientAppointmentTime,
       therapistDate: therapistAppointmentDate,
       therapistTime: therapistAppointmentTime,
+      clientTimeZone,
+      therapistTimeZone,
       reason,
       therapistName: `${await getFullName(
         therapist.firstName,
