@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { checkDiscountCodeValidity } from "@/actions/discount-code";
 import Image from "next/image";
+import { formatTimeZoneWithOffset } from "@/utils/timeZoneUtils";
 
 if (process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY === undefined) {
   throw new Error("NEXT_PUBLIC_STRIPE_PUBLIC_KEY is not defined");
@@ -128,6 +129,10 @@ const CheckoutWrapper = ({
     );
   };
 
+  const browserTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+  const browserTimeZoneFormatted = formatTimeZoneWithOffset(browserTimeZone);
+
   return (
     <>
       <div className={`text-center`}>
@@ -137,7 +142,8 @@ const CheckoutWrapper = ({
             {t("day")}: {format(date, "eeee, MMMM d, yyyy")}{" "}
           </p>
           <p>
-            {t("time")}: {format(date, "HH:mm")}
+            {t("time")}: {format(date, "HH:mm")}{" "}
+            <em>({browserTimeZoneFormatted})</em>
           </p>
           <p>
             {t("duration")}: {appointmentType.durationInMinutes} {t("minutes")}
