@@ -337,6 +337,14 @@ const userSchema = new Schema(
       enum: ["ACTIVE", "DELETED", "INACTIVE"],
       default: "ACTIVE",
     },
+    marketingCampaignData: {
+      utmSource: { type: String, required: false }, // UTM source (e.g., 'google', 'facebook')
+      utmMedium: { type: String, required: false }, // UTM medium (e.g., 'cpc', 'email')
+      utmCampaign: { type: String, required: false }, // UTM campaign name or ID
+      utmTerm: { type: String, required: false }, // UTM term for keyword tracking
+      utmContent: { type: String, required: false }, // UTM content for differentiating ads
+      dateCaptured: { type: Date, required: false }, // Date when the UTM data was captured
+    },
   },
   {
     timestamps: true,

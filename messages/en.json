@@ -621,6 +621,7 @@
     "appointmentNotConfirmed": "The appointment is not confirmed."
   },
   "SuccessMessages": {
+    "campaignIdUpdated": "Campaign ID updated",
     "accountDeleted": "Account successfully deleted",
     "paymentSettingsSaved": "Payment settings saved",
     "accountSetupComplete": "Account setup completed",

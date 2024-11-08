@@ -1,15 +1,16 @@
 "use client";
 import { cn } from "@/lib/utils";
 import { Sidebar } from "@/components/sidebar/sidebar";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { usePathname } from "@/navigation";
 import { clearAllBodyScrollLocks, disableBodyScroll } from "body-scroll-lock";
 import { useMediaQuery } from "react-responsive";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { logout } from "@/actions/logout";
-import { getTimezoneOffset } from "date-fns-tz";
+import Cookies from "js-cookie";
 
 import TimezoneWarningDialog from "@/components/timezone-warning-dialog";
+import { updateUserCampaignId } from "@/actions/update-user-campaign-id";
 
 const routesWithoutSidebar = ["/appointments/[id]"];
 
@@ -32,6 +33,7 @@ export default function AdminPanelLayout({
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [showTimezoneDialog, setShowTimezoneDialog] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
   const pathname = usePathname();
   const sidebarMenuRef = useRef<any>();
@@ -90,6 +92,22 @@ export default function AdminPanelLayout({
     browserTimeZone,
     userTimeZone
   );
+
+  /*   useEffect(() => {
+    const googleCampaignId = Cookies.get("gclid");
+    const metaCampaignId = Cookies.get("fbclid");
+
+    if (
+      user &&
+      !user.marketingCampaignId &&
+      (googleCampaignId || metaCampaignId)
+    ) {
+      const campaignId = googleCampaignId || metaCampaignId;
+      startTransition(async () => {
+        await updateUserCampaignId(user.id, campaignId as string);
+      });
+    }
+  }, [user]); */
 
   useEffect(() => {
     if (timeZoneMismatch && !!user?.settings?.timeZone) {

@@ -15,6 +15,14 @@ export type ExtendedUser = DefaultSession["user"] & {
     en: string;
     ar: string;
   };
+  marketingCampaignData: {
+    utmSource?: string;
+    utmMedium?: string;
+    utmCampaign?: string;
+    utmTerm?: string;
+    utmContent?: string;
+    dateCaptured: Date;
+  };
   error?: "inactive-user";
   isOnboardingDone: boolean;
   isAccountSetupDone: boolean;

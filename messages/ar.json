@@ -612,6 +612,7 @@
     "appointmentNotConfirmed": "لم يتم تأكيد الموعد."
   },
   "SuccessMessages": {
+    "campaignIdUpdated": "تم تحديث معرف الحملة",
     "accountDeleted": "تم حذف الحساب بنجاح",
     "therapistCreated": "تم إنشاء حساب الأخصائي النفسي بنجاح",
     "paymentSettingsSaved": "تم حفظ إعدادات الدفع",
