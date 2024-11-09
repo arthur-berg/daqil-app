@@ -367,16 +367,16 @@ export const paidAppointmentConfirmationTemplate = async (
   // If admin, include both timezones
   const timeZoneInfo = isAdmin
     ? `
-       <p><strong>${t("therapistTimeZoneLabel")}</strong> ${
-        appointmentDetails.therapistTimeZone
-          ? formatTimeZoneWithOffset(appointmentDetails.therapistTimeZone)
-          : "N/A"
-      }</p>
-       <p><strong>${t("clientTimeZoneLabel")}</strong> ${
-        appointmentDetails.clientTimeZone
-          ? formatTimeZoneWithOffset(appointmentDetails.clientTimeZone)
-          : "N/A"
-      }</p>
+       <p><strong>Psychologists timezone: </strong> ${
+         appointmentDetails.therapistTimeZone
+           ? formatTimeZoneWithOffset(appointmentDetails.therapistTimeZone)
+           : "N/A"
+       }</p>
+       <p><strong>Clients timezone: </strong> ${
+         appointmentDetails.clientTimeZone
+           ? formatTimeZoneWithOffset(appointmentDetails.clientTimeZone)
+           : "N/A"
+       }</p>
      `
     : `
        <p><strong>${t("timeLabel")}</strong> ${time} (${formattedTimeZone})</p>
@@ -455,16 +455,12 @@ export const introBookingConfirmationTemplate = async (
 
   const timeZoneInfo = isAdmin
     ? `
-       <p><strong>${t("therapistTimeZoneLabel")}</strong> ${
-        appointmentDetails.therapistTimeZone
-          ? formatTimeZoneWithOffset(appointmentDetails.therapistTimeZone)
-          : "N/A"
-      }</p>
-       <p><strong>${t("clientTimeZoneLabel")}</strong> ${
-        appointmentDetails.clientTimeZone
-          ? formatTimeZoneWithOffset(appointmentDetails.clientTimeZone)
-          : "N/A"
-      }</p>
+       <p><strong>Psychologists time/timeZone: </strong> ${
+         appointmentDetails.therapistTime
+       } (${formatTimeZoneWithOffset(appointmentDetails.therapistTimeZone)})</p>
+       <p><strong>Clients time/timeZone: </strong> ${
+         appointmentDetails.clientTime
+       } (${formatTimeZoneWithOffset(appointmentDetails.clientTimeZone)})</p>
      `
     : `
        <p><strong>${t("timeLabel")}</strong> ${time} (${formattedTimeZone})</p>
