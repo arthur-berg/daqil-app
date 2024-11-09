@@ -140,21 +140,6 @@ export const scheduleReminderJobs = async (
   const twentyMinutesBefore = subMinutes(new Date(appointment.startDate), 20);
   const tenSecondsAfter = addSeconds(new Date(now), 10);
 
-  /*  if (isAfter(oneDayBefore, addMinutes(now, 1))) {
-    const emailReminderTaskIdOneDay = await scheduleTask(
-      `${process.env.QSTASH_API_URL}/send-email-reminder`,
-      { appointmentId: appointmentId },
-      Math.floor(oneDayBefore.getTime() / 1000),
-      locale
-    );
-
-    await ScheduledTask.create({
-      appointmentId: appointmentId,
-      type: "emailReminder",
-      taskId: emailReminderTaskIdOneDay,
-    });
-    } */
-
   if (isAfter(twoHoursBefore, addMinutes(now, 1))) {
     const emailReminderTaskIdOneHour = await scheduleTask(
       `${process.env.QSTASH_API_URL}/send-email-reminder`,
@@ -183,12 +168,10 @@ export const scheduleReminderJobs = async (
     taskId: meetingLinkTaskId,
   });
 
-  console.log("scheduling sms-reminder task");
-
   const smsReminderTaskId = await scheduleTask(
     `${process.env.QSTASH_API_URL}/sms-reminder`,
     { clientPhone: appointment.clientPhone, appointmentId: appointmentId },
-    Math.floor(tenSecondsAfter.getTime() / 1000),
+    Math.floor(twentyMinutesBefore.getTime() / 1000),
     locale
   );
 
