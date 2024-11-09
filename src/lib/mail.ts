@@ -387,7 +387,8 @@ export const sendIntroBookingConfirmationMail = async (
         appointmentDetails,
         true,
         t,
-        locale
+        locale,
+        true
       ),
       to: [
         {
@@ -598,7 +599,8 @@ export const sendPaidBookingConfirmationEmail = async (
         appointmentDetails,
         true,
         t,
-        locale
+        locale,
+        true
       ),
       to: [
         {

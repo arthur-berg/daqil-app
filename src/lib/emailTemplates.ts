@@ -315,7 +315,8 @@ export const paidAppointmentConfirmationTemplate = async (
   },
   isTherapist: boolean,
   t: any,
-  locale: string
+  locale: string,
+  isAdmin?: boolean
 ) => {
   const daqilLogoUrl = await getDaqilLogoUrl(locale);
   const subject = isTherapist ? t("therapistSubject") : t("clientSubject");
@@ -363,6 +364,24 @@ export const paidAppointmentConfirmationTemplate = async (
 
   const formattedTimeZone = formatTimeZoneWithOffset(timeZone as string);
 
+  // If admin, include both timezones
+  const timeZoneInfo = isAdmin
+    ? `
+       <p><strong>${t("therapistTimeZoneLabel")}</strong> ${
+        appointmentDetails.therapistTimeZone
+          ? formatTimeZoneWithOffset(appointmentDetails.therapistTimeZone)
+          : "N/A"
+      }</p>
+       <p><strong>${t("clientTimeZoneLabel")}</strong> ${
+        appointmentDetails.clientTimeZone
+          ? formatTimeZoneWithOffset(appointmentDetails.clientTimeZone)
+          : "N/A"
+      }</p>
+     `
+    : `
+       <p><strong>${t("timeLabel")}</strong> ${time} (${formattedTimeZone})</p>
+     `;
+
   return `
     <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
@@ -379,9 +398,7 @@ export const paidAppointmentConfirmationTemplate = async (
     appointmentDetails.clientName
   }</p>
           <p><strong>${t("dateLabel")}</strong> ${date}</p>
-          <p><strong>${t(
-            "timeLabel"
-          )}</strong> ${time} (${formattedTimeZone})</p>
+          ${timeZoneInfo}
           <p><strong>${t("durationLabel")}</strong> ${
     appointmentDetails.durationInMinutes
   } ${t("minutesLabel")}</p>
@@ -417,7 +434,8 @@ export const introBookingConfirmationTemplate = async (
   },
   isTherapist: boolean,
   t: any,
-  locale: string
+  locale: string,
+  isAdmin?: boolean
 ) => {
   const daqilLogoUrl = await getDaqilLogoUrl(locale);
   const subject = isTherapist ? t("therapistSubject") : t("clientSubject");
@@ -435,6 +453,23 @@ export const introBookingConfirmationTemplate = async (
 
   const formattedTimeZone = formatTimeZoneWithOffset(timeZone);
 
+  const timeZoneInfo = isAdmin
+    ? `
+       <p><strong>${t("therapistTimeZoneLabel")}</strong> ${
+        appointmentDetails.therapistTimeZone
+          ? formatTimeZoneWithOffset(appointmentDetails.therapistTimeZone)
+          : "N/A"
+      }</p>
+       <p><strong>${t("clientTimeZoneLabel")}</strong> ${
+        appointmentDetails.clientTimeZone
+          ? formatTimeZoneWithOffset(appointmentDetails.clientTimeZone)
+          : "N/A"
+      }</p>
+     `
+    : `
+       <p><strong>${t("timeLabel")}</strong> ${time} (${formattedTimeZone})</p>
+     `;
+
   return `
     <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
@@ -450,9 +485,7 @@ export const introBookingConfirmationTemplate = async (
     appointmentDetails.clientName
   }</p>
           <p><strong>${t("dateLabel")}</strong> ${date}</p>
-          <p><strong>${t(
-            "timeLabel"
-          )}</strong> ${time} (${formattedTimeZone})</p>
+          ${timeZoneInfo}
           <p><strong>${t("durationLabel")}</strong> ${
     appointmentDetails.durationInMinutes
   } ${t("minutesLabel")}</p>
