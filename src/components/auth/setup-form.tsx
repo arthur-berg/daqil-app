@@ -47,32 +47,6 @@ import { useGetCountries } from "@/hooks/use-get-countries";
 import { Checkbox } from "@/components/ui/checkbox";
 import { formatTimeZoneWithOffset } from "@/utils/timeZoneUtils";
 
-const getMappedTimezone = (ianaTimezone: string) => {
-  return allTimezones[ianaTimezone] ? ianaTimezone : "Asia/Dubai";
-};
-
-const getGmtOffset = (timezone: string) => {
-  const now = new Date();
-  const dtf = new Intl.DateTimeFormat("en-US", {
-    timeZone: timezone,
-    hour12: false,
-    weekday: "long",
-    year: "numeric",
-    month: "numeric",
-    day: "numeric",
-    hour: "numeric",
-    minute: "numeric",
-    second: "numeric",
-    timeZoneName: "short",
-  });
-
-  const [{ value: timeZoneName }] = dtf
-    .formatToParts(now)
-    .filter(({ type }) => type === "timeZoneName");
-
-  return `${timeZoneName}`;
-};
-
 export const SetupForm = () => {
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
@@ -445,10 +419,8 @@ export const SetupForm = () => {
                           className="justify-between max-w-[280px] sm:w-full"
                         >
                           <div className="truncate max-w-[calc(100%-24px)]">
-                            {field.value && allTimezones[field.value]
-                              ? `${getGmtOffset(field.value)} ${
-                                  allTimezones[field.value]
-                                }`
+                            {field.value
+                              ? `${formatTimeZoneWithOffset(field.value)}`
                               : t("selectTimezone")}
                           </div>
                           <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />

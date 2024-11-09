@@ -386,10 +386,8 @@ const OAuthAccountSetupForm = () => {
                             className="justify-between max-w-[280px] sm:w-full"
                           >
                             <div className="truncate max-w-[calc(100%-24px)]">
-                              {field.value && allTimezones[field.value]
-                                ? `${getGmtOffset(field.value)} ${
-                                    allTimezones[field.value]
-                                  }`
+                              {field.value
+                                ? `${formatTimeZoneWithOffset(field.value)}`
                                 : t("selectTimezone")}
                             </div>
                             <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />

@@ -10,5 +10,8 @@ export const getTimeZoneOffset = (timeZone: string): string => {
 };
 
 export const formatTimeZoneWithOffset = (timeZone: string): string => {
+  /* if (timeZone.includes("UTC")) {
+    return timeZone;
+  } */
   return `${timeZone} ${getTimeZoneOffset(timeZone)}`;
 };

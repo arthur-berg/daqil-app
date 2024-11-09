@@ -50,6 +50,7 @@ import { useToast } from "./ui/use-toast";
 import { deleteAccount } from "@/actions/delete-account";
 import { logout } from "@/actions/logout";
 import { UserRole } from "@/generalTypes";
+import { formatTimeZoneWithOffset } from "@/utils/timeZoneUtils";
 
 const SettingsForm = ({ hidePageTitle }: { hidePageTitle?: boolean }) => {
   const user = useCurrentUser();
@@ -212,7 +213,7 @@ const SettingsForm = ({ hidePageTitle }: { hidePageTitle?: boolean }) => {
                             >
                               <div className="truncate max-w-[calc(100%-24px)]">
                                 {field.value
-                                  ? `${field.value}`
+                                  ? `${formatTimeZoneWithOffset(field.value)}`
                                   : t("selectTimezone")}
                               </div>
                               <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -233,9 +234,9 @@ const SettingsForm = ({ hidePageTitle }: { hidePageTitle?: boolean }) => {
                                     )
                                     .map((option) => (
                                       <CommandItem
-                                        key={option.label}
+                                        key={option.value}
                                         onSelect={() => {
-                                          field.onChange(option.label);
+                                          field.onChange(option.value);
                                           setTimezonePopoverOpen(false);
                                         }}
                                       >
