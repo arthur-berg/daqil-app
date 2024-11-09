@@ -11,6 +11,7 @@ import Cookies from "js-cookie";
 
 import TimezoneWarningDialog from "@/components/timezone-warning-dialog";
 import { updateUserCampaignId } from "@/actions/update-user-campaign-id";
+import { formatTimeZoneWithOffset } from "@/utils/timeZoneUtils";
 
 const routesWithoutSidebar = ["/appointments/[id]"];
 
@@ -110,9 +111,21 @@ export default function AdminPanelLayout({
   }, [user]); */
 
   useEffect(() => {
-    /* const dismissed = Cookies.get("timezoneWarningDismissed"); */
+    const dismissedTimeZoneCookie = Cookies.get("timezoneWarningDismissed");
+    let dismissedTimezoneChanged = false;
+    if (dismissedTimeZoneCookie) {
+      const formattedTimeZone = formatTimeZoneWithOffset(browserTimeZone);
+      const newTimeZoneDetected = formattedTimeZone !== dismissedTimeZoneCookie;
+      if (newTimeZoneDetected) {
+        dismissedTimezoneChanged = true;
+      }
+    }
 
-    if (timeZoneMismatch && !!user?.settings?.timeZone) {
+    if (
+      timeZoneMismatch &&
+      !!user?.settings?.timeZone &&
+      !dismissedTimezoneChanged
+    ) {
       setShowTimezoneDialog(true);
     }
   }, [timeZoneMismatch, user?.settings?.timeZone]);

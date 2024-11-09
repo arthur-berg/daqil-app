@@ -30,24 +30,28 @@ const TimezoneWarningDialog = ({
   };
 
   const handleDismiss = () => {
-    /*    Cookies.set("timezoneWarningDismissed", "true", { expires: 30 }); */
+    Cookies.set(
+      "timezoneWarningDismissed",
+      formatTimeZoneWithOffset(browserTimeZone),
+      { expires: 30 }
+    );
     setShowTimezoneDialog(false);
   };
 
   return (
     <Dialog open={showTimezoneDialog} onOpenChange={setShowTimezoneDialog}>
-      <DialogContent>
+      <DialogContent className="w-11/12 sm:max-w-md">
         <DialogHeader>
           <DialogTitle>{t("title")}</DialogTitle>
           <DialogDescription>
             <div>
-              <span>{t("browserTimezoneLabel")}</span>{" "}
+              <div>{t("browserTimezoneLabel")}</div>{" "}
               <span className="font-bold">
                 {formatTimeZoneWithOffset(browserTimeZone)}
               </span>
             </div>
             <div>
-              <span>{t("accountSettingsTimezoneLabel")}</span>{" "}
+              <div>{t("accountSettingsTimezoneLabel")}</div>{" "}
               <span className="font-bold">
                 {formatTimeZoneWithOffset(userTimeZone)}
               </span>
@@ -60,14 +64,16 @@ const TimezoneWarningDialog = ({
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Link href="/settings">
-            <Button variant="success" onClick={handleGoToSettings}>
-              {t("goToSettings")}
+          <div className="flex flex-col items-center sm:flex-row justify-center space-y-2 sm:space-y-0 sm:space-x-2 sm:rtl:space-x-reverse">
+            <Link href="/settings">
+              <Button variant="success" onClick={handleGoToSettings}>
+                {t("goToSettings")}
+              </Button>
+            </Link>
+            <Button variant="secondary" onClick={handleDismiss}>
+              {t("timezonesAligned")}
             </Button>
-          </Link>
-          <Button variant="secondary" onClick={handleDismiss}>
-            {t("timezonesAligned")}
-          </Button>
+          </div>
         </DialogFooter>
       </DialogContent>
     </Dialog>
