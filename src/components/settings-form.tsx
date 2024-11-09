@@ -51,28 +51,6 @@ import { deleteAccount } from "@/actions/delete-account";
 import { logout } from "@/actions/logout";
 import { UserRole } from "@/generalTypes";
 
-const getGmtOffset = (timezone: string) => {
-  const now = new Date();
-  const dtf = new Intl.DateTimeFormat("en-US", {
-    timeZone: timezone,
-    hour12: false,
-    weekday: "long",
-    year: "numeric",
-    month: "numeric",
-    day: "numeric",
-    hour: "numeric",
-    minute: "numeric",
-    second: "numeric",
-    timeZoneName: "short",
-  });
-
-  const [{ value: timeZoneName }] = dtf
-    .formatToParts(now)
-    .filter(({ type }) => type === "timeZoneName");
-
-  return `${timeZoneName}`;
-};
-
 const SettingsForm = ({ hidePageTitle }: { hidePageTitle?: boolean }) => {
   const user = useCurrentUser();
   const [error, setError] = useState<string | undefined>();
@@ -84,7 +62,7 @@ const SettingsForm = ({ hidePageTitle }: { hidePageTitle?: boolean }) => {
   const [confirmationInput, setConfirmationInput] = useState("");
 
   const t = useTranslations("SettingsPage");
-  const { options: timezoneOptions, parseTimezone } = useTimezoneSelect({
+  const { options: timezoneOptions } = useTimezoneSelect({
     timezones: allTimezones,
     displayValue: "UTC",
   });
@@ -233,10 +211,8 @@ const SettingsForm = ({ hidePageTitle }: { hidePageTitle?: boolean }) => {
                               className="justify-between sm:w-full"
                             >
                               <div className="truncate max-w-[calc(100%-24px)]">
-                                {field.value && allTimezones[field.value]
-                                  ? `${getGmtOffset(field.value)} ${
-                                      allTimezones[field.value]
-                                    }`
+                                {field.value
+                                  ? `${field.value}`
                                   : t("selectTimezone")}
                               </div>
                               <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -257,12 +233,9 @@ const SettingsForm = ({ hidePageTitle }: { hidePageTitle?: boolean }) => {
                                     )
                                     .map((option) => (
                                       <CommandItem
-                                        key={option.value}
+                                        key={option.label}
                                         onSelect={() => {
-                                          const parsedTimezone = parseTimezone(
-                                            option.value
-                                          ).value;
-                                          field.onChange(parsedTimezone);
+                                          field.onChange(option.label);
                                           setTimezonePopoverOpen(false);
                                         }}
                                       >
