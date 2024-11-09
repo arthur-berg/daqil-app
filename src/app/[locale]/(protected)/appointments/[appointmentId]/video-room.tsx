@@ -25,6 +25,9 @@ const VideoRoom = ({
         appId?: string;
         roomName: string;
         isIntroCall: boolean;
+        appointmentData: {
+          id: string;
+        };
       }
     | { error: string };
 }) => {
@@ -343,6 +346,7 @@ const VideoRoom = ({
             connected={connected}
             cameraPublishing={cameraPublishing}
             t={t}
+            appointmentId={sessionData.appointmentData.id}
           />
         </div>
       </div>

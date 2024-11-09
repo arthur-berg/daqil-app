@@ -98,8 +98,12 @@
     "myProfile": "ملفي الشخصي"
   },
   "AppointmentEndedPage": {
-    "callEnded": "انتهت المكالمة",
-    "goToAppointments": "الذهاب إلى مواعيدي"
+    "callEnded": "تم إنهاء المكالمة",
+  "goToAppointments": "اذهب إلى المواعيد",
+  "rejoinMeetingButton": "العودة إلى الاجتماع",
+  "description": "يمكنك العودة إلى الاجتماع إذا غادرت عن طريق الخطأ. أو بدلاً من ذلك، اذهب إلى صفحة مواعيدك.",
+  "descriptionIntro": "لقد انتهت مكالمة التعارف. يمكنك الآن اختيار قبول أو رفض المعالج بناءً على تجربتك. إذا غادرت الاجتماع عن طريق الخطأ، يمكنك العودة إليه.",
+  "therapistSelectButton": "اذهب إلى اختيار المعالج"
   },
   "AppointmentList": {
     "timezoneNotice": "أنت تشاهد الأوقات في المنطقة الزمنية لمتصفحك: {timeZone}",

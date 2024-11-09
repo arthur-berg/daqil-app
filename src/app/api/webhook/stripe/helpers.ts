@@ -200,7 +200,7 @@ async function handlePayBeforeBooking(
   await Appointment.findByIdAndUpdate(appointment._id, {
     status: "confirmed",
     "payment.status": "paid",
-    amountPaid: amountPaidNumber, // Store it as a number
+    amountPaid: amountPaidNumber,
   });
 
   const t = await getTranslations({

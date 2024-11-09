@@ -155,7 +155,11 @@
   },
   "AppointmentEndedPage": {
     "callEnded": "Call Ended",
-    "goToAppointments": "Go to my appointments"
+    "goToAppointments": "Go to Appointments",
+    "rejoinMeetingButton": "Rejoin Meeting",
+    "description": "Rejoin the meeting if you left by accident. Alternatively, go to your appointments page.",
+    "descriptionIntro": "Your introductory call has ended. Now, you can choose to accept or reject your therapist based on your experience. If you left the meeting by accident, you can rejoin it.",
+    "therapistSelectButton": "Go to therapist selection"
   },
   "SettingsPage": {
     "deleteAccount": "Delete Account",

@@ -5,7 +5,13 @@ import EndCallButton from "./end-call-button";
 import { useRouter } from "@/navigation";
 import { useToast } from "@/components/ui/use-toast";
 
-const ToolBar = ({ room, connected, cameraPublishing, t }: any) => {
+const ToolBar = ({
+  room,
+  connected,
+  cameraPublishing,
+  t,
+  appointmentId,
+}: any) => {
   const [hasAudio, setHasAudio] = useState(true);
   const [hasVideo, setHasVideo] = useState(true);
   const [areAllMuted, setAllMuted] = useState(false);
@@ -66,7 +72,7 @@ const ToolBar = ({ room, connected, cameraPublishing, t }: any) => {
   const endCall = () => {
     if (room) {
       room.leave();
-      router.push(`/appointments/ended`);
+      router.push(`/appointments/ended/${appointmentId}`);
     }
   };
 
