@@ -317,9 +317,12 @@
     "noImage": "No image"
   },
   "TimezoneWarningDialog": {
-    "title": "Timezone Mismatch Detected",
-    "description": "Your browser's timezone ({browserTimeZone}) does not match your saved timezone ({userTimeZone}). Please update your timezone in your settings or adjust your browser's timezone.",
-    "goToSettings": "Go to Settings"
+  "title": "Timezone Mismatch Detected - Warning",
+  "browserTimezoneLabel": "Browser timezone:",
+  "accountSettingsTimezoneLabel": "Account settings timezone:",
+  "description": "Your browser's timezone ({browserTimeZone}) does not match your saved timezone ({userTimeZone}). This mismatch may lead to appointment times being displayed in different timezones. We recommend updating your timezone in the settings to match your browser's timezone for consistency.",
+  "goToSettings": "Go to Settings",
+  "timezonesAligned": "Timezones are aligned"
 },
   "BookingCalendar": {
     "timezoneNotice": "You are viewing times in the timezone: {timeZone}",

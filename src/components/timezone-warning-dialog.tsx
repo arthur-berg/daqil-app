@@ -10,6 +10,7 @@ import {
 import { Link } from "@/navigation";
 import { formatTimeZoneWithOffset } from "@/utils/timeZoneUtils";
 import { useTranslations } from "next-intl";
+import Cookies from "js-cookie";
 
 const TimezoneWarningDialog = ({
   showTimezoneDialog,
@@ -28,12 +29,30 @@ const TimezoneWarningDialog = ({
     setShowTimezoneDialog(false);
   };
 
+  const handleDismiss = () => {
+    /*    Cookies.set("timezoneWarningDismissed", "true", { expires: 30 }); */
+    setShowTimezoneDialog(false);
+  };
+
   return (
     <Dialog open={showTimezoneDialog} onOpenChange={setShowTimezoneDialog}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{t("title")}</DialogTitle>
           <DialogDescription>
+            <div>
+              <span>{t("browserTimezoneLabel")}</span>{" "}
+              <span className="font-bold">
+                {formatTimeZoneWithOffset(browserTimeZone)}
+              </span>
+            </div>
+            <div>
+              <span>{t("accountSettingsTimezoneLabel")}</span>{" "}
+              <span className="font-bold">
+                {formatTimeZoneWithOffset(userTimeZone)}
+              </span>
+            </div>
+            <br />
             {t("description", {
               browserTimeZone: formatTimeZoneWithOffset(browserTimeZone),
               userTimeZone: formatTimeZoneWithOffset(userTimeZone),
@@ -46,6 +65,9 @@ const TimezoneWarningDialog = ({
               {t("goToSettings")}
             </Button>
           </Link>
+          <Button variant="secondary" onClick={handleDismiss}>
+            {t("timezonesAligned")}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

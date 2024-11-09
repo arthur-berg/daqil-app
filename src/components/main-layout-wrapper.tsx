@@ -110,10 +110,12 @@ export default function AdminPanelLayout({
   }, [user]); */
 
   useEffect(() => {
+    /* const dismissed = Cookies.get("timezoneWarningDismissed"); */
+
     if (timeZoneMismatch && !!user?.settings?.timeZone) {
       setShowTimezoneDialog(true);
     }
-  }, [timeZoneMismatch]);
+  }, [timeZoneMismatch, user?.settings?.timeZone]);
 
   useEffect(() => {
     if (!isDesktop) {
