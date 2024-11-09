@@ -10,8 +10,16 @@ export const getTimeZoneOffset = (timeZone: string): string => {
 };
 
 export const formatTimeZoneWithOffset = (timeZone: string): string => {
-  /* if (timeZone.includes("UTC")) {
+  // Handle "Etc/GMT" as "UTC+0:00"
+  if (timeZone === "Etc/GMT" || timeZone.startsWith("Etc/GMT")) {
+    return "(UTC+0:00) UTC";
+  }
+
+  // If the timeZone already includes "UTC", return it as is
+  if (timeZone.includes("UTC")) {
     return timeZone;
-  } */
+  }
+
+  // Otherwise, format it with the offset
   return `${timeZone} ${getTimeZoneOffset(timeZone)}`;
 };
