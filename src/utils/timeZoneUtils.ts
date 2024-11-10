@@ -23,3 +23,16 @@ export const formatTimeZoneWithOffset = (timeZone: string): string => {
   // Otherwise, format it with the offset
   return `${timeZone} ${getTimeZoneOffset(timeZone)}`;
 };
+
+export const getUTCOffset = (timeZone: string): string => {
+  const date = new Date();
+  const formatter = new Intl.DateTimeFormat("en-US", {
+    timeZone,
+    timeZoneName: "shortOffset",
+  });
+  const parts = formatter.formatToParts(date);
+  const offsetPart = parts.find((part) => part.type === "timeZoneName");
+
+  // Convert "GMT" to "UTC" and remove additional text
+  return offsetPart ? offsetPart.value.replace("GMT", "UTC") : "UTC";
+};

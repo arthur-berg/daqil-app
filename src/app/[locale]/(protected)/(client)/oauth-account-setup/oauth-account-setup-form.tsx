@@ -46,29 +46,7 @@ import { useRouter } from "@/navigation";
 import { useToast } from "@/components/ui/use-toast";
 import { useGetCountries } from "@/hooks/use-get-countries";
 import { Checkbox } from "@/components/ui/checkbox";
-import { formatTimeZoneWithOffset } from "@/utils/timeZoneUtils";
-
-const getGmtOffset = (timezone: string) => {
-  const now = new Date();
-  const dtf = new Intl.DateTimeFormat("en-US", {
-    timeZone: timezone,
-    hour12: false,
-    weekday: "long",
-    year: "numeric",
-    month: "numeric",
-    day: "numeric",
-    hour: "numeric",
-    minute: "numeric",
-    second: "numeric",
-    timeZoneName: "short",
-  });
-
-  const [{ value: timeZoneName }] = dtf
-    .formatToParts(now)
-    .filter(({ type }) => type === "timeZoneName");
-
-  return `${timeZoneName}`;
-};
+import { formatTimeZoneWithOffset, getUTCOffset } from "@/utils/timeZoneUtils";
 
 const OAuthAccountSetupForm = () => {
   const [error, setError] = useState<string | undefined>("");
@@ -131,7 +109,7 @@ const OAuthAccountSetupForm = () => {
 
   const browserTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-  const formattedTimeZone = formatTimeZoneWithOffset(browserTimeZone);
+  const utcTimeZone = getUTCOffset(browserTimeZone);
 
   return isPending ? (
     <div className="flex flex-col items-center justify-center h-screen space-y-4">
@@ -369,7 +347,7 @@ const OAuthAccountSetupForm = () => {
                         {t("timeZoneNoticePart1")}{" "}
                         <strong>
                           {t("timeZoneNoticePart2")}{" "}
-                          <span className="underline">{formattedTimeZone}</span>
+                          <span className="underline">{utcTimeZone}</span>
                         </strong>
                       </div>
                       <FormLabel>{t("selectTimezone")}</FormLabel>

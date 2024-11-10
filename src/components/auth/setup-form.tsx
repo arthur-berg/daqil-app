@@ -45,7 +45,7 @@ import { CaretSortIcon } from "@radix-ui/react-icons";
 import { BeatLoader } from "react-spinners";
 import { useGetCountries } from "@/hooks/use-get-countries";
 import { Checkbox } from "@/components/ui/checkbox";
-import { formatTimeZoneWithOffset } from "@/utils/timeZoneUtils";
+import { formatTimeZoneWithOffset, getUTCOffset } from "@/utils/timeZoneUtils";
 
 export const SetupForm = () => {
   const [error, setError] = useState<string | undefined>("");
@@ -138,7 +138,7 @@ export const SetupForm = () => {
 
   const browserTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-  const formattedTimeZone = formatTimeZoneWithOffset(browserTimeZone);
+  const utcTimeZone = getUTCOffset(browserTimeZone);
 
   return isPending ? (
     <div className="flex flex-col items-center justify-center h-screen space-y-4">
@@ -404,7 +404,7 @@ export const SetupForm = () => {
                       {t("timeZoneNoticePart1")}{" "}
                       <strong>
                         {t("timeZoneNoticePart2")}{" "}
-                        <span className="underline">{formattedTimeZone}</span>
+                        <span className="underline">{utcTimeZone}</span>
                       </strong>
                     </div>
                     <FormLabel>{t("selectTimezone")}</FormLabel>

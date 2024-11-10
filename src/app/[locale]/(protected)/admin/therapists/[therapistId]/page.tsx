@@ -14,6 +14,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  APPOINTMENT_TYPE_ID_INTRO_SESSION,
+  APPOINTMENT_TYPE_ID_SHORT_SESSION,
+  APPOINTMENT_TYPE_ID_LONG_SESSION,
+} from "@/contants/config";
 
 const TherapistPage = async ({
   params,
@@ -25,6 +30,56 @@ const TherapistPage = async ({
   const therapistId = params.therapistId;
   const therapist = await getTherapistAdminProfileById(therapistId);
   if (!therapist) return <div>Therapist not found</div>;
+
+  const clientsWithIntroAppointments: string[] = [];
+  const clientsWithPaidAppointments: string[] = [];
+
+  therapist.appointments.forEach((appointment: any) => {
+    appointment.bookedAppointments.forEach((appt: any) => {
+      if (appt.hostUserId.toString() === therapistId) {
+        if (
+          appt.appointmentTypeId.toString() ===
+          APPOINTMENT_TYPE_ID_INTRO_SESSION
+        ) {
+          // Add client to intro appointments if not already added
+          if (
+            !clientsWithIntroAppointments.includes(
+              appt.participants[0].userId.toString()
+            )
+          ) {
+            clientsWithIntroAppointments.push(
+              appt.participants[0].userId.toString()
+            );
+          }
+        } else if (
+          appt.appointmentTypeId.toString() ===
+            APPOINTMENT_TYPE_ID_SHORT_SESSION ||
+          appt.appointmentTypeId.toString() === APPOINTMENT_TYPE_ID_LONG_SESSION
+        ) {
+          // Add client to paid appointments if not already added
+          if (
+            !clientsWithPaidAppointments.includes(
+              appt.participants[0].userId.toString()
+            )
+          ) {
+            clientsWithPaidAppointments.push(
+              appt.participants[0].userId.toString()
+            );
+          }
+        }
+      }
+    });
+  });
+
+  const clientsWhoConverted = clientsWithIntroAppointments.filter((clientId) =>
+    clientsWithPaidAppointments.includes(clientId)
+  ).length;
+
+  const totalIntroAppointments = clientsWithIntroAppointments.length;
+  const conversionRatio =
+    totalIntroAppointments > 0
+      ? (clientsWhoConverted / totalIntroAppointments) * 100
+      : 0;
 
   return (
     <div className="container mx-auto p-6 bg-white">
@@ -77,6 +132,10 @@ const TherapistPage = async ({
               <p>
                 <strong>Assigned Clients:</strong>{" "}
                 {therapist.assignedClients.length}
+              </p>
+              <p>
+                <strong>Intro/Paid Conversion Ratio:</strong>{" "}
+                {conversionRatio.toFixed(2)}%
               </p>
             </div>
           </div>
