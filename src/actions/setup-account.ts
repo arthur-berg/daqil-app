@@ -193,7 +193,7 @@ export const setupAccount = async (
     LNAME_AR: capitalizedLastName.ar || "",
     PHONE: personalInfo.phoneNumber || "",
     SEX: personalInfo.sex,
-    DATE_OF_BIRTH: personalInfo.dateOfBirth,
+    BIRTHDAY: personalInfo.dateOfBirth,
     COUNTRY: personalInfo.country,
   };
 
