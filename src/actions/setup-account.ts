@@ -187,11 +187,11 @@ export const setupAccount = async (
   await VerificationToken.findByIdAndDelete(existingToken._id);
 
   const customFields = {
-    FIRSTNAME_EN: capitalizedFirstName.en,
-    LASTNAME_EN: capitalizedLastName.en,
-    FIRSTNAME_AR: capitalizedFirstName.ar || "",
-    LASTNAMEA_AR: capitalizedLastName.ar || "",
-    PHONE_NUMBER: personalInfo.phoneNumber || "",
+    FNAME_EN: capitalizedFirstName.en,
+    LNAME_EN: capitalizedLastName.en,
+    FNAME_AR: capitalizedFirstName.ar || "",
+    LNAME_AR: capitalizedLastName.ar || "",
+    PHONE: personalInfo.phoneNumber || "",
     SEX: personalInfo.sex,
     DATE_OF_BIRTH: personalInfo.dateOfBirth,
     COUNTRY: personalInfo.country,

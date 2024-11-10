@@ -206,8 +206,6 @@ export const bookIntroAppointment = async (
       INTRO_CALL_END_DATE: fetchedAppointment.endDate,
     };
 
-    console.log("customFields", customFields);
-
     await setCustomFieldsForMailchimpUser(client.email, customFields);
 
     return {
