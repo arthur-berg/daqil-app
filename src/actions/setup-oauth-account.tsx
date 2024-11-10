@@ -7,6 +7,10 @@ import { getTranslations } from "next-intl/server";
 import { capitalizeFirstLetter } from "@/utils";
 import { getUserById } from "@/data/user";
 import { revalidatePath } from "next/cache";
+import {
+  addTagToMailchimpUser,
+  setCustomFieldsForMailchimpUser,
+} from "@/lib/mail";
 
 export const setupOAuthAccount = async (
   values: z.infer<typeof OAuthAccountSetupSchema>,
@@ -63,13 +67,22 @@ export const setupOAuthAccount = async (
   }
 
   try {
-    const updatedUser = await User.findByIdAndUpdate(userId, updateFields, {
-      new: true,
-    });
+    await User.findByIdAndUpdate(userId, updateFields);
 
-    if (!updatedUser) {
-      return { error: ErrorMessages("userNotFound") };
-    }
+    const customFields = {
+      FNAME_EN: capitalizedFirstName.en,
+      LNAME_EN: capitalizedLastName.en,
+      FNAME_AR: capitalizedFirstName.ar || "",
+      LNAME_AR: capitalizedLastName.ar || "",
+      PHONE: updatedPersonalInfo.phoneNumber || "",
+      SEX: personalInfo.sex,
+      BIRTHDAY: personalInfo.dateOfBirth,
+      COUNTRY: personalInfo.country,
+    };
+
+    await setCustomFieldsForMailchimpUser(existingUser.email, customFields);
+
+    await addTagToMailchimpUser(existingUser.email, "account-setup-finished");
 
     revalidatePath("/settings");
 

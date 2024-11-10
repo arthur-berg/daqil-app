@@ -10,6 +10,7 @@ import { login } from "@/actions/login";
 import { getVerificationTokenByToken } from "@/data/verification-token";
 import VerificationToken from "@/models/VerificationToken";
 import {
+  addTagToMailchimpUser,
   addUserNameToSubscriberProfile,
   setCustomFieldsForMailchimpUser,
 } from "@/lib/mail";
@@ -191,14 +192,15 @@ export const setupAccount = async (
     LNAME_EN: capitalizedLastName.en,
     FNAME_AR: capitalizedFirstName.ar || "",
     LNAME_AR: capitalizedLastName.ar || "",
-    PHONE: personalInfo.phoneNumber || "",
+    PHONE: updatedPersonalInfo.phoneNumber || "",
     SEX: personalInfo.sex,
     BIRTHDAY: personalInfo.dateOfBirth,
     COUNTRY: personalInfo.country,
-    ACC_SETUP: "YES",
   };
 
   await setCustomFieldsForMailchimpUser(email, customFields);
+
+  await addTagToMailchimpUser(email, "account-setup-finished");
 
   await login({ email, password }, locale);
 
