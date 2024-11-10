@@ -4,6 +4,7 @@ import AppointmentType from "@/models/AppointmentType";
 
 import Appointment from "@/models/Appointment";
 import User from "@/models/User";
+import { endOfDay, startOfDay } from "date-fns";
 
 const getStructuredParticipantData = (appointment: any) => {
   const transformedParticipants = appointment.participants.map(

@@ -13,6 +13,8 @@ import { generateVerificationToken } from "@/lib/tokens";
 import DiscountCode from "@/models/DiscountCode";
 import { revalidatePath } from "next/cache";
 import connectToMongoDB from "@/lib/mongoose";
+import { endOfDay, startOfDay } from "date-fns";
+import Appointment from "@/models/Appointment";
 
 export const admin = async () => {
   await connectToMongoDB();
@@ -221,5 +223,24 @@ export const sendTherapistInviteEmail = async (
     return { success: SuccessMessages("therapistInvited") };
   } catch (error) {
     return { error: ErrorMessages("somethingWentWrong") };
+  }
+};
+
+export const getAllAppointmentsByDate = async (date: string) => {
+  try {
+    const start = startOfDay(new Date(date));
+    const end = endOfDay(new Date(date));
+
+    const appointments = await Appointment.find({
+      startDate: { $gte: start, $lte: end },
+    })
+      .populate("hostUserId", "firstName lastName")
+      .populate("participants.userId", "firstName lastName")
+      .lean();
+
+    return appointments;
+  } catch (error) {
+    console.error("Error fetching appointments:", error);
+    return null;
   }
 };
