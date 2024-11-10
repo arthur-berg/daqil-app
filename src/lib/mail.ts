@@ -41,6 +41,8 @@ export const addUserToSubscriberList = async (
       email
     );
 
+    console.log("listResponse", listResponse);
+
     if (listResponse.status === "subscribed") {
       return { success: "User already exists in the list" };
     } else if (
@@ -80,7 +82,6 @@ export const addUserToSubscriberList = async (
     return { error: "Unexpected user status, unable to subscribe" };
   } catch (error: any) {
     if (error?.status === 404) {
-      // User does not exist, add them to the list
       try {
         await mailchimpMarketing.lists.addListMember(
           process.env.MAILCHIMP_LIST_ID as string,
@@ -174,6 +175,29 @@ export const addTagToMailchimpUser = async (email: string, tag: string) => {
   } catch (error) {
     console.error("Error adding tag to Mailchimp user:", error);
     return { error: "Failed to add tag to Mailchimp user" };
+  }
+};
+
+export const setCustomFieldsForMailchimpUser = async (
+  email: string,
+  customFields: { [key: string]: any }
+) => {
+  try {
+    await mailchimpMarketing.lists.setListMember(
+      process.env.MAILCHIMP_LIST_ID as string,
+      email,
+      {
+        email_address: email,
+        status_if_new: "subscribed",
+        merge_fields: customFields,
+      }
+    );
+
+    console.log(`Custom fields updated for Mailchimp user: ${email}`);
+    return { success: `Custom fields updated successfully` };
+  } catch (error) {
+    console.error("Error updating custom fields for Mailchimp user:", error);
+    return { error: "Failed to update custom fields for Mailchimp user" };
   }
 };
 

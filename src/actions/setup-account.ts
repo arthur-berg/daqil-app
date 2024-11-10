@@ -9,7 +9,10 @@ import { getUserByEmail } from "@/data/user";
 import { login } from "@/actions/login";
 import { getVerificationTokenByToken } from "@/data/verification-token";
 import VerificationToken from "@/models/VerificationToken";
-import { addUserNameToSubscriberProfile } from "@/lib/mail";
+import {
+  addUserNameToSubscriberProfile,
+  setCustomFieldsForMailchimpUser,
+} from "@/lib/mail";
 import { getTranslations } from "next-intl/server";
 import connectToMongoDB from "@/lib/mongoose";
 import { capitalizeFirstLetter } from "@/utils";
@@ -183,11 +186,24 @@ export const setupAccount = async (
 
   await VerificationToken.findByIdAndDelete(existingToken._id);
 
-  await addUserNameToSubscriberProfile(
+  const customFields = {
+    FIRSTNAME_EN: capitalizedFirstName.en,
+    LASTNAME_EN: capitalizedLastName.en,
+    FIRSTNAME_AR: capitalizedFirstName.ar || "",
+    LASTNAMEA_AR: capitalizedLastName.ar || "",
+    PHONE_NUMBER: personalInfo.phoneNumber || "",
+    SEX: personalInfo.sex,
+    DATE_OF_BIRTH: personalInfo.dateOfBirth,
+    COUNTRY: personalInfo.country,
+  };
+
+  await setCustomFieldsForMailchimpUser(email, customFields);
+
+  /*   await addUserNameToSubscriberProfile(
     email,
     capitalizedFirstName,
     capitalizedLastName
-  );
+  ); */
 
   await login({ email, password }, locale);
 

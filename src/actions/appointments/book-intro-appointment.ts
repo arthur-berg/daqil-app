@@ -17,6 +17,7 @@ import { formatInTimeZone } from "date-fns-tz";
 import {
   addTagToMailchimpUser,
   sendIntroBookingConfirmationMail,
+  setCustomFieldsForMailchimpUser,
 } from "@/lib/mail";
 import {
   scheduleReminderJobs,
@@ -200,6 +201,14 @@ export const bookIntroAppointment = async (
     await scheduleStatusUpdateJob(fetchedAppointment);
 
     await addTagToMailchimpUser(client.email, "intro-call-booked");
+
+    const customFields = {
+      INTRO_CALL_END_DATE: fetchedAppointment.endDate,
+    };
+
+    console.log("customFields", customFields);
+
+    await setCustomFieldsForMailchimpUser(client.email, customFields);
 
     return {
       success: SuccessMessages("bookingConfirmed"),
