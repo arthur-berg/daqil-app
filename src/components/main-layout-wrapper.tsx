@@ -122,9 +122,10 @@ export default function AdminPanelLayout({
     }
 
     if (
-      timeZoneMismatch &&
-      !!user?.settings?.timeZone &&
-      !dismissedTimezoneChanged
+      (timeZoneMismatch &&
+        !!user?.settings?.timeZone &&
+        !dismissedTimeZoneCookie) ||
+      (dismissedTimeZoneCookie && dismissedTimezoneChanged)
     ) {
       setShowTimezoneDialog(true);
     }

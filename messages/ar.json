@@ -106,7 +106,7 @@
 "therapistSelectButton": "الذهاب إلى اختيار الأخصائي النفسي"
   },
   "AppointmentList": {
-    "timezoneNotice": "أنت تشاهد الأوقات في المنطقة الزمنية لمتصفحك: {timeZone}",
+"timezoneNotice": "أنت تشاهد الأوقات في المنطقة الزمنية لمتصفحك: {timeZone}",
     "meetingNotPaid": "الموعد في انتظار الدفع",
     "upcoming": "المواعيد القادمة",
     "history": "السجل",
@@ -318,7 +318,7 @@
     "timezonesAligned": "تمت محاذاة المناطق الزمنية"
   },
   "BookingCalendar": {
-    "timezoneNotice": "أنت تشاهد الأوقات في المنطقة الزمنية لمتصفحك: {timeZone}",
+"timezoneNotice": "أنت تشاهد الأوقات في المنطقة الزمنية لمتصفحك: {timeZone}",
     "closestAvailableDate": "أقرب تاريخ يحتوي على أوقات متاحة: {date}",
     "addToCalendar": "أضف إلى التقويم",
     "addThisEventToYourCalendar": "أضف هذا الحدث إلى تقويمك",
@@ -389,6 +389,7 @@
     "cancelReservation": "إلغاء الحجز"
   },
   "AvailabilityPage": {
+    "timezoneNotice": "أنت تشاهد الأوقات في المنطقة الزمنية لمتصفحك: {timeZone}",
     "savingTimeSlots": "... جارٍ حفظ الفترات الزمنية",
     "recurringAvailableTimes": "أوقات متاحة متكررة",
     "nonRecurringAvailableTimes": "أوقات متاحة غير متكررة",
