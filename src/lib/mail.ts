@@ -82,6 +82,8 @@ export const addUserToSubscriberList = async (
     return { error: "Unexpected user status, unable to subscribe" };
   } catch (error: any) {
     if (error?.status === 404) {
+      const creationDate = new Date().toISOString();
+
       try {
         await mailchimpMarketing.lists.addListMember(
           process.env.MAILCHIMP_LIST_ID as string,
@@ -89,6 +91,9 @@ export const addUserToSubscriberList = async (
             email_address: email,
             status: "subscribed",
             tags: [roleTag as string],
+            merge_fields: {
+              CREATEDAT: creationDate,
+            },
           }
         );
         return { success: "User added to the subscriber list" };

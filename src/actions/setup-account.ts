@@ -195,6 +195,7 @@ export const setupAccount = async (
     SEX: personalInfo.sex,
     BIRTHDAY: personalInfo.dateOfBirth,
     COUNTRY: personalInfo.country,
+    ACC_SETUP: "YES",
   };
 
   await setCustomFieldsForMailchimpUser(email, customFields);
