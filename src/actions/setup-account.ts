@@ -199,12 +199,6 @@ export const setupAccount = async (
 
   await setCustomFieldsForMailchimpUser(email, customFields);
 
-  /*   await addUserNameToSubscriberProfile(
-    email,
-    capitalizedFirstName,
-    capitalizedLastName
-  ); */
-
   await login({ email, password }, locale);
 
   return { success: SuccessMessages("accountSuccessfullySetup") };

@@ -203,7 +203,7 @@ export const bookIntroAppointment = async (
     await addTagToMailchimpUser(client.email, "intro-call-booked");
 
     const customFields = {
-      INTRO_CALL_END_DATE: fetchedAppointment.endDate,
+      INTRO_END: fetchedAppointment.endDate,
     };
 
     await setCustomFieldsForMailchimpUser(client.email, customFields);
