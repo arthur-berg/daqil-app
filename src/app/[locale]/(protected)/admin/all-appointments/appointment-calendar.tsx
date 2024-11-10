@@ -16,7 +16,7 @@ import { getAllAppointmentsByDate } from "@/actions/admin";
 const AppointmentCalendar = () => {
   const [isPending, startTransition] = useTransition();
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
-  const [appointments, setAppointments] = useState([]);
+  const [appointments, setAppointments] = useState<any>([]);
 
   const handleSelectDate = (date?: Date) => {
     if (!date) return;
@@ -44,7 +44,7 @@ const AppointmentCalendar = () => {
       <h1 className="text-xl font-bold mb-4">Appointments Calendar</h1>
       <Calendar
         mode="single"
-        selected={selectedDate}
+        selected={selectedDate as any}
         onSelect={(date) => handleSelectDate(date)}
         className="w-full sm:max-w-none max-w-xs sm:w-auto overflow-hidden rounded-md border h-auto"
         classNames={{
