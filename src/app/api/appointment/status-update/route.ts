@@ -58,8 +58,13 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
       appointment.appointmentTypeId.toString() ===
       APPOINTMENT_TYPE_ID_INTRO_SESSION;
 
+    console.log(
+      "statusUpdate.cancellationReason",
+      statusUpdate.cancellationReason
+    );
+
     if (
-      statusUpdate.cancellationReason === "no-show-participant" &&
+      /*  statusUpdate.cancellationReason === "no-show-participant" && */
       isIntroAppointment
     ) {
       const customerId = participants[0]?.userId?.stripeCustomerId;
