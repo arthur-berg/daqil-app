@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { verifySignatureAppRouter } from "@upstash/qstash/nextjs";
 import Appointment from "@/models/Appointment";
 import connectToMongoDB from "@/lib/mongoose";
-import User from "@/models/User";
 import { chargeNoShowFee } from "@/actions/stripe";
 import { APPOINTMENT_TYPE_ID_INTRO_SESSION } from "@/contants/config";
 
@@ -58,13 +57,8 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
       appointment.appointmentTypeId.toString() ===
       APPOINTMENT_TYPE_ID_INTRO_SESSION;
 
-    console.log(
-      "statusUpdate.cancellationReason",
-      statusUpdate.cancellationReason
-    );
-
     if (
-      /*  statusUpdate.cancellationReason === "no-show-participant" && */
+      statusUpdate.cancellationReason === "no-show-participant" &&
       isIntroAppointment
     ) {
       const customerId = participants[0]?.userId?.stripeCustomerId;

@@ -22,7 +22,7 @@ const IntroCheckout = ({
   const [errorMessage, setErrorMessage] = useState<string>();
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
-  const t = useTranslations("IntroCheckout");
+  const t = useTranslations("IntroCheckoutTranslation");
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -88,14 +88,14 @@ const IntroCheckout = ({
 
       <div className="w-32 mx-auto">
         <Button disabled={!stripe || loading} className="mt-4 w-full">
-          {!loading ? t("saveCard") : t("processing")}
+          {!loading ? t("bookAppointment") : t("processing")}
         </Button>
       </div>
       {loading && (
         <div className="absolute inset-0 bg-gray-700 bg-opacity-75 flex items-center justify-center z-50">
           <div className="flex flex-col items-center">
             <BeatLoader color="#ffffff" className="mb-2" />
-            <div className="text-white">{t("processingSetup")}</div>
+            <div className="text-white">{t("processingPayment")}</div>
           </div>
         </div>
       )}

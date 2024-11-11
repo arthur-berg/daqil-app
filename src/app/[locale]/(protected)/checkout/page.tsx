@@ -54,6 +54,8 @@ const CheckoutPage = async ({
         <IntroCheckoutWrapper
           appointmentId={appointmentId}
           paymentExpiryDate={appointment.payment.paymentExpiryDate}
+          appointmentType={appointmentType}
+          date={dateObject}
         />
       ) : (
         <CheckoutWrapper

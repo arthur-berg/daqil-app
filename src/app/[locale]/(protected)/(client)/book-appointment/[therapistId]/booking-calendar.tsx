@@ -161,57 +161,22 @@ const BookingCalendar = ({
 
     const isFree = appointmentType._id === APPOINTMENT_TYPE_ID_INTRO_SESSION;
 
-    if (isFree) {
-      startTransition(async () => {
-        const data = await reserveAppointment(
-          appointmentType,
-          therapistId,
-          combinedDateTime
-        );
-        if (data.error) {
-          toast({
-            title: data.error,
-            variant: "destructive",
-          });
-        }
-        if (data.success) {
-          router.push(`/checkout?appointmentId=${data.appointmentId}`);
-        }
-        /*  const data = await bookIntroAppointment(
-          appointmentType,
-          therapistId,
-          combinedDateTime
-        );
-        if (data.error) {
-          toast({
-            title: data.error,
-            variant: "destructive",
-          });
-        }
-        if (data.success) {
-          router.push(
-            `/intro-booking-success?appointmentId=${data.appointmentId}`
-          );
-        } */
-      });
-    } else {
-      startTransition(async () => {
-        const data = await reserveAppointment(
-          appointmentType,
-          therapistId,
-          combinedDateTime
-        );
-        if (data.error) {
-          toast({
-            title: data.error,
-            variant: "destructive",
-          });
-        }
-        if (data.success) {
-          router.push(`/checkout?appointmentId=${data.appointmentId}`);
-        }
-      });
-    }
+    startTransition(async () => {
+      const data = await reserveAppointment(
+        appointmentType,
+        therapistId,
+        combinedDateTime
+      );
+      if (data.error) {
+        toast({
+          title: data.error,
+          variant: "destructive",
+        });
+      }
+      if (data.success) {
+        router.push(`/checkout?appointmentId=${data.appointmentId}`);
+      }
+    });
   };
 
   return (
