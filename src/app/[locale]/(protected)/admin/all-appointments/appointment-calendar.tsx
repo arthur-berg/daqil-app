@@ -1,6 +1,5 @@
 "use client";
-
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import {
@@ -10,13 +9,33 @@ import {
   TableHead,
   TableBody,
   TableCell,
-} from "@/components/ui/table"; // Replace with your table component
+} from "@/components/ui/table";
 import { getAllAppointmentsByDate } from "@/actions/admin";
 
 const AppointmentCalendar = () => {
   const [isPending, startTransition] = useTransition();
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
   const [appointments, setAppointments] = useState<any>([]);
+
+  useEffect(() => {
+    const todaysDate = new Date();
+    const formattedDate = format(todaysDate, "yyyy-MM-dd");
+    startTransition(async () => {
+      try {
+        const data = await getAllAppointmentsByDate(formattedDate);
+
+        if (Array.isArray(data)) {
+          setAppointments(data);
+        } else {
+          console.error("Unexpected data format:", data);
+          setAppointments([]);
+        }
+      } catch (error) {
+        console.error("Error fetching appointments:", error);
+        setAppointments([]);
+      }
+    });
+  }, []);
 
   const handleSelectDate = (date?: Date) => {
     if (!date) return;
@@ -65,6 +84,7 @@ const AppointmentCalendar = () => {
             <TableHead>Psychologist</TableHead>
             <TableHead>Client</TableHead>
             <TableHead>Status</TableHead>
+            <TableHead>Cancellation Reason</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -95,11 +115,18 @@ const AppointmentCalendar = () => {
                     : "N/A"}
                 </TableCell>
                 <TableCell>{appointment.status}</TableCell>
+                <TableCell>
+                  {appointment.status === "canceled"
+                    ? appointment.cancellationReason === "custom"
+                      ? appointment.customCancellationReason || "N/A"
+                      : appointment.cancellationReason || "N/A"
+                    : "N/A"}
+                </TableCell>
               </TableRow>
             ))
           ) : (
             <TableRow>
-              <TableCell colSpan={6} className="text-center">
+              <TableCell colSpan={7} className="text-center">
                 No appointments available
               </TableCell>
             </TableRow>

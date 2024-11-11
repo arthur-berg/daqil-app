@@ -233,7 +233,6 @@ export const getAllAppointmentsByDate = async (date: string) => {
 
     const appointments = await Appointment.find({
       startDate: { $gte: start, $lte: end },
-      status: { $ne: "canceled" },
     })
       .populate("hostUserId", "firstName lastName")
       .populate("participants.userId", "firstName lastName")
