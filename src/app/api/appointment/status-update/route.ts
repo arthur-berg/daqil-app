@@ -3,6 +3,8 @@ import { verifySignatureAppRouter } from "@upstash/qstash/nextjs";
 import Appointment from "@/models/Appointment";
 import connectToMongoDB from "@/lib/mongoose";
 import User from "@/models/User";
+import { chargeNoShowFee } from "@/actions/stripe";
+import { APPOINTMENT_TYPE_ID_INTRO_SESSION } from "@/contants/config";
 
 const updateAppointmentStatus = async (
   appointmentId: string,
@@ -34,7 +36,10 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
     const body = await req.json();
     const { appointmentId } = body;
 
-    const appointment = await Appointment.findById(appointmentId);
+    const appointment = await Appointment.findById(appointmentId).populate({
+      path: "participants.userId",
+      select: "stripeCustomerId stripePaymentMethodId",
+    });
     if (!appointment) {
       return NextResponse.json(
         { error: "Appointment not found" },
@@ -48,6 +53,37 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
     const statusUpdate = determineStatusUpdate(hostShowUp, participantShowUp);
 
     await updateAppointmentStatus(appointmentId, statusUpdate);
+
+    const isIntroAppointment =
+      appointment.appointmentTypeId.toString() ===
+      APPOINTMENT_TYPE_ID_INTRO_SESSION;
+
+    if (
+      statusUpdate.cancellationReason === "no-show-participant" &&
+      isIntroAppointment
+    ) {
+      const customerId = participants[0]?.userId?.stripeCustomerId;
+      const paymentMethodId = participants[0]?.userId?.stripePaymentMethodId;
+
+      if (customerId && paymentMethodId) {
+        const chargeResult = await chargeNoShowFee(customerId, paymentMethodId);
+
+        if (chargeResult.error) {
+          console.error(
+            `Failed to charge no-show fee for appointment ${appointmentId}:`,
+            chargeResult.error
+          );
+          return NextResponse.json(
+            { error: "Failed to charge no-show fee" },
+            { status: 500 }
+          );
+        }
+      } else {
+        console.error(
+          `Missing Stripe customer or payment method ID for appointment ${appointmentId}`
+        );
+      }
+    }
 
     return NextResponse.json({
       message: `Appointment ${appointmentId} status updated successfully.`,

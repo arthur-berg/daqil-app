@@ -163,7 +163,21 @@ const BookingCalendar = ({
 
     if (isFree) {
       startTransition(async () => {
-        const data = await bookIntroAppointment(
+        const data = await reserveAppointment(
+          appointmentType,
+          therapistId,
+          combinedDateTime
+        );
+        if (data.error) {
+          toast({
+            title: data.error,
+            variant: "destructive",
+          });
+        }
+        if (data.success) {
+          router.push(`/checkout?appointmentId=${data.appointmentId}`);
+        }
+        /*  const data = await bookIntroAppointment(
           appointmentType,
           therapistId,
           combinedDateTime
@@ -178,7 +192,7 @@ const BookingCalendar = ({
           router.push(
             `/intro-booking-success?appointmentId=${data.appointmentId}`
           );
-        }
+        } */
       });
     } else {
       startTransition(async () => {

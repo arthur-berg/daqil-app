@@ -39,29 +39,24 @@ export async function handlePaymentIntentSucceeded(
     return;
   }
 
+  const userId = appointment.participants[0].userId._id.toString();
+
   if (trackDiscountCodeRedeemed && discountCodeId) {
-    await redeemDiscountCode(
-      appointment.participants[0].userId,
-      discountCodeId,
-      appointmentId
-    );
+    await redeemDiscountCode(userId, discountCodeId, appointmentId);
   }
 
   const paymentDetails = await getPaymentDetails(paymentIntent);
 
   await processAppointmentPayment(appointment, paymentDetails, locale);
 
-  const user = await updateUserPaymentMethod(
-    appointment.participants[0].userId,
-    paymentMethodId
-  );
+  const user = await updateUserPaymentMethod(userId, paymentMethodId);
 
   if (!user.stripePaymentMethodId) {
     await addTagToMailchimpUser(user.email, "has-paid-for-appointment");
   }
 }
 
-async function findAppointmentById(appointmentId: string) {
+export const findAppointmentById = async (appointmentId: string) => {
   try {
     return await Appointment.findById(appointmentId)
       .populate({
@@ -76,7 +71,7 @@ async function findAppointmentById(appointmentId: string) {
     console.error(`Error fetching appointment ${appointmentId}:`, error);
     return null;
   }
-}
+};
 
 async function redeemDiscountCode(
   userId: string,
@@ -251,7 +246,10 @@ async function handlePayAfterBooking(
   );
 }
 
-async function updateAppointments(appointment: any, appointmentDate: string) {
+export const updateAppointments = async (
+  appointment: any,
+  appointmentDate: string
+) => {
   await User.findOneAndUpdate(
     {
       _id: appointment.participants[0].userId,
@@ -277,12 +275,12 @@ async function updateAppointments(appointment: any, appointmentDate: string) {
       $push: { "appointments.$.bookedAppointments": appointment._id },
     }
   );
-}
+};
 
-async function updateUserPaymentMethod(
+export const updateUserPaymentMethod = async (
   userId: string,
   paymentMethodId: string
-) {
+) => {
   try {
     const user = await User.findByIdAndUpdate(userId, {
       $set: { stripePaymentMethodId: paymentMethodId },
@@ -294,4 +292,4 @@ async function updateUserPaymentMethod(
       error
     );
   }
-}
+};

@@ -132,3 +132,71 @@ export const createPaymentIntent = async (
     };
   }
 };
+
+export const createSetupIntent = async (appointmentId: string) => {
+  await connectToMongoDB();
+  const [SuccessMessages, ErrorMessages] = await Promise.all([
+    getTranslations("SuccessMessages"),
+    getTranslations("ErrorMessages"),
+  ]);
+  const locale = await getLocale();
+
+  try {
+    // Require client authentication
+    requireAuth([UserRole.CLIENT]);
+
+    const user = await getCurrentUser();
+    let customerId = user?.stripeCustomerId;
+
+    // Create a Stripe customer if not already created
+    if (!user?.stripeCustomerId) {
+      const customer = await stripe.customers.create({
+        email: user?.email,
+      });
+      customerId = customer.id;
+      await User.findByIdAndUpdate(user?.id, {
+        stripeCustomerId: customerId,
+      });
+    }
+
+    // Create a SetupIntent to save the payment method
+    const setupIntent = await stripe.setupIntents.create({
+      customer: customerId,
+      payment_method_types: ["card"],
+      metadata: {
+        appointmentId: appointmentId,
+        locale: locale,
+      },
+    });
+
+    // Return the SetupIntent client secret
+    return {
+      clientSecret: setupIntent.client_secret,
+    };
+  } catch (error) {
+    console.error("Internal Error: ", error);
+    return {
+      error: ErrorMessages("somethingWentWrong"),
+    };
+  }
+};
+
+export const chargeNoShowFee = async (
+  customerId: string,
+  paymentMethodId: string
+) => {
+  try {
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: 2000,
+      currency: "usd",
+      customer: customerId,
+      payment_method: paymentMethodId,
+      off_session: true,
+      confirm: true,
+    });
+    return { success: true, paymentIntent };
+  } catch (error: any) {
+    console.error("Error charging no-show fee:", error);
+    return { error: "Something went wrong" };
+  }
+};

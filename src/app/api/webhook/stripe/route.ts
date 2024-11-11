@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 import Stripe from "stripe";
 import { handlePaymentIntentSucceeded } from "./helpers";
+import { handleSetupIntentSucceeded } from "./setup-intent-helpers";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET as string;
@@ -29,6 +30,11 @@ export async function POST(req: Request): Promise<NextResponse> {
 
   if (eventType === "payment_intent.succeeded") {
     await handlePaymentIntentSucceeded(data);
+  }
+
+  if (event.type === "setup_intent.succeeded") {
+    const setupIntent = event.data.object as Stripe.SetupIntent;
+    await handleSetupIntentSucceeded(setupIntent);
   }
 
   return NextResponse.json({});
