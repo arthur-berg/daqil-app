@@ -159,7 +159,19 @@ export const createSetupIntent = async (appointmentId: string) => {
       });
     }
 
-    // Create a SetupIntent to save the payment method
+    // Remove existing payment methods
+    const existingPaymentMethods = await stripe.paymentMethods.list({
+      customer: customerId,
+      type: "card",
+    });
+
+    console.log("existingPaymentMethods", existingPaymentMethods);
+
+    for (const paymentMethod of existingPaymentMethods.data) {
+      await stripe.paymentMethods.detach(paymentMethod.id);
+    }
+
+    // Create a new SetupIntent to save a new payment method
     const setupIntent = await stripe.setupIntents.create({
       customer: customerId,
       payment_method_types: ["card"],

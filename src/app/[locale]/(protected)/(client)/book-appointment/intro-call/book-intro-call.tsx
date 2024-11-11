@@ -21,6 +21,7 @@ import { getTherapistAvailableTimeSlots } from "@/utils/therapistAvailability";
 import { bookIntroAppointment } from "@/actions/appointments/book-intro-appointment";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { formatTimeZoneWithOffset } from "@/utils/timeZoneUtils";
+import { reserveAppointment } from "@/actions/appointments/reserve-appointment";
 
 type DateType = {
   justDate: Date | undefined;
@@ -175,7 +176,7 @@ const BookIntroCall = ({
     const therapistId = selectedTherapist._id;
 
     startTransition(async () => {
-      const data = await bookIntroAppointment(
+      const data = await reserveAppointment(
         appointmentType,
         therapistId,
         combinedDateTime
@@ -187,9 +188,7 @@ const BookIntroCall = ({
         });
       }
       if (data.success) {
-        router.push(
-          `/intro-booking-success?appointmentId=${data.appointmentId}`
-        );
+        router.push(`/checkout?appointmentId=${data.appointmentId}`);
       }
     });
   };

@@ -13,6 +13,8 @@ import { useCurrentUser } from "@/hooks/use-current-user";
 import Image from "next/image";
 import { BeatLoader } from "react-spinners";
 import IntroCheckout from "@/app/[locale]/(protected)/checkout/intro-checkout";
+import { format } from "date-fns";
+import { formatTimeZoneWithOffset } from "@/utils/timeZoneUtils";
 
 if (process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY === undefined) {
   throw new Error("NEXT_PUBLIC_STRIPE_PUBLIC_KEY is not defined");
@@ -23,8 +25,12 @@ const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
 const IntroCheckoutWrapper = ({
   appointmentId,
   paymentExpiryDate,
+  appointmentType,
+  date,
 }: {
-  appointmentId: string;
+  date: Date;
+  appointmentType: any;
+  appointmentId: any;
   paymentExpiryDate: Date;
 }) => {
   const [clientSecret, setClientSecret] = useState("");
@@ -32,7 +38,8 @@ const IntroCheckoutWrapper = ({
   const [isPending, startTransition] = useTransition();
   const [reservationExpired, setReservationExpired] = useState(false);
   const [countdownCompleted, setCountdownCompleted] = useState(false);
-  const t = useTranslations("IntroCheckout");
+
+  const t = useTranslations("IntroCheckoutTranslation");
   const router = useRouter();
   const { toast } = useToast();
   const user = useCurrentUser();
@@ -90,7 +97,9 @@ const IntroCheckoutWrapper = ({
 
   if (!user) return "No user found";
 
-  console.log("Payment Expiry Date: ", paymentExpiryDate);
+  const browserTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+  const browserTimeZoneFormatted = formatTimeZoneWithOffset(browserTimeZone);
 
   return (
     <>
@@ -105,20 +114,34 @@ const IntroCheckoutWrapper = ({
           {t("cancelReservation")}
         </Button>
       </div>
+      <div className="text-center mb-6">
+        <p className="text-lg font-semibold">{t("weHaveReserved")}</p>
+        {isPending ? (
+          ""
+        ) : (
+          <Countdown date={paymentExpiryDate} renderer={renderer} />
+        )}
+      </div>
+      <div className={`p-4 rounded-md mb-6 flex flex-col items-center`}>
+        <h2 className="text-2xl font-bold">{t("appointmentDetails")}:</h2>
+        <p className="mt-2">
+          {t("day")}: {format(date, "eeee, MMMM d, yyyy")}{" "}
+        </p>
+        <p className="mt-2">
+          {t("time")}: {format(date, "HH:mm")}{" "}
+          <em>({browserTimeZoneFormatted})</em>
+        </p>
+        <p className="mt-2">
+          {t("duration")}: {appointmentType.durationInMinutes} {t("minutes")}
+        </p>
+      </div>
       <div className="text-center">
         <div className="text-center mb-8">
           <p className="text-lg font-semibold">{t("cancellationTerms")}</p>
           <p className="text-destructive">{t("cancellationNotice")}</p>
           <p>{t("cancellationReason")}</p>
         </div>
-        <div className="text-center mb-6">
-          <p className="text-lg font-semibold">{t("weHaveReserved")}</p>
-          {isPending ? (
-            ""
-          ) : (
-            <Countdown date={paymentExpiryDate} renderer={renderer} />
-          )}
-        </div>
+
         {loading ? (
           <div className="text-center mt-8 pb-8">
             <BeatLoader />
@@ -134,7 +157,12 @@ const IntroCheckoutWrapper = ({
                 alt="Pay securely with Stripe"
               />
             </div>
-            <Elements stripe={stripePromise} options={{ clientSecret }}>
+            <Elements
+              stripe={stripePromise}
+              options={{
+                clientSecret,
+              }}
+            >
               <IntroCheckout
                 clientSecret={clientSecret}
                 appointmentId={appointmentId}

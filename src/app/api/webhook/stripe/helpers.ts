@@ -28,7 +28,9 @@ export async function handlePaymentIntentSucceeded(
   const paymentMethodId = paymentIntent.payment_method as string;
 
   if (!appointmentId) {
-    console.error("No appointment ID in payment metadata.");
+    console.error(
+      "No appointment ID in payment metadata in handlePaymentIntentSucceeded. Probably because intent was created by charging user for missed intro call"
+    );
     return;
   }
 
