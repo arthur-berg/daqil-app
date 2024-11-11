@@ -19,6 +19,7 @@ import mongoose from "mongoose";
 import User from "@/models/User";
 import { revalidatePath } from "next/cache";
 import connectToMongoDB from "@/lib/mongoose";
+import { APPOINTMENT_TYPE_ID_INTRO_SESSION } from "@/contants/config";
 
 export const reserveAppointment = async (
   appointmentType: any,
@@ -99,9 +100,13 @@ export const reserveAppointment = async (
     const appointmentId = appointment[0]._id;
     const appointmentDate = format(new Date(startDate), "yyyy-MM-dd");
 
+    const isIntroCall =
+      appointmentType._id.toString() === APPOINTMENT_TYPE_ID_INTRO_SESSION;
+
     if (
-      !client.selectedTherapist ||
-      client.selectedTherapist?.therapist?.toString() !== therapistId
+      (!client.selectedTherapist ||
+        client.selectedTherapist?.therapist?.toString() !== therapistId) &&
+      !isIntroCall
     ) {
       // Update the previous therapist in selectedTherapistHistory
       await User.updateOne(
