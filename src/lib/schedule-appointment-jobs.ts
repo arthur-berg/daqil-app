@@ -114,12 +114,12 @@ export const scheduleStatusUpdateJob = async (appointment: any) => {
   const now = new Date();
   const appointmentEndTime = new Date(appointment.endDate);
   const appointmentId = appointment._id.toString();
-  const tenSecondsAfter = addSeconds(new Date(now), 10);
+  const fiveMinutesAfter = addMinutes(new Date(now), 5);
 
   const statusUpdateTaskId = await scheduleTask(
     `${process.env.QSTASH_API_URL}/status-update`,
     { appointmentId: appointmentId },
-    Math.floor(tenSecondsAfter.getTime() / 1000)
+    Math.floor(fiveMinutesAfter.getTime() / 1000)
   );
 
   await ScheduledTask.create({
