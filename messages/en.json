@@ -511,6 +511,16 @@
     "schedule": "Schedule",
     "selectAppointmentType": "Select type of appointment"
   },
+"IntroCheckout": {
+  "cancellationTerms": "Your introductory appointment is completely free of charge.",
+  "cancellationNotice": "However, if you do not attend the appointment or fail to cancel at least 24 hours in advance, $20 USD will be charged to your saved card.",
+  "cancellationReason": "This policy helps ensure that our therapists' time is respected and available slots can be offered to others in need. Thank you for your understanding.",
+  "weHaveReserved": "We have reserved this appointment slot for you. Please complete add your card details within the given time to confirm your reservation.",
+  "minutesLeft": "minutes left",
+  "loadingCheckout": "Loading checkout...",
+  "cancelReservation":"Cancel reservation",
+  "saveCard": "Save card"
+},
   "AdminPage": {
     "clientOverview": "Client Overview",
     "inviteTherapists": "Invite psychologists",

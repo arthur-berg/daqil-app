@@ -365,10 +365,10 @@ export const sendIntroBookingConfirmationMail = async (
     durationInMinutes: number;
     clientTimeZone: string;
     therapistTimeZone: string;
-  }
+  },
+  t: any,
+  locale: string
 ) => {
-  const t = await getTranslations("BookingConfirmedIntroCall");
-  const locale = await getLocale();
   const therapistMessage = {
     from_email: "no-reply@daqilhealth.com",
     subject: t("therapistSubject"),
@@ -572,7 +572,7 @@ export const sendPaidBookingConfirmationEmail = async (
     therapistName: string;
     clientName: string;
     durationInMinutes: number;
-    amountPaid: string;
+    amountPaid?: string;
     paymentMethod: string;
     transactionId: string;
     therapistTimeZone: string;

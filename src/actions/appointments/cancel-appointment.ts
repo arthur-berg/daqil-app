@@ -16,6 +16,7 @@ import { getFullName } from "@/utils/formatName";
 import connectToMongoDB from "@/lib/mongoose";
 import { cancelAllScheduledJobsForAppointment } from "@/lib/schedule-appointment-jobs";
 import { formatInTimeZone } from "date-fns-tz";
+import { chargeNoShowFee } from "@/actions/stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
@@ -92,15 +93,25 @@ export const cancelAppointment = async (
       new Date()
     );
 
+    const isIntroSession =
+      appointment.appointmentTypeId.toString() ===
+      APPOINTMENT_TYPE_ID_INTRO_SESSION;
+
+    if (isIntroSession && hoursUntilAppointment <= 24) {
+      const customerId = appointment.participants[0]?.userId?.stripeCustomerId;
+      const paymentMethodId =
+        appointment.participants[0]?.userId?.stripePaymentMethodId;
+      await chargeNoShowFee(customerId, paymentMethodId);
+    }
     if (
       isTherapist ||
-      (hoursUntilAppointment > 24 && appointment.payment.status === "paid")
+      (!isIntroSession &&
+        hoursUntilAppointment > 24 &&
+        appointment.payment.status === "paid")
     ) {
-      // Fetch the payment intent using the appointmentId as metadata
-
       const paymentIntents = await stripe.paymentIntents.list({
         customer: appointment.participants[0].userId.stripeCustomerId,
-        limit: 100, // Adjust the limit as needed
+        limit: 100,
       });
 
       const paymentIntent = paymentIntents.data.find(
