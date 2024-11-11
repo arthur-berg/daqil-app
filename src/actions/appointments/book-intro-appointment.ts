@@ -188,11 +188,13 @@ export const bookIntroAppointment = async (
       therapistTimeZone: therapistTimeZone,
     };
 
-    await sendIntroBookingConfirmationMail(
+    /*   await sendIntroBookingConfirmationMail(
       therapistEmail,
       clientEmail,
-      appointmentDetails
-    );
+      appointmentDetails,
+      t,
+      locale
+    ); */
 
     revalidatePath("/appointments");
     revalidatePath("/book-appointment");
