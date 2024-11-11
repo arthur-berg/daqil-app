@@ -237,8 +237,8 @@ export const getAllAppointmentsByDate = async (date: string) => {
       .populate("hostUserId", "firstName lastName")
       .populate("participants.userId", "firstName lastName")
       .lean();
-
-    return appointments;
+    const jsonAppointments = JSON.stringify(appointments);
+    return jsonAppointments;
   } catch (error) {
     console.error("Error fetching appointments:", error);
     return null;

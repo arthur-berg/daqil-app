@@ -11,6 +11,7 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { getAllAppointmentsByDate } from "@/actions/admin";
+import { BeatLoader } from "react-spinners";
 
 const AppointmentCalendar = () => {
   const [isPending, startTransition] = useTransition();
@@ -22,7 +23,9 @@ const AppointmentCalendar = () => {
     const formattedDate = format(todaysDate, "yyyy-MM-dd");
     startTransition(async () => {
       try {
-        const data = await getAllAppointmentsByDate(formattedDate);
+        const jsonData = await getAllAppointmentsByDate(formattedDate);
+        if (!jsonData) return;
+        const data = JSON.parse(jsonData);
 
         if (Array.isArray(data)) {
           setAppointments(data);
@@ -39,11 +42,13 @@ const AppointmentCalendar = () => {
 
   const handleSelectDate = (date?: Date) => {
     if (!date) return;
-    setSelectedDate(date);
+
     const formattedDate = format(date, "yyyy-MM-dd");
     startTransition(async () => {
       try {
-        const data = await getAllAppointmentsByDate(formattedDate);
+        const jsonData = await getAllAppointmentsByDate(formattedDate);
+        if (!jsonData) return;
+        const data = JSON.parse(jsonData);
 
         if (Array.isArray(data)) {
           setAppointments(data);
@@ -55,6 +60,7 @@ const AppointmentCalendar = () => {
         console.error("Error fetching appointments:", error);
         setAppointments([]);
       }
+      setSelectedDate(date);
     });
   };
 
@@ -75,64 +81,70 @@ const AppointmentCalendar = () => {
           row: "w-full",
         }}
       />
-      <Table className="w-full">
-        <TableHeader>
-          <TableRow>
-            <TableHead>Title</TableHead>
-            <TableHead>Start Time</TableHead>
-            <TableHead>End Time</TableHead>
-            <TableHead>Psychologist</TableHead>
-            <TableHead>Client</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Cancellation Reason</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {appointments.length > 0 ? (
-            appointments.map((appointment: any) => (
-              <TableRow key={appointment._id}>
-                <TableCell>{appointment.title}</TableCell>
-                <TableCell>
-                  {format(new Date(appointment.startDate), "HH:mm")}
-                </TableCell>
-                <TableCell>
-                  {format(new Date(appointment.endDate), "HH:mm")}
-                </TableCell>
-                <TableCell>
-                  {appointment.hostUserId
-                    ? `${appointment.hostUserId.firstName.en} ${appointment.hostUserId.lastName.en}`
-                    : "N/A"}
-                </TableCell>
-                <TableCell>
-                  {appointment.participants &&
-                  appointment.participants.length > 0
-                    ? appointment.participants
-                        .map(
-                          (participant: any) =>
-                            `${participant.userId.firstName.en} ${participant.userId.lastName.en}`
-                        )
-                        .join(", ")
-                    : "N/A"}
-                </TableCell>
-                <TableCell>{appointment.status}</TableCell>
-                <TableCell>
-                  {appointment.status === "canceled"
-                    ? appointment.cancellationReason === "custom"
-                      ? appointment.customCancellationReason || "N/A"
-                      : appointment.cancellationReason || "N/A"
-                    : "N/A"}
+      {isPending ? (
+        <div className="flex justify-center mt-10">
+          <BeatLoader />
+        </div>
+      ) : (
+        <Table className="w-full">
+          <TableHeader>
+            <TableRow>
+              <TableHead>Title</TableHead>
+              <TableHead>Start Time</TableHead>
+              <TableHead>End Time</TableHead>
+              <TableHead>Psychologist</TableHead>
+              <TableHead>Client</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Cancellation Reason</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {appointments.length > 0 ? (
+              appointments.map((appointment: any) => (
+                <TableRow key={appointment._id}>
+                  <TableCell>{appointment.title}</TableCell>
+                  <TableCell>
+                    {format(new Date(appointment.startDate), "HH:mm")}
+                  </TableCell>
+                  <TableCell>
+                    {format(new Date(appointment.endDate), "HH:mm")}
+                  </TableCell>
+                  <TableCell>
+                    {appointment.hostUserId
+                      ? `${appointment.hostUserId.firstName.en} ${appointment.hostUserId.lastName.en}`
+                      : "N/A"}
+                  </TableCell>
+                  <TableCell>
+                    {appointment.participants &&
+                    appointment.participants.length > 0
+                      ? appointment.participants
+                          .map(
+                            (participant: any) =>
+                              `${participant.userId.firstName.en} ${participant.userId.lastName.en}`
+                          )
+                          .join(", ")
+                      : "N/A"}
+                  </TableCell>
+                  <TableCell>{appointment.status}</TableCell>
+                  <TableCell>
+                    {appointment.status === "canceled"
+                      ? appointment.cancellationReason === "custom"
+                        ? appointment.customCancellationReason || "N/A"
+                        : appointment.cancellationReason || "N/A"
+                      : "N/A"}
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={7} className="text-center">
+                  No appointments available
                 </TableCell>
               </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={7} className="text-center">
-                No appointments available
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+            )}
+          </TableBody>
+        </Table>
+      )}
     </div>
   );
 };
