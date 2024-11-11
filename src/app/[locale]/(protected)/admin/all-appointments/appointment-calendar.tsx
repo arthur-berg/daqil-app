@@ -89,11 +89,14 @@ const AppointmentCalendar = () => {
         <Table className="w-full">
           <TableHeader>
             <TableRow>
+              <TableHead>ID</TableHead>
               <TableHead>Title</TableHead>
               <TableHead>Start Time</TableHead>
               <TableHead>End Time</TableHead>
               <TableHead>Psychologist</TableHead>
+              <TableHead>Psychologist Email</TableHead>
               <TableHead>Client</TableHead>
+              <TableHead>Client Email</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Cancellation Reason</TableHead>
             </TableRow>
@@ -102,6 +105,7 @@ const AppointmentCalendar = () => {
             {appointments.length > 0 ? (
               appointments.map((appointment: any) => (
                 <TableRow key={appointment._id}>
+                  <TableCell>{appointment._id}</TableCell>{" "}
                   <TableCell>{appointment.title}</TableCell>
                   <TableCell>
                     {format(new Date(appointment.startDate), "HH:mm")}
@@ -114,6 +118,7 @@ const AppointmentCalendar = () => {
                       ? `${appointment.hostUserId.firstName.en} ${appointment.hostUserId.lastName.en}`
                       : "N/A"}
                   </TableCell>
+                  <TableCell>{appointment.hostUserId.email}</TableCell>
                   <TableCell>
                     {appointment.participants &&
                     appointment.participants.length > 0
@@ -124,6 +129,9 @@ const AppointmentCalendar = () => {
                           )
                           .join(", ")
                       : "N/A"}
+                  </TableCell>
+                  <TableCell>
+                    {appointment.participants[0].userId.email}
                   </TableCell>
                   <TableCell>{appointment.status}</TableCell>
                   <TableCell>
