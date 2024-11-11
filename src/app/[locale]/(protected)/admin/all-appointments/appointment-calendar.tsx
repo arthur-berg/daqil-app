@@ -44,6 +44,7 @@ const AppointmentCalendar = () => {
     if (!date) return;
 
     const formattedDate = format(date, "yyyy-MM-dd");
+    setSelectedDate(date);
     startTransition(async () => {
       try {
         const jsonData = await getAllAppointmentsByDate(formattedDate);
@@ -60,7 +61,6 @@ const AppointmentCalendar = () => {
         console.error("Error fetching appointments:", error);
         setAppointments([]);
       }
-      setSelectedDate(date);
     });
   };
 
