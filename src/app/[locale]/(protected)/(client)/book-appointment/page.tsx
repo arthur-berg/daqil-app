@@ -56,6 +56,9 @@ const BookAppointmentPage = async ({
 
   // Gör det tydligare när mic är OFF i video samtal
 
+  console.log("clientAcceptedIntroTherapist", clientAcceptedIntroTherapist);
+  console.log("hasSelectedTherapist", hasSelectedTherapist);
+
   if (clientAcceptedIntroTherapist || hasSelectedTherapist) {
     return (
       <div className="max-w-4xl mx-auto">
