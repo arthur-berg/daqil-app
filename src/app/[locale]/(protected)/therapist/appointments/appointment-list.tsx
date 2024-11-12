@@ -502,6 +502,16 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
                                         {appointment.status === "confirmed" &&
                                           !isPending && (
                                             <div className="flex flex-col align-items center">
+                                              <Link
+                                                className="text-center"
+                                                href={`/appointments/${appointment._id}`}
+                                              >
+                                                <Button
+                                                  disabled={!isJoinEnabled}
+                                                >
+                                                  {t("startMeeting")}
+                                                </Button>
+                                              </Link>
                                               {isJoinEnabled ? (
                                                 <Link
                                                   className="text-center"

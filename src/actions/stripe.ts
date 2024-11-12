@@ -9,6 +9,7 @@ import { checkDiscountCodeValidity } from "./discount-code";
 import User from "@/models/User";
 import CodeRedemption from "@/models/CodeRedemption";
 import connectToMongoDB from "@/lib/mongoose";
+import { addTagToMailchimpUser } from "@/lib/mail";
 
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
@@ -156,6 +157,11 @@ export const createSetupIntent = async (appointmentId: string) => {
       await User.findByIdAndUpdate(user?.id, {
         stripeCustomerId: customerId,
       });
+
+      await addTagToMailchimpUser(
+        user?.email as string,
+        "has-reached-intro-checkout"
+      );
     }
 
     const existingPaymentMethods = await stripe.paymentMethods.list({

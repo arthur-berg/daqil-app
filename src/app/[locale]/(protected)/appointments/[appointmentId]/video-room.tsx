@@ -288,6 +288,11 @@ const VideoRoom = ({
                   previewPublisherRef.current.setAudioDevice(audioDeviceId);
                 }
               }}
+              changeVideoSource={(videoDeviceId: any) => {
+                if (previewPublisherRef.current) {
+                  previewPublisherRef.current.setVideoDevice(videoDeviceId);
+                }
+              }}
               getAudioSource={async () => {
                 if (previewPublisherRef.current) {
                   const audioDevice =

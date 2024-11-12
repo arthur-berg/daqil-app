@@ -233,13 +233,12 @@ export const getAllAppointmentsByDate = async (date: string) => {
 
     const appointments = await Appointment.find({
       startDate: { $gte: start, $lte: end },
-      status: { $ne: "canceled" },
     })
-      .populate("hostUserId", "firstName lastName")
-      .populate("participants.userId", "firstName lastName")
+      .populate("hostUserId", "firstName lastName email")
+      .populate("participants.userId", "firstName lastName email")
       .lean();
-
-    return appointments;
+    const jsonAppointments = JSON.stringify(appointments);
+    return jsonAppointments;
   } catch (error) {
     console.error("Error fetching appointments:", error);
     return null;

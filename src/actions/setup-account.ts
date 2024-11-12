@@ -172,7 +172,8 @@ export const setupAccount = async (
     updateFields.therapistWorkProfile = {
       en: { title: "Psychologist", description: "" },
       ar: {
-        title: updatedPersonalInfo.sex === "MALE" ? "طبيب نفسي" : "طبيبة نفسية",
+        title:
+          updatedPersonalInfo.sex === "MALE" ? "أخصائي نفسي" : "أخصائية نفسية",
         description: "",
       },
     };

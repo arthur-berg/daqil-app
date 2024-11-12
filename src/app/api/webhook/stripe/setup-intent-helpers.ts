@@ -3,6 +3,7 @@ import User from "@/models/User";
 import { Stripe } from "stripe";
 import { format } from "date-fns";
 import {
+  addTagToMailchimpUser,
   sendIntroBookingConfirmationMail,
   sendPaidBookingConfirmationEmail,
 } from "@/lib/mail";
@@ -32,10 +33,6 @@ export async function handleSetupIntentSucceeded(
   }
 
   const { appointmentId, locale } = metadata;
-
-  console.log("metaData", metadata);
-
-  console.log("appointmentId", appointmentId);
 
   const paymentMethodId = setupIntent.payment_method as string;
 
@@ -123,6 +120,14 @@ export async function handleSetupIntentSucceeded(
       locale,
       namespace: "BookingConfirmedIntroCall",
     });
+
+    await User.findByIdAndUpdate(client.id, {
+      $set: {
+        "selectedTherapist.therapist": therapist._id,
+      },
+    });
+
+    await addTagToMailchimpUser(clientEmail, "intro-call-booked");
 
     await sendIntroBookingConfirmationMail(
       therapistEmail,

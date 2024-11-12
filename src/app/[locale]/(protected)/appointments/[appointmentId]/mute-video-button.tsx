@@ -53,13 +53,23 @@ export default function MuteVideoButton({
 
   useEffect(() => {
     if (devicesAvailable) {
-      const videoDevicesAvailable = devicesAvailable.map((e: any) => {
-        return e.label;
-      });
+      // Check if the user is on a mobile device
+      const isMobile = /iPhone|Android|iPad|iPod/.test(navigator.userAgent);
+
+      let videoDevicesAvailable;
+
+      if (isMobile) {
+        // Limit to the main two cameras
+        videoDevicesAvailable = devicesAvailable
+          .slice(0, 2)
+          .map((e: any) => e.label);
+      } else {
+        // Show all video devices on non-mobile
+        videoDevicesAvailable = devicesAvailable.map((e: any) => e.label);
+      }
+
       setOptions(videoDevicesAvailable);
     }
-    // if (user.videoEffects.backgroundBlur)
-    //   setOptions(['Not available with Background Blurring']);
   }, [devicesAvailable]);
 
   const handleChangeVideoSource = (event: any, index: any) => {
@@ -106,7 +116,7 @@ export default function MuteVideoButton({
               <TooltipContent>{title}</TooltipContent>
             </Tooltip>
 
-            {/* <DropdownMenu>
+            <DropdownMenu>
               <DropdownMenuTrigger onClick={handleToggle}>
                 <MdArrowDropDown className="w-8 h-8 text-white cursor-pointer" />
               </DropdownMenuTrigger>
@@ -120,7 +130,7 @@ export default function MuteVideoButton({
                   </DropdownMenuItem>
                 ))}
               </DropdownMenuContent>
-            </DropdownMenu> */}
+            </DropdownMenu>
           </div>
         </TooltipProvider>
       </>

@@ -81,7 +81,7 @@ const MyProfileInfo = ({
             {/* eslint-disable */}
             <Avatar className="w-28 h-28">
               <AvatarImage
-                src={imageUrl ? imageUrl : therapist.image || ""}
+                src={imageUrl ? imageUrl : therapist?.image || ""}
                 className="object-cover"
               />
               <AvatarFallback className="bg-background flex items-center justify-center w-full h-full">
