@@ -63,7 +63,7 @@ export default {
 
             if (passwordsMatch) return user;
           } catch (error) {
-            console.log(error);
+            console.log("Error in authorize callback", error);
           }
         }
 
