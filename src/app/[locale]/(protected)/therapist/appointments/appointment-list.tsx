@@ -8,6 +8,7 @@ import {
   isAfter,
   parseISO,
   differenceInMinutes,
+  isSameDay,
 } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/navigation";
@@ -26,6 +27,7 @@ import CancelAppontmentForm from "./cancel-appointment-form";
 
 import { useUserName } from "@/hooks/use-user-name";
 import { formatTimeZoneWithOffset } from "@/utils/timeZoneUtils";
+import Countdown from "react-countdown";
 
 const AppointmentList = ({ appointments }: { appointments: any }) => {
   const [filterType, setFilterType] = useState("upcoming");
@@ -172,6 +174,24 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
 
     const isPending = nextAppointment.payment.status === "pending";
 
+    const isSameDayAppointment = isSameDay(
+      new Date(nextAppointment.startDate),
+      new Date()
+    );
+
+    const countdownRenderer = ({ minutes, seconds, completed }: any) => {
+      if (completed) {
+        return null; // When the countdown is over, we show nothing
+      } else {
+        return (
+          <span>
+            {String(minutes).padStart(2, "0")}:
+            {String(seconds).padStart(2, "0")}
+          </span>
+        );
+      }
+    };
+
     return (
       <div
         className={
@@ -214,6 +234,17 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
                   timeLimit: 1, // 1 hour before meeting
                 })}
               </div>
+            </div>
+          )}
+
+          {/* Countdown Timer */}
+          {isSameDayAppointment && !hasMeetingEnded && timeUntilStart > 0 && (
+            <div className="mt-2 text-sm text-gray-500">
+              {t("timeLeftUntilStart")}:{" "}
+              <Countdown
+                date={new Date(nextAppointment.startDate)}
+                renderer={countdownRenderer}
+              />
             </div>
           )}
 
