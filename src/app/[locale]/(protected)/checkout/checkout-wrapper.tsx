@@ -296,7 +296,7 @@ const CheckoutWrapper = ({
             >
               <Checkout
                 clientSecret={clientSecret}
-                amount={appointmentType.price}
+                amount={finalAmount}
                 appointmentId={appointmentId}
               />
             </Elements>
