@@ -21,14 +21,20 @@ export const sendSmsReminder = async (
   appointmentTime: string,
   t: any,
   appointmentId: string,
-  noMeetingLink: string
+  reminders: { reminder24h: boolean; reminder2h: boolean }
 ): Promise<void> => {
   try {
     let message;
 
-    if (noMeetingLink) {
+    if (reminders.reminder24h) {
       // Message without the meeting link
       message = t("reminderMessage24h", {
+        hostFirstName,
+        hostLastName,
+        appointmentTime,
+      });
+    } else if (reminders.reminder2h) {
+      message = t("reminderMessage2h", {
         hostFirstName,
         hostLastName,
         appointmentTime,

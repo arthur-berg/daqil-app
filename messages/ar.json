@@ -509,8 +509,9 @@
   "time": "الوقت",
   "duration": "المدة",
   "cancellationTerms": "موعدك التعريفي مجاني تمامًا.",
-  "cancellationNotice": "ومع ذلك، إذا لم تحضر الموعد أو لم تقم بإلغائه قبل 24 ساعة على الأقل، سيتم خصم 15 دولارًا أمريكيًا من بطاقتك المحفوظة.",
-  "cancellationReason": "تساعد هذه السياسة في ضمان احترام وقت معالجينا النفسيين وتوفير المواعيد المتاحة للآخرين المحتاجين. شكرًا لتفهمك.",
+  "cancellationNotice": "ومع ذلك، إذا لم تحضر الموعد أو لم تلغِ قبل 24 ساعة على الأقل، سيتم خصم 15 دولارًا أمريكيًا.",
+  "cancellationReason": "تساعد هذه السياسة في ضمان احترام وقت أطبائنا النفسيين.",
+  "thankYou": "شكرًا لتفهمك.",
   "weHaveReserved": "لقد قمنا بحجز هذا الموعد لك. يُرجى إكمال إضافة تفاصيل بطاقتك في الوقت المحدد لتأكيد الحجز.",
   "minutesLeft": "دقائق متبقية",
   "loadingCheckout": "جارٍ تحميل الدفع...",
@@ -695,7 +696,8 @@
   },
  "SmsReminder": {
   "reminderMessage": "تذكير: موعدك مع {hostFirstName} {hostLastName} سيبدأ خلال 20 دقيقة في {appointmentTime}. يرجى الاستعداد والتأكد من أن الميكروفون والفيديو يعملان بشكل صحيح. يمكنك الانضمام إلى الاجتماع هنا: {meetingLink}",
-  "reminderMessage24h": "تذكير: موعدك مع {hostFirstName} {hostLastName} مقرر في {appointmentTime} غدًا. يرجى الاستعداد والتأكد من تجهيز معداتك."
+  "reminderMessage24h": "تذكير: موعدك مع {hostFirstName} {hostLastName} مقرر في {appointmentTime} غدًا. يرجى الاستعداد والتأكد من تجهيز معداتك.",
+  "reminderMessage2h": "تذكير: موعدك مع {hostFirstName} {hostLastName} سيبدأ بعد ساعتين في {appointmentTime}. يرجى الاستعداد والتأكد من أن معداتك جاهزة."
 },
   "TwoFactorEmail": {
     "daqil": "زاكينا",

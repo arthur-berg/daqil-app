@@ -12,7 +12,7 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
   try {
     await connectToMongoDB();
     const body = await req.json();
-    const { appointmentId, locale, noMeetingLink } = body;
+    const { appointmentId, locale, reminder24h, reminder2h } = body;
 
     const t = await getTranslations({
       locale,
@@ -61,6 +61,11 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
       "HH:mm"
     );
 
+    const reminders = {
+      reminder24h: !!reminder24h,
+      reminder2h: !!reminder2h,
+    };
+
     await sendSmsReminder(
       clientPhone,
       hostFirstName,
@@ -68,7 +73,7 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
       formattedTime,
       t,
       appointmentId,
-      noMeetingLink
+      reminders
     );
 
     return NextResponse.json({

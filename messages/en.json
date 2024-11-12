@@ -519,8 +519,9 @@
     "time": "Time",
     "duration": "Duration",
   "cancellationTerms": "Your introductory appointment is completely free of charge.",
-  "cancellationNotice": "However, if you do not attend the appointment or fail to cancel at least 24 hours in advance, $15 USD will be charged to your saved card.",
-  "cancellationReason": "This policy helps ensure that our therapists' time is respected and available slots can be offered to others in need. Thank you for your understanding.",
+  "cancellationNotice": "However, if you do not attend the appointment or fail to cancel at least 24 hours in advance, you will be charged $15 USD.",
+  "cancellationReason": "This policy helps ensure that our psychologists time is respected.",
+  "thankYou": "Thank you for your understanding.",
   "weHaveReserved": "We have reserved this appointment slot for you. Please complete add your card details within the given time to confirm your reservation.",
   "minutesLeft": "minutes left",
   "loadingCheckout": "Loading checkout...",
@@ -703,7 +704,9 @@
   },
   "SmsReminder": {
     "reminderMessage": "Reminder: Your appointment with {hostFirstName} {hostLastName} starts in 20 minutes at {appointmentTime}. Please be ready and ensure your microphone and video are working properly. You can join the meeting here: {meetingLink}",
-  "reminderMessage24h": "Reminder: Your appointment with {hostFirstName} {hostLastName} is scheduled for {appointmentTime} tomorrow. Please be prepared and ensure your equipment is set up."
+  "reminderMessage24h": "Reminder: Your appointment with {hostFirstName} {hostLastName} is scheduled for {appointmentTime} tomorrow. Please be prepared and ensure your equipment is set up.",
+  "reminderMessage2h": "Reminder: Your appointment with {hostFirstName} {hostLastName} starts in 2 hours at {appointmentTime}. Please be prepared and ensure your equipment is set up."
+
 },
   
   "TwoFactorEmail": {
