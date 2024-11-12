@@ -161,7 +161,7 @@ export const scheduleReminderJobs = async (
       {
         clientPhone: appointment.clientPhone,
         appointmentId: appointmentId,
-        noMeetingLink: "true",
+        reminder24h: "true",
       },
       Math.floor(twentyFourHoursBefore.getTime() / 1000),
       locale
@@ -192,7 +192,7 @@ export const scheduleReminderJobs = async (
         {
           clientPhone: appointment.clientPhone,
           appointmentId: appointmentId,
-          noMeetingLink: "true",
+          reminder2h: "true",
         },
         Math.floor(twoHoursBefore.getTime() / 1000),
         locale

@@ -137,9 +137,12 @@ const IntroCheckoutWrapper = ({
       </div>
       <div className="text-center">
         <div className="text-center mb-8">
-          <p className="text-lg font-semibold">{t("cancellationTerms")}</p>
-          <p className="text-destructive">{t("cancellationNotice")}</p>
+          <p className="text-lg font-semibold text-success mb-2">
+            {t("cancellationTerms")}
+          </p>
+          <p className="text-destructive mb-2">{t("cancellationNotice")}</p>
           <p>{t("cancellationReason")}</p>
+          <p className="mt-4">{t("thankYou")}</p>
         </div>
 
         {loading ? (
