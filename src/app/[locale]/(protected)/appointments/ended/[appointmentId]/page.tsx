@@ -31,16 +31,19 @@ const EndedAppointmentPage = async ({
 
   return (
     <div className="w-full h-[calc(100vh-196px)] lg:h-[calc(100vh-154px)] flex flex-col items-center justify-center text-white">
-      <h1 className="mb-4 text-3xl">{t("callEnded")}</h1>
+      <h1 className="mb-4 text-3xl font-bold">{t("callEnded")}</h1>
 
       {introAppointmentClientView ? (
-        <div>
-          <p className="mb-6 text-lg max-w-3xl text-white text-center">
+        <div className="text-center">
+          <h2 className="mb-2 text-2xl font-semibold">{t("nextStep")}</h2>
+          <p className="mb-6 text-lg max-w-3xl text-white">
             {t("descriptionIntro")}
           </p>
           <div className="flex justify-center sm:space-x-2 sm:rtl:space-x-reverse flex-col sm:flex-row space-y-2 sm:space-y-0 items-center">
             <Link href="/book-appointment">
-              <Button variant="success">{t("therapistSelectButton")}</Button>
+              <Button variant="success" size="lg">
+                {t("therapistSelectButton")}
+              </Button>
             </Link>
             <Link href={`/appointments/${appointmentId}`}>
               <Button variant="secondary">{t("rejoinMeetingButton")}</Button>
@@ -48,8 +51,8 @@ const EndedAppointmentPage = async ({
           </div>
         </div>
       ) : (
-        <div>
-          <p className="mb-6 text-lg max-w-3xl text-white text-center">
+        <div className="text-center">
+          <p className="mb-6 text-lg max-w-3xl text-white">
             {t("description")}
           </p>
           <div className="flex justify-center sm:space-x-2 sm:rtl:space-x-reverse flex-col sm:flex-row space-y-2 sm:space-y-0 items-center">
