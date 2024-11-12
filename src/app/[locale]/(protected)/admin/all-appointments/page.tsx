@@ -5,7 +5,7 @@ const AdminAllAppointmentsPage = async () => {
   await connectToMongoDB();
 
   return (
-    <div className="mx-auto py-10 bg-white rounded-md">
+    <div className="mx-auto w-full py-10 bg-white rounded-md">
       <AppointmentCalendar />
     </div>
   );
