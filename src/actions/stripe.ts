@@ -148,7 +148,6 @@ export const createSetupIntent = async (appointmentId: string) => {
     const user = await getCurrentUser();
     let customerId = user?.stripeCustomerId;
 
-    // Create a Stripe customer if not already created
     if (!user?.stripeCustomerId) {
       const customer = await stripe.customers.create({
         email: user?.email,
@@ -159,19 +158,15 @@ export const createSetupIntent = async (appointmentId: string) => {
       });
     }
 
-    // Remove existing payment methods
     const existingPaymentMethods = await stripe.paymentMethods.list({
       customer: customerId,
       type: "card",
     });
 
-    console.log("existingPaymentMethods", existingPaymentMethods);
-
     for (const paymentMethod of existingPaymentMethods.data) {
       await stripe.paymentMethods.detach(paymentMethod.id);
     }
 
-    // Create a new SetupIntent to save a new payment method
     const setupIntent = await stripe.setupIntents.create({
       customer: customerId,
       payment_method_types: ["card"],
@@ -181,7 +176,6 @@ export const createSetupIntent = async (appointmentId: string) => {
       },
     });
 
-    // Return the SetupIntent client secret
     return {
       clientSecret: setupIntent.client_secret,
     };
@@ -199,7 +193,7 @@ export const chargeNoShowFee = async (
 ) => {
   try {
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: 2000,
+      amount: 1500,
       currency: "usd",
       customer: customerId,
       payment_method: paymentMethodId,

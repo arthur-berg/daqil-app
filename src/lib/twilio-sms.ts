@@ -20,17 +20,29 @@ export const sendSmsReminder = async (
   hostLastName: string,
   appointmentTime: string,
   t: any,
-  appointmentId: string
+  appointmentId: string,
+  noMeetingLink: string
 ): Promise<void> => {
   try {
-    const meetingLink = `${process.env.NEXT_PUBLIC_APP_URL}/appointments/${appointmentId}`;
+    let message;
 
-    const message = t("reminderMessage", {
-      hostFirstName,
-      hostLastName,
-      appointmentTime,
-      meetingLink, // Add the meeting link to the message
-    });
+    if (noMeetingLink) {
+      // Message without the meeting link
+      message = t("reminderMessage24h", {
+        hostFirstName,
+        hostLastName,
+        appointmentTime,
+      });
+    } else {
+      // Message with the meeting link
+      const meetingLink = `${process.env.NEXT_PUBLIC_APP_URL}/appointments/${appointmentId}`;
+      message = t("reminderMessage", {
+        hostFirstName,
+        hostLastName,
+        appointmentTime,
+        meetingLink,
+      });
+    }
 
     // Send SMS via Twilio
     await client.messages.create({
