@@ -632,7 +632,7 @@ export const reminderEmailTemplate = async (
 ) => {
   const daqilLogoUrl = await getDaqilLogoUrl(locale);
   const formattedTimeZone = formatTimeZoneWithOffset(
-    appointmentDetails.timeZone
+    appointmentDetails.clientTimeZone
   );
   return `
     <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
