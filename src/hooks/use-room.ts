@@ -146,6 +146,10 @@ export default function useRoom() {
       { appId, sessionId, token }: Credentials,
       roomContainer: any,
       userName: string,
+      /*  appointmentData: {
+        appointmentId: string;
+        startDate: Date;
+      }, */
       videoFilter?: VideoFilter,
       publisherOptions?: PublisherOptions
     ) => {

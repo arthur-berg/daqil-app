@@ -153,14 +153,15 @@
     "myClients": "My Clients",
     "myProfile": "My Profile"
   },
-  "AppointmentEndedPage": {
-    "callEnded": "Call Ended",
-    "goToAppointments": "Go to Appointments",
-    "rejoinMeetingButton": "Rejoin Meeting",
-    "description": "Rejoin the meeting if you left by accident. Alternatively, go to your appointments page.",
-    "descriptionIntro": "Your introductory call has ended. Now, you can choose to accept or reject your psychologist based on your experience. If you left the meeting by accident, you can rejoin it.",
-    "therapistSelectButton": "Go to psychologist selection"
-  },
+ "AppointmentEndedPage": {
+  "callEnded": "Call Ended",
+  "goToAppointments": "Go to Appointments",
+  "rejoinMeetingButton": "Rejoin Meeting",
+  "description": "Rejoin the meeting if you left by accident. Alternatively, go to your appointments page.",
+  "descriptionIntro": "Your introductory call has ended. Now, you can choose to accept or reject your psychologist based on your experience. If you left the meeting by accident, you can rejoin it.",
+  "therapistSelectButton": "Review and Select Your Psychologist",
+  "nextStep": "Next Step: Select Your Psychologist"
+},
   "SettingsPage": {
     "deleteAccount": "Delete Account",
     "areYouSureTitle": "Are You Sure?",
@@ -925,6 +926,7 @@
     "loggingYouOut": "Logging you out..."
   },
   "VideoRoom": {
+    "timeLeft": "Time left until appointment starts",
     "micMuted": "Microphone is muted",
     "micMutedDescription": "You have muted your microphone. Tap mic symbtol to unmute.",
     "joinMeeting": "Join meeting",
