@@ -127,7 +127,7 @@ const IntroMeetingManager = async ({
                     <div className="flex justify-center mb-4">
                       <Avatar className="w-28 h-28">
                         <AvatarImage
-                          src={selectedTherapist.image || ""}
+                          src={selectedTherapist?.image || ""}
                           className="object-cover"
                         />
                         <AvatarFallback className="bg-background flex items-center justify-center w-full h-full">

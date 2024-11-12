@@ -45,7 +45,7 @@ const TherapistPage = async ({
       </h1>
       <div className="flex justify-center mb-8">
         <Avatar className="w-28 h-28">
-          <AvatarImage src={therapist.image || ""} className="object-cover" />
+          <AvatarImage src={therapist?.image || ""} className="object-cover" />
           <AvatarFallback className="bg-background flex items-center justify-center w-full h-full">
             <Image
               width={150}

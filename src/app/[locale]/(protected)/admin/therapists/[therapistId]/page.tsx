@@ -88,7 +88,7 @@ const TherapistPage = async ({
           <div className="flex items-center space-x-4">
             <Avatar>
               <AvatarImage
-                src={therapist.image}
+                src={therapist?.image}
                 alt={therapist.firstName.en}
                 className="object-cover"
               />

@@ -21,7 +21,7 @@ export const deleteAccount = async () => {
         "lastName.en": "",
         "firstName.ar": "Deleted",
         "lastName.ar": "",
-        emailVerified: false,
+        emailVerified: null,
         email: `deleted_${user.id}@example.com`,
         "personalInfo.phoneNumber": null,
         "personalInfo.dateOfBirth": null,
