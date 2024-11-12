@@ -29,7 +29,7 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
         path: "hostUserId",
         select: "firstName lastName email settings.timeZone",
       });
-    console.log("appointment");
+
     if (!appointment) {
       return NextResponse.json(
         { error: "Appointment not found" },
@@ -66,9 +66,6 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
       )}`,
       clientTimeZone,
     };
-
-    console.log("appointmentDetails", appointmentDetails);
-    console.log("clientEmail", clientEmail);
 
     await sendReminderEmail(clientEmail, appointmentDetails, t, locale);
 
