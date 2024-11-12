@@ -52,16 +52,9 @@ const BookAppointmentPage = async ({
     APPOINTMENT_TYPE_ID_LONG_SESSION,
   ]);
 
-  console.log("locale", locale);
-
   // TODO Testa nya flödet för att sätta introCallDone till true
 
   // Gör det tydligare när mic är OFF i video samtal
-
-  console.log(
-    "clientAcceptedIntroTherapist || hasSelectedTherapist",
-    clientAcceptedIntroTherapist || hasSelectedTherapist
-  );
 
   if (clientAcceptedIntroTherapist || hasSelectedTherapist) {
     return (
@@ -83,8 +76,6 @@ const BookAppointmentPage = async ({
       </div>
     );
   }
-
-  console.log("going intro intro meeting manager");
 
   return (
     <IntroMeetingManager

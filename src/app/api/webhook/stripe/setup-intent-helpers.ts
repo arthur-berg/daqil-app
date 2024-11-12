@@ -33,10 +33,6 @@ export async function handleSetupIntentSucceeded(
 
   const { appointmentId, locale } = metadata;
 
-  console.log("metaData", metadata);
-
-  console.log("appointmentId", appointmentId);
-
   const paymentMethodId = setupIntent.payment_method as string;
 
   if (!appointmentId) {
@@ -122,6 +118,12 @@ export async function handleSetupIntentSucceeded(
     const t = await getTranslations({
       locale,
       namespace: "BookingConfirmedIntroCall",
+    });
+
+    await User.findByIdAndUpdate(client.id, {
+      $set: {
+        "selectedTherapist.therapist": therapist._id,
+      },
     });
 
     await sendIntroBookingConfirmationMail(
