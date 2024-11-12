@@ -70,6 +70,21 @@ const IntroMeetingManager = async ({
   const introMeetingIsBookedButNotFinished =
     !!confirmedIntroAppointment && !client?.selectedTherapist?.introCallDone;
 
+  console.log("before return in intro meeting manager");
+  console.log("locale in intro meeting manger", locale);
+
+  console.log("selectedTherapist", selectedTherapist);
+
+  console.log(
+    "selectedTherapist.therapistWorkProfile[locale].title",
+    selectedTherapist.therapistWorkProfile[locale].title
+  );
+
+  console.log(
+    "selectedTherapist.therapistWorkProfile[locale].description",
+    selectedTherapist.therapistWorkProfile[locale].description
+  );
+
   return (
     <>
       <div className="max-w-4xl mx-auto">
