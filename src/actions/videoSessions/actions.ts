@@ -4,7 +4,7 @@ import { isUserAuthorized } from "@/actions/videoSessions/utils";
 import { APPOINTMENT_TYPE_ID_INTRO_SESSION } from "@/contants/config";
 import { getCurrentRole, requireAuth } from "@/lib/auth";
 import { createSessionAndToken, generateToken } from "@/lib/vonage";
-import { addMinutes, subMinutes, isBefore, isAfter } from "date-fns";
+import { addMinutes, subMinutes, isBefore, isAfter, isPast } from "date-fns";
 import Appointment from "@/models/Appointment";
 import User from "@/models/User";
 import VideoSession from "@/models/VideoSession";
@@ -72,57 +72,62 @@ export const getSessionData = async (appointmentId: string) => {
       appointment.appointmentTypeId.toString() ===
       APPOINTMENT_TYPE_ID_INTRO_SESSION;
 
-    if (isTherapist) {
-      if (!appointment.hostShowUp) {
-        updatePayload.hostShowUp = true;
-        await Appointment.findByIdAndUpdate(
-          appointmentId,
-          { $set: updatePayload },
-          updateOptions
+    if (
+      isPast(appointment.startDate) ||
+      appointment.startDate.getTime() === new Date().getTime()
+    ) {
+      if (isTherapist) {
+        if (!appointment.hostShowUp) {
+          updatePayload.hostShowUp = true;
+          await Appointment.findByIdAndUpdate(
+            appointmentId,
+            { $set: updatePayload },
+            updateOptions
+          );
+        }
+
+        if (
+          !client.selectedTherapist?.introCallDone &&
+          isIntroCall &&
+          appointment.participants[0].showUp
+        ) {
+          await User.findByIdAndUpdate(client._id, {
+            $set: { "selectedTherapist.introCallDone": true },
+          });
+        }
+      }
+
+      if (isClient) {
+        const participant = appointment.participants.find(
+          (participant: any) =>
+            participant.userId.toString() === client._id.toString()
         );
-      }
 
-      if (
-        !client.selectedTherapist?.introCallDone &&
-        isIntroCall &&
-        appointment.participants[0].showUp
-      ) {
-        await User.findByIdAndUpdate(client._id, {
-          $set: { "selectedTherapist.introCallDone": true },
-        });
-      }
-    }
+        if (!participant) {
+          sessionCreationInProgress = false;
+          return { error: ErrorMessages("userNotFound") };
+        }
 
-    if (isClient) {
-      const participant = appointment.participants.find(
-        (participant: any) =>
-          participant.userId.toString() === client._id.toString()
-      );
+        if (
+          !client.selectedTherapist?.introCallDone &&
+          isIntroCall &&
+          appointment.hostShowUp
+        ) {
+          await User.findByIdAndUpdate(client._id, {
+            $set: { "selectedTherapist.introCallDone": true },
+          });
+        }
 
-      if (!participant) {
-        sessionCreationInProgress = false;
-        return { error: ErrorMessages("userNotFound") };
-      }
+        updateOptions.arrayFilters = [{ "elem.userId": client._id }];
 
-      if (
-        !client.selectedTherapist?.introCallDone &&
-        isIntroCall &&
-        appointment.hostShowUp
-      ) {
-        await User.findByIdAndUpdate(client._id, {
-          $set: { "selectedTherapist.introCallDone": true },
-        });
-      }
-
-      updateOptions.arrayFilters = [{ "elem.userId": client._id }];
-
-      if (!participant.showUp) {
-        updatePayload["participants.$[elem].showUp"] = true;
-        await Appointment.findByIdAndUpdate(
-          appointmentId,
-          { $set: updatePayload },
-          updateOptions
-        );
+        if (!participant.showUp) {
+          updatePayload["participants.$[elem].showUp"] = true;
+          await Appointment.findByIdAndUpdate(
+            appointmentId,
+            { $set: updatePayload },
+            updateOptions
+          );
+        }
       }
     }
 
@@ -156,6 +161,7 @@ export const getSessionData = async (appointmentId: string) => {
           id: appointment._id.toString(),
           endDate: appointment.endDate,
           videoRecordingStarted,
+          startDate: appointment.startDate,
         },
       };
     } else {
@@ -181,6 +187,7 @@ export const getSessionData = async (appointmentId: string) => {
           id: appointment._id.toString(),
           endDate: appointment.endDate,
           videoRecordingStarted,
+          startDate: appointment.startDate,
         },
       };
     }

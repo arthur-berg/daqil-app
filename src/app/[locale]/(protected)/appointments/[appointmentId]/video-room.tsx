@@ -14,6 +14,8 @@ import { Button } from "@/components/ui/button";
 import { useLocale, useTranslations } from "next-intl";
 import Image from "next/image";
 import { revalidateBookAppointmentCache } from "@/actions/revalidateBookAppointmentCache";
+import VideoSessionCountdown from "@/app/[locale]/(protected)/appointments/[appointmentId]/video-session-countdown";
+import { isBefore } from "date-fns";
 
 const VideoRoom = ({
   sessionData,
@@ -27,6 +29,7 @@ const VideoRoom = ({
         isIntroCall: boolean;
         appointmentData: {
           id: string;
+          startDate: Date;
         };
       }
     | { error: string };
@@ -224,6 +227,11 @@ const VideoRoom = ({
 
   if ("error" in sessionData) return;
 
+  const meetingHasNotStarted = isBefore(
+    new Date(),
+    sessionData.appointmentData.startDate
+  );
+
   if (isPreviewing) {
     return (
       <div
@@ -326,6 +334,13 @@ const VideoRoom = ({
                   height={200}
                   className="mb-4"
                 />
+                {meetingHasNotStarted && (
+                  <VideoSessionCountdown
+                    appointmentStartDate={sessionData.appointmentData.startDate}
+                    appointmentId={sessionData.appointmentData.id}
+                  />
+                )}
+
                 {user?.role === "CLIENT"
                   ? t("waitingForPsychologist")
                   : t("waitingForClient")}

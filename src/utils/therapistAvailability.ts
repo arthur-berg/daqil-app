@@ -229,7 +229,7 @@ export const getTherapistAvailableTimeSlots = (
     );
 
     const isTimeInPast = isBefore(time, now);
-    const isTimeTooSoon = isBefore(time, addMinutes(now, 15));
+    const isTimeTooSoon = isBefore(time, addMinutes(now, 2));
 
     return (
       !isTimeInPast &&
