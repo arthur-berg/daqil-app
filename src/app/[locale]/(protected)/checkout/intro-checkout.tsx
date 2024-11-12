@@ -87,7 +87,7 @@ const IntroCheckout = ({
       {clientSecret && <PaymentElement />}
 
       <div className="w-32 mx-auto">
-        <Button disabled={!stripe || loading} className="mt-4 w-full">
+        <Button disabled={!stripe || loading} className="mt-4 w-full" size="lg">
           {!loading ? t("bookAppointment") : t("processing")}
         </Button>
       </div>

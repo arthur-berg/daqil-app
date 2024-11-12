@@ -12,7 +12,7 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
   try {
     await connectToMongoDB();
     const body = await req.json();
-    const { appointmentId, locale } = body;
+    const { appointmentId, locale, noMeetingLink } = body;
 
     const t = await getTranslations({
       locale,
@@ -67,7 +67,8 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
       hostLastName,
       formattedTime,
       t,
-      appointmentId
+      appointmentId,
+      noMeetingLink
     );
 
     return NextResponse.json({

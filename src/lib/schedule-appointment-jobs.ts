@@ -137,22 +137,73 @@ export const scheduleReminderJobs = async (
   /* const oneDayBefore = subDays(new Date(appointment.startDate), 1); */
   const twoHoursBefore = subHours(new Date(appointment.startDate), 2);
   /* const thirtyMinutesBefore = subMinutes(new Date(appointment.startDate), 30); */
+  const twentyFourHoursBefore = subHours(new Date(appointment.startDate), 24);
+
   const twentyMinutesBefore = subMinutes(new Date(appointment.startDate), 20);
   const tenSecondsAfter = addSeconds(new Date(now), 10);
 
-  if (isAfter(twoHoursBefore, addMinutes(now, 1))) {
-    const emailReminderTaskIdOneHour = await scheduleTask(
+  if (isAfter(twentyFourHoursBefore, addMinutes(now, 1))) {
+    const emailReminderTaskId = await scheduleTask(
       `${process.env.QSTASH_API_URL}/send-email-reminder`,
       { clientEmail: appointment.clientEmail, appointmentId: appointmentId },
-      Math.floor(twoHoursBefore.getTime() / 1000),
+      Math.floor(twentyFourHoursBefore.getTime() / 1000),
       locale
     );
 
     await ScheduledTask.create({
       appointmentId: appointmentId,
       type: "emailReminder",
-      taskId: emailReminderTaskIdOneHour,
+      taskId: emailReminderTaskId,
     });
+
+    const smsReminderTaskId = await scheduleTask(
+      `${process.env.QSTASH_API_URL}/sms-reminder`,
+      {
+        clientPhone: appointment.clientPhone,
+        appointmentId: appointmentId,
+        noMeetingLink: "true",
+      },
+      Math.floor(twentyFourHoursBefore.getTime() / 1000),
+      locale
+    );
+
+    await ScheduledTask.create({
+      appointmentId: appointmentId,
+      type: "smsReminder",
+      taskId: smsReminderTaskId,
+    });
+  } else {
+    if (isAfter(twoHoursBefore, addMinutes(now, 1))) {
+      const emailReminderTaskId = await scheduleTask(
+        `${process.env.QSTASH_API_URL}/send-email-reminder`,
+        { clientEmail: appointment.clientEmail, appointmentId: appointmentId },
+        Math.floor(twoHoursBefore.getTime() / 1000),
+        locale
+      );
+
+      await ScheduledTask.create({
+        appointmentId: appointmentId,
+        type: "emailReminder",
+        taskId: emailReminderTaskId,
+      });
+
+      const smsReminderTaskId = await scheduleTask(
+        `${process.env.QSTASH_API_URL}/sms-reminder`,
+        {
+          clientPhone: appointment.clientPhone,
+          appointmentId: appointmentId,
+          noMeetingLink: "true",
+        },
+        Math.floor(twoHoursBefore.getTime() / 1000),
+        locale
+      );
+
+      await ScheduledTask.create({
+        appointmentId: appointmentId,
+        type: "smsReminder",
+        taskId: smsReminderTaskId,
+      });
+    }
   }
 
   const meetingLinkTaskId = await scheduleTask(
