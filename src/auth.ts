@@ -18,6 +18,9 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     error: "/auth/error",
   },
   events: {
+    /*  async signOut({ token }) {
+      console.log("token", token);
+    }, */
     async linkAccount({ user }) {
       await connectToMongoDB();
       await User.findByIdAndUpdate((user as any)?._id, {

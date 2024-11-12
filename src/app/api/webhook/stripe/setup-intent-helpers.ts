@@ -3,6 +3,7 @@ import User from "@/models/User";
 import { Stripe } from "stripe";
 import { format } from "date-fns";
 import {
+  addTagToMailchimpUser,
   sendIntroBookingConfirmationMail,
   sendPaidBookingConfirmationEmail,
 } from "@/lib/mail";
@@ -125,6 +126,8 @@ export async function handleSetupIntentSucceeded(
         "selectedTherapist.therapist": therapist._id,
       },
     });
+
+    await addTagToMailchimpUser(clientEmail, "intro-call-booked");
 
     await sendIntroBookingConfirmationMail(
       therapistEmail,

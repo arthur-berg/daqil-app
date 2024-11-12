@@ -167,5 +167,6 @@ export const login = async (
     if (!errorOccurred) {
       redirect(redirectUrl);
     }
+    return { error: ErrorMessages("somethingWentWrong") };
   }
 };
