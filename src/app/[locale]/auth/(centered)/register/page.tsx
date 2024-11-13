@@ -11,6 +11,11 @@ const RegisterPage = ({
     utm_content?: string;
   };
 }) => {
+  if ("_gl" in searchParams) {
+    delete searchParams._gl;
+  }
+  console.log("searchParams", searchParams);
+
   return (
     <div className="h-full flex items-center justify-center container">
       <RegisterForm searchParams={searchParams} />
