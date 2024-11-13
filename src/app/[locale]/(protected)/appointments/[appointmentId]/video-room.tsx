@@ -71,9 +71,9 @@ const VideoRoom = ({
 
   const handleJoinCall = () => {
     if ("isIntroCall" in sessionData && sessionData?.isIntroCall) {
-      startTransition(() => {
+      /* startTransition(() => {
         revalidateBookAppointmentCache();
-      });
+      }); */
     }
     setIsPreviewing(false);
   };
