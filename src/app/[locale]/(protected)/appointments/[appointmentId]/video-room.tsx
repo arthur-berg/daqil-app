@@ -319,6 +319,8 @@ const VideoRoom = ({
     );
   }
 
+  console.log("participants", participants);
+
   return (
     <div
       className={`${containerHeight} md:h-screen w-full flex flex-col p-2 box-border`}
