@@ -227,6 +227,8 @@ export const sendTherapistInviteEmail = async (
 };
 
 export const getAllAppointmentsByDate = async (date: string) => {
+  await connectToMongoDB();
+
   try {
     const start = startOfDay(new Date(date));
     const end = endOfDay(new Date(date));
