@@ -127,7 +127,7 @@ export const login = async (
       return { twoFactor: true };
     }
   }
-  let errorOccurred = false;
+  let catchedError = null;
 
   const redirectUrl = callbackUrl
     ? decodeURIComponent(callbackUrl)
@@ -145,8 +145,7 @@ export const login = async (
       /*  redirectTo: callbackUrl || `/${locale}/${redirectUrl}`, */
     });
   } catch (error) {
-    errorOccurred = true;
-
+    catchedError = error;
     if (error instanceof AuthError) {
       // Hack to make broken CredentialsSignin work
       if (error.cause?.err instanceof Error) {
@@ -164,8 +163,14 @@ export const login = async (
       throw error;
     }
   } finally {
-    if (!errorOccurred) {
+    if (!catchedError) {
       redirect(redirectUrl);
+    }
+    if (catchedError instanceof AuthError) {
+      if (catchedError.cause?.err instanceof Error) {
+        return { error: catchedError.cause.err.message };
+      }
+      return { error: ErrorMessages("somethingWentWrong") };
     }
     return { error: ErrorMessages("somethingWentWrong") };
   }
