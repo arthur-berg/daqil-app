@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import useRoom from "@/hooks/use-room";
 import { useCurrentUser } from "@/hooks/use-current-user";
 /* import useScreenSharing from "@/hooks/use-screen-sharing"; */
@@ -53,7 +53,7 @@ const VideoRoom = ({
   const effectRun = useRef(false);
   const effectRunPreview = useRef(false);
   const previewPublisherRef = useRef<any>(null);
-
+  const [isPending, startTransition] = useTransition();
   const user = useCurrentUser();
   const { isClient } = useCurrentRole();
   const { toast } = useToast();
@@ -71,7 +71,9 @@ const VideoRoom = ({
 
   const handleJoinCall = () => {
     if ("isIntroCall" in sessionData && sessionData?.isIntroCall) {
-      revalidateBookAppointmentCache();
+      startTransition(() => {
+        revalidateBookAppointmentCache();
+      });
     }
     setIsPreviewing(false);
   };
