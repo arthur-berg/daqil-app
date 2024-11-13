@@ -127,7 +127,7 @@ export async function handleSetupIntentSucceeded(
       },
     });
 
-    await addTagToMailchimpUser(clientEmail, "intro-call-booked");
+    await addTagToMailchimpUser(clientEmail, "intro-call-booked-card");
 
     await sendIntroBookingConfirmationMail(
       therapistEmail,
