@@ -10,8 +10,6 @@ const AppointmentSessionPage = async ({
 
   if (!sessionData) return;
 
-  console.log("sessionData", sessionData);
-
   return (
     <div>
       <VideoRoom sessionData={sessionData} />

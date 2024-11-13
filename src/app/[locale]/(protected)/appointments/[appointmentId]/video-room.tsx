@@ -13,7 +13,6 @@ import PreviewToolbar from "@/app/[locale]/(protected)/appointments/[appointment
 import { Button } from "@/components/ui/button";
 import { useLocale, useTranslations } from "next-intl";
 import Image from "next/image";
-import { revalidateBookAppointmentCache } from "@/actions/revalidateBookAppointmentCache";
 import VideoSessionCountdown from "@/app/[locale]/(protected)/appointments/[appointmentId]/video-session-countdown";
 import { isBefore } from "date-fns";
 
@@ -53,7 +52,6 @@ const VideoRoom = ({
   const effectRun = useRef(false);
   const effectRunPreview = useRef(false);
   const previewPublisherRef = useRef<any>(null);
-  const [isPending, startTransition] = useTransition();
   const user = useCurrentUser();
   const { isClient } = useCurrentRole();
   const { toast } = useToast();
@@ -70,11 +68,6 @@ const VideoRoom = ({
   const [isLandscape, setIsLandscape] = useState(false);
 
   const handleJoinCall = () => {
-    if ("isIntroCall" in sessionData && sessionData?.isIntroCall) {
-      /* startTransition(() => {
-        revalidateBookAppointmentCache();
-      }); */
-    }
     setIsPreviewing(false);
   };
 
