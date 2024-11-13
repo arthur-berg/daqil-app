@@ -17,9 +17,9 @@ const VideoSessionCountdown = ({
 
   // Handler for when the countdown completes
   const handleCompletion = () => {
-    startTransition(() => {
+    startTransition(async () => {
       try {
-        markUserAsShowedUp(appointmentId);
+        await markUserAsShowedUp(appointmentId);
       } catch (error) {
         console.error("Error marking user as showed up:", error);
       }

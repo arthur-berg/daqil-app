@@ -12,6 +12,7 @@ import Cookies from "js-cookie";
 import TimezoneWarningDialog from "@/components/timezone-warning-dialog";
 import { updateUserCampaignId } from "@/actions/update-user-campaign-id";
 import { formatTimeZoneWithOffset } from "@/utils/timeZoneUtils";
+import { updateUserUTMData } from "@/actions/update-user-utm-data";
 
 const routesWithoutSidebar = ["/appointments/[id]"];
 
@@ -145,6 +146,31 @@ export default function AdminPanelLayout({
       setIsOpen(false); // Ensure it is closed on mobile screens
     }
   }, [isDesktop]);
+
+  useEffect(() => {
+    if (!user) return;
+    if (!user.hasUTMSaved) {
+      const utmSource = Cookies.get("utm_source");
+      const utmMedium = Cookies.get("utm_medium");
+      const utmCampaign = Cookies.get("utm_campaign");
+      const utmTerm = Cookies.get("utm_term");
+      const utmContent = Cookies.get("utm_content");
+
+      if (utmSource || utmMedium || utmCampaign || utmTerm || utmContent) {
+        const utmData = {
+          utmSource: utmSource || null,
+          utmMedium: utmMedium || null,
+          utmCampaign: utmCampaign || null,
+          utmTerm: utmTerm || null,
+          utmContent: utmContent || null,
+        };
+
+        startTransition(async () => {
+          await updateUserUTMData(user.id, utmData);
+        });
+      }
+    }
+  }, [user]);
 
   useEffect(() => {
     // Handle body scroll locking based on isOpen state on mobile
