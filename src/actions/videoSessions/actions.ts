@@ -134,6 +134,8 @@ export const getSessionData = async (appointmentId: string) => {
     let session = await VideoSession.findOne({ appointmentId });
     const videoRecordingStarted = !!appointment.journalNoteId;
 
+    console.log("session", session);
+
     if (session) {
       console.log("Session found. Generating new token...");
       const userAuthorized = await isUserAuthorized(
@@ -149,6 +151,7 @@ export const getSessionData = async (appointmentId: string) => {
       }
 
       const data = generateToken(session.sessionId);
+      console.log("data in 1", data);
 
       sessionCreationInProgress = false;
       return {
@@ -167,6 +170,7 @@ export const getSessionData = async (appointmentId: string) => {
     } else {
       console.log("Session not found. Creating a new one...");
       const data = await createSessionAndToken();
+      console.log("data in 2", data);
 
       await VideoSession.create({
         sessionId: data?.sessionId,
