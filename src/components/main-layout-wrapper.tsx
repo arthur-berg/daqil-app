@@ -13,6 +13,7 @@ import TimezoneWarningDialog from "@/components/timezone-warning-dialog";
 import { updateUserCampaignId } from "@/actions/update-user-campaign-id";
 import { formatTimeZoneWithOffset } from "@/utils/timeZoneUtils";
 import { updateUserUTMData } from "@/actions/update-user-utm-data";
+import { useSearchParams } from "next/navigation";
 
 const routesWithoutSidebar = ["/appointments/[id]"];
 
@@ -36,6 +37,8 @@ export default function AdminPanelLayout({
   const [isOpen, setIsOpen] = useState(false);
   const [showTimezoneDialog, setShowTimezoneDialog] = useState(false);
   const [isPending, startTransition] = useTransition();
+
+  const searchParams = useSearchParams();
 
   const pathname = usePathname();
   const sidebarMenuRef = useRef<any>();
@@ -150,11 +153,14 @@ export default function AdminPanelLayout({
   useEffect(() => {
     if (!user) return;
     if (!user.hasUTMSaved) {
-      const utmSource = Cookies.get("utm_source");
-      const utmMedium = Cookies.get("utm_medium");
-      const utmCampaign = Cookies.get("utm_campaign");
-      const utmTerm = Cookies.get("utm_term");
-      const utmContent = Cookies.get("utm_content");
+      // Use Next.js useSearchParams to get query parameters
+      const searchParams = new URLSearchParams(window.location.search);
+      console.log("searchParams", searchParams);
+      const utmSource = searchParams.get("utm_source");
+      const utmMedium = searchParams.get("utm_medium");
+      const utmCampaign = searchParams.get("utm_campaign");
+      const utmTerm = searchParams.get("utm_term");
+      const utmContent = searchParams.get("utm_content");
 
       if (utmSource || utmMedium || utmCampaign || utmTerm || utmContent) {
         const utmData = {
