@@ -165,7 +165,6 @@ export const getSessionData = async (appointmentId: string) => {
         },
       };
     } else {
-      console.log("Session not found. Creating a new one...");
       const data = await createSessionAndToken();
 
       await VideoSession.create({

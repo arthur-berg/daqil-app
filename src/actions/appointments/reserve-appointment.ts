@@ -108,6 +108,7 @@ export const reserveAppointment = async (
         client.selectedTherapist?.therapist?.toString() !== therapistId) &&
       !isIntroCall
     ) {
+      console.log("here");
       // Update the previous therapist in selectedTherapistHistory
       await User.updateOne(
         { _id: clientId, "selectedTherapistHistory.current": true },

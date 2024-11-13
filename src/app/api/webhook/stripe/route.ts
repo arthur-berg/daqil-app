@@ -32,8 +32,6 @@ export async function POST(req: Request): Promise<NextResponse> {
     await handlePaymentIntentSucceeded(data);
   }
 
-  console.log("eventType", event.type);
-
   if (event.type === "setup_intent.succeeded") {
     const setupIntent = event.data.object as Stripe.SetupIntent;
     await handleSetupIntentSucceeded(setupIntent);
