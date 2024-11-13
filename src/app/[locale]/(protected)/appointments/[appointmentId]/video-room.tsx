@@ -227,10 +227,9 @@ const VideoRoom = ({
 
   if ("error" in sessionData) return;
 
-  const meetingHasNotStarted = isBefore(
-    new Date(),
-    sessionData.appointmentData.startDate
-  );
+  const startDate = new Date(sessionData.appointmentData.startDate);
+
+  const meetingHasNotStarted = isBefore(new Date(), startDate);
 
   if (isPreviewing) {
     return (
@@ -341,7 +340,7 @@ const VideoRoom = ({
                 />
                 {meetingHasNotStarted && (
                   <VideoSessionCountdown
-                    appointmentStartDate={sessionData.appointmentData.startDate}
+                    appointmentStartDate={startDate}
                     appointmentId={sessionData.appointmentData.id}
                   />
                 )}
