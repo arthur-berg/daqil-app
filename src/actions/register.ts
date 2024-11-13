@@ -7,7 +7,11 @@ import User from "@/models/User";
 import { RegisterSchema } from "@/schemas";
 import { getUserByEmail } from "@/data/user";
 import { generateVerificationToken } from "@/lib/tokens";
-import { addUserToSubscriberList, sendVerificationEmail } from "@/lib/mail";
+import {
+  addUserToSubscriberList,
+  sendVerificationEmail,
+  setCustomFieldsForMailchimpUser,
+} from "@/lib/mail";
 import { generatePassword } from "@/utils";
 import { getTranslations } from "next-intl/server";
 import { UserRole } from "@/generalTypes";
@@ -46,15 +50,21 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
+  const marketingData: Record<string, unknown> = {
+    utmSource: utmSource || null,
+    utmMedium: utmMedium || null,
+    utmCampaign: utmCampaign || null,
+    utmTerm: utmTerm || null,
+    utmContent: utmContent || null,
+  };
+
+  // If any UTM parameter exists, add dateCaptured
+  if (utmSource || utmMedium || utmCampaign || utmTerm || utmContent) {
+    marketingData.dateCaptured = new Date();
+  }
+
   if (existingUser && !existingUser.isAccountSetupDone) {
-    const updateData: Record<string, unknown> = { password: hashedPassword };
-
-    if (utmSource) updateData["marketingData.utmSource"] = utmSource;
-    if (utmMedium) updateData["marketingData.utmMedium"] = utmMedium;
-    if (utmCampaign) updateData["marketingData.utmCampaign"] = utmCampaign;
-    if (utmTerm) updateData["marketingData.utmTerm"] = utmTerm;
-    if (utmContent) updateData["marketingData.utmContent"] = utmContent;
-
+    const updateData = { password: hashedPassword, ...marketingData };
     await User.findByIdAndUpdate(existingUser._id, {
       password: hashedPassword,
       updateData,
@@ -63,7 +73,7 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
     await User.create({
       password: hashedPassword,
       role: UserRole.CLIENT,
-      email,
+      email: email.toLowerCase(),
       clientBalance: { amount: 0, currency: "USD" },
       selectedTherapist: {
         therapist: null,
@@ -72,19 +82,27 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
       },
       appointments: [],
       selectedTherapistHistory: [],
-      marketingData: {
-        utmSource: utmSource || null,
-        utmMedium: utmMedium || null,
-        utmCampaign: utmCampaign || null,
-        utmTerm: utmTerm || null,
-        utmContent: utmContent || null,
-      },
+      marketingData,
     });
   }
 
   const verificationToken = await generateVerificationToken(email);
 
   await sendVerificationEmail(verificationToken.email, verificationToken.token);
+
+  const customFields = {
+    UTMSOURCE: utmSource || "",
+    UTMMEDIUM: utmMedium || "",
+    UTMCAMP: utmCampaign || "",
+    UTMTERM: utmTerm || "",
+    UTMCONTENT: utmContent || "",
+    UTMDATE: marketingData.dateCaptured
+      ? new Date(marketingData.dateCaptured).toISOString()
+      : "",
+  };
+
+  // Update Mailchimp custom fields
+  await setCustomFieldsForMailchimpUser(email, customFields);
 
   const response = await addUserToSubscriberList(verificationToken.email);
 

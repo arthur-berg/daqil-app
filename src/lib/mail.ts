@@ -41,8 +41,6 @@ export const addUserToSubscriberList = async (
       email
     );
 
-    console.log("listResponse", listResponse);
-
     if (listResponse.status === "subscribed") {
       return { success: "User already exists in the list" };
     } else if (
