@@ -97,7 +97,7 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
     UTMTERM: utmTerm || "",
     UTMCONTENT: utmContent || "",
     UTMDATE: marketingData.dateCaptured
-      ? new Date(marketingData.dateCaptured).toISOString()
+      ? new Date(marketingData.dateCaptured as Date).toISOString()
       : "",
   };
 
