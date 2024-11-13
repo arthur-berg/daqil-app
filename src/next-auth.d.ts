@@ -23,7 +23,7 @@ export type ExtendedUser = DefaultSession["user"] & {
     utmContent?: string;
     dateCaptured: Date;
   };
-  hasUTMSaved: boolean;
+  /*  hasUTMSaved: boolean; */
   error?: "inactive-user";
   isOnboardingDone: boolean;
   isAccountSetupDone: boolean;

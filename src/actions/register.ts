@@ -25,7 +25,8 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
     return { error: ErrorMessages("invalidFields") };
   }
 
-  const { email } = validatedFields.data;
+  const { email, utmSource, utmMedium, utmCampaign, utmTerm, utmContent } =
+    validatedFields.data;
 
   if (process.env.NODE_ENV === "development" && !email.endsWith("@daqil.com")) {
     return {
@@ -46,8 +47,17 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
   const hashedPassword = await bcrypt.hash(password, 10);
 
   if (existingUser && !existingUser.isAccountSetupDone) {
+    const updateData: Record<string, unknown> = { password: hashedPassword };
+
+    if (utmSource) updateData["marketingData.utmSource"] = utmSource;
+    if (utmMedium) updateData["marketingData.utmMedium"] = utmMedium;
+    if (utmCampaign) updateData["marketingData.utmCampaign"] = utmCampaign;
+    if (utmTerm) updateData["marketingData.utmTerm"] = utmTerm;
+    if (utmContent) updateData["marketingData.utmContent"] = utmContent;
+
     await User.findByIdAndUpdate(existingUser._id, {
       password: hashedPassword,
+      updateData,
     });
   } else {
     await User.create({
@@ -62,6 +72,13 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
       },
       appointments: [],
       selectedTherapistHistory: [],
+      marketingData: {
+        utmSource: utmSource || null,
+        utmMedium: utmMedium || null,
+        utmCampaign: utmCampaign || null,
+        utmTerm: utmTerm || null,
+        utmContent: utmContent || null,
+      },
     });
   }
 

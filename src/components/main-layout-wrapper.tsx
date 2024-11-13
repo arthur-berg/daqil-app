@@ -151,34 +151,26 @@ export default function AdminPanelLayout({
   }, [isDesktop]);
 
   useEffect(() => {
-    if (!user) return;
-    console.log("user", user);
-    console.log("user.hasUTMSaved", user.hasUTMSaved);
-    if (!user.hasUTMSaved) {
-      // Use Next.js useSearchParams to get query parameters
-      const searchParams = new URLSearchParams(window.location.search);
-      console.log("searchParams", searchParams);
-      const utmSource = searchParams.get("utm_source");
-      const utmMedium = searchParams.get("utm_medium");
-      const utmCampaign = searchParams.get("utm_campaign");
-      const utmTerm = searchParams.get("utm_term");
-      const utmContent = searchParams.get("utm_content");
+    const searchParams = new URLSearchParams(window.location.search);
+    const utmSource = searchParams.get("utm_source");
+    const utmMedium = searchParams.get("utm_medium");
+    const utmCampaign = searchParams.get("utm_campaign");
+    const utmTerm = searchParams.get("utm_term");
+    const utmContent = searchParams.get("utm_content");
+    console.log("searchParams", searchParams);
 
-      if (utmSource || utmMedium || utmCampaign || utmTerm || utmContent) {
-        const utmData = {
-          utmSource: utmSource || null,
-          utmMedium: utmMedium || null,
-          utmCampaign: utmCampaign || null,
-          utmTerm: utmTerm || null,
-          utmContent: utmContent || null,
-        };
-
-        startTransition(async () => {
-          await updateUserUTMData(user.id, utmData);
-        });
-      }
+    if (utmSource || utmMedium || utmCampaign || utmTerm || utmContent) {
+      if (utmSource)
+        Cookies.set("utm_source", utmSource, { expires: 30, path: "/" });
+      if (utmMedium)
+        Cookies.set("utm_medium", utmMedium, { expires: 30, path: "/" });
+      if (utmCampaign)
+        Cookies.set("utm_campaign", utmCampaign, { expires: 30, path: "/" });
+      if (utmTerm) Cookies.set("utm_term", utmTerm, { expires: 30, path: "/" });
+      if (utmContent)
+        Cookies.set("utm_content", utmContent, { expires: 30, path: "/" });
     }
-  }, [user]);
+  }, []);
 
   useEffect(() => {
     // Handle body scroll locking based on isOpen state on mobile
