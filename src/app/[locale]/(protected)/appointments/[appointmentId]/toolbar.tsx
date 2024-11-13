@@ -12,14 +12,15 @@ const ToolBar = ({
   cameraPublishing,
   t,
   appointmentId,
+  isIntroCall,
 }: any) => {
+  const [isPending, startTransition] = useTransition();
   const [hasAudio, setHasAudio] = useState(true);
   const [hasVideo, setHasVideo] = useState(true);
   const [areAllMuted, setAllMuted] = useState(false);
   const { toast, dismiss } = useToast();
   const [muteToastId, setMuteToastId] = useState<string | null>(null);
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
 
   const toggleVideo = () => {
     if (room && room.camera) {
@@ -73,9 +74,12 @@ const ToolBar = ({
 
   const endCall = () => {
     if (room) {
-      startTransition(() => {
-        revalidateBookAppointmentCache();
-      });
+      if (isIntroCall) {
+        startTransition(() => {
+          revalidateBookAppointmentCache();
+        });
+      }
+
       room.leave();
       router.push(`/appointments/ended/${appointmentId}`);
     }

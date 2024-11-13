@@ -125,7 +125,7 @@ export const inviteTherapist = async (
     const hashedPassword = await bcrypt.hash(password, 10);
 
     await User.create({
-      email,
+      email: email.toLowerCase(),
       password: hashedPassword,
       role: UserRole.THERAPIST,
       stripeAccountId: "",
@@ -227,6 +227,8 @@ export const sendTherapistInviteEmail = async (
 };
 
 export const getAllAppointmentsByDate = async (date: string) => {
+  await connectToMongoDB();
+
   try {
     const start = startOfDay(new Date(date));
     const end = endOfDay(new Date(date));

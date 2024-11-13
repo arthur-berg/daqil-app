@@ -76,6 +76,7 @@
     "finishAccountSetup": "Finish account setup"
   },
   "AppointmentList": {
+    "timeLeftUntilStart": "Time left until appointment start",
     "timezoneNotice":  "You are viewing times in your browsers timezone: {timeZone}",
     "meetingNotPaid": "Appointment is waiting for payment",
     "meetingNotPaidMessage": "The meeting is not paid yet by the client.",
@@ -529,7 +530,7 @@
   "cancelReservation":"Cancel reservation",
   "bookAppointment": "Book appointment",
   "loadingSetup":  "Loading checkout...",
-  "processingPayment": "Processing payment..."
+  "processing": "Processing..."
 },
   "AdminPage": {
     "clientOverview": "Client Overview",

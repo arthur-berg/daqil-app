@@ -222,10 +222,9 @@ const VideoRoom = ({
 
   if ("error" in sessionData) return;
 
-  const meetingHasNotStarted = isBefore(
-    new Date(),
-    sessionData.appointmentData.startDate
-  );
+  const startDate = new Date(sessionData.appointmentData.startDate);
+
+  const meetingHasNotStarted = isBefore(new Date(), startDate);
 
   if (isPreviewing) {
     return (
@@ -315,6 +314,8 @@ const VideoRoom = ({
     );
   }
 
+  console.log("participants", participants);
+
   return (
     <div
       className={`${containerHeight} md:h-screen w-full flex flex-col p-2 box-border`}
@@ -336,7 +337,7 @@ const VideoRoom = ({
                 />
                 {meetingHasNotStarted && (
                   <VideoSessionCountdown
-                    appointmentStartDate={sessionData.appointmentData.startDate}
+                    appointmentStartDate={startDate}
                     appointmentId={sessionData.appointmentData.id}
                   />
                 )}
@@ -362,6 +363,7 @@ const VideoRoom = ({
             cameraPublishing={cameraPublishing}
             t={t}
             appointmentId={sessionData.appointmentData.id}
+            isIntroCall={sessionData.isIntroCall}
           />
         </div>
       </div>
