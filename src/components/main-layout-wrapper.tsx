@@ -152,6 +152,8 @@ export default function AdminPanelLayout({
 
   useEffect(() => {
     if (!user) return;
+    console.log("user", user);
+    console.log("user.hasUTMSaved", user.hasUTMSaved);
     if (!user.hasUTMSaved) {
       // Use Next.js useSearchParams to get query parameters
       const searchParams = new URLSearchParams(window.location.search);
