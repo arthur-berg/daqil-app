@@ -70,6 +70,11 @@ const IntroMeetingManager = async ({
   const introMeetingIsBookedButNotFinished =
     !!confirmedIntroAppointment && !client?.selectedTherapist?.introCallDone;
 
+  console.log(
+    "introMeetingIsBookedButNotFinished",
+    introMeetingIsBookedButNotFinished
+  );
+
   return (
     <>
       <div className="max-w-4xl mx-auto">
@@ -94,7 +99,8 @@ const IntroMeetingManager = async ({
                 </Link>
               </div>
             ) : introAppointmentWasCanceledDueToNoShowUp &&
-              !introMeetingIsBookedButNotFinished ? (
+              !confirmedIntroAppointment &&
+              !client?.selectedTherapist?.introCallDone ? (
               <>
                 <div className="bg-white p-4 rounded-md mb-6 flex items-center flex-col text-center">
                   <MdEvent className="mr-2 text-destructive mb-4" size={48} />
