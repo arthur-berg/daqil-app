@@ -65,7 +65,7 @@ export async function confirmIntroBooking(appointmentId: string) {
     // Update the appointment status to "confirmed"
     await Appointment.findByIdAndUpdate(appointment._id, {
       status: "confirmed",
-      "payment.status": "pending",
+      "payment.status": "paid",
     });
 
     // Email and reminder logic
