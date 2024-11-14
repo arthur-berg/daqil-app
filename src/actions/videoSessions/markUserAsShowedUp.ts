@@ -15,7 +15,6 @@ export const markUserAsShowedUp = async (appointmentId: string) => {
     getTranslations("ErrorMessages"),
   ]);
   try {
-    console.log("HERE");
     const user = await requireAuth([UserRole.THERAPIST, UserRole.CLIENT]);
     const { isTherapist, isClient } = await getCurrentRole();
     const appointment = await Appointment.findById(appointmentId);
