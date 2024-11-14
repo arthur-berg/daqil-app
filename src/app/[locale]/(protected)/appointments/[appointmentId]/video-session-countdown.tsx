@@ -19,7 +19,7 @@ const VideoSessionCountdown = ({
   const handleCompletion = () => {
     startTransition(async () => {
       try {
-        /* await markUserAsShowedUp(appointmentId); */
+        await markUserAsShowedUp(appointmentId);
       } catch (error) {
         console.error("Error marking user as showed up:", error);
       }
