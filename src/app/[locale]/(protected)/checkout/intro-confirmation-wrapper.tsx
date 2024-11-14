@@ -91,6 +91,12 @@ const IntroConfirmationWrapper = ({
         </p>
       </div>
 
+      {/* Penalty Fee Notice */}
+      <div className="text-red-600 font-semibold mb-4">
+        {t("cancellationNotice")}
+      </div>
+      <p className="text-sm text-gray-600 mb-6">{t("cancellationReason")}</p>
+
       <div className="text-center mb-6">
         <p className="text-lg font-semibold text-gray-800">
           {t("weHaveReservedNoCard")}
