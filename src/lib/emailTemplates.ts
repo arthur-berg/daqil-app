@@ -827,34 +827,5 @@ export const introBookingConfirmationEmailTemplate = async (
         </div>
       </div>
     `,
-    therapistEmailHtml: `
-      <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
-        <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
-          <div style="text-align: center; margin-bottom: 20px;">
-            <img src="${daqilLogoUrl}" alt="daqil" style="width: 50%; max-width: 100%; height: auto;" />
-          </div>
-          <div style="margin-top: 40px;">
-            <p>${t("therapistGreeting", {
-              name: appointmentDetails.therapistName,
-            })}</p>
-            <p>${t("therapistIntroBookingMessage", {
-              clientName: appointmentDetails.clientName,
-            })}</p>
-            <p><strong>${t("dateLabel")}</strong> ${
-      appointmentDetails.therapistDate
-    }</p>
-            <p><strong>${t("timeLabel")}</strong> ${
-      appointmentDetails.therapistTime
-    } (${appointmentDetails.therapistTimeZone})</p>
-            <p><strong>${t("durationLabel")}</strong> ${
-      appointmentDetails.durationInMinutes
-    } ${t("minutesLabel")}</p>
-            <p style="margin-top: 20px; color: #888888; font-size: 12px;">${t(
-              "therapistNotificationFooter"
-            )}</p>
-          </div>
-        </div>
-      </div>
-    `,
   };
 };

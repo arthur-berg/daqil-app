@@ -106,8 +106,11 @@ export async function confirmIntroBooking(appointmentId: string) {
       clientTime: clientAppointmentTime,
       therapistDate: therapistAppointmentDate,
       therapistTime: therapistAppointmentTime,
-      therapistName: `${getFullName(therapist.firstName, therapist.lastName)}`,
-      clientName: `${getFullName(client.firstName, client.lastName)}`,
+      therapistName: `${await getFullName(
+        therapist.firstName,
+        therapist.lastName
+      )}`,
+      clientName: `${await getFullName(client.firstName, client.lastName)}`,
       durationInMinutes: appointment.durationInMinutes,
       therapistTimeZone,
       clientTimeZone,

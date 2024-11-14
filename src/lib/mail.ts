@@ -834,13 +834,12 @@ export const sendIntroBookingConfirmationMailWithLink = async (
     appointmentDetails.appointmentId
   )}`;
 
-  const { clientEmailHtml, therapistEmailHtml } =
-    await introBookingConfirmationEmailTemplate(
-      appointmentDetails,
-      confirmLink,
-      t,
-      locale
-    );
+  const { clientEmailHtml } = await introBookingConfirmationEmailTemplate(
+    appointmentDetails,
+    confirmLink,
+    t,
+    locale
+  );
 
   const clientMessage = {
     from_email: "no-reply@daqilhealth.com",
@@ -854,22 +853,9 @@ export const sendIntroBookingConfirmationMailWithLink = async (
     ],
   };
 
-  const therapistMessage = {
-    from_email: "no-reply@daqilhealth.com",
-    subject: t("therapistNotificationSubject"),
-    html: therapistEmailHtml,
-    to: [
-      {
-        email: therapistEmail,
-        type: "to",
-      },
-    ],
-  };
-
   try {
     await Promise.all([
       mailchimpTx.messages.send({ message: clientMessage as any }),
-      mailchimpTx.messages.send({ message: therapistMessage as any }),
     ]);
   } catch (error) {
     console.error(
