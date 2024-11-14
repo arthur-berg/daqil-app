@@ -617,6 +617,7 @@
     "goToAppointments": "Go to Appointments"
   },
   "ErrorMessages": {
+    "appointmentNotReserved": "Appointment not reserved anymore",
     "isNotIntroCall": "This is not an introductory call",
     "appointmentAlreadyConfirmed": "Appointment already confirmed",
     "accountDeletionFailed": "Account deletion failed",
@@ -851,7 +852,9 @@
   "therapistGreeting": "Hello {name},",
   "therapistIntroBookingMessage": "{clientName} has booked an intro call appointment with you. Here are the details:",
   "therapistNotificationFooter": "You will receive a notification once the client confirms the booking.",
-  "cancellationNotice": "If you do not attend the appointment or fail to cancel at least 24 hours in advance, you will be charged $15 USD."
+  "cancellationNotice": "If you do not attend the appointment or fail to cancel at least 24 hours in advance, you will be charged $15 USD.",
+  "psychologistLabel": "Psychologist",
+  "clientLabel": "Client"
 
 },
   "MeetingLinkEmail": {

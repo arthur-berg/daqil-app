@@ -29,6 +29,9 @@ const IntroConfirmationWrapper = ({
         router.push("/book-appointment");
       } else if (data.error) {
         toast({ title: data.error, variant: "destructive" });
+        if (data.redirect) {
+          router.push("/book-appointment");
+        }
       }
     });
   }, [appointmentId, router, toast]);

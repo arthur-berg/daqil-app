@@ -20,7 +20,10 @@ import User from "@/models/User";
 import { revalidatePath } from "next/cache";
 import connectToMongoDB from "@/lib/mongoose";
 import { APPOINTMENT_TYPE_ID_INTRO_SESSION } from "@/contants/config";
-import { sendIntroBookingConfirmationMailWithLink } from "@/lib/mail";
+import {
+  addTagToMailchimpUser,
+  sendIntroBookingConfirmationMailWithLink,
+} from "@/lib/mail";
 import { getFullName } from "@/utils/formatName";
 
 export const reserveAppointment = async (
@@ -179,6 +182,10 @@ export const reserveAppointment = async (
     session.endSession();
 
     if (isIntroCall) {
+      await addTagToMailchimpUser(
+        client.email as string,
+        "has-reached-intro-checkout"
+      );
       const locale = await getLocale();
       const appointmentDetails = {
         appointmentId: appointmentId.toString(),

@@ -806,6 +806,12 @@ export const introBookingConfirmationEmailTemplate = async (
         <div style="margin-top: 40px;">
           <p>${t("greeting", { name: appointmentDetails.clientName })}</p>
           <p>${t("introBookingMessage")}</p>
+          <p><strong>${t("psychologistLabel")}</strong>: ${
+      appointmentDetails.therapistName
+    }</p>
+          <p><strong>${t("clientLabel")}</strong>: ${
+      appointmentDetails.clientName
+    }</p>
           <p><strong>${t("dateLabel")}</strong> ${
       appointmentDetails.clientDate
     }</p>
@@ -815,7 +821,6 @@ export const introBookingConfirmationEmailTemplate = async (
           <p><strong>${t("durationLabel")}</strong> ${
       appointmentDetails.durationInMinutes
     } ${t("minutesLabel")}</p>
-
           <p style="color: red; font-weight: bold; margin-top: 20px;">
             ${t("cancellationNotice")}
           </p>

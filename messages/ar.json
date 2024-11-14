@@ -608,6 +608,7 @@
     "goToAppointments": "الذهاب إلى المواعيد"
   },
   "ErrorMessages": {
+    "appointmentNotReserved": "لم يتم حجز الموعد بعد الآن",
     "isNotIntroCall": "هذه ليست مكالمة تعريفية",
 "appointmentAlreadyConfirmed": "تم تأكيد الموعد بالفعل",
     "accountDeletionFailed": "فشل في حذف الحساب",
@@ -841,7 +842,9 @@
   "therapistGreeting": "مرحبًا {name}،",
   "therapistIntroBookingMessage": "قام {clientName} بحجز موعد مكالمة تعريفية معك. إليك التفاصيل:",
   "therapistNotificationFooter": "سوف تتلقى إشعارًا بمجرد أن يؤكد العميل الحجز.",
-  "cancellationNotice": "إذا لم تحضر الموعد أو لم تقم بإلغائه قبل 24 ساعة على الأقل، سيتم فرض رسوم بقيمة 15 دولارًا أمريكيًا."
+  "cancellationNotice": "إذا لم تحضر الموعد أو لم تقم بإلغائه قبل 24 ساعة على الأقل، سيتم فرض رسوم بقيمة 15 دولارًا أمريكيًا.",
+  "psychologistLabel": "المعالج النفسي",
+"clientLabel": "العميل"
 },
   "MeetingLinkEmail": {
     "subject": "رابط الفيديو لموعدك في {appointmentTime}",
