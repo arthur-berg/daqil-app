@@ -16,6 +16,7 @@ import {
   therapistNotPaidInTimeTemplate,
   introBookingConfirmationTemplate,
   meetingLinkEmailTemplate,
+  introBookingConfirmationEmailTemplate,
 } from "./emailTemplates";
 import { getLocale, getTranslations } from "next-intl/server";
 
@@ -816,5 +817,64 @@ export const sendMeetingLink = async (
   } catch (error) {
     console.error("Error sending meeting link email:", error);
     throw error;
+  }
+};
+
+export const sendIntroBookingConfirmationMailWithLink = async (
+  therapistEmail: any,
+  clientEmail: any,
+  appointmentDetails: any,
+  locale: any
+) => {
+  const t = await getTranslations("IntroBookingLinkConfirmationEmail");
+
+  const confirmLink = `${
+    process.env.NEXT_PUBLIC_APP_URL
+  }/${locale}/intro-booking-confirmation?appointmentId=${encodeURIComponent(
+    appointmentDetails.appointmentId
+  )}`;
+
+  const { clientEmailHtml, therapistEmailHtml } =
+    await introBookingConfirmationEmailTemplate(
+      appointmentDetails,
+      confirmLink,
+      t,
+      locale
+    );
+
+  const clientMessage = {
+    from_email: "no-reply@daqilhealth.com",
+    subject: t("actionRequiredSubject"),
+    html: clientEmailHtml,
+    to: [
+      {
+        email: clientEmail,
+        type: "to",
+      },
+    ],
+  };
+
+  const therapistMessage = {
+    from_email: "no-reply@daqilhealth.com",
+    subject: t("therapistNotificationSubject"),
+    html: therapistEmailHtml,
+    to: [
+      {
+        email: therapistEmail,
+        type: "to",
+      },
+    ],
+  };
+
+  try {
+    await Promise.all([
+      mailchimpTx.messages.send({ message: clientMessage as any }),
+      mailchimpTx.messages.send({ message: therapistMessage as any }),
+    ]);
+  } catch (error) {
+    console.error(
+      "Error sending intro booking confirmation email with link:",
+      error
+    );
   }
 };

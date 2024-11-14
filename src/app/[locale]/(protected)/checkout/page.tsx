@@ -6,6 +6,7 @@ import { getCurrentUser } from "@/lib/auth";
 import connectToMongoDB from "@/lib/mongoose";
 import { APPOINTMENT_TYPE_ID_INTRO_SESSION } from "@/contants/config";
 import IntroCheckoutWrapper from "@/app/[locale]/(protected)/checkout/intro-checkout-wrapper";
+import IntroConfirmationWrapper from "@/app/[locale]/(protected)/checkout/intro-confirmation-wrapper";
 
 const CheckoutPage = async ({
   searchParams: { appointmentId },
@@ -27,12 +28,15 @@ const CheckoutPage = async ({
 
   const currentDate = new Date();
   const paymentExpiryDate = new Date(appointment.payment.paymentExpiryDate);
+  const isIntroAppointment =
+    appointment.appointmentTypeId.toString() ===
+    APPOINTMENT_TYPE_ID_INTRO_SESSION;
 
   if (currentDate > paymentExpiryDate) {
     return (
       <div className="max-w-4xl mx-auto bg-white p-10 rounded-md text-black ">
         <p className="text-center text-red-600 font-semibold">
-          {t("paymentExpired")}
+          {isIntroAppointment ? t("confirmationExpired") : t("paymentExpired")}
         </p>
       </div>
     );
@@ -44,18 +48,14 @@ const CheckoutPage = async ({
 
   const dateObject = new Date(appointment.startDate);
 
-  const isIntroAppointment =
-    appointment.appointmentTypeId.toString() ===
-    APPOINTMENT_TYPE_ID_INTRO_SESSION;
-
   return (
     <div className="max-w-4xl mx-auto bg-white py-6 px-2 sm:p-10 rounded-md text-black relative">
       {isIntroAppointment ? (
-        <IntroCheckoutWrapper
+        <IntroConfirmationWrapper
           appointmentId={appointmentId}
           paymentExpiryDate={appointment.payment.paymentExpiryDate}
-          appointmentType={appointmentType}
           date={dateObject}
+          appointmentType={appointmentType}
         />
       ) : (
         <CheckoutWrapper
@@ -70,4 +70,12 @@ const CheckoutPage = async ({
   );
 };
 
+{
+  /* <IntroCheckoutWrapper
+          appointmentId={appointmentId}
+          paymentExpiryDate={appointment.payment.paymentExpiryDate}
+          appointmentType={appointmentType}
+          date={dateObject}
+        /> */
+}
 export default CheckoutPage;
