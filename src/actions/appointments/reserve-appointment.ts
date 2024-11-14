@@ -7,7 +7,7 @@ import {
   getUserByIdLean,
 } from "@/data/user";
 import { requireAuth } from "@/lib/auth";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import {
   checkTherapistAvailability,
   clearTemporarilyReservedAppointments,
@@ -20,6 +20,8 @@ import User from "@/models/User";
 import { revalidatePath } from "next/cache";
 import connectToMongoDB from "@/lib/mongoose";
 import { APPOINTMENT_TYPE_ID_INTRO_SESSION } from "@/contants/config";
+import { sendIntroBookingConfirmationMailWithLink } from "@/lib/mail";
+import { getFullName } from "@/utils/formatName";
 
 export const reserveAppointment = async (
   appointmentType: any,
@@ -176,6 +178,32 @@ export const reserveAppointment = async (
     await session.commitTransaction();
     transactionCommitted = true;
     session.endSession();
+
+    if (isIntroCall) {
+      const locale = await getLocale();
+      const appointmentDetails = {
+        appointmentId: appointmentId.toString(),
+        clientDate: format(new Date(startDate), "yyyy-MM-dd"),
+        clientTime: format(new Date(startDate), "HH:mm"),
+        therapistDate: format(new Date(startDate), "yyyy-MM-dd"),
+        therapistTime: format(new Date(startDate), "HH:mm"),
+        therapistName: `${await getFullName(
+          therapist.firstName,
+          therapist.lastName
+        )}`,
+        clientName: `${await getFullName(client.firstName, client.lastName)}`,
+        durationInMinutes: appointmentType.durationInMinutes,
+        clientTimeZone: client.settings.timeZone,
+        therapistTimeZone: therapist.settings.timeZone,
+      };
+
+      await sendIntroBookingConfirmationMailWithLink(
+        therapist.email,
+        client.email,
+        appointmentDetails,
+        locale
+      );
+    }
 
     revalidatePath("/appointments");
 

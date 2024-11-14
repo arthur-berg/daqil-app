@@ -364,6 +364,7 @@
     "selectAppointmentType": "Select type of appointment"
   },
   "Checkout": {
+    "confirmationExpired": "The confirmation link has expired. Please reserve a new appointment.",
     "processingPayment": "Processing payment...",
     "pay": "Pay ${amount}",
     "appointmentDetails": "Appointment Details",
@@ -513,7 +514,16 @@
     "schedule": "Schedule",
     "selectAppointmentType": "Select type of appointment"
   },
+  "ConfirmBookingPage": {
+    "confirmingBookingText": "Confirming booking... Please wait",
+  "missingAppointmentId": "The appointment ID is missing. Please try again.",
+  "somethingWentWrong": "Something went wrong. Please try again later.",
+  "redirecting": "Redirecting..."
+},
 "IntroCheckoutTranslation": {
+  "checkEmailToConfirm": "Check your email to confirm your booking.",
+  "actionRequired":"Action Required",
+  "weHaveReservedNoCard": "We have reserved this appointment for you.",
   "goBack": "Go back",
   "minutes": "minutes",
     "appointmentDetails": "Appointment Details",
@@ -601,9 +611,14 @@
     "amountToBePaid": "Amount to be paid:",
     "bookingConfirmed": "Booking confirmed",
     "loadingAmountPaid": "Loading amount paid...",
+    "actionRequired": "Action Required",
+    "confirmYourBooking": "Please confirm your booking",
+    "checkEmailForConfirmation": "An email has been sent with your booking details. Please check your inbox and confirm the booking to proceed.",
     "goToAppointments": "Go to Appointments"
   },
   "ErrorMessages": {
+    "isNotIntroCall": "This is not an introductory call",
+    "appointmentAlreadyConfirmed": "Appointment already confirmed",
     "accountDeletionFailed": "Account deletion failed",
     "thisAccountIsTerminated": "This account has been deleted. Please logout.",
     "onlyDaqilEmailsAllowed": "Only DAQIL emails are allowed",
@@ -649,6 +664,7 @@
     "appointmentNotConfirmed": "The appointment is not confirmed."
   },
   "SuccessMessages": {
+    "appointmentBookingConfirmed": "Appointment booking confirmed",
     "campaignIdUpdated": "Campaign ID updated",
     "accountDeleted": "Account successfully deleted",
     "paymentSettingsSaved": "Payment settings saved",
@@ -821,6 +837,21 @@
     "notPaidInTimeMessageTherapist": "The appointment with your client was canceled because the client did not pay on time. Please check your upcoming appointments.",
     "thankYouMessage": "Thank you for using DAQIL."
   },
+  "IntroBookingLinkConfirmationEmail": {
+  "actionRequiredSubject": "Action Required: Confirm Your Booking",
+  "therapistNotificationSubject": "New Intro Call Appointment Booked",
+  "greeting": "Hello {name},",
+  "introBookingMessage": "We have reserved an intro call appointment for you. Please confirm your booking by clicking the button below.",
+  "dateLabel": "Date",
+  "timeLabel": "Time",
+  "durationLabel": "Duration",
+  "minutesLabel": "minutes",
+  "confirmBookingButton": "Confirm Booking",
+  "actionRequiredFooter": "Please confirm your booking as soon as possible to secure your appointment.",
+  "therapistGreeting": "Hello {name},",
+  "therapistIntroBookingMessage": "{clientName} has booked an intro call appointment with you. Here are the details:",
+  "therapistNotificationFooter": "You will receive a notification once the client confirms the booking."
+},
   "MeetingLinkEmail": {
     "subject": "Video link for your appointment at {appointmentTime}",
     "greeting": "Hello,",
