@@ -798,34 +798,40 @@ export const introBookingConfirmationEmailTemplate = async (
 
   return {
     clientEmailHtml: `
-      <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
-        <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
-          <div style="text-align: center; margin-bottom: 20px;">
-            <img src="${daqilLogoUrl}" alt="daqil" style="width: 50%; max-width: 100%; height: auto;" />
-          </div>
-          <div style="margin-top: 40px;">
-            <p>${t("greeting", { name: appointmentDetails.clientName })}</p>
-            <p>${t("introBookingMessage")}</p>
-            <p><strong>${t("dateLabel")}</strong> ${
+    <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
+      <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+        <div style="text-align: center; margin-bottom: 20px;">
+          <img src="${daqilLogoUrl}" alt="daqil" style="width: 50%; max-width: 100%; height: auto;" />
+        </div>
+        <div style="margin-top: 40px;">
+          <p>${t("greeting", { name: appointmentDetails.clientName })}</p>
+          <p>${t("introBookingMessage")}</p>
+          <p><strong>${t("dateLabel")}</strong> ${
       appointmentDetails.clientDate
     }</p>
-            <p><strong>${t("timeLabel")}</strong> ${
+          <p><strong>${t("timeLabel")}</strong> ${
       appointmentDetails.clientTime
     } (${appointmentDetails.clientTimeZone})</p>
-            <p><strong>${t("durationLabel")}</strong> ${
+          <p><strong>${t("durationLabel")}</strong> ${
       appointmentDetails.durationInMinutes
     } ${t("minutesLabel")}</p>
-            <div style="text-align: center; margin-top: 20px;">
-              <a href="${confirmLink}" style="display: inline-block; padding: 12px 24px; background-color: #28a745; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: bold;">
-                ${t("confirmBookingButton")}
-              </a>
-            </div>
-            <p style="margin-top: 20px; color: #888888; font-size: 12px;">${t(
-              "actionRequiredFooter"
-            )}</p>
+
+          <p style="color: red; font-weight: bold; margin-top: 20px;">
+            ${t("cancellationNotice")}
+          </p>
+
+          <div style="text-align: center; margin-top: 20px;">
+            <a href="${confirmLink}" style="display: inline-block; padding: 12px 24px; background-color: #28a745; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: bold;">
+              ${t("confirmBookingButton")}
+            </a>
           </div>
+          
+          <p style="margin-top: 20px; color: #888888; font-size: 12px;">
+            ${t("actionRequiredFooter")}
+          </p>
         </div>
       </div>
-    `,
+    </div>
+  `,
   };
 };

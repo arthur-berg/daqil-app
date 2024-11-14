@@ -531,7 +531,7 @@
     "time": "Time",
     "duration": "Duration",
   "cancellationTerms": "Your introductory appointment is completely free of charge.",
-  "cancellationNotice": "However, if you do not attend the appointment or fail to cancel at least 24 hours in advance, you will be charged $15 USD.",
+  "cancellationNotice": "If you do not attend the appointment or fail to cancel at least 24 hours in advance, you will be charged $15 USD.",
   "cancellationReason": "This policy helps ensure that our psychologists time is respected.",
   "thankYou": "Thank you for your understanding.",
   "weHaveReserved": "We have reserved this appointment slot for you. Please complete add your card details within the given time to confirm your reservation.",
@@ -850,7 +850,9 @@
   "actionRequiredFooter": "Please confirm your booking as soon as possible to secure your appointment.",
   "therapistGreeting": "Hello {name},",
   "therapistIntroBookingMessage": "{clientName} has booked an intro call appointment with you. Here are the details:",
-  "therapistNotificationFooter": "You will receive a notification once the client confirms the booking."
+  "therapistNotificationFooter": "You will receive a notification once the client confirms the booking.",
+  "cancellationNotice": "If you do not attend the appointment or fail to cancel at least 24 hours in advance, you will be charged $15 USD."
+
 },
   "MeetingLinkEmail": {
     "subject": "Video link for your appointment at {appointmentTime}",
