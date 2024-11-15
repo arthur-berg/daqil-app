@@ -70,11 +70,6 @@ const IntroMeetingManager = async ({
   const introMeetingIsBookedButNotFinished =
     !!confirmedIntroAppointment && !client?.selectedTherapist?.introCallDone;
 
-  console.log(
-    "introMeetingIsBookedButNotFinished",
-    introMeetingIsBookedButNotFinished
-  );
-
   return (
     <>
       <div className="max-w-4xl mx-auto">
