@@ -1,6 +1,7 @@
 "use client";
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useRef, useCallback, useEffect, useTransition } from "react";
 import _ from "lodash";
+import { markBothUserAsShowedUp } from "@/actions/videoSessions/markBothUserAsShowedUp";
 
 interface Credentials {
   appId: string;
@@ -35,8 +36,16 @@ export default function useRoom() {
   const [networkStatus, setNetworkStatus] = useState("");
   const [publisherIsSpeaking, setPublisherIsSpeaking] = useState(false);
   const [cameraPublishing, setCameraPublishing] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
-  const addParticipants = ({ participant }: any) => {
+  const addParticipants = ({ participant, appointmentId }: any) => {
+    startTransition(async () => {
+      try {
+        await markBothUserAsShowedUp(appointmentId);
+      } catch (error) {
+        console.error("Error marking user as showed up:", error);
+      }
+    });
     setParticipants((prev: any) => [...prev, participant]);
   };
 
@@ -105,7 +114,7 @@ export default function useRoom() {
     }
   };
 
-  const startRoomListeners = useCallback(() => {
+  const startRoomListeners = useCallback((appointmentId: string) => {
     if (roomRef.current) {
       roomRef.current.on("connected", () => {
         console.log("Room: connected");
@@ -131,7 +140,11 @@ export default function useRoom() {
         console.log("Room: reconnecting");
       });
       roomRef.current.on("participantJoined", (participant: any) => {
-        addParticipants({ participant: participant });
+        addParticipants({
+          participant: participant,
+          appointmentId: appointmentId,
+        });
+
         console.log("Room: participant joined: ", participant);
       });
       roomRef.current.on("participantLeft", (participant: any, reason: any) => {
@@ -146,10 +159,7 @@ export default function useRoom() {
       { appId, sessionId, token }: Credentials,
       roomContainer: any,
       userName: string,
-      /*  appointmentData: {
-        appointmentId: string;
-        startDate: Date;
-      }, */
+      appointmentId: string,
       videoFilter?: VideoFilter,
       publisherOptions?: PublisherOptions
     ) => {
@@ -210,7 +220,7 @@ export default function useRoom() {
         insertDefaultUI: true,
       };
 
-      startRoomListeners();
+      startRoomListeners(appointmentId);
 
       if (videoFilter && videoFilter.filterName && videoFilter.filterPayload) {
         publisherOptionsRef.current = {

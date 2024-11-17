@@ -12,6 +12,8 @@ import Cookies from "js-cookie";
 import TimezoneWarningDialog from "@/components/timezone-warning-dialog";
 import { updateUserCampaignId } from "@/actions/update-user-campaign-id";
 import { formatTimeZoneWithOffset } from "@/utils/timeZoneUtils";
+import { updateUserUTMData } from "@/actions/update-user-utm-data";
+import { useSearchParams } from "next/navigation";
 
 const routesWithoutSidebar = ["/appointments/[id]"];
 

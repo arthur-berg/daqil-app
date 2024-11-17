@@ -1,64 +1,65 @@
+"use server";
+
 import Appointment from "@/models/Appointment";
 import User from "@/models/User";
-import { Stripe } from "stripe";
-import { format } from "date-fns";
 import {
   addTagToMailchimpUser,
   sendIntroBookingConfirmationMail,
-  sendPaidBookingConfirmationEmail,
 } from "@/lib/mail";
 import {
   cancelPaymentRelatedJobsForAppointment,
   scheduleReminderJobs,
   scheduleStatusUpdateJob,
 } from "@/lib/schedule-appointment-jobs";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { formatInTimeZone } from "date-fns-tz";
 import { revalidatePath } from "next/cache";
+
+import { getFullName } from "@/utils/formatName";
+import connectToMongoDB from "@/lib/mongoose";
 import {
   findAppointmentById,
   updateAppointments,
-  updateUserPaymentMethod,
-} from "./helpers";
-import { getFullName } from "@/utils/nameUtilsForApiRoutes";
+} from "@/app/api/webhook/stripe/helpers";
+import { requireAuth } from "@/lib/auth";
+import { UserRole } from "@/generalTypes";
+import { APPOINTMENT_TYPE_ID_INTRO_SESSION } from "@/contants/config";
 
-export async function handleSetupIntentSucceeded(
-  setupIntent: Stripe.SetupIntent
-) {
-  const metadata = setupIntent.metadata;
+export async function confirmIntroBooking(appointmentId: string) {
+  await connectToMongoDB();
+  const [SuccessMessages, ErrorMessages] = await Promise.all([
+    getTranslations("SuccessMessages"),
+    getTranslations("ErrorMessages"),
+  ]);
+  const locale = await getLocale();
+  try {
+    await requireAuth([UserRole.CLIENT]);
+    const appointment = await findAppointmentById(appointmentId);
 
-  if (!metadata || !metadata.appointmentId || !metadata.locale) {
-    console.error("Invalid or missing metadata in setup intent.");
-    return;
-  }
+    if (!appointment) {
+      console.error(`Appointment ${appointmentId} not found.`);
+      return { error: "Appointment not found." };
+    }
 
-  const { appointmentId, locale } = metadata;
+    if (appointment.status === "confirmed") {
+      return { error: ErrorMessages("appointmentAlreadyConfirmed") };
+    }
 
-  const paymentMethodId = setupIntent.payment_method as string;
+    const isIntroCall =
+      appointment.appointmentTypeId.toString() ===
+      APPOINTMENT_TYPE_ID_INTRO_SESSION;
 
-  if (!appointmentId) {
-    console.error("No appointment ID in setup intent metadata.");
-    return;
-  }
-
-  // Fetch the appointment to get all relevant details
-  const appointment = await findAppointmentById(appointmentId);
-
-  if (!appointment) {
-    console.error(`Appointment ${appointmentId} not found.`);
-    return;
-  }
-
-  const userId = appointment.participants[0].userId._id.toString();
-
-  if (userId && paymentMethodId) {
-    await updateUserPaymentMethod(userId, paymentMethodId);
+    if (!isIntroCall) {
+      return { error: ErrorMessages("isNotIntroCall") };
+    }
 
     // Proceed to update appointment status, send emails, and schedule jobs
-    const appointmentDate = format(
+    const appointmentDate = formatInTimeZone(
       new Date(appointment.startDate),
+      "UTC",
       "yyyy-MM-dd"
     );
+
     await updateAppointments(appointment, appointmentDate);
 
     // Update the appointment status to "confirmed"
@@ -100,17 +101,16 @@ export async function handleSetupIntentSucceeded(
       "HH:mm"
     );
 
-    const appointmentDetails: any = {
+    const appointmentDetails = {
       clientDate: clientAppointmentDate,
       clientTime: clientAppointmentTime,
       therapistDate: therapistAppointmentDate,
       therapistTime: therapistAppointmentTime,
-      therapistName: `${getFullName(
+      therapistName: `${await getFullName(
         therapist.firstName,
-        therapist.lastName,
-        locale
+        therapist.lastName
       )}`,
-      clientName: `${getFullName(client.firstName, client.lastName, locale)}`,
+      clientName: `${await getFullName(client.firstName, client.lastName)}`,
       durationInMinutes: appointment.durationInMinutes,
       therapistTimeZone,
       clientTimeZone,
@@ -121,14 +121,17 @@ export async function handleSetupIntentSucceeded(
       namespace: "BookingConfirmedIntroCall",
     });
 
-    await User.findByIdAndUpdate(client.id, {
+    // Update the client's selected therapist
+    await User.findByIdAndUpdate(client._id, {
       $set: {
         "selectedTherapist.therapist": therapist._id,
       },
     });
 
-    await addTagToMailchimpUser(clientEmail, "intro-call-booked-card");
+    // Add a tag to the client's profile in Mailchimp
+    await addTagToMailchimpUser(clientEmail, "intro-call-booked");
 
+    // Send the intro booking confirmation email with the confirmation link
     await sendIntroBookingConfirmationMail(
       therapistEmail,
       clientEmail,
@@ -137,12 +140,19 @@ export async function handleSetupIntentSucceeded(
       locale
     );
 
+    // Revalidate paths to update the cache
     revalidatePath(`/book-appointment`);
     revalidatePath(`/appointments`);
+
+    // Cancel any payment-related jobs for the appointment
     await cancelPaymentRelatedJobsForAppointment(appointment._id);
+
+    // Schedule reminder jobs and status update jobs
     await scheduleReminderJobs(appointment, locale);
     await scheduleStatusUpdateJob(appointment);
-  } else {
-    console.error("Missing userId or paymentMethodId for setup intent.");
+
+    return { success: SuccessMessages("appointmentBookingConfirmed") };
+  } catch (error) {
+    return { error: ErrorMessages("somethingWentWrong") };
   }
 }

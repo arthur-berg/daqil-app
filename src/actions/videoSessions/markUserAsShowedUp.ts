@@ -2,7 +2,7 @@
 import { APPOINTMENT_TYPE_ID_INTRO_SESSION } from "@/contants/config";
 import { getUserById } from "@/data/user";
 import { UserRole } from "@/generalTypes";
-import { requireAuth } from "@/lib/auth";
+import { getCurrentRole, requireAuth } from "@/lib/auth";
 import connectToMongoDB from "@/lib/mongoose";
 import Appointment from "@/models/Appointment";
 import User from "@/models/User";
@@ -15,9 +15,8 @@ export const markUserAsShowedUp = async (appointmentId: string) => {
     getTranslations("ErrorMessages"),
   ]);
   try {
-    console.log("HERE");
     const user = await requireAuth([UserRole.THERAPIST, UserRole.CLIENT]);
-
+    const { isTherapist, isClient } = await getCurrentRole();
     const appointment = await Appointment.findById(appointmentId);
     if (!appointment) {
       return { error: ErrorMessages("appointmentNotFound") };
@@ -31,7 +30,7 @@ export const markUserAsShowedUp = async (appointmentId: string) => {
     let updatePayload: Record<string, unknown> = {};
     const updateOptions: Record<string, unknown> = { new: true };
 
-    if (client.role === UserRole.CLIENT) {
+    if (isClient) {
       if (
         !client.selectedTherapist?.introCallDone &&
         isIntroCall &&
@@ -54,7 +53,7 @@ export const markUserAsShowedUp = async (appointmentId: string) => {
       }
     }
 
-    if (user.role === UserRole.THERAPIST) {
+    if (isTherapist) {
       if (!appointment.hostShowUp) {
         updatePayload.hostShowUp = true;
         await Appointment.findByIdAndUpdate(

@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useTransition } from "react";
 import MuteAudioButton from "./mute-audio-button";
 import MuteVideoButton from "./mute-video-button";
 import EndCallButton from "./end-call-button";
 import { useRouter } from "@/navigation";
 import { useToast } from "@/components/ui/use-toast";
+import { revalidateBookAppointmentCache } from "@/actions/revalidateBookAppointmentCache";
 
 const ToolBar = ({
   room,
@@ -11,7 +12,9 @@ const ToolBar = ({
   cameraPublishing,
   t,
   appointmentId,
+  isIntroCall,
 }: any) => {
+  const [isPending, startTransition] = useTransition();
   const [hasAudio, setHasAudio] = useState(true);
   const [hasVideo, setHasVideo] = useState(true);
   const [areAllMuted, setAllMuted] = useState(false);
@@ -71,6 +74,12 @@ const ToolBar = ({
 
   const endCall = () => {
     if (room) {
+      if (isIntroCall) {
+        startTransition(() => {
+          revalidateBookAppointmentCache();
+        });
+      }
+
       room.leave();
       router.push(`/appointments/ended/${appointmentId}`);
     }

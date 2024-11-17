@@ -167,6 +167,7 @@ const BookingCalendar = ({
         therapistId,
         combinedDateTime
       );
+      console.log("data", data);
       if (data.error) {
         toast({
           title: data.error,

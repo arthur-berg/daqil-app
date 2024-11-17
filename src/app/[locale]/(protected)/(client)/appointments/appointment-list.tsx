@@ -9,6 +9,7 @@ import {
   parseISO,
   differenceInMinutes,
   subHours,
+  isSameDay,
 } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/navigation";
@@ -28,6 +29,7 @@ import { BeatLoader } from "react-spinners";
 import { useUserName } from "@/hooks/use-user-name";
 import PageTitle from "@/components/page-title";
 import { formatTimeZoneWithOffset } from "@/utils/timeZoneUtils";
+import Countdown from "react-countdown";
 
 const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
   const [filterType, setFilterType] = useState("upcoming");
@@ -189,6 +191,24 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
         nextAppointment.participants[0].showUp) &&
       !hasMeetingEnded;
 
+    const isSameDayAppointment = isSameDay(
+      new Date(nextAppointment.startDate),
+      new Date()
+    );
+
+    const countdownRenderer = ({ minutes, seconds, completed }: any) => {
+      if (completed) {
+        return null; // When the countdown is over, we show nothing
+      } else {
+        return (
+          <span>
+            {String(minutes).padStart(2, "0")}:
+            {String(seconds).padStart(2, "0")}
+          </span>
+        );
+      }
+    };
+
     return (
       <>
         <div
@@ -227,6 +247,15 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
             </p>
             {nextAppointment.payment.status === "pending" && (
               <p className="text-red-600 mt-2">{t("meetingNotPaid")}</p>
+            )}
+            {isSameDayAppointment && !hasMeetingEnded && timeUntilStart > 0 && (
+              <div className="mt-2 text-sm text-gray-500">
+                {t("timeLeftUntilStart")}:{" "}
+                <Countdown
+                  date={new Date(nextAppointment.startDate)}
+                  renderer={countdownRenderer}
+                />
+              </div>
             )}
             <div className="mt-4">
               {isJoinEnabled ? (

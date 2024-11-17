@@ -107,6 +107,7 @@
   "nextStep": "الخطوة التالية: اختر طبيبك النفسي"
 },
   "AppointmentList": {
+    "timeLeftUntilStart": "الوقت المتبقي حتى بدء الموعد",
 "timezoneNotice": "أنت تشاهد الأوقات في المنطقة الزمنية لمتصفحك: {timeZone}",
     "meetingNotPaid": "الموعد في انتظار الدفع",
     "upcoming": "المواعيد القادمة",
@@ -353,6 +354,7 @@
     "free": "مجاني"
   },
   "Checkout": {
+    "confirmationExpired": "لقد انتهت صلاحية رابط التأكيد. يرجى حجز موعد جديد.",
     "processingPayment": "جارٍ معالجة الدفع...",
     "pay": "ادفع ${amount}",
     "appointmentDetails": "تفاصيل الموعد",
@@ -502,7 +504,16 @@
     "schedule": "جدولة",
     "selectAppointmentType": "اختر نوع الموعد"
   },
+  "ConfirmBookingPage": {
+  "confirmingBookingText": "تأكيد الحجز... يرجى الانتظار",
+  "missingAppointmentId": "معرف الموعد مفقود. يرجى المحاولة مرة أخرى.",
+  "somethingWentWrong": "حدث خطأ ما. يرجى المحاولة لاحقًا.",
+  "redirecting": "جارٍ التوجيه..."
+},
  "IntroCheckoutTranslation": {
+  "checkEmailToConfirm": "تحقق من بريدك الإلكتروني لتأكيد الحجز.",
+"actionRequired": "مطلوب إجراء",
+"weHaveReservedNoCard": "لقد قمنا بحجز هذا الموعد لك.",
   "goBack": "العودة",
   "minutes": "دقائق",
   "appointmentDetails": "تفاصيل الموعد",
@@ -510,7 +521,7 @@
   "time": "الوقت",
   "duration": "المدة",
   "cancellationTerms": "موعدك التعريفي مجاني تمامًا.",
-  "cancellationNotice": "ومع ذلك، إذا لم تحضر الموعد أو لم تلغِ قبل 24 ساعة على الأقل، سيتم خصم 15 دولارًا أمريكيًا.",
+ "cancellationNotice": "إذا لم تحضر الموعد أو لم تقم بإلغائه قبل 24 ساعة على الأقل، سيتم فرض رسوم قدرها 15 دولارًا أمريكيًا.",
   "cancellationReason": "تساعد هذه السياسة في ضمان احترام وقت أطبائنا النفسيين.",
   "thankYou": "شكرًا لتفهمك.",
   "weHaveReserved": "لقد قمنا بحجز هذا الموعد لك. يُرجى إكمال إضافة تفاصيل بطاقتك في الوقت المحدد لتأكيد الحجز.",
@@ -519,7 +530,7 @@
   "cancelReservation": "إلغاء الحجز",
   "bookAppointment": "احجز موعدًا",
   "loadingSetup": "جارٍ تحميل الدفع...",
-  "processingPayment": "جارٍ معالجة الدفع..."
+  "processing": "جارٍ المعالجة..."
 },
   "AdminPage": {
     "addTherapist": "إضافة معالج",
@@ -591,9 +602,14 @@
     "loadingAmountPaid": "... جاري تحميل المبلغ المدفوع",
     "bookingConfirmed": "تم تأكيد الحجز",
     "amountToBePaid": "المبلغ المطلوب دفعه",
+    "actionRequired": "مطلوب إجراء",
+"confirmYourBooking": "يرجى تأكيد الحجز",
+"checkEmailForConfirmation": "تم إرسال بريد إلكتروني يحتوي على تفاصيل الحجز. يرجى التحقق من بريدك الوارد وتأكيد الحجز للمتابعة.",
     "goToAppointments": "الذهاب إلى المواعيد"
   },
   "ErrorMessages": {
+    "isNotIntroCall": "هذه ليست مكالمة تعريفية",
+"appointmentAlreadyConfirmed": "تم تأكيد الموعد بالفعل",
     "accountDeletionFailed": "فشل في حذف الحساب",
     "logout": "تسجيل الخروج",
     "thisAccountIsTerminated": "تم حذف هذا الحساب. يرجى تسجيل الخروج.",
@@ -640,6 +656,7 @@
     "appointmentNotConfirmed": "لم يتم تأكيد الموعد."
   },
   "SuccessMessages": {
+    "appointmentBookingConfirmed": "تم تأكيد حجز الموعد",
     "campaignIdUpdated": "تم تحديث معرف الحملة",
     "accountDeleted": "تم حذف الحساب بنجاح",
     "therapistCreated": "تم إنشاء حساب الأخصائي النفسي بنجاح",
@@ -810,6 +827,22 @@
     "notPaidInTimeMessageTherapist": "تم إلغاء الموعد مع عميلك لأن العميل لم يدفع في الوقت المحدد. يرجى التحقق من مواعيدك القادمة",
     "thankYouMessage": "شكرًا لاستخدامك زاكينا."
   },
+  "IntroBookingLinkConfirmationEmail": {
+  "actionRequiredSubject": "مطلوب إجراء: تأكيد حجزك",
+  "therapistNotificationSubject": "تم حجز موعد مكالمة تعريفية جديدة",
+  "greeting": "مرحبًا {name}،",
+  "introBookingMessage": "لقد قمنا بحجز موعد لمكالمة تعريفية لك. يرجى تأكيد حجزك بالنقر على الزر أدناه.",
+  "dateLabel": "التاريخ",
+  "timeLabel": "الوقت",
+  "durationLabel": "المدة",
+  "minutesLabel": "دقائق",
+  "confirmBookingButton": "تأكيد الحجز",
+  "actionRequiredFooter": "يرجى تأكيد حجزك في أقرب وقت ممكن لتأمين الموعد.",
+  "therapistGreeting": "مرحبًا {name}،",
+  "therapistIntroBookingMessage": "قام {clientName} بحجز موعد مكالمة تعريفية معك. إليك التفاصيل:",
+  "therapistNotificationFooter": "سوف تتلقى إشعارًا بمجرد أن يؤكد العميل الحجز.",
+  "cancellationNotice": "إذا لم تحضر الموعد أو لم تقم بإلغائه قبل 24 ساعة على الأقل، سيتم فرض رسوم بقيمة 15 دولارًا أمريكيًا."
+},
   "MeetingLinkEmail": {
     "subject": "رابط الفيديو لموعدك في {appointmentTime}",
     "greeting": "مرحبًا،",

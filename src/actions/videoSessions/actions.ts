@@ -72,10 +72,7 @@ export const getSessionData = async (appointmentId: string) => {
       appointment.appointmentTypeId.toString() ===
       APPOINTMENT_TYPE_ID_INTRO_SESSION;
 
-    if (
-      isPast(appointment.startDate) ||
-      appointment.startDate.getTime() === new Date().getTime()
-    ) {
+    if (isPast(startDate) || startDate.getTime() === new Date().getTime()) {
       if (isTherapist) {
         if (!appointment.hostShowUp) {
           updatePayload.hostShowUp = true;
@@ -168,7 +165,6 @@ export const getSessionData = async (appointmentId: string) => {
         },
       };
     } else {
-      console.log("Session not found. Creating a new one...");
       const data = await createSessionAndToken();
       console.log("data in 2", data);
 

@@ -113,6 +113,8 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         session.user.settings = token.settings as any;
 
         session.user.isAccountSetupDone = token.isAccountSetupDone as any;
+        /* 
+        session.user.hasUTMSaved = token.marketingCampaignData as boolean; */
 
         if (session.user.role === "CLIENT") {
           session.user.selectedTherapist = token.selectedTherapist as any;
@@ -146,6 +148,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       token.stripeCustomerId = existingUser.stripeCustomerId;
       token.stripePaymentMethodId = existingUser.stripePaymentMethodId;
       token.settings = existingUser.settings;
+      /* token.hasUTMSaved = !!token.marketingCampaignData; */
 
       if (existingUser.role === "CLIENT") {
         token.selectedTherapist = existingUser.selectedTherapist;
