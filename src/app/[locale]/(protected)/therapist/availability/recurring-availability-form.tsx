@@ -147,8 +147,6 @@ const RecurringAvailabilityForm = ({
 
   const onSubmitDay = (values: z.infer<typeof RecurringAvailabilitySchema>) => {
     startTransition(async () => {
-      console.log("values", values);
-      console.log("adminPageProps in onSubmitDay", adminPageProps);
       const data = await saveRecurringAvailableTimes(values, adminPageProps);
       responseToast(data);
       if (data?.success) {
