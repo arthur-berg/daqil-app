@@ -287,8 +287,6 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
                 ) : (
                   <div className="text-sm text-gray-500 mt-2 text-center">
                     {t("joinDisabledMessage", { time: 20 })}
-                    <br />
-                    {t("refreshMessage")}
                   </div>
                 )}
               </>
@@ -585,8 +583,6 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
                                                           time: 20,
                                                         }
                                                       )}
-                                                      <br />
-                                                      {t("refreshMessage")}
                                                     </p>
                                                   )}
                                                 </>

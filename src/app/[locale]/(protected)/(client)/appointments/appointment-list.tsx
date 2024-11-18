@@ -296,8 +296,6 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
                       {t("joinDisabledMessage", {
                         time: 20,
                       })}
-                      <br />
-                      {t("refreshMessage")}
                     </p>
                   )}
                 </>
@@ -627,8 +625,6 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
                                                             time: 20,
                                                           }
                                                         )}
-                                                        <br />
-                                                        {t("refreshMessage")}
                                                       </p>
                                                     )}
                                                   </>
