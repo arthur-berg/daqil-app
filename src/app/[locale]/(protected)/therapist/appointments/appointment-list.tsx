@@ -264,12 +264,7 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
               )}
             </div>
           )}
-          <Link
-            className="text-center"
-            href={`/appointments/${nextAppointment._id}`}
-          >
-            <Button disabled={!isJoinEnabled}>{t("startMeeting")}</Button>
-          </Link>
+
           <div className="mt-4">
             {isJoinEnabled || isCountdownFinished ? (
               <Link
