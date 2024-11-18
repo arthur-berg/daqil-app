@@ -608,6 +608,7 @@
     "goToAppointments": "الذهاب إلى المواعيد"
   },
   "ErrorMessages": {
+    "appointmentNotFound": "لم يتم العثور على الموعد",
     "appointmentNotReserved": "لم يتم حجز الموعد بعد الآن",
     "isNotIntroCall": "هذه ليست مكالمة تعريفية",
 "appointmentAlreadyConfirmed": "تم تأكيد الموعد بالفعل",

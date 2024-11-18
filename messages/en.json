@@ -618,6 +618,7 @@
     "goToAppointments": "Go to Appointments"
   },
   "ErrorMessages": {
+    "appointmentNotFound": "Appointment not found",
     "appointmentNotReserved": "Appointment not reserved anymore",
     "isNotIntroCall": "This is not an introductory call",
     "appointmentAlreadyConfirmed": "Appointment already confirmed",
