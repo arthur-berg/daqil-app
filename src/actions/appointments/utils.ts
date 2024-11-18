@@ -19,18 +19,11 @@ const removeRelatedJobs = async (appointmentIds: any) => {
 };
 
 export const createAppointment = async (appointmentData: any, session: any) => {
-  const locale = await getLocale();
   const appointment = await Appointment.create([appointmentData], { session });
 
   if (!appointment) {
     throw new Error("Failed to create appointment.");
   }
-
-  await schedulePayBeforePaymentExpiredStatusUpdateJobs(
-    appointment[0]._id.toString(),
-    appointment[0].payment.paymentExpiryDate,
-    locale
-  );
 
   return appointment;
 };

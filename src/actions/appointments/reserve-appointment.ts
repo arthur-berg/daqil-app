@@ -25,6 +25,7 @@ import {
   sendIntroBookingConfirmationMailWithLink,
 } from "@/lib/mail";
 import { getFullName } from "@/utils/formatName";
+import { schedulePayBeforePaymentExpiredStatusUpdateJobs } from "@/lib/schedule-appointment-jobs";
 
 export const reserveAppointment = async (
   appointmentType: any,
@@ -40,6 +41,7 @@ export const reserveAppointment = async (
       getTranslations("AppointmentTypes"),
     ]);
   const user = await requireAuth([UserRole.CLIENT, UserRole.ADMIN]);
+  const locale = await getLocale();
 
   const client = (await getClientByIdAppointments(user.id)) as any;
   const clientId = client._id.toString();
@@ -159,6 +161,12 @@ export const reserveAppointment = async (
         locale
       );
     }
+
+    await schedulePayBeforePaymentExpiredStatusUpdateJobs(
+      appointmentId.toString(),
+      appointment[0].payment.paymentExpiryDate,
+      locale
+    );
 
     revalidatePath("/appointments");
 
