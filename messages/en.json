@@ -400,6 +400,7 @@
     "calculatingPrice": "Calculating price...",
     "cancelReservation": "Cancel reservation",
     "cancellationPolicy": "You will receive a 100% refund if you cancel more than 24 hours before the appointment starts."
+    
   },
   "AvailabilityPage": {
     "timezoneNotice":  "You are viewing times in your browsers timezone: {timeZone}",
