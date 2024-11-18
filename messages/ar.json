@@ -97,14 +97,13 @@
     "myClients": "عملائي",
     "myProfile": "ملفي الشخصي"
   },
-  "AppointmentEndedPage": {
+ "AppointmentEndedPage": {
   "callEnded": "انتهت المكالمة",
-  "goToAppointments": "اذهب إلى المواعيد",
-  "rejoinMeetingButton": "إعادة الانضمام إلى الاجتماع",
-  "description": "أعد الانضمام إلى الاجتماع إذا خرجت بالخطأ. بدلاً من ذلك، اذهب إلى صفحة المواعيد الخاصة بك.",
-  "descriptionIntro": "لقد انتهت مكالمة التعريف الخاصة بك. الآن، يمكنك اختيار قبول أو رفض طبيبك النفسي بناءً على تجربتك. إذا غادرت الاجتماع بالخطأ، يمكنك إعادة الانضمام.",
-  "therapistSelectButton": "راجع واختر طبيبك النفسي",
-  "nextStep": "الخطوة التالية: اختر طبيبك النفسي"
+  "nextStep": "الخطوة التالية: احجز موعدك",
+  "descriptionIntro": "لقد انتهت مكالمتك التعريفية. يمكنك الآن حجز موعدك التالي لمواصلة تقدمك. إذا غادرت الاجتماع عن طريق الخطأ، يمكنك الانضمام إليه مرة أخرى.",
+  "promoCodeMessage": "استخدم الرمز NOVEMBER50 للحصول على خصم 50% على موعدك التالي!",
+  "bookNextAppointmentButton": "احجز موعدك التالي",
+  "rejoinMeetingButton": "الانضمام مرة أخرى للاجتماع"
 },
   "AppointmentList": {
     "timeLeftUntilStart": "الوقت المتبقي حتى بدء الموعد",
@@ -389,7 +388,8 @@
     "addDiscountLater": "ستتمكن من تطبيق رمز الخصم عندما تختار الدفع لاحقًا.",
     "discountLoading": "جارٍ تطبيق رمز الخصم...",
     "calculatingPrice": "... جارٍ حساب السعر",
-    "cancelReservation": "إلغاء الحجز"
+    "cancelReservation": "إلغاء الحجز",
+    "cancellationPolicy": "ستحصل على استرداد كامل بنسبة 100٪ إذا قمت بالإلغاء قبل أكثر من 24 ساعة من موعد الجلسة."
   },
   "AvailabilityPage": {
     "timezoneNotice": "أنت تشاهد الأوقات في المنطقة الزمنية لمتصفحك: {timeZone}",
