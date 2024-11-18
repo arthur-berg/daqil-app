@@ -25,6 +25,7 @@ import {
   sendIntroBookingConfirmationMailWithLink,
 } from "@/lib/mail";
 import { getFullName } from "@/utils/formatName";
+import { schedulePayBeforePaymentExpiredStatusUpdateJobs } from "@/lib/schedule-appointment-jobs";
 
 export const reserveAppointment = async (
   appointmentType: any,
@@ -40,6 +41,7 @@ export const reserveAppointment = async (
       getTranslations("AppointmentTypes"),
     ]);
   const user = await requireAuth([UserRole.CLIENT, UserRole.ADMIN]);
+  const locale = await getLocale();
 
   const client = (await getClientByIdAppointments(user.id)) as any;
   const clientId = client._id.toString();
@@ -108,57 +110,6 @@ export const reserveAppointment = async (
     const isIntroCall =
       appointmentType._id.toString() === APPOINTMENT_TYPE_ID_INTRO_SESSION;
 
-    if (
-      (!client.selectedTherapist ||
-        client.selectedTherapist?.therapist?.toString() !== therapistId) &&
-      !isIntroCall
-    ) {
-      // Update the previous therapist in selectedTherapistHistory
-      await User.updateOne(
-        { _id: clientId, "selectedTherapistHistory.current": true },
-        {
-          $set: {
-            "selectedTherapistHistory.$.current": false,
-            "selectedTherapistHistory.$.endDate": new Date(),
-          },
-        },
-        { session }
-      );
-
-      await User.findByIdAndUpdate(
-        clientId,
-        {
-          $set: {
-            "selectedTherapist.therapist": therapistId,
-          },
-          $push: {
-            selectedTherapistHistory: {
-              therapist: therapistId,
-              startDate: new Date(),
-              current: true,
-            },
-          },
-        },
-        { session }
-      );
-
-      // Remove client from old therapist's assignedClients list
-      await User.findByIdAndUpdate(
-        client.selectedTherapist?.therapist,
-        { $pull: { assignedClients: clientId } },
-        { session }
-      );
-    }
-
-    // Add client to new therapist's assignedClients list if not already present
-    if (!therapist.assignedClients?.includes(clientId)) {
-      await User.findByIdAndUpdate(
-        therapistId,
-        { $addToSet: { assignedClients: clientId } }, // $addToSet ensures no duplicates
-        { session }
-      );
-    }
-
     // Update the user's appointments
     await updateAppointments(
       clientId,
@@ -210,6 +161,12 @@ export const reserveAppointment = async (
         locale
       );
     }
+
+    await schedulePayBeforePaymentExpiredStatusUpdateJobs(
+      appointmentId.toString(),
+      appointment[0].payment.paymentExpiryDate,
+      locale
+    );
 
     revalidatePath("/appointments");
 

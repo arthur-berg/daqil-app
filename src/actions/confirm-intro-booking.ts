@@ -17,13 +17,86 @@ import { revalidatePath } from "next/cache";
 
 import { getFullName } from "@/utils/formatName";
 import connectToMongoDB from "@/lib/mongoose";
-import {
-  findAppointmentById,
-  updateAppointments,
-} from "@/app/api/webhook/stripe/helpers";
+import { findAppointmentById } from "@/app/api/webhook/stripe/helpers";
 import { requireAuth } from "@/lib/auth";
 import { UserRole } from "@/generalTypes";
 import { APPOINTMENT_TYPE_ID_INTRO_SESSION } from "@/contants/config";
+import mongoose from "mongoose";
+
+const updateAppointments = async (
+  appointment: any,
+  appointmentDate: string
+) => {
+  const session = await mongoose.startSession();
+  try {
+    session.startTransaction();
+
+    const clientId = appointment.participants[0].userId;
+    const therapistId = appointment.hostUserId;
+
+    const client = await User.findOneAndUpdate(
+      {
+        _id: clientId,
+        "appointments.date": appointmentDate,
+      },
+      {
+        $pull: {
+          "appointments.$.temporarilyReservedAppointments": appointment._id,
+        },
+        $push: { "appointments.$.bookedAppointments": appointment._id },
+      },
+      { session }
+    );
+
+    const therapist = await User.findOneAndUpdate(
+      {
+        _id: therapistId,
+        "appointments.date": appointmentDate,
+      },
+      {
+        $pull: {
+          "appointments.$.temporarilyReservedAppointments": appointment._id,
+        },
+        $push: { "appointments.$.bookedAppointments": appointment._id },
+      },
+      { session }
+    );
+
+    const previousTherapistId = client.selectedTherapist?.therapist;
+    if (
+      previousTherapistId &&
+      previousTherapistId.toString() !== therapistId.toString()
+    ) {
+      // Remove client from the previous therapist's assignedClients list
+      await User.findByIdAndUpdate(
+        previousTherapistId,
+        { $pull: { assignedClients: clientId } },
+        { session }
+      );
+    }
+
+    if (!therapist.assignedClients?.includes(clientId)) {
+      await User.findByIdAndUpdate(
+        therapistId,
+        { $addToSet: { assignedClients: clientId } },
+        { session }
+      );
+    }
+
+    await User.findByIdAndUpdate(
+      clientId,
+      { $set: { "selectedTherapist.therapist": therapistId } },
+      { session }
+    );
+
+    await session.commitTransaction();
+  } catch (error) {
+    await session.abortTransaction();
+    throw error;
+  } finally {
+    session.endSession();
+  }
+};
 
 export async function confirmIntroBooking(appointmentId: string) {
   await connectToMongoDB();

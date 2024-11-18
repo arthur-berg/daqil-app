@@ -103,8 +103,6 @@ export const getTherapistAvailableTimeSlots = (
     ...validTemporarilyReservedAppointments,
   ];
 
-  console.log("allAppointmentsForDate", allAppointmentsForDate);
-
   const appointmentsForDate = allAppointmentsForDate.map((appointment: any) => {
     const start = new Date(appointment.startDate);
     const end = new Date(appointment.endDate);

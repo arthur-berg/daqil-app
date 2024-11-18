@@ -72,7 +72,6 @@ export const getClientById = async (id: string) => {
     if (!Appointment.schema) {
       throw new Error("Appointment schema is not registered.");
     }
-    console.log("id", id);
     const client = await User.findById(id)
       .select(
         "firstName lastName email selectedTherapist.therapist selectedTherapistHistory appointments personalInfo"

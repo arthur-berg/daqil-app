@@ -17,6 +17,8 @@ import { getTranslations } from "next-intl/server";
 import { getFullName } from "@/utils/nameUtilsForApiRoutes";
 import { formatInTimeZone } from "date-fns-tz";
 import { revalidatePath } from "next/cache";
+import { APPOINTMENT_TYPE_ID_INTRO_SESSION } from "@/contants/config";
+import mongoose from "mongoose";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
@@ -248,35 +250,107 @@ async function handlePayAfterBooking(
   );
 }
 
+export const updateSelectedTherapist = async () => {};
+
 export const updateAppointments = async (
   appointment: any,
   appointmentDate: string
 ) => {
-  await User.findOneAndUpdate(
-    {
-      _id: appointment.participants[0].userId,
-      "appointments.date": appointmentDate,
-    },
-    {
-      $pull: {
-        "appointments.$.temporarilyReservedAppointments": appointment._id,
-      },
-      $push: { "appointments.$.bookedAppointments": appointment._id },
-    }
-  );
+  const session = await mongoose.startSession();
+  try {
+    session.startTransaction();
 
-  await User.findOneAndUpdate(
-    {
-      _id: appointment.hostUserId,
-      "appointments.date": appointmentDate,
-    },
-    {
-      $pull: {
-        "appointments.$.temporarilyReservedAppointments": appointment._id,
+    const clientId = appointment.participants[0].userId;
+    const therapistId = appointment.hostUserId;
+
+    const client = await User.findOneAndUpdate(
+      {
+        _id: clientId,
+        "appointments.date": appointmentDate,
       },
-      $push: { "appointments.$.bookedAppointments": appointment._id },
+      {
+        $pull: {
+          "appointments.$.temporarilyReservedAppointments": appointment._id,
+        },
+        $push: { "appointments.$.bookedAppointments": appointment._id },
+      },
+      { session }
+    );
+
+    const therapist = await User.findOneAndUpdate(
+      {
+        _id: therapistId,
+        "appointments.date": appointmentDate,
+      },
+      {
+        $pull: {
+          "appointments.$.temporarilyReservedAppointments": appointment._id,
+        },
+        $push: { "appointments.$.bookedAppointments": appointment._id },
+      },
+      { session }
+    );
+
+    const isIntroCall =
+      appointment.appointmentTypeId.toString() ===
+      APPOINTMENT_TYPE_ID_INTRO_SESSION;
+
+    if (
+      (!client.selectedTherapist ||
+        client.selectedTherapist?.therapist?.toString() !==
+          therapistId.toString()) &&
+      !isIntroCall
+    ) {
+      await User.updateOne(
+        { _id: clientId, "selectedTherapistHistory.current": true },
+        {
+          $set: {
+            "selectedTherapistHistory.$.current": false,
+            "selectedTherapistHistory.$.endDate": new Date(),
+          },
+        },
+        { session }
+      );
+
+      await User.findByIdAndUpdate(
+        clientId,
+        {
+          $set: {
+            "selectedTherapist.therapist": therapistId,
+          },
+          $push: {
+            selectedTherapistHistory: {
+              therapist: therapistId,
+              startDate: new Date(),
+              current: true,
+            },
+          },
+        },
+        { session }
+      );
+
+      await User.findByIdAndUpdate(
+        client.selectedTherapist?.therapist,
+        { $pull: { assignedClients: clientId } },
+        { session }
+      );
     }
-  );
+
+    if (!therapist.assignedClients?.includes(clientId)) {
+      await User.findByIdAndUpdate(
+        therapistId,
+        { $addToSet: { assignedClients: clientId } },
+        { session }
+      );
+    }
+
+    await session.commitTransaction();
+  } catch (error) {
+    await session.abortTransaction();
+    throw error;
+  } finally {
+    session.endSession();
+  }
 };
 
 export const updateUserPaymentMethod = async (

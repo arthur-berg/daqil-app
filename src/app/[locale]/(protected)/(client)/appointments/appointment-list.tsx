@@ -1,5 +1,5 @@
 "use client";
-import { useMemo, useState, useTransition } from "react";
+import { useEffect, useMemo, useState, useTransition } from "react";
 import {
   format,
   isToday,
@@ -38,10 +38,17 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
   const [selectedAppointment, setSelectedAppointment] = useState<any>(null);
   const [isPending, startTransition] = useTransition();
   const { getFullName } = useUserName();
+  const [isCountdownFinished, setIsCountdownFinished] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+  const [hasSetCountdown, setHasSetCountdown] = useState(false);
 
   const t = useTranslations("AppointmentList");
 
   const appointments = JSON.parse(appointmentsJson);
+
+  useEffect(() => {
+    setIsMounted(true); // Set to true when the component mounts
+  }, []);
 
   const pendingPaymentAppointments = useMemo(() => {
     return appointments?.filter(
@@ -196,13 +203,19 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
       new Date()
     );
 
-    const countdownRenderer = ({ minutes, seconds, completed }: any) => {
+    const countdownRenderer = ({ hours, minutes, seconds, completed }: any) => {
+      const totalMinutes = hours * 60 + minutes;
+
+      if (totalMinutes < 20 && !hasSetCountdown) {
+        setIsCountdownFinished(true);
+        setHasSetCountdown(true);
+      }
       if (completed) {
-        return null; // When the countdown is over, we show nothing
+        return null;
       } else {
         return (
           <span>
-            {String(minutes).padStart(2, "0")}:
+            {String(hours).padStart(2, "0")}:{String(minutes).padStart(2, "0")}:
             {String(seconds).padStart(2, "0")}
           </span>
         );
@@ -251,14 +264,16 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
             {isSameDayAppointment && !hasMeetingEnded && timeUntilStart > 0 && (
               <div className="mt-2 text-sm text-gray-500">
                 {t("timeLeftUntilStart")}:{" "}
-                <Countdown
-                  date={new Date(nextAppointment.startDate)}
-                  renderer={countdownRenderer}
-                />
+                {isMounted && (
+                  <Countdown
+                    date={new Date(nextAppointment.startDate)}
+                    renderer={countdownRenderer}
+                  />
+                )}
               </div>
             )}
             <div className="mt-4">
-              {isJoinEnabled ? (
+              {isJoinEnabled || isCountdownFinished ? (
                 <Link
                   className="text-center"
                   href={`/appointments/${nextAppointment._id}`}
