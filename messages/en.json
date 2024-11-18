@@ -970,7 +970,10 @@
     "previewRoom": "Preview room:",
     "testSetup": "Test your audio and video before joining the call.",
     "waitingForClient": "Waiting for the client to join...",
-    "waitingForPsychologist": "Please wait. Your psychologist will be with you shortly."
+    "waitingForPsychologist": "Please wait. Your psychologist will be with you shortly.",
+    "noShowMessage": "If the client doesn't show up, please feel free to give them a call.",
+  "clientName": "Client name",
+  "phoneNumber": "Phone number"
   },
   "DateTimePicker": {
     "ok": "Ok"

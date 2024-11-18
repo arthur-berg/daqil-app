@@ -29,6 +29,8 @@ const VideoRoom = ({
         appointmentData: {
           id: string;
           startDate: Date;
+          clientName: string;
+          clientPhoneNumber: string;
         };
       }
     | { error: string };
@@ -345,9 +347,24 @@ const VideoRoom = ({
                   />
                 )}
 
-                {user?.role === "CLIENT"
-                  ? t("waitingForPsychologist")
-                  : t("waitingForClient")}
+                {user?.role === "CLIENT" ? (
+                  t("waitingForPsychologist")
+                ) : (
+                  <>
+                    <p>{t("waitingForClient")}</p>
+                    <div className="mt-4 text-sm text-gray-300">
+                      <p>{t("noShowMessage")}</p>
+                      <p>
+                        <strong>{t("clientName")}:</strong>{" "}
+                        {sessionData.appointmentData.clientName}
+                      </p>
+                      <p>
+                        <strong>{t("phoneNumber")}:</strong>{" "}
+                        {sessionData.appointmentData.clientPhoneNumber}
+                      </p>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           )}
