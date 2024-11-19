@@ -131,6 +131,7 @@ const DefaultAvailabilityManager = ({
     resolver: zodResolver(DefaultAvailabilitySettingsSchemaFE),
     defaultValues: {
       interval: settings?.interval.toString() ?? "15",
+      futureBookingDelay: settings?.futureBookingDelay?.toString() ?? "60",
     },
   });
 
@@ -160,6 +161,7 @@ const DefaultAvailabilityManager = ({
       const structuredData = {
         ...values,
         interval: parseInt(values.interval),
+        futureBookingDelay: parseInt(values.futureBookingDelay),
       };
       const data = await updateRecurringAvailabilitySettings(
         structuredData,
@@ -170,6 +172,21 @@ const DefaultAvailabilityManager = ({
   };
 
   const intervalOptions = ["15", "30", "45", "60"];
+  const futureBookingDelays = [
+    " 15",
+    "30",
+    "45",
+    "60",
+    "90",
+    "120",
+    "180",
+    "240",
+    "360",
+    "480",
+    "720",
+    "1440",
+    "2880",
+  ];
 
   const browserTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
@@ -248,6 +265,87 @@ const DefaultAvailabilityManager = ({
           </Button>
         </form>
       </Form> */}
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmitDefaultAvailability)}>
+          <div className="mt-4">
+            <FormField
+              control={form.control}
+              name="futureBookingDelay"
+              render={({ field }) => (
+                <FormItem>
+                  <label className="block text-lg font-semibold mb-2">
+                    {t("setFutureBookingDelay")}
+                  </label>
+                  <FormControl>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          role="combobox"
+                          className="w-[200px] justify-between"
+                        >
+                          {field.value
+                            ? field.value < 60
+                              ? `${field.value}m` // Only display minutes if less than 60
+                              : `${Math.floor(field.value / 60)}h ${
+                                  field.value % 60 ? `${field.value % 60}m` : ""
+                                }`.trim() // Display hours and minutes, but omit minutes if 0
+                            : t("selectFutureBookingDelay")}
+                          <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-[200px] p-0">
+                        <Command>
+                          <CommandList>
+                            <CommandEmpty>
+                              {t("noFutureBookingDelayFound")}
+                            </CommandEmpty>
+                            <CommandGroup>
+                              {futureBookingDelays.map((delay) => (
+                                <CommandItem
+                                  value={delay}
+                                  key={delay}
+                                  onSelect={() => {
+                                    form.setValue("futureBookingDelay", delay);
+                                  }}
+                                >
+                                  <CheckIcon
+                                    className={`mr-2 h-4 w-4 ${
+                                      delay === field.value
+                                        ? "opacity-100"
+                                        : "opacity-0"
+                                    }`}
+                                  />
+                                  {`${Math.floor(parseInt(delay) / 60)}h ${
+                                    parseInt(delay) % 60
+                                  }m`}
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                  </FormControl>
+                  <FormMessage />
+                  <p className="text-sm mt-2 max-w-72">
+                    {t("futureBookingDelayDescription")}
+                  </p>
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <Button
+            type="submit"
+            variant="success"
+            className="mt-4"
+            disabled={isPending}
+          >
+            {t("saveSettings")}
+          </Button>
+        </form>
+      </Form>
       <div
         className="bg-blue-100 border sm:mt-4 border-blue-400 text-blue-700 px-4 py-3 rounded inline-flex flex-col sm:flex-row text-sm items-center"
         role="alert"

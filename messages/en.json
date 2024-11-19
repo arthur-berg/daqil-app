@@ -413,7 +413,7 @@
     "noIntervalFound": "No interval found.",
     "intervalDescription": "The interval determines the time gaps between each available slot. For example, if you set the interval to 15 minutes, your available slots will be at 9:00, 9:15, 9:30, etc. We don't recommend an interval of less than 15 minutes to ensure you have enough time between sessions.",
     "saveSettings": "Save settings",
-    "clientsWillSee": "These available times can be booked with you 30 minutes in advance up to 4 weeks ahead.",
+    "clientsWillSee": "These available times can be booked with you up to 4 weeks ahead.",
     "scheduleInYourTimezone": "Please schedule the times in your own timezone: {browserTimeZone}. The system will automatically convert these times so that clients see them in their respective timezones.",
     "noRecurringSet": "No recurring available times set",
     "noTimeFound": "No time found.",
@@ -432,7 +432,11 @@
     "blockedTimesSaved": "Blocked times saved successfully.",
     "blockTimesFor": "Block times for",
     "overview": "Overview",
-    "selectView": "Select a view"
+    "selectView": "Select a view",
+    "setFutureBookingDelay": "Set future booking delay",
+    "selectFutureBookingDelay": "Select booking delay",
+    "noFutureBookingDelayFound": "No booking delays found.",
+    "futureBookingDelayDescription": "Specify how long in advance clients can book an appointment. For example, if you set it to '24h', clients can only book appointments starting from 24 hours into the future. You can choose between hours and minutes as needed."
   },
   "LoadingPages": {
     "loading": "Loading...",

@@ -31,6 +31,7 @@ type NonRecurringTimeRange = {
 type AvailableTimes = {
   settings: {
     interval: number;
+    futureBookingDelay?: number;
   };
   blockedOutTimes: BlockedTime[];
   nonRecurringAvailableTimes: {
@@ -77,7 +78,7 @@ export const getTherapistAvailableTimeSlots = (
     nonRecurringAvailableTimes,
     recurringAvailableTimes,
   } = availableTimes;
-  const { interval } = settings;
+  const { interval, futureBookingDelay } = settings;
 
   const appointmentDate = format(selectedDate, "yyyy-MM-dd");
 
@@ -229,7 +230,8 @@ export const getTherapistAvailableTimeSlots = (
     );
 
     const isTimeInPast = isBefore(time, now);
-    const isTimeTooSoon = isBefore(time, addMinutes(now, 60));
+    const delay = futureBookingDelay ?? 60;
+    const isTimeTooSoon = isBefore(time, addMinutes(now, delay));
 
     return (
       !isTimeInPast &&
