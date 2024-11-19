@@ -154,14 +154,13 @@
     "myClients": "My Clients",
     "myProfile": "My Profile"
   },
- "AppointmentEndedPage": {
+"AppointmentEndedPage": {
   "callEnded": "Call Ended",
-  "goToAppointments": "Go to Appointments",
-  "rejoinMeetingButton": "Rejoin Meeting",
-  "description": "Rejoin the meeting if you left by accident. Alternatively, go to your appointments page.",
-  "descriptionIntro": "Your introductory call has ended. Now, you can choose to accept or reject your psychologist based on your experience. If you left the meeting by accident, you can rejoin it.",
-  "therapistSelectButton": "Review and Select Your Psychologist",
-  "nextStep": "Next Step: Select Your Psychologist"
+  "nextStep": "Next Step: Book Your Appointment",
+  "descriptionIntro": "Your introductory call has ended. Now, you can book your next appointment to continue your progress. If you left the meeting by accident, you can rejoin it.",
+  "promoCodeMessage": "Use code NOVEMBER50 to get 50% off your next appointment!",
+  "bookNextAppointmentButton": "Book Next Appointment",
+  "rejoinMeetingButton": "Rejoin Meeting"
 },
   "SettingsPage": {
     "deleteAccount": "Delete Account",
@@ -399,7 +398,9 @@
     "addDiscountLater": "You will be able to apply a discount code at the time of payment.",
     "discountLoading": "Applying discount code...",
     "calculatingPrice": "Calculating price...",
-    "cancelReservation": "Cancel reservation"
+    "cancelReservation": "Cancel reservation",
+    "cancellationPolicy": "You will receive a 100% refund if you cancel more than 24 hours before the appointment starts."
+    
   },
   "AvailabilityPage": {
     "timezoneNotice":  "You are viewing times in your browsers timezone: {timeZone}",
@@ -617,6 +618,7 @@
     "goToAppointments": "Go to Appointments"
   },
   "ErrorMessages": {
+    "appointmentNotFound": "Appointment not found",
     "appointmentNotReserved": "Appointment not reserved anymore",
     "isNotIntroCall": "This is not an introductory call",
     "appointmentAlreadyConfirmed": "Appointment already confirmed",
