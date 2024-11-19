@@ -98,17 +98,17 @@
     "myProfile": "ملفي الشخصي"
   },
   "AppointmentEndedPage": {
-  "callEnded": "انتهت المكالمة",
-  "goToAppointments": "اذهب إلى المواعيد",
-  "rejoinMeetingButton": "إعادة الانضمام إلى الاجتماع",
-  "description": "أعد الانضمام إلى الاجتماع إذا خرجت بالخطأ. بدلاً من ذلك، اذهب إلى صفحة المواعيد الخاصة بك.",
-  "descriptionIntro": "لقد انتهت مكالمة التعريف الخاصة بك. الآن، يمكنك اختيار قبول أو رفض طبيبك النفسي بناءً على تجربتك. إذا غادرت الاجتماع بالخطأ، يمكنك إعادة الانضمام.",
-  "therapistSelectButton": "راجع واختر طبيبك النفسي",
-  "nextStep": "الخطوة التالية: اختر طبيبك النفسي"
-},
+    "callEnded": "انتهت المكالمة",
+    "goToAppointments": "اذهب إلى المواعيد",
+    "rejoinMeetingButton": "إعادة الانضمام إلى الاجتماع",
+    "description": "أعد الانضمام إلى الاجتماع إذا خرجت بالخطأ. بدلاً من ذلك، اذهب إلى صفحة المواعيد الخاصة بك.",
+    "descriptionIntro": "لقد انتهت مكالمة التعريف الخاصة بك. الآن، يمكنك اختيار قبول أو رفض طبيبك النفسي بناءً على تجربتك. إذا غادرت الاجتماع بالخطأ، يمكنك إعادة الانضمام.",
+    "therapistSelectButton": "راجع واختر طبيبك النفسي",
+    "nextStep": "الخطوة التالية: اختر طبيبك النفسي"
+  },
   "AppointmentList": {
     "timeLeftUntilStart": "الوقت المتبقي حتى بدء الموعد",
-"timezoneNotice": "أنت تشاهد الأوقات في المنطقة الزمنية لمتصفحك: {timeZone}",
+    "timezoneNotice": "أنت تشاهد الأوقات في المنطقة الزمنية لمتصفحك: {timeZone}",
     "meetingNotPaid": "الموعد في انتظار الدفع",
     "upcoming": "المواعيد القادمة",
     "history": "السجل",
@@ -300,11 +300,11 @@
     "close": "إغلاق",
     "yourTherapist": "معالجك النفسي",
     "chooseForMe": "اختر لي",
-"chooseForMeDescription": "إذا كنت لا ترغب في اختيار أخصائي نفسي وتريد فقط رؤية جميع الأوقات المتاحة، انقر هنا.",
+    "chooseForMeDescription": "إذا كنت لا ترغب في اختيار أخصائي نفسي وتريد فقط رؤية جميع الأوقات المتاحة، انقر هنا.",
     "seeAvailableTimes": "عرض الأوقات المتاحة",
     "reject": "رفض",
     "accept": "قبول",
-"awaitingApproval": "هل ترغب في الاستمرار مع هذا الأخصائي النفسي؟",
+    "awaitingApproval": "هل ترغب في الاستمرار مع هذا الأخصائي النفسي؟",
     "browseTherapistsDescriptionOnlyOption": "تصفح معالجينا واختر المعالج الذي ترغب في حجز موعد معه",
     "introMeetingIsOngoing": "لديك بالفعل اجتماع تمهيدي جاري. يرجى الانتظار حتى ينتهي الاجتماع، والذي سيكون في {endDate}.",
     "seeAppointments": "عرض المواعيد",
@@ -320,7 +320,7 @@
     "timezonesAligned": "تمت محاذاة المناطق الزمنية"
   },
   "BookingCalendar": {
-"timezoneNotice": "أنت تشاهد الأوقات في المنطقة الزمنية لمتصفحك: {timeZone}",
+    "timezoneNotice": "أنت تشاهد الأوقات في المنطقة الزمنية لمتصفحك: {timeZone}",
     "closestAvailableDate": "أقرب تاريخ يحتوي على أوقات متاحة: {date}",
     "addToCalendar": "أضف إلى التقويم",
     "addThisEventToYourCalendar": "أضف هذا الحدث إلى تقويمك",
@@ -505,33 +505,33 @@
     "selectAppointmentType": "اختر نوع الموعد"
   },
   "ConfirmBookingPage": {
-  "confirmingBookingText": "تأكيد الحجز... يرجى الانتظار",
-  "missingAppointmentId": "معرف الموعد مفقود. يرجى المحاولة مرة أخرى.",
-  "somethingWentWrong": "حدث خطأ ما. يرجى المحاولة لاحقًا.",
-  "redirecting": "جارٍ التوجيه..."
-},
- "IntroCheckoutTranslation": {
-  "checkEmailToConfirm": "تحقق من بريدك الإلكتروني لتأكيد الحجز.",
-"actionRequired": "مطلوب إجراء",
-"weHaveReservedNoCard": "لقد قمنا بحجز هذا الموعد لك.",
-  "goBack": "العودة",
-  "minutes": "دقائق",
-  "appointmentDetails": "تفاصيل الموعد",
-  "day": "اليوم",
-  "time": "الوقت",
-  "duration": "المدة",
-  "cancellationTerms": "موعدك التعريفي مجاني تمامًا.",
- "cancellationNotice": "إذا لم تحضر الموعد أو لم تقم بإلغائه قبل 24 ساعة على الأقل، سيتم فرض رسوم قدرها 15 دولارًا أمريكيًا.",
-  "cancellationReason": "تساعد هذه السياسة في ضمان احترام وقت أطبائنا النفسيين.",
-  "thankYou": "شكرًا لتفهمك.",
-  "weHaveReserved": "لقد قمنا بحجز هذا الموعد لك. يُرجى إكمال إضافة تفاصيل بطاقتك في الوقت المحدد لتأكيد الحجز.",
-  "minutesLeft": "دقائق متبقية",
-  "loadingCheckout": "جارٍ تحميل الدفع...",
-  "cancelReservation": "إلغاء الحجز",
-  "bookAppointment": "احجز موعدًا",
-  "loadingSetup": "جارٍ تحميل الدفع...",
-  "processing": "جارٍ المعالجة..."
-},
+    "confirmingBookingText": "تأكيد الحجز... يرجى الانتظار",
+    "missingAppointmentId": "معرف الموعد مفقود. يرجى المحاولة مرة أخرى.",
+    "somethingWentWrong": "حدث خطأ ما. يرجى المحاولة لاحقًا.",
+    "redirecting": "جارٍ التوجيه..."
+  },
+  "IntroCheckoutTranslation": {
+    "checkEmailToConfirm": "تحقق من بريدك الإلكتروني لتأكيد الحجز.",
+    "actionRequired": "مطلوب إجراء",
+    "weHaveReservedNoCard": "لقد قمنا بحجز هذا الموعد لك.",
+    "goBack": "العودة",
+    "minutes": "دقائق",
+    "appointmentDetails": "تفاصيل الموعد",
+    "day": "اليوم",
+    "time": "الوقت",
+    "duration": "المدة",
+    "cancellationTerms": "موعدك التعريفي مجاني تمامًا.",
+    "cancellationNotice": "إذا لم تحضر الموعد أو لم تقم بإلغائه قبل 24 ساعة على الأقل، سيتم فرض رسوم قدرها 15 دولارًا أمريكيًا.",
+    "cancellationReason": "تساعد هذه السياسة في ضمان احترام وقت أطبائنا النفسيين.",
+    "thankYou": "شكرًا لتفهمك.",
+    "weHaveReserved": "لقد قمنا بحجز هذا الموعد لك. يُرجى إكمال إضافة تفاصيل بطاقتك في الوقت المحدد لتأكيد الحجز.",
+    "minutesLeft": "دقائق متبقية",
+    "loadingCheckout": "جارٍ تحميل الدفع...",
+    "cancelReservation": "إلغاء الحجز",
+    "bookAppointment": "احجز موعدًا",
+    "loadingSetup": "جارٍ تحميل الدفع...",
+    "processing": "جارٍ المعالجة..."
+  },
   "AdminPage": {
     "addTherapist": "إضافة معالج",
     "clientOverview": "نظرة عامة على العملاء",
@@ -573,10 +573,10 @@
     "email": "البريد الإلكتروني",
     "totalAppointments": "إجمالي المواعيد",
     "emailLabel": "البريد الإلكتروني",
-"currentTherapist": "الأخصائي النفسي الحالي",
+    "currentTherapist": "الأخصائي النفسي الحالي",
     "none": "لا يوجد",
-"therapistHistory": "تاريخ الأخصائي النفسي",
-"therapistLabel": "الأخصائي النفسي",
+    "therapistHistory": "تاريخ الأخصائي النفسي",
+    "therapistLabel": "الأخصائي النفسي",
     "appointmentsLabel": "المواعيد",
     "periodLabel": "الفترة",
     "current": "الحالي",
@@ -603,14 +603,14 @@
     "bookingConfirmed": "تم تأكيد الحجز",
     "amountToBePaid": "المبلغ المطلوب دفعه",
     "actionRequired": "مطلوب إجراء",
-"confirmYourBooking": "يرجى تأكيد الحجز",
-"checkEmailForConfirmation": "تم إرسال بريد إلكتروني يحتوي على تفاصيل الحجز. يرجى التحقق من بريدك الوارد وتأكيد الحجز للمتابعة.",
+    "confirmYourBooking": "يرجى تأكيد الحجز",
+    "checkEmailForConfirmation": "تم إرسال بريد إلكتروني يحتوي على تفاصيل الحجز. يرجى التحقق من بريدك الوارد وتأكيد الحجز للمتابعة.",
     "goToAppointments": "الذهاب إلى المواعيد"
   },
   "ErrorMessages": {
     "appointmentNotReserved": "لم يتم حجز الموعد بعد الآن",
     "isNotIntroCall": "هذه ليست مكالمة تعريفية",
-"appointmentAlreadyConfirmed": "تم تأكيد الموعد بالفعل",
+    "appointmentAlreadyConfirmed": "تم تأكيد الموعد بالفعل",
     "accountDeletionFailed": "فشل في حذف الحساب",
     "logout": "تسجيل الخروج",
     "thisAccountIsTerminated": "تم حذف هذا الحساب. يرجى تسجيل الخروج.",
@@ -713,11 +713,11 @@
     "payNowButton": "ادفع الآن",
     "footerText": "شكرًا لاستخدامك زاكينا."
   },
- "SmsReminder": {
-  "reminderMessage": "تذكير: موعدك مع {hostFirstName} {hostLastName} سيبدأ خلال 20 دقيقة في {appointmentTime}. يرجى الاستعداد والتأكد من أن الميكروفون والفيديو يعملان بشكل صحيح. يمكنك الانضمام إلى الاجتماع هنا: {meetingLink}",
-  "reminderMessage24h": "تذكير: موعدك مع {hostFirstName} {hostLastName} مقرر في {appointmentTime} غدًا. يرجى الاستعداد والتأكد من تجهيز معداتك.",
-  "reminderMessage2h": "تذكير: موعدك مع {hostFirstName} {hostLastName} سيبدأ بعد ساعتين في {appointmentTime}. يرجى الاستعداد والتأكد من أن معداتك جاهزة."
-},
+  "SmsReminder": {
+    "reminderMessage": "تذكير: موعدك مع {hostFirstName} {hostLastName} سيبدأ خلال 20 دقيقة في {appointmentTime}. يرجى الاستعداد والتأكد من أن الميكروفون والفيديو يعملان بشكل صحيح. يمكنك الانضمام إلى الاجتماع هنا: {meetingLink}",
+    "reminderMessage24h": "تذكير: موعدك مع {hostFirstName} {hostLastName} مقرر في {appointmentTime} غدًا. يرجى الاستعداد والتأكد من تجهيز معداتك.",
+    "reminderMessage2h": "تذكير: موعدك مع {hostFirstName} {hostLastName} سيبدأ بعد ساعتين في {appointmentTime}. يرجى الاستعداد والتأكد من أن معداتك جاهزة."
+  },
   "TwoFactorEmail": {
     "daqil": "زاكينا",
     "subject": "رمز التحقق بخطوتين الخاص بك",
@@ -752,8 +752,8 @@
     "clientSubject": "تم إلغاء موعدك",
     "therapistButtonText": "عرض جميع مواعيدي",
     "clientButtonText": "عرض مواعيدي",
-"therapistLabel": "الأخصائي النفسي:"
-,    "clientLabel": "العميل:",
+    "therapistLabel": "الأخصائي النفسي:",
+    "clientLabel": "العميل:",
     "dateLabel": "التاريخ:",
     "timeLabel": "الوقت:",
     "reasonLabel": "السبب:",
@@ -829,23 +829,23 @@
     "thankYouMessage": "شكرًا لاستخدامك زاكينا."
   },
   "IntroBookingLinkConfirmationEmail": {
-  "actionRequiredSubject": "مطلوب إجراء: تأكيد حجزك",
-  "therapistNotificationSubject": "تم حجز موعد مكالمة تعريفية جديدة",
-  "greeting": "مرحبًا {name}،",
-  "introBookingMessage": "لقد قمنا بحجز موعد لمكالمة تعريفية لك. يرجى تأكيد حجزك بالنقر على الزر أدناه.",
-  "dateLabel": "التاريخ",
-  "timeLabel": "الوقت",
-  "durationLabel": "المدة",
-  "minutesLabel": "دقائق",
-  "confirmBookingButton": "تأكيد الحجز",
-  "actionRequiredFooter": "يرجى تأكيد حجزك في أقرب وقت ممكن لتأمين الموعد.",
-  "therapistGreeting": "مرحبًا {name}،",
-  "therapistIntroBookingMessage": "قام {clientName} بحجز موعد مكالمة تعريفية معك. إليك التفاصيل:",
-  "therapistNotificationFooter": "سوف تتلقى إشعارًا بمجرد أن يؤكد العميل الحجز.",
-  "cancellationNotice": "إذا لم تحضر الموعد أو لم تقم بإلغائه قبل 24 ساعة على الأقل، سيتم فرض رسوم بقيمة 15 دولارًا أمريكيًا.",
-  "psychologistLabel": "المعالج النفسي",
-"clientLabel": "العميل"
-},
+    "actionRequiredSubject": "مطلوب إجراء: تأكيد حجزك",
+    "therapistNotificationSubject": "تم حجز موعد مكالمة تعريفية جديدة",
+    "greeting": "مرحبًا {name}،",
+    "introBookingMessage": "لقد قمنا بحجز موعد لمكالمة تعريفية لك. يرجى تأكيد حجزك بالنقر على الزر أدناه.",
+    "dateLabel": "التاريخ",
+    "timeLabel": "الوقت",
+    "durationLabel": "المدة",
+    "minutesLabel": "دقائق",
+    "confirmBookingButton": "تأكيد الحجز",
+    "actionRequiredFooter": "يرجى تأكيد حجزك في أقرب وقت ممكن لتأمين الموعد.",
+    "therapistGreeting": "مرحبًا {name}،",
+    "therapistIntroBookingMessage": "قام {clientName} بحجز موعد مكالمة تعريفية معك. إليك التفاصيل:",
+    "therapistNotificationFooter": "سوف تتلقى إشعارًا بمجرد أن يؤكد العميل الحجز.",
+    "cancellationNotice": "إذا لم تحضر الموعد أو لم تقم بإلغائه قبل 24 ساعة على الأقل، سيتم فرض رسوم بقيمة 15 دولارًا أمريكيًا.",
+    "psychologistLabel": "المعالج النفسي",
+    "clientLabel": "العميل"
+  },
   "MeetingLinkEmail": {
     "subject": "رابط الفيديو لموعدك في {appointmentTime}",
     "greeting": "مرحبًا،",
@@ -961,8 +961,8 @@
     "waitingForClient": "في انتظار انضمام العميل...",
     "waitingForPsychologist": "يرجى الانتظار. سيكون معك الأخصائي النفسي قريبًا.",
     "noShowMessage": "إذا لم يحضر العميل، لا تتردد في الاتصال به.",
-"clientName": "اسم العميل",
-"phoneNumber": "رقم الهاتف"
+    "clientName": "اسم العميل",
+    "phoneNumber": "رقم الهاتف"
   },
   "DateTimePicker": {
     "ok": "موافق"
