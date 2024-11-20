@@ -26,6 +26,7 @@ import {
 } from "@/lib/mail";
 import { getFullName } from "@/utils/formatName";
 import { schedulePayBeforePaymentExpiredStatusUpdateJobs } from "@/lib/schedule-appointment-jobs";
+import { formatInTimeZone } from "date-fns-tz";
 
 export const reserveAppointment = async (
   appointmentType: any,
