@@ -160,6 +160,7 @@ const RecurringAvailabilityForm = ({
 
   const onSubmitDay = (values: z.infer<typeof RecurringAvailabilitySchema>) => {
     startTransition(async () => {
+      // Get the base date for the selected day
       const daysOfWeek = [
         "sunday",
         "monday",
@@ -180,8 +181,13 @@ const RecurringAvailabilityForm = ({
           endTime: combineDateAndTime(baseDate, new Date(range.endTime)),
         })),
       };
-      const data = await saveRecurringAvailableTimes(values, adminPageProps);
+
+      const data = await saveRecurringAvailableTimes(
+        adjustedValues,
+        adminPageProps
+      );
       responseToast(data);
+
       if (data?.success) {
         setEditModes((prev: any) => ({ ...prev, [day]: false }));
       }
