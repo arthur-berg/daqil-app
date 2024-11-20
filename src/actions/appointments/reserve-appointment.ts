@@ -22,6 +22,7 @@ import connectToMongoDB from "@/lib/mongoose";
 import { APPOINTMENT_TYPE_ID_INTRO_SESSION } from "@/contants/config";
 import { sendIntroBookingConfirmationMailWithLink } from "@/lib/mail";
 import { getFullName } from "@/utils/formatName";
+import { formatInTimeZone } from "date-fns-tz";
 
 export const reserveAppointment = async (
   appointmentType: any,
@@ -100,7 +101,12 @@ export const reserveAppointment = async (
 
     const appointment = await createAppointment(appointmentData, session);
     const appointmentId = appointment[0]._id;
-    const appointmentDate = format(new Date(startDate), "yyyy-MM-dd");
+
+    const appointmentDate = formatInTimeZone(
+      new Date(startDate),
+      "UTC",
+      "yyyy-MM-dd"
+    );
 
     const isIntroCall =
       appointmentType._id.toString() === APPOINTMENT_TYPE_ID_INTRO_SESSION;

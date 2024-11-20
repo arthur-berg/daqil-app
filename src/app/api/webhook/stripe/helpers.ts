@@ -188,7 +188,12 @@ async function handlePayBeforeBooking(
   therapistEmail: string,
   clientEmail: string
 ) {
-  const appointmentDate = format(new Date(appointment.startDate), "yyyy-MM-dd");
+  const appointmentDate = formatInTimeZone(
+    new Date(appointment.startDate),
+    "UTC",
+    "yyyy-MM-dd"
+  );
+
   await updateAppointments(appointment, appointmentDate);
 
   // Convert amountPaid to a number (removing the '$' sign and parsing as float)

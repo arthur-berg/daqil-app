@@ -55,10 +55,12 @@ export async function handleSetupIntentSucceeded(
     await updateUserPaymentMethod(userId, paymentMethodId);
 
     // Proceed to update appointment status, send emails, and schedule jobs
-    const appointmentDate = format(
+    const appointmentDate = formatInTimeZone(
       new Date(appointment.startDate),
+      "UTC",
       "yyyy-MM-dd"
     );
+
     await updateAppointments(appointment, appointmentDate);
 
     // Update the appointment status to "confirmed"
