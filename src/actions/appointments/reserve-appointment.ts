@@ -106,7 +106,11 @@ export const reserveAppointment = async (
 
     const appointment = await createAppointment(appointmentData, session);
     const appointmentId = appointment[0]._id;
-    const appointmentDate = format(new Date(startDate), "yyyy-MM-dd");
+    const appointmentDate = formatInTimeZone(
+      new Date(startDate),
+      "UTC",
+      "yyyy-MM-dd"
+    );
 
     const isIntroCall =
       appointmentType._id.toString() === APPOINTMENT_TYPE_ID_INTRO_SESSION;

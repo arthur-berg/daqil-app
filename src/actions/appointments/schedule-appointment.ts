@@ -131,7 +131,11 @@ export const scheduleAppointment = async (
 
     const appointmentId = appointment[0]._id;
 
-    const appointmentDate = format(new Date(startDate), "yyyy-MM-dd");
+    const appointmentDate = formatInTimeZone(
+      new Date(startDate),
+      "UTC",
+      "yyyy-MM-dd"
+    );
 
     await schedulePaymentReminders(appointmentId, paymentExpiryDate, locale);
 

@@ -315,7 +315,7 @@ export const getTherapistBookedTimeSlots = (
   selectedDate: Date,
   appointments: any[]
 ): TimeSlot[] => {
-  const appointmentDate = format(selectedDate, "yyyy-MM-dd");
+  const appointmentDate = formatInTimeZone(selectedDate, "UTC", "yyyy-MM-dd");
 
   const selectedAppointment = appointments.find(
     (appointment) => appointment.date === appointmentDate
