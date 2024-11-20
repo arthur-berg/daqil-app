@@ -42,7 +42,7 @@ const getNextDateForDay = (targetDay: number): Date => {
 const generateTimeIntervals = (intervalMinutes = 15) => {
   const times = [];
   const start = set(new Date(), {
-    hours: 7,
+    hours: 0,
     minutes: 0,
     seconds: 0,
     milliseconds: 0,
