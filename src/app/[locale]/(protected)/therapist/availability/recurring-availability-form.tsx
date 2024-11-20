@@ -160,6 +160,26 @@ const RecurringAvailabilityForm = ({
 
   const onSubmitDay = (values: z.infer<typeof RecurringAvailabilitySchema>) => {
     startTransition(async () => {
+      const daysOfWeek = [
+        "sunday",
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday",
+      ];
+      const baseDate = getNextDateForDay(daysOfWeek.indexOf(day.toLowerCase()));
+
+      // Adjust the time ranges to match the correct date
+      const adjustedValues = {
+        ...values,
+        timeRanges: values.timeRanges.map((range) => ({
+          ...range,
+          startTime: combineDateAndTime(baseDate, new Date(range.startTime)),
+          endTime: combineDateAndTime(baseDate, new Date(range.endTime)),
+        })),
+      };
       const data = await saveRecurringAvailableTimes(values, adminPageProps);
       responseToast(data);
       if (data?.success) {
