@@ -141,13 +141,15 @@ export const checkTherapistAvailability = async (
   therapist: any,
   startDate: any,
   endDate: any,
-  appointmentType: any
+  appointmentType: any,
+  browserTimeZone: string
 ) => {
   const validTimeSlots = getTherapistAvailableTimeSlots(
     therapist.availableTimes,
     appointmentType,
     startDate,
-    therapist.appointments
+    therapist.appointments,
+    browserTimeZone
   );
 
   const requestedStart = new Date(startDate);

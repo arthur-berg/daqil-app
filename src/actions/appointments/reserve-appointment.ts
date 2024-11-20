@@ -31,7 +31,8 @@ import { formatInTimeZone } from "date-fns-tz";
 export const reserveAppointment = async (
   appointmentType: any,
   therapistId: string,
-  startDate: Date
+  startDate: Date,
+  browserTimeZone: string
 ) => {
   await connectToMongoDB();
   const [SuccessMessages, ErrorMessages, t, tAppointmentTypes] =
@@ -73,7 +74,8 @@ export const reserveAppointment = async (
     therapist,
     startDate,
     endDate,
-    appointmentType
+    appointmentType,
+    browserTimeZone
   );
 
   if (!availabilityCheck.available) {

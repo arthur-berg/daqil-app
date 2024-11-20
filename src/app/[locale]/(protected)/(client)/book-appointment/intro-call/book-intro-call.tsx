@@ -93,7 +93,8 @@ const BookIntroCall = ({
             therapistAvailableTimes,
             appointmentType,
             utcCurrentdDate,
-            therapistAppointments
+            therapistAppointments,
+            browserTimeZone
           );
 
           return [...slots, ...introCallSlots];
@@ -155,7 +156,8 @@ const BookIntroCall = ({
             therapistAvailableTimes,
             appointmentType,
             utcSelectedDate,
-            therapistAppointments
+            therapistAppointments,
+            browserTimeZone
           );
 
           return [...slots, ...introCallSlots];
@@ -201,7 +203,8 @@ const BookIntroCall = ({
       const data = await reserveAppointment(
         appointmentType,
         therapistId,
-        combinedDateTime
+        combinedDateTime,
+        browserTimeZone
       );
       if (data.error) {
         toast({

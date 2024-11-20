@@ -103,7 +103,8 @@ const BookingCalendar = ({
         JSON.parse(therapistsAvailableTimes),
         appointmentType,
         utcCurrentdDate,
-        JSON.parse(appointments)
+        JSON.parse(appointments),
+        browserTimeZone
       );
 
       if (allAvailableSlots.length > 0) {
@@ -146,7 +147,8 @@ const BookingCalendar = ({
       JSON.parse(therapistsAvailableTimes),
       appointmentType,
       utcSelectedDate,
-      JSON.parse(appointments)
+      JSON.parse(appointments),
+      browserTimeZone
     );
 
     setAvailableTimeSlots(timeSlots);
@@ -184,7 +186,8 @@ const BookingCalendar = ({
       const data = await reserveAppointment(
         appointmentType,
         therapistId,
-        combinedDateTime
+        combinedDateTime,
+        browserTimeZone
       );
       if (data.error) {
         toast({

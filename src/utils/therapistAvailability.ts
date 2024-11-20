@@ -6,7 +6,7 @@ import {
   isEqual,
   isSameDay,
 } from "date-fns";
-import { formatInTimeZone } from "date-fns-tz";
+import { formatInTimeZone, toZonedTime } from "date-fns-tz";
 
 type TimeRange = {
   startTime: string | Date;
@@ -71,7 +71,8 @@ export const getTherapistAvailableTimeSlots = (
   availableTimes: AvailableTimes,
   appointmentType: AppointmentType,
   selectedDate: Date,
-  appointments: any[]
+  appointments: any[],
+  timeZone: string
 ): TimeSlot[] => {
   const {
     settings,
@@ -81,6 +82,22 @@ export const getTherapistAvailableTimeSlots = (
   } = availableTimes;
   const { interval, futureBookingDelay } = settings;
   const appointmentDate = formatInTimeZone(selectedDate, "UTC", "yyyy-MM-dd");
+
+  const normalizeToUTC = (date: any) => {
+    return new Date(
+      Date.UTC(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate(),
+        date.getHours(),
+        date.getMinutes(),
+        0,
+        0
+      )
+    );
+  };
+
+  const normalizedSelectedDate = normalizeToUTC(new Date(selectedDate));
 
   const selectedAppointment = appointments.find(
     (appointment) => appointment.date === appointmentDate
@@ -118,16 +135,27 @@ export const getTherapistAvailableTimeSlots = (
     const recurring = recurringAvailableTimes.find(
       (r) => r.day.toLowerCase() === day
     );
-    return recurring
-      ? filterTimeRangesByAppointmentType(
-          recurring.timeRanges.map((range) => ({
-            ...range,
-            startTime: new Date(range.startTime),
-            endTime: new Date(range.endTime),
-          })),
-          appointmentType._id
-        )
-      : [];
+
+    let timeRanges: any = [];
+
+    recurringAvailableTimes?.forEach((recurring) => {
+      recurring.timeRanges.map((range) => {
+        timeRanges.push({
+          startTime: new Date(range.startTime),
+          endTime: new Date(range.endTime),
+          appointmentTypeIds: range.appointmentTypeIds,
+        });
+      });
+    });
+
+    return filterTimeRangesByAppointmentType(
+      timeRanges.map((range: any) => ({
+        ...range,
+        startTime: new Date(range.startTime),
+        endTime: new Date(range.endTime),
+      })),
+      appointmentType._id
+    );
   };
 
   const getBlockedOutTimesForDate = (date: Date): BlockedTimeRange[] => {
@@ -231,7 +259,59 @@ export const getTherapistAvailableTimeSlots = (
 
   const now = new Date();
 
-  const availableTimeSlots = timeRanges.reduce<Date[]>((acc, range) => {
+  const filterTimeRangesBySelectedDate = (
+    timeRanges: TimeRange[],
+    selectedDate: Date
+  ): TimeRange[] => {
+    // Convert selectedDate to local day boundaries
+    const localDayStart = new Date(
+      selectedDate.getFullYear(),
+      selectedDate.getMonth(),
+      selectedDate.getDate(),
+      0,
+      0,
+      0
+    );
+    const localDayEnd = new Date(
+      selectedDate.getFullYear(),
+      selectedDate.getMonth(),
+      selectedDate.getDate(),
+      23,
+      59,
+      59
+    );
+
+    const dayStart = toZonedTime(localDayStart, timeZone);
+    const dayEnd = toZonedTime(localDayEnd, timeZone);
+
+    return timeRanges
+      .map((range) => {
+        const rangeStart = new Date(range.startTime);
+        const rangeEnd = new Date(range.endTime);
+
+        // Adjust ranges to align with the local day boundaries
+        const truncatedStart = isBefore(rangeStart, dayStart)
+          ? dayStart
+          : rangeStart;
+        const truncatedEnd = isAfter(rangeEnd, dayEnd) ? dayEnd : rangeEnd;
+
+        if (!isBefore(truncatedStart, truncatedEnd)) {
+          return null; // Exclude invalid ranges
+        }
+
+        return {
+          ...range,
+          startTime: truncatedStart,
+          endTime: truncatedEnd,
+        };
+      })
+      .filter(Boolean) as TimeRange[];
+  };
+
+  const availableTimeSlots = filterTimeRangesBySelectedDate(
+    timeRanges,
+    selectedDate
+  ).reduce<Date[]>((acc, range) => {
     const intervals = generateTimeIntervals(
       new Date(range.startTime),
       new Date(range.endTime),
