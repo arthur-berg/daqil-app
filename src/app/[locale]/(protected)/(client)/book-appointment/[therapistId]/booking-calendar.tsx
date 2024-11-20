@@ -89,10 +89,20 @@ const BookingCalendar = ({
     let foundAvailableSlots = false; // Track if we find available slots
 
     for (let i = 0; i < maxLookAheadDays; i++) {
+      const utcCurrentdDate = new Date(
+        Date.UTC(
+          currentDate.getFullYear(),
+          currentDate.getMonth(),
+          currentDate.getDate(),
+          currentDate.getHours(),
+          currentDate.getMinutes(),
+          currentDate.getSeconds()
+        )
+      );
       const allAvailableSlots = getTherapistAvailableTimeSlots(
         JSON.parse(therapistsAvailableTimes),
         appointmentType,
-        currentDate,
+        utcCurrentdDate,
         JSON.parse(appointments)
       );
 
@@ -122,11 +132,20 @@ const BookingCalendar = ({
 
   const setTimeSlots = (selectedDate: Date) => {
     if (!selectedDate) return [];
-
+    const utcSelectedDate = new Date(
+      Date.UTC(
+        selectedDate.getFullYear(),
+        selectedDate.getMonth(),
+        selectedDate.getDate(),
+        selectedDate.getHours(),
+        selectedDate.getMinutes(),
+        selectedDate.getSeconds()
+      )
+    );
     const timeSlots = getTherapistAvailableTimeSlots(
       JSON.parse(therapistsAvailableTimes),
       appointmentType,
-      selectedDate,
+      utcSelectedDate,
       JSON.parse(appointments)
     );
 
