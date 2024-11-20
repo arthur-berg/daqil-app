@@ -135,12 +135,39 @@ export const reserveAppointment = async (
 
     if (isIntroCall) {
       const locale = await getLocale();
+
+      const clientTimeZone = client.settings?.timeZone || "UTC";
+      const therapistTimeZone = therapist.settings.timeZone || "UTC";
+
+      const therapistAppointmentDate = formatInTimeZone(
+        new Date(startDate),
+        therapistTimeZone,
+        "yyyy-MM-dd"
+      );
+
+      const therapistAppointmentTime = formatInTimeZone(
+        new Date(startDate),
+        therapistTimeZone,
+        "HH:mm"
+      );
+
+      const clientAppointmentDate = formatInTimeZone(
+        new Date(startDate),
+        clientTimeZone,
+        "yyyy-MM-dd"
+      );
+      const clientAppointmentTime = formatInTimeZone(
+        new Date(startDate),
+        clientTimeZone,
+        "HH:mm"
+      );
+
       const appointmentDetails = {
         appointmentId: appointmentId.toString(),
-        clientDate: format(new Date(startDate), "yyyy-MM-dd"),
-        clientTime: format(new Date(startDate), "HH:mm"),
-        therapistDate: format(new Date(startDate), "yyyy-MM-dd"),
-        therapistTime: format(new Date(startDate), "HH:mm"),
+        clientDate: clientAppointmentDate,
+        clientTime: clientAppointmentTime,
+        therapistDate: therapistAppointmentDate,
+        therapistTime: therapistAppointmentTime,
         therapistName: `${await getFullName(
           therapist.firstName,
           therapist.lastName
