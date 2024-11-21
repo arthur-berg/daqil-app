@@ -821,9 +821,6 @@ export const introBookingConfirmationEmailTemplate = async (
           <p><strong>${t("durationLabel")}</strong> ${
       appointmentDetails.durationInMinutes
     } ${t("minutesLabel")}</p>
-          <p style="color: red; font-weight: bold; margin-top: 20px;">
-            ${t("cancellationNotice")}
-          </p>
 
           <div style="text-align: center; margin-top: 20px;">
             <a href="${confirmLink}" style="display: inline-block; padding: 12px 24px; background-color: #28a745; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: bold;">
@@ -840,3 +837,8 @@ export const introBookingConfirmationEmailTemplate = async (
   `,
   };
 };
+
+/*
+ <p style="color: red; font-weight: bold; margin-top: 20px;">
+            ${t("cancellationNotice")}
+          </p>*/
