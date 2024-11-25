@@ -2,6 +2,8 @@ import connectToMongoDB from "@/lib/mongoose";
 import { UserRole } from "@/generalTypes";
 import Appointment from "@/models/Appointment";
 import User from "@/models/User";
+import { getTherapistAvailableTimeSlots } from "@/utils/therapistAvailability";
+import { addDays } from "date-fns";
 
 export const getUserByEmail = async (email: string) => {
   try {
@@ -240,7 +242,11 @@ export const getTherapistAdminProfileById = async (id: string) => {
 
 //emailVerified: { $ne: null },
 
-export const getTherapists = async () => {
+export const getTherapistsWithNextAvailableTime = async (
+  startingDate = new Date(),
+  browserTimeZone: string,
+  appointmentType: any
+) => {
   try {
     const therapists = await User.find({
       role: UserRole.THERAPIST,
@@ -251,9 +257,72 @@ export const getTherapists = async () => {
       ],
     }).lean();
 
-    return therapists;
-  } catch {
-    return null;
+    const maxLookAheadDays = 30;
+
+    // Fetch all relevant appointments in one query
+    const allAppointments = await Appointment.find({
+      hostUserId: { $in: therapists.map((t) => t._id) },
+      status: { $in: ["confirmed", "temporarily-reserved"] },
+      startDate: {
+        $gte: startingDate,
+        $lte: addDays(startingDate, maxLookAheadDays),
+      },
+    }).lean();
+
+    // Group appointments by therapist
+    const appointmentsByTherapist = allAppointments.reduce(
+      (acc: any, appointment: any) => {
+        if (!acc[appointment.hostUserId]) acc[appointment.hostUserId] = [];
+        acc[appointment.hostUserId].push(appointment);
+        return acc;
+      },
+      {}
+    );
+
+    // Process therapists in parallel
+    const therapistsWithNextAvailableTime = await Promise.all(
+      therapists.map(async (therapist: any) => {
+        const availableTimes = therapist.availableTimes;
+        const appointments = appointmentsByTherapist[therapist._id] || [];
+
+        therapist.nextAvailableSlot = null;
+
+        let currentDate = new Date(startingDate);
+        for (let i = 0; i < maxLookAheadDays; i++) {
+          const allAvailableSlots = getTherapistAvailableTimeSlots(
+            availableTimes,
+            appointmentType,
+            currentDate,
+            appointments,
+            browserTimeZone
+          );
+
+          if (allAvailableSlots.length > 0) {
+            therapist.nextAvailableSlot = allAvailableSlots[0].start;
+            break;
+          }
+
+          currentDate = addDays(currentDate, 1);
+        }
+
+        return therapist;
+      })
+    );
+
+    // Sort therapists by the nextAvailableSlot date (earliest first)
+    const sortedTherapists = therapistsWithNextAvailableTime.sort((a, b) => {
+      if (!a.nextAvailableSlot) return 1; // Therapists with no slot go to the end
+      if (!b.nextAvailableSlot) return -1;
+      return (
+        new Date(a.nextAvailableSlot).getTime() -
+        new Date(b.nextAvailableSlot).getTime()
+      );
+    });
+
+    return sortedTherapists;
+  } catch (error) {
+    console.error("Error fetching therapists with availability:", error);
+    return [];
   }
 };
 
