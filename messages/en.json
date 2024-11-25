@@ -155,12 +155,14 @@
     "myProfile": "My Profile"
   },
 "AppointmentEndedPage": {
+  "description": "If you left the meeting by accident, you can rejoin it.",
   "callEnded": "Call Ended",
   "nextStep": "Next Step: Book Your Appointment",
   "descriptionIntro": "Your introductory call has ended. Now, you can book your next appointment to continue your progress. If you left the meeting by accident, you can rejoin it.",
   "promoCodeMessage": "Use code NOVEMBER50 to get 50% off your next appointment!",
   "bookNextAppointmentButton": "Book Next Appointment",
-  "rejoinMeetingButton": "Rejoin Meeting"
+  "rejoinMeetingButton": "Rejoin Meeting",
+  "goToAppointments":"Go to Appointments"
 },
   "SettingsPage": {
     "deleteAccount": "Delete Account",

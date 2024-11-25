@@ -115,7 +115,10 @@ export async function confirmIntroBooking(appointmentId: string) {
     }
 
     if (appointment.status === "confirmed") {
-      return { error: ErrorMessages("appointmentAlreadyConfirmed") };
+      return {
+        redirect: true,
+        error: ErrorMessages("appointmentAlreadyConfirmed"),
+      };
     }
 
     const isIntroCall =

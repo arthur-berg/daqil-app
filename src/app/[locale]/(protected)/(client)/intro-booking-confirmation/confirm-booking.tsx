@@ -34,6 +34,9 @@ const ConfirmBooking = ({ appointmentId }: { appointmentId: string }) => {
           } else {
             setError(data.error || t("somethingWentWrong"));
             setLoading(false);
+            if (data.redirect) {
+              router.push("/appointments");
+            }
           }
         });
       } catch (err) {
