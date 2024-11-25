@@ -43,7 +43,7 @@ const updateAppointments = async (
         $pull: {
           "appointments.$.temporarilyReservedAppointments": appointment._id,
         },
-        $push: { "appointments.$.bookedAppointments": appointment._id },
+        $addToSet: { "appointments.$.bookedAppointments": appointment._id },
       },
       { session }
     );
@@ -57,7 +57,7 @@ const updateAppointments = async (
         $pull: {
           "appointments.$.temporarilyReservedAppointments": appointment._id,
         },
-        $push: { "appointments.$.bookedAppointments": appointment._id },
+        $addToSet: { "appointments.$.bookedAppointments": appointment._id },
       },
       { session }
     );

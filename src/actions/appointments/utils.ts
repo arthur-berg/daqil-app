@@ -53,8 +53,8 @@ export const updateAppointments = async (
         "appointments.date": appointmentDate, // Match the specific date
       },
       {
-        $push: {
-          [`appointments.$.${appointmentCategory}`]: appointmentId, // Dynamically push to the specified array for that date
+        $addToSet: {
+          [`appointments.$.${appointmentCategory}`]: appointmentId, // Use $addToSet to ensure no duplicates
         },
       },
       { session }
