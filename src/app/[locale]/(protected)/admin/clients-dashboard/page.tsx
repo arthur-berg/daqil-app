@@ -26,57 +26,66 @@ const AdminDashboardPage = async () => {
     );
 
   const totalClients = clients.length;
+  const accountSetupDoneCount = clients.filter(
+    (client) => client.isAccountSetupDone
+  ).length;
 
-  let accountSetupDone = 0;
-  let introAppointmentsCount = 0;
-  let paidAppointmentsCount = 0;
+  let confirmedIntroAppointmentsCount = 0;
+  let confirmedPaidAppointmentsCount = 0;
+  let completedIntroAppointmentsCount = 0;
+  let completedPaidAppointmentsCount = 0;
+  let canceledIntroAppointmentsCount = 0;
+  let canceledPaidAppointmentsCount = 0;
 
   const groupedData = clients.reduce((acc: any, client: any) => {
-    const createdDate = format(new Date(client.createdAt), "yyyy-MM-dd");
+    client.appointments?.forEach((apptGroup: any) => {
+      apptGroup.bookedAppointments.forEach((appointment: any) => {
+        const createdDate = format(
+          new Date(appointment.createdAt),
+          "yyyy-MM-dd"
+        );
 
-    if (!acc[createdDate]) {
-      acc[createdDate] = {
-        totalClients: 0,
-        accountSetupDone: 0,
-        introAppointments: 0,
-        paidAppointments: 0,
-      };
-    }
+        if (!acc[createdDate]) {
+          acc[createdDate] = {
+            confirmedIntroAppointments: 0,
+            confirmedPaidAppointments: 0,
+          };
+        }
 
-    acc[createdDate].totalClients += 1;
+        const isIntroAppointment =
+          appointment?.appointmentTypeId?.toString() ===
+          APPOINTMENT_TYPE_ID_INTRO_SESSION;
 
-    if (client.isAccountSetupDone) {
-      acc[createdDate].accountSetupDone += 1;
-      accountSetupDone += 1;
-    }
+        // Confirmed Appointments
+        if (appointment?.status === "confirmed") {
+          if (isIntroAppointment) {
+            acc[createdDate].confirmedIntroAppointments += 1;
+            confirmedIntroAppointmentsCount += 1;
+          } else {
+            acc[createdDate].confirmedPaidAppointments += 1;
+            confirmedPaidAppointmentsCount += 1;
+          }
+        }
 
-    const introAppointments = client.appointments?.flatMap((apptGroup: any) =>
-      apptGroup.bookedAppointments.filter(
-        (appointment: any) =>
-          appointment?.appointmentTypeId.toString() ===
-            APPOINTMENT_TYPE_ID_INTRO_SESSION &&
-          appointment?.status !== "canceled"
-      )
-    );
+        // Completed Appointments
+        if (appointment?.status === "completed") {
+          if (isIntroAppointment) {
+            completedIntroAppointmentsCount += 1;
+          } else {
+            completedPaidAppointmentsCount += 1;
+          }
+        }
 
-    const paidAppointments = client.appointments?.flatMap((apptGroup: any) =>
-      apptGroup.bookedAppointments.filter(
-        (appointment: any) =>
-          appointment?.appointmentTypeId.toString() !==
-            APPOINTMENT_TYPE_ID_INTRO_SESSION &&
-          appointment?.status !== "canceled"
-      )
-    );
-
-    if (introAppointments?.length > 0) {
-      acc[createdDate].introAppointments += 1;
-      introAppointmentsCount += 1;
-    }
-
-    if (paidAppointments?.length > 0) {
-      acc[createdDate].paidAppointments += 1;
-      paidAppointmentsCount += 1;
-    }
+        // Canceled Appointments
+        if (appointment?.status === "canceled") {
+          if (isIntroAppointment) {
+            canceledIntroAppointmentsCount += 1;
+          } else {
+            canceledPaidAppointmentsCount += 1;
+          }
+        }
+      });
+    });
 
     return acc;
   }, {});
@@ -93,14 +102,31 @@ const AdminDashboardPage = async () => {
             <strong>Total Clients:</strong> {totalClients}
           </p>
           <p>
-            <strong>Accounts setup:</strong> {accountSetupDone}
+            <strong>Accounts Setup:</strong> {accountSetupDoneCount}
           </p>
           <p>
-            <strong>Confirmed/Completed Intro Appointments:</strong>{" "}
-            {introAppointmentsCount}
+            <strong>Booked Intro Appointments:</strong>{" "}
+            {confirmedIntroAppointmentsCount}
           </p>
           <p>
-            <strong>Paid Appointments:</strong> {paidAppointmentsCount}
+            <strong>Completed Intro Appointments:</strong>{" "}
+            {completedIntroAppointmentsCount}
+          </p>
+          <p>
+            <strong>Canceled Intro Appointments:</strong>{" "}
+            {canceledIntroAppointmentsCount}
+          </p>
+          <p>
+            <strong>Booked Paid Appointments:</strong>{" "}
+            {confirmedPaidAppointmentsCount}
+          </p>
+          <p>
+            <strong>Completed Paid Appointments:</strong>{" "}
+            {completedPaidAppointmentsCount}
+          </p>
+          <p>
+            <strong>Canceled Paid Appointments:</strong>{" "}
+            {canceledPaidAppointmentsCount}
           </p>
         </div>
       </div>
@@ -111,27 +137,25 @@ const AdminDashboardPage = async () => {
         </Link>
       </div>
 
-      {/* Grouped Data by Date */}
+      {/* Grouped Data by Appointment Creation Date */}
       <div className="mb-6">
-        <h2 className="text-xl font-semibold">Client Data by Date</h2>
+        <h2 className="text-xl font-semibold">
+          Confirmed Appointments by Date
+        </h2>
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead>Date</TableHead>
-              <TableHead>Total Clients</TableHead>
-              <TableHead>Account setup</TableHead>
-              <TableHead>Confirmed/Completed Intro Appointments</TableHead>
-              <TableHead>Paid Appointments</TableHead>
+              <TableHead>Booked Intro Appointments</TableHead>
+              <TableHead>Booked Paid Appointments</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {Object.entries(groupedData).map(([date, data]: any) => (
               <TableRow key={date}>
                 <TableCell>{date}</TableCell>
-                <TableCell>{data.totalClients}</TableCell>
-                <TableCell>{data.accountSetupDone}</TableCell>
-                <TableCell>{data.introAppointments}</TableCell>
-                <TableCell>{data.paidAppointments}</TableCell>
+                <TableCell>{data.confirmedIntroAppointments}</TableCell>
+                <TableCell>{data.confirmedPaidAppointments}</TableCell>
               </TableRow>
             ))}
           </TableBody>
