@@ -241,6 +241,22 @@ export const getTherapistAdminProfileById = async (id: string) => {
 };
 
 //emailVerified: { $ne: null },
+export const getTherapists = async () => {
+  try {
+    const therapists = await User.find({
+      role: UserRole.THERAPIST,
+      isAccountSetupDone: true,
+      $or: [
+        { "settings.hiddenProfile": { $exists: false } },
+        { "settings.hiddenProfile": false },
+      ],
+    }).lean();
+
+    return therapists;
+  } catch {
+    return null;
+  }
+};
 
 export const getTherapistsWithNextAvailableTime = async (
   startingDate = new Date(),
