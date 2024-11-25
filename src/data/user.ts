@@ -41,10 +41,16 @@ export const getAllClientsAdmin = async () => {
 
 export const getAllClients = async () => {
   try {
-    const clients = await User.find({ role: UserRole.CLIENT }).lean();
+    const clients = await User.find({ role: UserRole.CLIENT })
+      .populate({
+        path: "appointments.bookedAppointments",
+        model: "Appointment",
+      })
+      .lean();
 
     return clients;
-  } catch {
+  } catch (error) {
+    console.error("Error fetching clients:", error);
     return null;
   }
 };
