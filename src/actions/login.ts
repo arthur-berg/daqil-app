@@ -68,7 +68,8 @@ export const login = async (
   } */
 
   const { email, password, code } = validatedFields.data;
-  const existingUser = await getUserByEmail(email);
+  const lowerCaseEmail = email.toLowerCase();
+  const existingUser = await getUserByEmail(lowerCaseEmail);
 
   if (!existingUser || !existingUser.email) {
     return { error: ErrorMessages("invalidCredentials") };
@@ -139,7 +140,7 @@ export const login = async (
 
   try {
     await signIn("credentials", {
-      email,
+      email: lowerCaseEmail,
       password,
       redirect: false,
       /*  redirectTo: callbackUrl || `/${locale}/${redirectUrl}`, */
