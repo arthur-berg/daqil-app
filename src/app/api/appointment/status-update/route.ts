@@ -4,6 +4,7 @@ import Appointment from "@/models/Appointment";
 import connectToMongoDB from "@/lib/mongoose";
 import { chargeNoShowFee } from "@/actions/stripe";
 import { APPOINTMENT_TYPE_ID_INTRO_SESSION } from "@/contants/config";
+import { addTagToMailchimpUser } from "@/lib/mail";
 
 const updateAppointmentStatus = async (
   appointmentId: string,
@@ -37,7 +38,7 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
 
     const appointment = await Appointment.findById(appointmentId).populate({
       path: "participants.userId",
-      select: "stripeCustomerId stripePaymentMethodId",
+      select: "stripeCustomerId stripePaymentMethodId email",
     });
     if (!appointment) {
       return NextResponse.json(
@@ -56,6 +57,10 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
     const isIntroAppointment =
       appointment.appointmentTypeId.toString() ===
       APPOINTMENT_TYPE_ID_INTRO_SESSION;
+    if (isIntroAppointment && statusUpdate.status === "completed") {
+      const clientEmail = participants[0]?.userId?.email;
+      await addTagToMailchimpUser(clientEmail, "intro-call-finished");
+    }
 
     if (
       statusUpdate.cancellationReason === "no-show-participant" &&
