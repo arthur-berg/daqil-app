@@ -330,7 +330,7 @@ export const getTherapistAvailableTimeSlots = (
     );
 
     const isTimeInPast = isBefore(time, now);
-    const delay = futureBookingDelay ?? 60;
+    const delay = futureBookingDelay ?? 360;
     const isTimeTooSoon = isBefore(time, addMinutes(now, delay));
 
     return (

@@ -131,7 +131,7 @@ const DefaultAvailabilityManager = ({
     resolver: zodResolver(DefaultAvailabilitySettingsSchemaFE),
     defaultValues: {
       interval: settings?.interval.toString() ?? "15",
-      futureBookingDelay: settings?.futureBookingDelay?.toString() ?? "60",
+      futureBookingDelay: settings?.futureBookingDelay?.toString() ?? "360",
     },
   });
 
