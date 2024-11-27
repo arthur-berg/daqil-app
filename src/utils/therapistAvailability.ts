@@ -249,6 +249,8 @@ export const getTherapistAvailableTimeSlots = (
     (a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime()
   );
 
+  console.log("timeRanges", timeRanges);
+
   const blockedTimes = [
     ...getBlockedOutTimesForDate(selectedDate),
     ...appointmentsForDate.map((range: any) => ({
@@ -263,7 +265,8 @@ export const getTherapistAvailableTimeSlots = (
     timeRanges: TimeRange[],
     selectedDate: Date
   ): TimeRange[] => {
-    // Convert selectedDate to local day boundaries
+    const selectedDay = selectedDate.getDay(); // 0 = Sunday, ..., 6 = Saturday
+
     const localDayStart = new Date(
       selectedDate.getFullYear(),
       selectedDate.getMonth(),
@@ -285,15 +288,41 @@ export const getTherapistAvailableTimeSlots = (
     const dayEnd = toZonedTime(localDayEnd, timeZone);
 
     return timeRanges
+      .filter((range) => {
+        const rangeStart = new Date(range.startTime);
+        const rangeDay = rangeStart.getDay(); // Derive day from startTime
+        return rangeDay === selectedDay; // Match selectedDate's day with range's day
+      })
       .map((range) => {
         const rangeStart = new Date(range.startTime);
         const rangeEnd = new Date(range.endTime);
 
-        // Adjust ranges to align with the local day boundaries
-        const truncatedStart = isBefore(rangeStart, dayStart)
+        // Adjust rangeStart and rangeEnd to match the selectedDate
+        const adjustedRangeStart = new Date(
+          selectedDate.getFullYear(),
+          selectedDate.getMonth(),
+          selectedDate.getDate(),
+          rangeStart.getHours(),
+          rangeStart.getMinutes(),
+          rangeStart.getSeconds()
+        );
+
+        const adjustedRangeEnd = new Date(
+          selectedDate.getFullYear(),
+          selectedDate.getMonth(),
+          selectedDate.getDate(),
+          rangeEnd.getHours(),
+          rangeEnd.getMinutes(),
+          rangeEnd.getSeconds()
+        );
+
+        // Truncate the adjusted times to fit within the local day boundaries
+        const truncatedStart = isBefore(adjustedRangeStart, dayStart)
           ? dayStart
-          : rangeStart;
-        const truncatedEnd = isAfter(rangeEnd, dayEnd) ? dayEnd : rangeEnd;
+          : adjustedRangeStart;
+        const truncatedEnd = isAfter(adjustedRangeEnd, dayEnd)
+          ? dayEnd
+          : adjustedRangeEnd;
 
         if (!isBefore(truncatedStart, truncatedEnd)) {
           return null; // Exclude invalid ranges
@@ -321,6 +350,8 @@ export const getTherapistAvailableTimeSlots = (
 
     return [...acc, ...intervals];
   }, []);
+
+  console.log("availableTimeSlots", availableTimeSlots);
 
   const filteredAvailableTimes = availableTimeSlots.filter((time) => {
     const intervalEnd = addMinutes(time, interval);
