@@ -19,18 +19,11 @@ const removeRelatedJobs = async (appointmentIds: any) => {
 };
 
 export const createAppointment = async (appointmentData: any, session: any) => {
-  const locale = await getLocale();
   const appointment = await Appointment.create([appointmentData], { session });
 
   if (!appointment) {
     throw new Error("Failed to create appointment.");
   }
-
-  await schedulePayBeforePaymentExpiredStatusUpdateJobs(
-    appointment[0]._id.toString(),
-    appointment[0].payment.paymentExpiryDate,
-    locale
-  );
 
   return appointment;
 };
@@ -60,8 +53,8 @@ export const updateAppointments = async (
         "appointments.date": appointmentDate, // Match the specific date
       },
       {
-        $push: {
-          [`appointments.$.${appointmentCategory}`]: appointmentId, // Dynamically push to the specified array for that date
+        $addToSet: {
+          [`appointments.$.${appointmentCategory}`]: appointmentId, // Use $addToSet to ensure no duplicates
         },
       },
       { session }
@@ -148,13 +141,15 @@ export const checkTherapistAvailability = async (
   therapist: any,
   startDate: any,
   endDate: any,
-  appointmentType: any
+  appointmentType: any,
+  browserTimeZone: string
 ) => {
   const validTimeSlots = getTherapistAvailableTimeSlots(
     therapist.availableTimes,
     appointmentType,
     startDate,
-    therapist.appointments
+    therapist.appointments,
+    browserTimeZone
   );
 
   const requestedStart = new Date(startDate);

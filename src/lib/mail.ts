@@ -58,7 +58,7 @@ export const addUserToSubscriberList = async (
           }
         );
 
-        await mailchimpMarketing.lists.updateListMemberTags(
+        /*  await mailchimpMarketing.lists.updateListMemberTags(
           process.env.MAILCHIMP_LIST_ID as string,
           email,
           {
@@ -69,7 +69,7 @@ export const addUserToSubscriberList = async (
               },
             ],
           }
-        );
+        ); */
 
         return { success: "User re-subscribed to the list" };
       } catch (updateError) {
@@ -89,7 +89,7 @@ export const addUserToSubscriberList = async (
           {
             email_address: email,
             status: "subscribed",
-            tags: [roleTag as string],
+            /*   tags: [roleTag as string], */
             merge_fields: {
               CREATEDAT: creationDate,
             },

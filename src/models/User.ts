@@ -82,6 +82,10 @@ const availableTimesSchema = new Schema({
       type: Number,
       required: false,
     },
+    futureBookingDelay: {
+      type: Number,
+      required: false,
+    },
   },
   blockedOutTimes: {
     type: [dateTimesSchema],

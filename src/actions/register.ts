@@ -8,6 +8,7 @@ import { RegisterSchema } from "@/schemas";
 import { getUserByEmail } from "@/data/user";
 import { generateVerificationToken } from "@/lib/tokens";
 import {
+  addTagToMailchimpUser,
   addUserToSubscriberList,
   sendVerificationEmail,
   setCustomFieldsForMailchimpUser,
@@ -105,6 +106,11 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
   await setCustomFieldsForMailchimpUser(email, customFields);
 
   const response = await addUserToSubscriberList(verificationToken.email);
+
+  await addTagToMailchimpUser(
+    email.toLowerCase(),
+    process.env.MAILCHIMP_CLIENT_TAG as string
+  );
 
   if (response?.error) {
     console.error(response.error);

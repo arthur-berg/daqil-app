@@ -158,6 +158,9 @@ const CheckoutWrapper = ({
               </>
             )}
           </p>
+          <div className="mt-3 text-sm text-gray-600">
+            <p>{t("cancellationPolicy")}</p>
+          </div>
         </div>
         {loading || discountLoading ? (
           <div>

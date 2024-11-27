@@ -20,14 +20,19 @@ import User from "@/models/User";
 import { revalidatePath } from "next/cache";
 import connectToMongoDB from "@/lib/mongoose";
 import { APPOINTMENT_TYPE_ID_INTRO_SESSION } from "@/contants/config";
-import { sendIntroBookingConfirmationMailWithLink } from "@/lib/mail";
+import {
+  addTagToMailchimpUser,
+  sendIntroBookingConfirmationMailWithLink,
+} from "@/lib/mail";
 import { getFullName } from "@/utils/formatName";
+import { schedulePayBeforePaymentExpiredStatusUpdateJobs } from "@/lib/schedule-appointment-jobs";
 import { formatInTimeZone } from "date-fns-tz";
 
 export const reserveAppointment = async (
   appointmentType: any,
   therapistId: string,
-  startDate: Date
+  startDate: Date,
+  browserTimeZone: string
 ) => {
   await connectToMongoDB();
   const [SuccessMessages, ErrorMessages, t, tAppointmentTypes] =
@@ -38,6 +43,7 @@ export const reserveAppointment = async (
       getTranslations("AppointmentTypes"),
     ]);
   const user = await requireAuth([UserRole.CLIENT, UserRole.ADMIN]);
+  const locale = await getLocale();
 
   const client = (await getClientByIdAppointments(user.id)) as any;
   const clientId = client._id.toString();
@@ -68,7 +74,8 @@ export const reserveAppointment = async (
     therapist,
     startDate,
     endDate,
-    appointmentType
+    appointmentType,
+    browserTimeZone
   );
 
   if (!availabilityCheck.available) {
@@ -101,7 +108,6 @@ export const reserveAppointment = async (
 
     const appointment = await createAppointment(appointmentData, session);
     const appointmentId = appointment[0]._id;
-
     const appointmentDate = formatInTimeZone(
       new Date(startDate),
       "UTC",
@@ -134,6 +140,10 @@ export const reserveAppointment = async (
     session.endSession();
 
     if (isIntroCall) {
+      await addTagToMailchimpUser(
+        client.email as string,
+        "has-reached-intro-checkout"
+      );
       const locale = await getLocale();
 
       const clientTimeZone = client.settings?.timeZone || "UTC";
@@ -185,6 +195,12 @@ export const reserveAppointment = async (
         locale
       );
     }
+
+    await schedulePayBeforePaymentExpiredStatusUpdateJobs(
+      appointmentId.toString(),
+      appointment[0].payment.paymentExpiryDate,
+      locale
+    );
 
     revalidatePath("/appointments");
 

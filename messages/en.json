@@ -29,7 +29,7 @@
     "passwordLabel": "Password",
     "forgotPassword": "Forgot password?",
     "login": "Login",
-    "continueWithGoogle": "Continue with google",
+    "continueWithGoogle": "Continue with Google",
     "noAccount": "Don't have an account?",
     "twoFactorCode": "Two factor code",
     "confirm": "Confirm",
@@ -154,14 +154,15 @@
     "myClients": "My Clients",
     "myProfile": "My Profile"
   },
- "AppointmentEndedPage": {
+"AppointmentEndedPage": {
+  "description": "If you left the meeting by accident, you can rejoin it.",
   "callEnded": "Call Ended",
-  "goToAppointments": "Go to Appointments",
+  "nextStep": "Next Step: Book Your Appointment",
+  "descriptionIntro": "Your introductory call has ended. Now, you can book your next appointment to continue your progress. If you left the meeting by accident, you can rejoin it.",
+  "promoCodeMessage": "Use code NOVEMBER50 to get 50% off your next appointment!",
+  "bookNextAppointmentButton": "Book Next Appointment",
   "rejoinMeetingButton": "Rejoin Meeting",
-  "description": "Rejoin the meeting if you left by accident. Alternatively, go to your appointments page.",
-  "descriptionIntro": "Your introductory call has ended. Now, you can choose to accept or reject your psychologist based on your experience. If you left the meeting by accident, you can rejoin it.",
-  "therapistSelectButton": "Review and Select Your Psychologist",
-  "nextStep": "Next Step: Select Your Psychologist"
+  "goToAppointments":"Go to Appointments"
 },
   "SettingsPage": {
     "deleteAccount": "Delete Account",
@@ -279,6 +280,7 @@
     "noPaymentDetails": "No payment details have been saved yet"
   },
   "BookAppointmentPage": {
+    "nextAvailable": "Next available time: ",
     "logout": "Logout",
     "introMeetingWasCanceled": " Your intro appointment was not completed because one or both participants didn't join, or one of the participants canceled. Please book a new intro call.",
     "goBack": "Go back",
@@ -399,7 +401,9 @@
     "addDiscountLater": "You will be able to apply a discount code at the time of payment.",
     "discountLoading": "Applying discount code...",
     "calculatingPrice": "Calculating price...",
-    "cancelReservation": "Cancel reservation"
+    "cancelReservation": "Cancel reservation",
+    "cancellationPolicy": "You will receive a 100% refund if you cancel more than 24 hours before the appointment starts."
+    
   },
   "AvailabilityPage": {
     "timezoneNotice":  "You are viewing times in your browsers timezone: {timeZone}",
@@ -412,7 +416,7 @@
     "noIntervalFound": "No interval found.",
     "intervalDescription": "The interval determines the time gaps between each available slot. For example, if you set the interval to 15 minutes, your available slots will be at 9:00, 9:15, 9:30, etc. We don't recommend an interval of less than 15 minutes to ensure you have enough time between sessions.",
     "saveSettings": "Save settings",
-    "clientsWillSee": "These available times can be booked with you 30 minutes in advance up to 4 weeks ahead.",
+    "clientsWillSee": "These available times can be booked with you up to 4 weeks ahead.",
     "scheduleInYourTimezone": "Please schedule the times in your own timezone: {browserTimeZone}. The system will automatically convert these times so that clients see them in their respective timezones.",
     "noRecurringSet": "No recurring available times set",
     "noTimeFound": "No time found.",
@@ -431,7 +435,11 @@
     "blockedTimesSaved": "Blocked times saved successfully.",
     "blockTimesFor": "Block times for",
     "overview": "Overview",
-    "selectView": "Select a view"
+    "selectView": "Select a view",
+    "setFutureBookingDelay": "Set future booking delay",
+    "selectFutureBookingDelay": "Select booking delay",
+    "noFutureBookingDelayFound": "No booking delays found.",
+    "futureBookingDelayDescription": "Specify how long in advance clients can book an appointment. For example, if you set it to '24h', clients can only book appointments starting from 24 hours into the future. You can choose between hours and minutes as needed."
   },
   "LoadingPages": {
     "loading": "Loading...",
@@ -617,6 +625,8 @@
     "goToAppointments": "Go to Appointments"
   },
   "ErrorMessages": {
+    "appointmentNotFound": "Appointment not found",
+    "appointmentNotReserved": "Appointment not reserved anymore",
     "isNotIntroCall": "This is not an introductory call",
     "appointmentAlreadyConfirmed": "Appointment already confirmed",
     "accountDeletionFailed": "Account deletion failed",
@@ -851,7 +861,9 @@
   "therapistGreeting": "Hello {name},",
   "therapistIntroBookingMessage": "{clientName} has booked an intro call appointment with you. Here are the details:",
   "therapistNotificationFooter": "You will receive a notification once the client confirms the booking.",
-  "cancellationNotice": "If you do not attend the appointment or fail to cancel at least 24 hours in advance, you will be charged $15 USD."
+  "cancellationNotice": "If you do not attend the appointment or fail to cancel at least 24 hours in advance, you will be charged $15 USD.",
+  "psychologistLabel": "Psychologist",
+  "clientLabel": "Client"
 
 },
   "MeetingLinkEmail": {
@@ -967,7 +979,10 @@
     "previewRoom": "Preview room:",
     "testSetup": "Test your audio and video before joining the call.",
     "waitingForClient": "Waiting for the client to join...",
-    "waitingForPsychologist": "Please wait. Your psychologist will be with you shortly."
+    "waitingForPsychologist": "Please wait. Your psychologist will be with you shortly.",
+    "noShowMessage": "If the client doesn't show up, please feel free to give them a call.",
+  "clientName": "Client name",
+  "phoneNumber": "Phone number"
   },
   "DateTimePicker": {
     "ok": "Ok"

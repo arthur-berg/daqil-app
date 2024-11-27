@@ -67,6 +67,8 @@ export const settings = async (values: z.input<typeof SettingsSchema>) => {
 
     values.password = hashedPassword;
     values.newPassword = undefined;
+  } else {
+    delete values.password;
   }
 
   const updateData: any = {

@@ -78,11 +78,23 @@ const BookIntroCall = ({
           const therapistAvailableTimes = therapist.availableTimes;
           const therapistAppointments = therapist.appointments;
 
+          const utcCurrentdDate = new Date(
+            Date.UTC(
+              currentDate.getFullYear(),
+              currentDate.getMonth(),
+              currentDate.getDate(),
+              currentDate.getHours(),
+              currentDate.getMinutes(),
+              currentDate.getSeconds()
+            )
+          );
+
           const introCallSlots = getTherapistAvailableTimeSlots(
             therapistAvailableTimes,
             appointmentType,
-            currentDate,
-            therapistAppointments
+            utcCurrentdDate,
+            therapistAppointments,
+            browserTimeZone
           );
 
           return [...slots, ...introCallSlots];
@@ -129,11 +141,23 @@ const BookIntroCall = ({
           const therapistAvailableTimes = therapist.availableTimes;
           const therapistAppointments = therapist.appointments;
 
+          const utcSelectedDate = new Date(
+            Date.UTC(
+              selectedDate.getFullYear(),
+              selectedDate.getMonth(),
+              selectedDate.getDate(),
+              selectedDate.getHours(),
+              selectedDate.getMinutes(),
+              selectedDate.getSeconds()
+            )
+          );
+
           const introCallSlots = getTherapistAvailableTimeSlots(
             therapistAvailableTimes,
             appointmentType,
-            selectedDate,
-            therapistAppointments
+            utcSelectedDate,
+            therapistAppointments,
+            browserTimeZone
           );
 
           return [...slots, ...introCallSlots];
@@ -179,7 +203,8 @@ const BookIntroCall = ({
       const data = await reserveAppointment(
         appointmentType,
         therapistId,
-        combinedDateTime
+        combinedDateTime,
+        browserTimeZone
       );
       if (data.error) {
         toast({

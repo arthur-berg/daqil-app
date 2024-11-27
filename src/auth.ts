@@ -10,7 +10,7 @@ import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation
 import TwoFactorConfirmation from "@/models/TwoFactorConfirmation";
 import { UserRole } from "@/generalTypes";
 import { getAccountByUserId } from "@/data/account";
-import { addUserToSubscriberList } from "@/lib/mail";
+import { addTagToMailchimpUser, addUserToSubscriberList } from "@/lib/mail";
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
   pages: {
@@ -60,7 +60,14 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           const createdAt = new Date();
           userToSaveInDB.createdAt = createdAt;
 
-          const response = await addUserToSubscriberList(user.email as string);
+          const email = user.email as string;
+
+          const response = await addUserToSubscriberList(email);
+
+          await addTagToMailchimpUser(
+            email.toLowerCase(),
+            process.env.MAILCHIMP_CLIENT_TAG as string
+          );
 
           if (response?.error) {
             console.error(response.error);

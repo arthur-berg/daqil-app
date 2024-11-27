@@ -36,6 +36,7 @@ const TherapistPage = async ({
 
   therapist.appointments.forEach((appointment: any) => {
     appointment.bookedAppointments.forEach((appt: any) => {
+      if (appt.status !== "completed") return;
       if (appt.hostUserId.toString() === therapistId) {
         if (
           appt.appointmentTypeId.toString() ===

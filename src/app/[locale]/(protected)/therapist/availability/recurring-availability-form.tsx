@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { RecurringAvailabilitySchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { addMinutes, format, isBefore, set } from "date-fns";
+import { addDays, addMinutes, format, isBefore, set } from "date-fns";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { useToast } from "@/components/ui/use-toast";
@@ -26,10 +26,23 @@ import {
 import { useTranslations } from "next-intl";
 import { BeatLoader } from "react-spinners";
 
+const combineDateAndTime = (baseDate: Date, time: Date): Date => {
+  const combined = new Date(baseDate);
+  combined.setHours(time.getHours(), time.getMinutes(), 0, 0);
+  return combined;
+};
+
+const getNextDateForDay = (targetDay: number): Date => {
+  const today = new Date();
+  const currentDay = today.getDay();
+  const daysToAdd = (targetDay - currentDay + 7) % 7;
+  return addDays(today, daysToAdd);
+};
+
 const generateTimeIntervals = (intervalMinutes = 15) => {
   const times = [];
   const start = set(new Date(), {
-    hours: 7,
+    hours: 0,
     minutes: 0,
     seconds: 0,
     milliseconds: 0,
@@ -147,10 +160,34 @@ const RecurringAvailabilityForm = ({
 
   const onSubmitDay = (values: z.infer<typeof RecurringAvailabilitySchema>) => {
     startTransition(async () => {
-      console.log("values", values);
-      console.log("adminPageProps in onSubmitDay", adminPageProps);
-      const data = await saveRecurringAvailableTimes(values, adminPageProps);
+      // Get the base date for the selected day
+      const daysOfWeek = [
+        "sunday",
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday",
+      ];
+      const baseDate = getNextDateForDay(daysOfWeek.indexOf(day.toLowerCase()));
+
+      // Adjust the time ranges to match the correct date
+      const adjustedValues = {
+        ...values,
+        timeRanges: values.timeRanges.map((range) => ({
+          ...range,
+          startTime: combineDateAndTime(baseDate, new Date(range.startTime)),
+          endTime: combineDateAndTime(baseDate, new Date(range.endTime)),
+        })),
+      };
+
+      const data = await saveRecurringAvailableTimes(
+        adjustedValues,
+        adminPageProps
+      );
       responseToast(data);
+
       if (data?.success) {
         setEditModes((prev: any) => ({ ...prev, [day]: false }));
       }
