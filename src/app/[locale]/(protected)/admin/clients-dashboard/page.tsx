@@ -150,12 +150,12 @@ const AdminDashboardPage = async () => {
               {completedIntroAppointmentsCount}
             </p>
           </div>
-          <div className="p-3 bg-white rounded-md shadow-sm border border-gray-200">
+          {/* <div className="p-3 bg-white rounded-md shadow-sm border border-gray-200">
             <p className="text-sm text-gray-600">Canceled Intro Appointments</p>
             <p className="text-lg font-bold">
               {canceledIntroAppointmentsCount}
             </p>
-          </div>
+          </div> */}
           <div className="p-3 bg-white rounded-md shadow-sm border border-gray-200">
             <p className="text-sm text-gray-600">Booked Paid Appointments</p>
             <p className="text-lg font-bold">{bookedPaidAppointmentsCount}</p>
@@ -166,10 +166,10 @@ const AdminDashboardPage = async () => {
               {completedPaidAppointmentsCount}
             </p>
           </div>
-          <div className="p-3 bg-white rounded-md shadow-sm border border-gray-200">
+          {/* <div className="p-3 bg-white rounded-md shadow-sm border border-gray-200">
             <p className="text-sm text-gray-600">Canceled Paid Appointments</p>
             <p className="text-lg font-bold">{canceledPaidAppointmentsCount}</p>
-          </div>
+          </div> */}
           <div className="p-3 bg-white rounded-md shadow-sm border border-gray-200">
             <p className="text-sm text-gray-600">No-Show Both Cancellations</p>
             <p className="text-lg font-bold">{noShowBothCount}</p>
@@ -184,10 +184,10 @@ const AdminDashboardPage = async () => {
             </p>
             <p className="text-lg font-bold">{noShowParticipantCount}</p>
           </div>
-          <div className="p-3 bg-white rounded-md shadow-sm border border-gray-200">
+          {/* <div className="p-3 bg-white rounded-md shadow-sm border border-gray-200">
             <p className="text-sm text-gray-600">Custom Cancellations</p>
             <p className="text-lg font-bold">{customCancellationCount}</p>
-          </div>
+          </div> */}
         </div>
       </div>
 
