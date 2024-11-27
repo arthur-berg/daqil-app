@@ -193,7 +193,6 @@ async function handlePayBeforeBooking(
     "UTC",
     "yyyy-MM-dd"
   );
-
   await updateAppointments(appointment, appointmentDate);
 
   // Convert amountPaid to a number (removing the '$' sign and parsing as float)
@@ -277,7 +276,7 @@ export const updateAppointments = async (
         $pull: {
           "appointments.$.temporarilyReservedAppointments": appointment._id,
         },
-        $push: { "appointments.$.bookedAppointments": appointment._id },
+        $addToSet: { "appointments.$.bookedAppointments": appointment._id },
       },
       { session }
     );
@@ -291,7 +290,7 @@ export const updateAppointments = async (
         $pull: {
           "appointments.$.temporarilyReservedAppointments": appointment._id,
         },
-        $push: { "appointments.$.bookedAppointments": appointment._id },
+        $addToSet: { "appointments.$.bookedAppointments": appointment._id },
       },
       { session }
     );

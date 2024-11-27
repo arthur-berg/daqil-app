@@ -85,9 +85,9 @@ const Checkout = ({
         )}
         {clientSecret && <PaymentElement />}
 
-        <div className="w-32 mx-auto">
+        <div className="w-40 mx-auto">
           <Button disabled={!stripe || loading} className="mt-4 w-full">
-            {!loading ? t("pay", { amount }) : t("processing")}
+            {!loading ? t("bookAppointment") : t("processing")}
           </Button>
         </div>
       </form>

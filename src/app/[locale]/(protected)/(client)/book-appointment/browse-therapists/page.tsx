@@ -1,4 +1,4 @@
-import { getTherapists } from "@/data/user";
+import { getTherapistsWithNextAvailableTime } from "@/data/user";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/navigation";
 import { getTranslations } from "next-intl/server";
@@ -7,6 +7,10 @@ import connectToMongoDB from "@/lib/mongoose";
 import PageTitle from "@/components/page-title";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Image from "next/image";
+import { getCurrentUser } from "@/lib/auth";
+import { formatInTimeZone } from "date-fns-tz";
+import { getAppointmentTypeById } from "@/data/appointment-types";
+import { APPOINTMENT_TYPE_ID_INTRO_SESSION } from "@/contants/config";
 
 const BrowseTherapistsPage = async ({
   params,
@@ -14,9 +18,17 @@ const BrowseTherapistsPage = async ({
   params: { locale: string };
 }) => {
   await connectToMongoDB();
-
+  const user = await getCurrentUser();
   const locale = params.locale;
-  const therapists = await getTherapists();
+  const userTimeZone = user?.settings?.timeZone || "UTC";
+  const introAppointmentType = await getAppointmentTypeById(
+    APPOINTMENT_TYPE_ID_INTRO_SESSION
+  );
+  const therapists = await getTherapistsWithNextAvailableTime(
+    new Date(),
+    userTimeZone,
+    introAppointmentType
+  );
   const t = await getTranslations("BookAppointmentPage");
 
   const maxDescriptionLength = 200;
@@ -88,13 +100,23 @@ const BrowseTherapistsPage = async ({
                   </div>
                 </div>
               )}
+              {therapist.nextAvailableSlot && (
+                <div className="bg-blue-100 text-blue-800 font-semibold text-sm px-3 py-1 rounded-full mb-2 text-center">
+                  {t("nextAvailable")}{" "}
+                  {formatInTimeZone(
+                    new Date(therapist.nextAvailableSlot),
+                    userTimeZone,
+                    "eeee, MMMM d, HH:ss"
+                  )}
+                </div>
+              )}
               <Link href={`/therapist/${therapist._id}`}>
                 <Button variant="outline" size="sm" className="mt-2">
                   {t("readMore")}
                 </Button>
               </Link>
             </div>
-            <div className="p-6">
+            <div className="pb-6">
               <div className="mt-auto flex justify-center">
                 <Link href={`/book-appointment/${therapist._id}`}>
                   <Button>{t("bookSession")}</Button>

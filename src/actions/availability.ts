@@ -245,6 +245,7 @@ export const updateRecurringAvailabilitySettings = async (
     await User.findByIdAndUpdate(userToUpdate, {
       $set: {
         "availableTimes.settings.interval": values.interval,
+        "availableTimes.settings.futureBookingDelay": values.futureBookingDelay,
       },
     });
 

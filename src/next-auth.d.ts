@@ -67,6 +67,7 @@ export type ExtendedUser = DefaultSession["user"] & {
   availableTimes?: {
     settings: {
       interval: number;
+      futureBookingDelay?: number;
     };
     blockedOutTimes: {
       date: Date;

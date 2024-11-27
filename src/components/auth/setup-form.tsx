@@ -420,7 +420,9 @@ export const SetupForm = () => {
                         >
                           <div className="truncate max-w-[calc(100%-24px)]">
                             {field.value
-                              ? `${formatTimeZoneWithOffset(field.value)}`
+                              ? timezoneOptions.find(
+                                  (option) => option.value === field.value
+                                )?.label || t("selectTimezone")
                               : t("selectTimezone")}
                           </div>
                           <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />

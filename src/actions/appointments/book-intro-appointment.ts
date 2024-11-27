@@ -27,7 +27,8 @@ import {
 export const bookIntroAppointment = async (
   appointmentType: any,
   therapistId: string,
-  startDate: Date
+  startDate: Date,
+  timeZone: string
 ) => {
   await connectToMongoDB();
   const locale = await getLocale();
@@ -60,7 +61,8 @@ export const bookIntroAppointment = async (
     therapist,
     startDate,
     endDate,
-    appointmentType
+    appointmentType,
+    timeZone
   );
 
   if (!availabilityCheck.available) {

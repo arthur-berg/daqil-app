@@ -8,7 +8,11 @@ import { getTranslations } from "next-intl/server";
 import User from "@/models/User";
 import { getUserByEmail } from "@/data/user";
 import { generatePassword } from "@/utils";
-import { addUserToSubscriberList, sendVerificationEmail } from "@/lib/mail";
+import {
+  addTagToMailchimpUser,
+  addUserToSubscriberList,
+  sendVerificationEmail,
+} from "@/lib/mail";
 import { generateVerificationToken } from "@/lib/tokens";
 import DiscountCode from "@/models/DiscountCode";
 import { revalidatePath } from "next/cache";
@@ -171,6 +175,20 @@ export const inviteTherapist = async (
     if (response?.error) {
       console.error(response.error);
     } */
+
+    const response = await addUserToSubscriberList(
+      email.toLowerCase(),
+      UserRole.THERAPIST
+    );
+
+    if (response?.error) {
+      console.error(response.error);
+    }
+
+    await addTagToMailchimpUser(
+      email,
+      process.env.MAILCHIMP_THERAPIST_TAG as string
+    );
 
     revalidatePath("/admin/therapists");
 

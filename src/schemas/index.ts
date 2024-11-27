@@ -114,6 +114,10 @@ export const RecurringAvailabilitySchema = z.object({
 export const RecurringAvailabilitySettingsSchemaBE = z.object({
   interval: z.number().min(1, "Interval must be at least 1 minute").default(15),
   appointmentTypeIds: z.array(z.string()).optional(),
+  futureBookingDelay: z
+    .number()
+    .min(1, "Future booking delay must be at least 15 minute")
+    .default(60),
 });
 
 export const NonRecurringAvailabilitySchemaFE = z.object({
@@ -183,6 +187,16 @@ export const DefaultAvailabilitySettingsSchemaFE = z.object({
     },
     {
       message: "Interval must be at least 1 minute and a valid number",
+    }
+  ),
+  futureBookingDelay: z.string().refine(
+    (val) => {
+      const num = Number(val);
+      return !isNaN(num) && num >= 15;
+    },
+    {
+      message:
+        "Future booking delay must be at least 15 minutes and a valid number",
     }
   ),
   appointmentTypeIds: z.array(z.string()).optional(),

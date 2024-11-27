@@ -33,6 +33,11 @@ export const cancelTempReservation = async (appointmentId: string) => {
       return { error: ErrorMessages("appointmentNotFound") };
     }
 
+    if (appointment.status !== "temporarily-reserved") {
+      revalidatePath("/book-appointment");
+      return { redirect: true, error: ErrorMessages("appointmentNotReserved") };
+    }
+
     await cancelAllScheduledJobsForAppointment(appointmentId);
 
     // Remove the appointmentId from the client's temporarilyReservedAppointments

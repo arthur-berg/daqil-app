@@ -1,5 +1,6 @@
 "use server";
 
+import { getFullName } from "@/utils/formatName";
 import { isUserAuthorized } from "@/actions/videoSessions/utils";
 import { APPOINTMENT_TYPE_ID_INTRO_SESSION } from "@/contants/config";
 import { getCurrentRole, requireAuth } from "@/lib/auth";
@@ -162,6 +163,8 @@ export const getSessionData = async (appointmentId: string) => {
           endDate: appointment.endDate,
           videoRecordingStarted,
           startDate: appointment.startDate,
+          clientName: await getFullName(client.firstName, client.lastName),
+          clientPhoneNumber: client.personalInfo.phoneNumber,
         },
       };
     } else {
@@ -188,6 +191,8 @@ export const getSessionData = async (appointmentId: string) => {
           endDate: appointment.endDate,
           videoRecordingStarted,
           startDate: appointment.startDate,
+          clientName: await getFullName(client.firstName, client.lastName),
+          clientPhoneNumber: client.personalInfo.phoneNumber,
         },
       };
     }

@@ -254,15 +254,18 @@ const OAuthAccountSetupForm = () => {
                           placeholder="YYYY/MM/DD"
                           value={field.value}
                           onChange={(e) => {
-                            let input = e.target.value.replace(/\D/g, "");
-                            if (input.length > 8) input = input.slice(0, 8);
-                            if (input.length >= 4) {
-                              input = input.slice(0, 4) + "/" + input.slice(4);
+                            let input = e.target.value.replace(/[^\d/]/g, ""); // Allow digits and slashes
+                            if (input.length <= 10) {
+                              if (input.length >= 5 && input[4] !== "/") {
+                                input =
+                                  input.slice(0, 4) + "/" + input.slice(4);
+                              }
+                              if (input.length >= 8 && input[7] !== "/") {
+                                input =
+                                  input.slice(0, 7) + "/" + input.slice(7);
+                              }
                             }
-                            if (input.length >= 7) {
-                              input = input.slice(0, 7) + "/" + input.slice(7);
-                            }
-                            field.onChange(input);
+                            field.onChange(input); // Update the form state
                           }}
                           disabled={isPending}
                           className={cn("max-w-[280px]")}
@@ -365,7 +368,9 @@ const OAuthAccountSetupForm = () => {
                           >
                             <div className="truncate max-w-[calc(100%-24px)]">
                               {field.value
-                                ? `${formatTimeZoneWithOffset(field.value)}`
+                                ? timezoneOptions.find(
+                                    (option) => option.value === field.value
+                                  )?.label || t("selectTimezone")
                                 : t("selectTimezone")}
                             </div>
                             <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
