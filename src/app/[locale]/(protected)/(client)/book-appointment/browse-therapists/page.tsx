@@ -18,6 +18,8 @@ const BrowseTherapistsPage = async ({
   params: { locale: string };
 }) => {
   await connectToMongoDB();
+  const t = await getTranslations("BookAppointmentPage");
+
   const user = await getCurrentUser();
   const locale = params.locale;
   const userTimeZone = user?.settings?.timeZone || "UTC";
@@ -29,7 +31,6 @@ const BrowseTherapistsPage = async ({
     userTimeZone,
     introAppointmentType
   );
-  const t = await getTranslations("BookAppointmentPage");
 
   const maxDescriptionLength = 200;
 
