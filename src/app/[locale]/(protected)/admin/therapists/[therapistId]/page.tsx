@@ -19,6 +19,7 @@ import {
   APPOINTMENT_TYPE_ID_SHORT_SESSION,
   APPOINTMENT_TYPE_ID_LONG_SESSION,
 } from "@/contants/config";
+import PayButton from "@/app/[locale]/(protected)/admin/therapists/[therapistId]/pay-button";
 
 const TherapistPage = async ({
   params,
@@ -33,16 +34,20 @@ const TherapistPage = async ({
 
   const clientsWithIntroAppointments: string[] = [];
   const clientsWithPaidAppointments: string[] = [];
+  let totalSumToPay = 0;
 
   therapist.appointments.forEach((appointment: any) => {
     appointment.bookedAppointments.forEach((appt: any) => {
-      if (appt.status !== "completed") return;
-      if (appt.hostUserId.toString() === therapistId) {
+      if (
+        appt.status === "completed" &&
+        appt.hostUserId.toString() === therapistId
+      ) {
+        totalSumToPay += appt?.price || 0;
+        // Add logic for intro/paid conversion calculation
         if (
           appt.appointmentTypeId.toString() ===
           APPOINTMENT_TYPE_ID_INTRO_SESSION
         ) {
-          // Add client to intro appointments if not already added
           if (
             !clientsWithIntroAppointments.includes(
               appt.participants[0].userId.toString()
@@ -57,7 +62,6 @@ const TherapistPage = async ({
             APPOINTMENT_TYPE_ID_SHORT_SESSION ||
           appt.appointmentTypeId.toString() === APPOINTMENT_TYPE_ID_LONG_SESSION
         ) {
-          // Add client to paid appointments if not already added
           if (
             !clientsWithPaidAppointments.includes(
               appt.participants[0].userId.toString()
@@ -138,6 +142,20 @@ const TherapistPage = async ({
                 <strong>Intro/Paid Conversion Ratio:</strong>{" "}
                 {conversionRatio.toFixed(2)}%
               </p>
+              <div>
+                <div className="bg-blue-100 p-4 rounded-md mb-4 mt-2">
+                  <h3 className="text-lg font-bold">
+                    Total Payment Due: ${totalSumToPay.toFixed(2)}
+                  </h3>
+                </div>
+                <div className="bg-green-100 p-4 rounded-md mb-4">
+                  <h3 className="text-lg font-bold">
+                    Has been paid: $
+                    {therapist.totalAmountPaid?.toFixed(2) || "0.00"}
+                  </h3>
+                </div>
+                <PayButton therapistId={therapistId} />
+              </div>
             </div>
           </div>
         </CardContent>

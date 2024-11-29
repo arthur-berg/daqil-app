@@ -60,7 +60,7 @@ const AdminDashboardPage = async () => {
     client.appointments?.forEach((apptGroup: any) => {
       apptGroup.bookedAppointments.forEach((appointment: any) => {
         const createdDate = format(
-          new Date(appointment.startDate),
+          new Date(appointment.createdAt),
           "yyyy-MM-dd"
         );
 
@@ -223,12 +223,12 @@ const AdminDashboardPage = async () => {
               <TableHead>Date</TableHead>
               <TableHead>Registered Clients</TableHead>
               <TableHead>Booked Intro</TableHead>
-              <TableHead>Completed Intro</TableHead>
+              {/*        <TableHead>Completed Intro</TableHead> */}
               <TableHead>Booked Paid</TableHead>
-              <TableHead>Completed Paid</TableHead>
-              <TableHead>No-Show Host</TableHead>
+              {/*    <TableHead>Completed Paid</TableHead> */}
+              {/*     <TableHead>No-Show Host</TableHead>
               <TableHead>No-Show Participant</TableHead>
-              <TableHead>No-Show Both</TableHead>
+              <TableHead>No-Show Both</TableHead> */}
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -242,12 +242,12 @@ const AdminDashboardPage = async () => {
                   <TableCell>{date}</TableCell>
                   <TableCell>{data.registeredClients}</TableCell>
                   <TableCell>{data.confirmedIntroAppointments}</TableCell>
-                  <TableCell>{data.completedIntroAppointmentsCount}</TableCell>
+                  {/*  <TableCell>{data.completedIntroAppointmentsCount}</TableCell> */}
                   <TableCell>{data.confirmedPaidAppointments}</TableCell>
-                  <TableCell>{data.completedPaidAppointmentsCount}</TableCell>
+                  {/* <TableCell>{data.completedPaidAppointmentsCount}</TableCell>
                   <TableCell>{data.noShowHostCount}</TableCell>
                   <TableCell>{data.noShowParticipantCount}</TableCell>
-                  <TableCell>{data.noShowBothCount}</TableCell>
+                  <TableCell>{data.noShowBothCount}</TableCell> */}
                 </TableRow>
               ))}
           </TableBody>

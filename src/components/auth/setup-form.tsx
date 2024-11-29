@@ -28,12 +28,19 @@ import {
   CommandGroup,
   CommandItem,
 } from "@/components/ui/command";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 import { CardWrapper } from "@/components/auth/card-wrapper";
 import { Button } from "@/components/ui/button";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
-import { useSearchParams } from "next/navigation";
 import { setupAccount } from "@/actions/setup-account";
 import { login } from "@/actions/login";
 import { useLocale, useTranslations } from "next-intl";
@@ -45,9 +52,18 @@ import { CaretSortIcon } from "@radix-ui/react-icons";
 import { BeatLoader } from "react-spinners";
 import { useGetCountries } from "@/hooks/use-get-countries";
 import { Checkbox } from "@/components/ui/checkbox";
-import { formatTimeZoneWithOffset, getUTCOffset } from "@/utils/timeZoneUtils";
+import { getUTCOffset } from "@/utils/timeZoneUtils";
+import { MdWarning } from "react-icons/md";
 
-export const SetupForm = () => {
+export const SetupForm = ({
+  emailParam,
+  tokenParam,
+  role,
+}: {
+  emailParam: string;
+  tokenParam: string;
+  role: string;
+}) => {
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const [currentPasswordRequired, setCurrentPasswordRequired] = useState(false);
@@ -55,9 +71,8 @@ export const SetupForm = () => {
   const [showArabicNameFields, setShowArabicNameFields] = useState(false);
   const [countryPopoverOpen, setCountryPopoverOpen] = useState(false);
   const [countrySearch, setCountrySearch] = useState("");
-
+  const [penaltyCheckbox, setPenaltyCheckbox] = useState(false);
   const countries = useGetCountries();
-  const searchParams = useSearchParams();
 
   const locale = useLocale();
   const t = useTranslations("AuthPage");
@@ -67,13 +82,13 @@ export const SetupForm = () => {
   });
   const [timezonePopoverOpen, setTimezonePopoverOpen] = useState(false);
   const [timezoneSearch, setTimezoneSearch] = useState("");
-
-  const initialEmail =
-    searchParams.get("email") || localStorage.getItem("email") || "";
+  const [penaltyDialogOpen, setPenaltyDialogOpen] = useState(false);
+  const initialEmail = emailParam || localStorage.getItem("email") || "";
 
   // Retrieve token from search params or localStorage
-  const initialToken =
-    searchParams.get("token") || localStorage.getItem("token") || "";
+  const initialToken = tokenParam || localStorage.getItem("token") || "";
+
+  const [storedValues, setStoredValues] = useState<any>(null);
 
   const [token, setToken] = useState(initialToken);
 
@@ -115,6 +130,12 @@ export const SetupForm = () => {
   const onSubmit = (values: z.infer<typeof SetupAccountSchema>) => {
     setError("");
     setSuccess("");
+
+    if (role === "THERAPIST") {
+      setPenaltyDialogOpen(true);
+      setStoredValues(values);
+      return;
+    }
     startTransition(async () => {
       const data = await setupAccount(values, locale, token);
       if ("success" in data && data.success) {
@@ -124,6 +145,29 @@ export const SetupForm = () => {
           event: "accountCreation",
         });
         await login({ email: values.email, password: values.password }, locale);
+      }
+      /*   if ("error" in data && data.error) {
+        setError(data.error);
+        if ("currentPasswordRequired" in data && data.currentPasswordRequired) {
+          setCurrentPasswordRequired(true);
+        }
+      } */
+    });
+  };
+
+  const handleAgree = () => {
+    startTransition(async () => {
+      const data = await setupAccount(storedValues, locale, token);
+      if ("success" in data && data.success) {
+        setSuccess(data?.success);
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+          event: "accountCreation",
+        });
+        await login(
+          { email: storedValues.email, password: storedValues.password },
+          locale
+        );
       }
       /*   if ("error" in data && data.error) {
         setError(data.error);
@@ -543,6 +587,52 @@ export const SetupForm = () => {
           </form>
         </Form>
       </CardWrapper>
+      <Dialog open={penaltyDialogOpen} onOpenChange={setPenaltyDialogOpen}>
+        <DialogContent className="w-11/12 sm:max-w-md">
+          <DialogHeader>
+            <MdWarning
+              className="text-red-600 text-4xl mx-auto mb-2"
+              aria-label={t("warningIconAltText")}
+            />
+            <DialogTitle>{t("title")}</DialogTitle>
+            <DialogDescription>{t("description")}</DialogDescription>
+          </DialogHeader>
+          <div className="mt-4">
+            <Checkbox
+              id="agree-to-terms"
+              checked={penaltyCheckbox}
+              onCheckedChange={() => {
+                setPenaltyCheckbox(!penaltyCheckbox);
+              }}
+            />
+            <label htmlFor="agree-to-terms" className="ml-2 text-sm">
+              {t("checkboxLabel")}
+            </label>
+          </div>
+          <div className="mt-4 text-sm">
+            <a
+              href={`${process.env.NEXT_PUBLIC_APP_URL}/penalty-policy`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline"
+            >
+              {t("readFullTermsLink")}
+            </a>
+          </div>
+          <DialogFooter>
+            <div className="flex justify-end">
+              <Button
+                className="mr-2"
+                variant="success"
+                onClick={handleAgree}
+                disabled={!penaltyCheckbox}
+              >
+                {t("agreeButton")}
+              </Button>
+            </div>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

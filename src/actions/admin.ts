@@ -264,3 +264,75 @@ export const getAllAppointmentsByDate = async (date: string) => {
     return null;
   }
 };
+
+export const addTherapistPaidAmount = async (
+  therapistId: string,
+  amount: string
+) => {
+  await connectToMongoDB();
+  const [SuccessMessages, ErrorMessages] = await Promise.all([
+    getTranslations("SuccessMessages"),
+    getTranslations("ErrorMessages"),
+  ]);
+
+  try {
+    await requireAuth([UserRole.ADMIN]);
+
+    const therapist = await User.findById(therapistId);
+    if (!therapist) {
+      return { error: ErrorMessages("therapistNotFound") };
+    }
+
+    const currentTotalPaid = therapist.totalAmountPaid || 0;
+    const newTotalPaid = currentTotalPaid + parseFloat(amount);
+
+    // Update the totalAmountPaid
+    await User.findByIdAndUpdate(therapistId, {
+      totalAmountPaid: newTotalPaid,
+    });
+    revalidatePath(`/admin/therapists/[therapistId]`);
+    return {
+      success: SuccessMessages("therapistPaidAmountSet"),
+      totalAmountPaid: newTotalPaid,
+    };
+  } catch (error) {
+    console.log("Error in set therapist paid amount action", error);
+    return { error: ErrorMessages("somethingWentWrong") };
+  }
+};
+
+export const removeTherapistPaidAmount = async (
+  therapistId: string,
+  amount: string
+) => {
+  await connectToMongoDB();
+  const [SuccessMessages, ErrorMessages] = await Promise.all([
+    getTranslations("SuccessMessages"),
+    getTranslations("ErrorMessages"),
+  ]);
+
+  try {
+    await requireAuth([UserRole.ADMIN]);
+
+    const therapist = await User.findById(therapistId);
+    if (!therapist) {
+      return { error: ErrorMessages("therapistNotFound") };
+    }
+
+    const currentTotalPaid = therapist.totalAmountPaid || 0;
+    const newTotalPaid = Math.max(0, currentTotalPaid - parseFloat(amount));
+
+    // Update the totalAmountPaid
+    await User.findByIdAndUpdate(therapistId, {
+      totalAmountPaid: newTotalPaid,
+    });
+    revalidatePath(`/admin/therapists/[therapistId]`);
+    return {
+      success: SuccessMessages("therapistPaidAmountSet"),
+      totalAmountPaid: newTotalPaid,
+    };
+  } catch (error) {
+    console.log("Error in remove therapist paid amount action", error);
+    return { error: ErrorMessages("somethingWentWrong") };
+  }
+};
