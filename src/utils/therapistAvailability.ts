@@ -131,33 +131,6 @@ export const getTherapistAvailableTimeSlots = (
     };
   });
 
-  const getTimeRangesForDay = (day: string): TimeRange[] => {
-    const recurring = recurringAvailableTimes.find(
-      (r) => r.day.toLowerCase() === day
-    );
-
-    let timeRanges: any = [];
-
-    recurringAvailableTimes?.forEach((recurring) => {
-      recurring.timeRanges.map((range) => {
-        timeRanges.push({
-          startTime: new Date(range.startTime),
-          endTime: new Date(range.endTime),
-          appointmentTypeIds: range.appointmentTypeIds,
-        });
-      });
-    });
-
-    return filterTimeRangesByAppointmentType(
-      timeRanges.map((range: any) => ({
-        ...range,
-        startTime: new Date(range.startTime),
-        endTime: new Date(range.endTime),
-      })),
-      appointmentType._id
-    );
-  };
-
   const getBlockedOutTimesForDate = (): BlockedTimeRange[] => {
     let timeRanges: any = [];
     blockedOutTimes?.forEach((nonRecurring) => {
@@ -218,7 +191,7 @@ export const getTherapistAvailableTimeSlots = (
     let current = new Date(start);
 
     // Get the day name for the selected date
-    const selectedDayName = format(selectedDate, "EEEE");
+    const selectedDayName = formatInTimeZone(selectedDate, timeZone, "EEEE");
 
     // Generate intervals and filter by day name
     while (isBefore(current, end)) {
@@ -238,7 +211,7 @@ export const getTherapistAvailableTimeSlots = (
 
     const filteredTimes = times
       .map((time) => {
-        const slotDayName = format(time, "EEEE");
+        const slotDayName = formatInTimeZone(time, timeZone, "EEEE");
 
         if (slotDayName === selectedDayName) {
           const adjustedStart = new Date(
@@ -256,9 +229,6 @@ export const getTherapistAvailableTimeSlots = (
 
     return filteredTimes as any;
   };
-
-  const dayOfWeek = formatInTimeZone(selectedDate, "UTC", "EEEE").toLowerCase();
-  let timeRanges = getTimeRangesForDay(dayOfWeek);
 
   const nonRecurringTimeRanges = getNonRecurringAvailableTimesForDate();
 
@@ -317,17 +287,13 @@ export const getTherapistAvailableTimeSlots = (
       ),
       timeZone
     );
-    const selectedDayName = format(localDayStart, "EEEE"); // e.g., "Tuesday"
+    const selectedDayName = formatInTimeZone(localDayStart, timeZone, "EEEE");
 
     return availableTimeSlots.filter((slot) => {
       const slotStart = toZonedTime(new Date(slot), timeZone);
-      const slotDayName = format(slotStart, "EEEE");
+      const slotDayName = formatInTimeZone(slotStart, timeZone, "EEEE");
 
       const matchesDayName = slotDayName === selectedDayName;
-
-      if (!matchesDayName) {
-        console.log("Excluding slot:", slotStart, "Day:", slotDayName);
-      }
 
       return matchesDayName;
     });
