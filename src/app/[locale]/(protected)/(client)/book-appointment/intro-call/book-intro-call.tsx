@@ -172,32 +172,87 @@ const BookIntroCall = ({
     }
   };
 
-  const selectTherapistWithFewestClients = (therapists: any[]) => {
-    const sortedTherapists = therapists.sort(
+  const selectTherapistWithFewestClients = (
+    therapists: any[],
+    selectedTimeSlot: { start: Date; end: Date }
+  ) => {
+    // Filter therapists to include only those with the selected time slot available
+    const therapistsWithTimeSlot = therapists.filter((therapist) => {
+      const availableSlots = getTherapistAvailableTimeSlots(
+        therapist.availableTimes,
+        appointmentType,
+        selectedTimeSlot.start, // Pass the start date of the selected slot
+        therapist.appointments,
+        browserTimeZone
+      );
+
+      // Check if the selected time slot is in the therapist's available slots
+      return availableSlots.some(
+        (slot: any) =>
+          slot.start.getTime() === selectedTimeSlot.start.getTime() &&
+          slot.end.getTime() === selectedTimeSlot.end.getTime()
+      );
+    });
+
+    if (therapistsWithTimeSlot.length === 0) {
+      console.error("No therapists with the selected time slot available.");
+      return null;
+    }
+
+    // Sort the filtered therapists by the number of assigned clients
+    const sortedTherapists = therapistsWithTimeSlot.sort(
       (a, b) => a.assignedClients.length - b.assignedClients.length
     );
 
+    // Get therapists with the fewest clients
     const therapistsWithFewestClients = sortedTherapists.filter(
       (therapist) =>
         therapist.assignedClients.length ===
         sortedTherapists[0].assignedClients.length
     );
 
+    // Select a random therapist from the ones with the fewest clients
     const selectedTherapistIndex = Math.floor(
       Math.random() * therapistsWithFewestClients.length
     );
+
     return therapistsWithFewestClients[selectedTherapistIndex];
   };
 
   const handleTimeSlotClicked = () => {
     setBookingDialogOpen(false);
+
+    const selectedTimeSlot = availableTimeSlots.find(
+      (slot) => slot.start.getTime() === date.dateTime?.getTime()
+    );
+
+    if (!selectedTimeSlot) {
+      console.error("Selected time slot not found in available slots.");
+      toast({
+        title: "Selected time slot is no longer available.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const selectedTherapist = selectTherapistWithFewestClients(
+      therapists,
+      selectedTimeSlot
+    );
+
+    if (!selectedTherapist) {
+      toast({
+        title: "No therapists available for the selected time slot.",
+        variant: "destructive",
+      });
+      return;
+    }
+    const therapistId = selectedTherapist._id;
+
     const combinedDateTime = set(date.justDate as Date, {
       hours: date?.dateTime?.getHours(),
       minutes: date?.dateTime?.getMinutes(),
     });
-
-    const selectedTherapist = selectTherapistWithFewestClients(therapists);
-    const therapistId = selectedTherapist._id;
 
     startTransition(async () => {
       const data = await reserveAppointment(
