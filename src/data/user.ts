@@ -55,16 +55,6 @@ export const getAllClients = async () => {
   }
 };
 
-export const getUserByEmailLean = async (email: string) => {
-  try {
-    const user = await User.findOne({ email }).lean();
-
-    return user;
-  } catch {
-    return null;
-  }
-};
-
 export const getUserByIdLean = async (id: string) => {
   try {
     const user = await User.findById(id).lean();

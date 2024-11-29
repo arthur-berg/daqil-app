@@ -1,5 +1,5 @@
 import { SetupForm } from "@/components/auth/setup-form";
-import { getUserByEmailLean } from "@/data/user";
+import { getUserByEmail } from "@/data/user";
 
 const SetupPage = async ({
   searchParams,
@@ -9,7 +9,7 @@ const SetupPage = async ({
   const token = searchParams.token;
   const email = searchParams.email;
 
-  const user = await getUserByEmailLean(email);
+  const user = await getUserByEmail(email);
 
   const role = user?.role;
 
