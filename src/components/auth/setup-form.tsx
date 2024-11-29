@@ -41,7 +41,6 @@ import { CardWrapper } from "@/components/auth/card-wrapper";
 import { Button } from "@/components/ui/button";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
-import { useSearchParams } from "next/navigation";
 import { setupAccount } from "@/actions/setup-account";
 import { login } from "@/actions/login";
 import { useLocale, useTranslations } from "next-intl";
@@ -53,7 +52,7 @@ import { CaretSortIcon } from "@radix-ui/react-icons";
 import { BeatLoader } from "react-spinners";
 import { useGetCountries } from "@/hooks/use-get-countries";
 import { Checkbox } from "@/components/ui/checkbox";
-import { formatTimeZoneWithOffset, getUTCOffset } from "@/utils/timeZoneUtils";
+import { getUTCOffset } from "@/utils/timeZoneUtils";
 import { MdWarning } from "react-icons/md";
 
 export const SetupForm = ({
@@ -74,7 +73,6 @@ export const SetupForm = ({
   const [countrySearch, setCountrySearch] = useState("");
   const [penaltyCheckbox, setPenaltyCheckbox] = useState(false);
   const countries = useGetCountries();
-  const searchParams = useSearchParams();
 
   const locale = useLocale();
   const t = useTranslations("AuthPage");
