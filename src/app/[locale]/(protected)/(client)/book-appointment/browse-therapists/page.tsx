@@ -107,7 +107,7 @@ const BrowseTherapistsPage = async ({
                   {formatInTimeZone(
                     new Date(therapist.nextAvailableSlot),
                     userTimeZone,
-                    "eeee, MMMM d, HH:ss"
+                    "eeee, MMMM d, HH:mm"
                   )}
                 </div>
               )}
