@@ -86,8 +86,8 @@ const AppointmentDetailsPage = async ({
                   {format(new Date(appointment.startDate), "yyyy-MM-dd")}
                 </TableCell>
                 <TableCell>
-                  {appointment.participants[0]?.firstName}{" "}
-                  {appointment.participants[0]?.lastName}
+                  {appointment.participants[0]?.firstName.en}{" "}
+                  {appointment.participants[0]?.lastName.en}
                 </TableCell>
                 <TableCell>{appointment.appointmentTypeId?.title}</TableCell>
                 <TableCell>${appointment.appointmentTypeId?.price}</TableCell>

@@ -665,6 +665,7 @@
     "appointmentNotConfirmed": "لم يتم تأكيد الموعد."
   },
   "SuccessMessages": {
+    "therapistPaidAmountSet": "تم تعديل المبلغ بنجاح",
     "appointmentBookingConfirmed": "تم تأكيد حجز الموعد",
     "campaignIdUpdated": "تم تحديث معرف الحملة",
     "accountDeleted": "تم حذف الحساب بنجاح",

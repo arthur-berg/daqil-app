@@ -177,6 +177,10 @@ const userSchema = new Schema(
       type: Number,
       required: false,
     },
+    totalAmountPaid: {
+      type: Number,
+      required: false,
+    },
     stripeCustomerId: {
       type: String,
       required: false,

@@ -674,6 +674,7 @@
     "appointmentNotConfirmed": "The appointment is not confirmed."
   },
   "SuccessMessages": {
+    "therapistPaidAmountSet": "Amount edited successfully",
     "appointmentBookingConfirmed": "Appointment booking confirmed",
     "campaignIdUpdated": "Campaign ID updated",
     "accountDeleted": "Account successfully deleted",
