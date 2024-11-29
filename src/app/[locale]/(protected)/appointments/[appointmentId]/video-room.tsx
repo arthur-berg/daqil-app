@@ -25,7 +25,7 @@ const VideoRoom = ({
         token?: string;
         appId?: string;
         roomName: string;
-        isIntroCall: boolean;
+        /*    isIntroCall: boolean; */
         appointmentData: {
           id: string;
           startDate: Date;
@@ -383,7 +383,7 @@ const VideoRoom = ({
             cameraPublishing={cameraPublishing}
             t={t}
             appointmentId={sessionData.appointmentData.id}
-            isIntroCall={sessionData.isIntroCall}
+            /*  isIntroCall={sessionData.isIntroCall} */
           />
         </div>
       </div>

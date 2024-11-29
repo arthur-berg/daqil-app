@@ -114,8 +114,8 @@ export const reserveAppointment = async (
       "yyyy-MM-dd"
     );
 
-    const isIntroCall =
-      appointmentType._id.toString() === APPOINTMENT_TYPE_ID_INTRO_SESSION;
+    /*  const isIntroCall =
+      appointmentType._id.toString() === APPOINTMENT_TYPE_ID_INTRO_SESSION; */
 
     // Update the user's appointments
     await updateAppointments(
@@ -139,7 +139,7 @@ export const reserveAppointment = async (
     transactionCommitted = true;
     session.endSession();
 
-    if (isIntroCall) {
+    /* if (isIntroCall) {
       await addTagToMailchimpUser(
         client.email as string,
         "has-reached-intro-checkout"
@@ -194,7 +194,7 @@ export const reserveAppointment = async (
         appointmentDetails,
         locale
       );
-    }
+    } */
 
     await schedulePayBeforePaymentExpiredStatusUpdateJobs(
       appointmentId.toString(),

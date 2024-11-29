@@ -295,15 +295,15 @@ export const updateAppointments = async (
       { session }
     );
 
-    const isIntroCall =
+    /*  const isIntroCall =
       appointment.appointmentTypeId.toString() ===
-      APPOINTMENT_TYPE_ID_INTRO_SESSION;
+      APPOINTMENT_TYPE_ID_INTRO_SESSION; */
 
     if (
-      (!client.selectedTherapist ||
-        client.selectedTherapist?.therapist?.toString() !==
-          therapistId.toString()) &&
-      !isIntroCall
+      !client.selectedTherapist ||
+      client.selectedTherapist?.therapist?.toString() !==
+        therapistId.toString() /* &&
+      !isIntroCall */
     ) {
       await User.updateOne(
         { _id: clientId, "selectedTherapistHistory.current": true },

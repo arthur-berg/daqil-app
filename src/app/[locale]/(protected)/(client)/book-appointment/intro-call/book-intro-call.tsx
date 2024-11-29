@@ -22,6 +22,14 @@ import { bookIntroAppointment } from "@/actions/appointments/book-intro-appointm
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { formatTimeZoneWithOffset } from "@/utils/timeZoneUtils";
 import { reserveAppointment } from "@/actions/appointments/reserve-appointment";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 type DateType = {
   justDate: Date | undefined;
@@ -29,11 +37,11 @@ type DateType = {
 };
 
 const BookIntroCall = ({
-  appointmentType,
   therapistsJson,
+  appointmentTypes,
 }: {
-  appointmentType: any;
   therapistsJson: any;
+  appointmentTypes: any;
 }) => {
   const t = useTranslations("BookingCalendar");
   const [bookingDialogOpen, setBookingDialogOpen] = useState(false);
@@ -41,9 +49,10 @@ const BookIntroCall = ({
   const [closestAvailableDate, setClosestAvailableDate] = useState<Date | null>(
     null
   );
+  const tAppointmentTypes = useTranslations("AppointmentTypes");
 
   const user = useCurrentUser();
-
+  const [appointmentType, setAppointmentType] = useState(appointmentTypes[0]);
   const [availableTimeSlots, setAvailableTimeSlots] = useState<
     { start: Date; end: Date }[]
   >([]);
@@ -159,6 +168,8 @@ const BookIntroCall = ({
             therapistAppointments,
             browserTimeZone
           );
+
+          console.log("introCallSlots", introCallSlots);
 
           return [...slots, ...introCallSlots];
         },
@@ -291,6 +302,36 @@ const BookIntroCall = ({
               <Link href="/book-appointment">
                 <Button variant="secondary">{t("goBack")}</Button>
               </Link>
+            </div>
+            <div className="flex justify-center">
+              <div className="w-64 sm:w-1/3 mb-4  sm:px-0">
+                <Select
+                  onValueChange={(value) => {
+                    setDate({
+                      justDate: undefined,
+                      dateTime: undefined,
+                    });
+                    setAppointmentType(value);
+                  }}
+                  value={appointmentType}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder={t("selectAppointmentType")} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {appointmentTypes.map((appointmentType: any) => (
+                        <SelectItem
+                          key={appointmentType._id}
+                          value={appointmentType}
+                        >
+                          {tAppointmentTypes(appointmentType._id)}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
             {closestAvailableDate && (
               <div className="mb-4 p-4 bg-blue-100 rounded-md">
