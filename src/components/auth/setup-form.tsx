@@ -132,6 +132,7 @@ export const SetupForm = ({
   const onSubmit = (values: z.infer<typeof SetupAccountSchema>) => {
     setError("");
     setSuccess("");
+
     if (role === "THERAPIST") {
       setPenaltyDialogOpen(true);
       setStoredValues(values);
@@ -158,7 +159,6 @@ export const SetupForm = ({
 
   const handleAgree = () => {
     startTransition(async () => {
-      console.log("storedValues", storedValues);
       const data = await setupAccount(storedValues, locale, token);
       if ("success" in data && data.success) {
         setSuccess(data?.success);
@@ -181,8 +181,6 @@ export const SetupForm = ({
   };
 
   if (!token) return "Token is missing";
-
-  console.log("role", role);
 
   const browserTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
