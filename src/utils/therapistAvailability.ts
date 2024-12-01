@@ -208,11 +208,9 @@ export const getTherapistAvailableTimeSlots = (
       times.push(new Date(adjustedStart));
       current = addMinutes(current, interval);
     }
-
     const filteredTimes = times
       .map((time) => {
         const slotDayName = formatInTimeZone(time, timeZone, "EEEE");
-
         if (slotDayName === selectedDayName) {
           const adjustedStart = new Date(
             selectedDate.getFullYear(),
@@ -276,22 +274,11 @@ export const getTherapistAvailableTimeSlots = (
     availableTimeSlots: Date[]
   ): Date[] => {
     // Get the day name for the selected date in the local timezone
-    const localDayStart = toZonedTime(
-      new Date(
-        selectedDate.getFullYear(),
-        selectedDate.getMonth(),
-        selectedDate.getDate(),
-        0,
-        0,
-        0
-      ),
-      timeZone
-    );
-    const selectedDayName = formatInTimeZone(localDayStart, timeZone, "EEEE");
+
+    const selectedDayName = formatInTimeZone(selectedDate, timeZone, "EEEE");
 
     return availableTimeSlots.filter((slot) => {
-      const slotStart = toZonedTime(new Date(slot), timeZone);
-      const slotDayName = formatInTimeZone(slotStart, timeZone, "EEEE");
+      const slotDayName = formatInTimeZone(slot, timeZone, "EEEE");
 
       const matchesDayName = slotDayName === selectedDayName;
 
