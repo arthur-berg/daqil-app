@@ -69,9 +69,9 @@ export const getSessionData = async (appointmentId: string) => {
     let updatePayload: Record<string, unknown> = {};
     const updateOptions: Record<string, unknown> = { new: true };
 
-    const isIntroCall =
+    /* const isIntroCall =
       appointment.appointmentTypeId.toString() ===
-      APPOINTMENT_TYPE_ID_INTRO_SESSION;
+      APPOINTMENT_TYPE_ID_INTRO_SESSION; */
 
     if (isPast(startDate) || startDate.getTime() === new Date().getTime()) {
       if (isTherapist) {
@@ -84,7 +84,7 @@ export const getSessionData = async (appointmentId: string) => {
           );
         }
 
-        if (
+        /* if (
           !client.selectedTherapist?.introCallDone &&
           isIntroCall &&
           appointment.participants[0].showUp
@@ -92,7 +92,7 @@ export const getSessionData = async (appointmentId: string) => {
           await User.findByIdAndUpdate(client._id, {
             $set: { "selectedTherapist.introCallDone": true },
           });
-        }
+        } */
       }
 
       if (isClient) {
@@ -106,7 +106,7 @@ export const getSessionData = async (appointmentId: string) => {
           return { error: ErrorMessages("userNotFound") };
         }
 
-        if (
+        /* if (
           !client.selectedTherapist?.introCallDone &&
           isIntroCall &&
           appointment.hostShowUp
@@ -114,7 +114,7 @@ export const getSessionData = async (appointmentId: string) => {
           await User.findByIdAndUpdate(client._id, {
             $set: { "selectedTherapist.introCallDone": true },
           });
-        }
+        } */
 
         updateOptions.arrayFilters = [{ "elem.userId": client._id }];
 
@@ -154,7 +154,7 @@ export const getSessionData = async (appointmentId: string) => {
         token: data.token,
         appId: data.appId,
         roomName: session.roomName,
-        isIntroCall,
+        /*    isIntroCall, */
         appointmentData: {
           id: appointment._id.toString(),
           endDate: appointment.endDate,
@@ -182,7 +182,7 @@ export const getSessionData = async (appointmentId: string) => {
         sessionId: data?.sessionId,
         token: data?.token,
         appId: data?.appId,
-        isIntroCall,
+        /*    isIntroCall, */
         appointmentData: {
           id: appointment._id.toString(),
           endDate: appointment.endDate,

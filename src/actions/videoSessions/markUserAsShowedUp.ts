@@ -23,15 +23,15 @@ export const markUserAsShowedUp = async (appointmentId: string) => {
     }
 
     const client = await getUserById(appointment.participants[0].userId);
-    const isIntroCall =
+    /*    const isIntroCall =
       appointment.appointmentTypeId.toString() ===
-      APPOINTMENT_TYPE_ID_INTRO_SESSION;
+      APPOINTMENT_TYPE_ID_INTRO_SESSION; */
 
     let updatePayload: Record<string, unknown> = {};
     const updateOptions: Record<string, unknown> = { new: true };
 
     if (isClient) {
-      if (
+      /*  if (
         !client.selectedTherapist?.introCallDone &&
         isIntroCall &&
         appointment.hostShowUp
@@ -39,7 +39,7 @@ export const markUserAsShowedUp = async (appointmentId: string) => {
         await User.findByIdAndUpdate(client._id, {
           $set: { "selectedTherapist.introCallDone": true },
         });
-      }
+      } */
 
       updateOptions.arrayFilters = [{ "elem.userId": client._id }];
 
@@ -63,7 +63,7 @@ export const markUserAsShowedUp = async (appointmentId: string) => {
         );
       }
 
-      if (
+      /*  if (
         !client.selectedTherapist?.introCallDone &&
         isIntroCall &&
         appointment.participants[0].showUp
@@ -71,7 +71,7 @@ export const markUserAsShowedUp = async (appointmentId: string) => {
         await User.findByIdAndUpdate(client._id, {
           $set: { "selectedTherapist.introCallDone": true },
         });
-      }
+      } */
     }
   } catch (error) {
     return { error: ErrorMessages("somethingWentWrong") };

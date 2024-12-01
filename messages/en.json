@@ -73,7 +73,14 @@
     "hideArabicName": "Remove Arabic name",
     "firstNameAr": "First name (Arabic)",
     "lastNameAr": "Last name (Arabic)",
-    "finishAccountSetup": "Finish account setup"
+    "finishAccountSetup": "Finish account setup",
+    "warningIconAltText": "Warning icon",
+    "title": "Acknowledgment of Platform Policy",
+    "description": "We impose a fine of $1000 for each client stolen from our platform. Advanced AI technology is used to detect any such incidents. By checking the box below, you agree to these terms.",
+    "checkboxLabel": "I acknowledge and agree to the above terms.",
+    "readFullTermsLink": "Read the full terms here.",
+    "agreeButton": "Agree",
+    "cancelButton": "Cancel"
   },
   "AppointmentList": {
     "timeLeftUntilStart": "Time left until appointment start",
@@ -289,13 +296,13 @@
     "finishAccountSetupButton": "Finish Account Setup",
     "therapists": "Psychologists",
     "bookSession": "Book a Session",
-    "introCallTitle": "Book a 15-Minute Intro Call",
-    "introCallDescription": "Book a 15-minute intro call to get started.",
-    "bookIntroCall": "Book Intro Call",
+    "introCallTitle": "Book therapy session",
+    "introCallDescription": "Book a first therapy session to get started.",
+    "bookIntroCall": "Book",
     "browseTherapistsTitle": "Browse Psychologists",
     "browseTherapistsDescription": "If you prefer to browse psychologists on your own, click here.",
     "browseTherapistsButton": "Browse Psychologists",
-    "scheduleIntroCall": "Schedule Your Introductory Call",
+    "scheduleIntroCall": "Schedule Your First Call",
     "goBackButton": "Go Back",
     "bookAppointment": "Book Appointment",
     "morning": "Morning",
@@ -674,6 +681,7 @@
     "appointmentNotConfirmed": "The appointment is not confirmed."
   },
   "SuccessMessages": {
+    "therapistPaidAmountSet": "Amount edited successfully",
     "appointmentBookingConfirmed": "Appointment booking confirmed",
     "campaignIdUpdated": "Campaign ID updated",
     "accountDeleted": "Account successfully deleted",
@@ -952,6 +960,35 @@
       "content": "If you have any questions or concerns about these Terms and Conditions, please contact us at hello@daqil.com."
     }
   },
+    "PenaltyPolicyPage": {
+      "title": "Penalty Policy",
+      "lastUpdated": "Last Updated: 2024/11/29",
+      "introduction": {
+        "heading": "1. Introduction",
+        "content": "This document outlines the penalty policy for psychologists who violate the terms of the platform by stealing clients or breaching other outlined agreements."
+      },
+      "policyOverview": {
+        "heading": "2. Policy Overview",
+        "content": "To maintain trust and professionalism, DAQIL enforces strict policies regarding client interactions. Any violations, such as stealing clients, will result in significant penalties to ensure the integrity of the platform."
+      },
+      "fineDetails": {
+        "heading": "3. Fine Details",
+        "content": "A fine of $1000 will be imposed for each client stolen from the platform. This penalty aims to prevent unauthorized solicitation and safeguard the interests of both the platform and its users."
+      },
+      "detectionMethods": {
+        "heading": "4. Detection Methods",
+        "content": "DAQIL employs advanced AI technology and manual monitoring to detect unauthorized actions. This includes tracking communication patterns, session history, and other behavioral indicators to identify potential violations."
+      },
+      "agreement": {
+        "heading": "5. Agreement to Policy",
+        "content": "By continuing to use the platform, psychologists agree to abide by this policy and accept the penalties for any violations as outlined in this document."
+      },
+      "contactUs": {
+        "heading": "6. Contact Us",
+        "content": "If you have any questions or concerns about this policy, please contact us at hello@daqil.com."
+      }
+    },
+  
   "BookingConfirmedIntroCall": {
     "therapistSubject": "New Appointment Booking: Introductory Call",
     "clientSubject": "Appointment Confirmation",

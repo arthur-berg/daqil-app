@@ -131,33 +131,6 @@ export const getTherapistAvailableTimeSlots = (
     };
   });
 
-  const getTimeRangesForDay = (day: string): TimeRange[] => {
-    const recurring = recurringAvailableTimes.find(
-      (r) => r.day.toLowerCase() === day
-    );
-
-    let timeRanges: any = [];
-
-    recurringAvailableTimes?.forEach((recurring) => {
-      recurring.timeRanges.map((range) => {
-        timeRanges.push({
-          startTime: new Date(range.startTime),
-          endTime: new Date(range.endTime),
-          appointmentTypeIds: range.appointmentTypeIds,
-        });
-      });
-    });
-
-    return filterTimeRangesByAppointmentType(
-      timeRanges.map((range: any) => ({
-        ...range,
-        startTime: new Date(range.startTime),
-        endTime: new Date(range.endTime),
-      })),
-      appointmentType._id
-    );
-  };
-
   const getBlockedOutTimesForDate = (): BlockedTimeRange[] => {
     let timeRanges: any = [];
     blockedOutTimes?.forEach((nonRecurring) => {
@@ -256,9 +229,6 @@ export const getTherapistAvailableTimeSlots = (
 
     return filteredTimes as any;
   };
-
-  /* const dayOfWeek = formatInTimeZone(selectedDate, "UTC", "EEEE").toLowerCase();
-  let timeRanges = getTimeRangesForDay(dayOfWeek); */
 
   const nonRecurringTimeRanges = getNonRecurringAvailableTimesForDate();
 
