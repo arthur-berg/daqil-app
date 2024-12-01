@@ -54,9 +54,16 @@ const AdminDashboardPage = async () => {
         noShowHostCount: 0,
         noShowBothCount: 0,
         noShowParticipantCount: 0,
+        accountSetupDates: [],
       };
     }
     acc[registrationDate].registeredClients += 1;
+    if (client.isAccountSetupDone) {
+      const setupDate = format(new Date(client.createdAt), "yyyy-MM-dd");
+      if (!acc[registrationDate].accountSetupDates.includes(setupDate)) {
+        acc[registrationDate].accountSetupDates.push(setupDate);
+      }
+    }
     client.appointments?.forEach((apptGroup: any) => {
       apptGroup.bookedAppointments.forEach((appointment: any) => {
         const createdDate = format(
@@ -74,6 +81,7 @@ const AdminDashboardPage = async () => {
             noShowHostCount: 0,
             noShowBothCount: 0,
             noShowParticipantCount: 0,
+            accountSetupDates: [],
           };
         }
 
@@ -222,6 +230,7 @@ const AdminDashboardPage = async () => {
             <TableRow>
               <TableHead>Date</TableHead>
               <TableHead>Registered Clients</TableHead>
+              <TableHead>Accounts Setup</TableHead>
               <TableHead>Booked Intro</TableHead>
               {/*        <TableHead>Completed Intro</TableHead> */}
               <TableHead>Booked Paid</TableHead>
@@ -241,6 +250,11 @@ const AdminDashboardPage = async () => {
                 <TableRow key={date}>
                   <TableCell>{date}</TableCell>
                   <TableCell>{data.registeredClients}</TableCell>
+                  <TableCell>
+                    {data.accountSetupDates.length > 0
+                      ? data.accountSetupDates.join(", ")
+                      : "No accounts setup"}
+                  </TableCell>
                   <TableCell>{data.confirmedIntroAppointments}</TableCell>
                   {/*  <TableCell>{data.completedIntroAppointmentsCount}</TableCell> */}
                   <TableCell>{data.confirmedPaidAppointments}</TableCell>

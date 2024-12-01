@@ -62,6 +62,7 @@ const verifyPasswordAndLogin = async ({
   await User.findByIdAndUpdate(existingUser._id, {
     password: hashedPassword,
     isAccountSetupDone: true,
+    accountSetupDate: new Date(),
     firstName,
     lastName,
   });
@@ -162,6 +163,7 @@ export const setupAccount = async (
   const updateFields: any = {
     password: hashedPassword,
     isAccountSetupDone: true,
+    accountSetupDate: new Date(),
     firstName: capitalizedFirstName,
     lastName: capitalizedLastName,
     personalInfo: updatedPersonalInfo,

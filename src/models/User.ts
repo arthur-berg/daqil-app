@@ -226,6 +226,10 @@ const userSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    accountSetupDate: {
+      type: Date,
+      required: false,
+    },
     isOnboardingDone: {
       type: Boolean,
       default: false,

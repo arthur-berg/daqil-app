@@ -55,6 +55,7 @@ export const setupOAuthAccount = async (
 
   const updateFields: any = {
     isAccountSetupDone: true,
+    accountSetupDate: new Date(),
     firstName: capitalizedFirstName,
     lastName: capitalizedLastName,
     personalInfo: updatedPersonalInfo,
