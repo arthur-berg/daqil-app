@@ -69,9 +69,12 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
         customer: appointment.participants[0].userId.stripeCustomerId,
         limit: 100,
       });
+      console.log("paymentIntents", paymentIntents);
       const paymentIntent = paymentIntents.data.find(
         (pi) => pi.metadata && pi.metadata.appointmentId === appointmentId
       );
+      console.log("appointmentId");
+      console.log("paymentIntent", paymentIntent);
       if (paymentIntent) {
         try {
           const refund = await stripe.refunds.create({
