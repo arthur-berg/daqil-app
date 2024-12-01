@@ -221,6 +221,34 @@ export const getTherapistById = async (id: string) => {
   }
 };
 
+export const getTherapistInvoicesById = async (therapistId: string) => {
+  try {
+    await connectToMongoDB();
+
+    const therapist = await User.findById(therapistId).populate({
+      path: "appointments.bookedAppointments",
+      match: { status: "completed" },
+      populate: {
+        path: "participants.userId",
+        select: "firstName lastName",
+      },
+    });
+
+    if (!therapist) {
+      console.log(`Therapist with id ${therapistId} not found.`);
+      return null;
+    }
+
+    return therapist;
+  } catch (error) {
+    console.error(
+      `Error fetching therapist invoices for id ${therapistId}:`,
+      error
+    );
+    return null;
+  }
+};
+
 export const getTherapistAdminProfileById = async (id: string) => {
   try {
     await connectToMongoDB();

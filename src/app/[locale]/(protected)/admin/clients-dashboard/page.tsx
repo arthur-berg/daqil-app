@@ -49,13 +49,25 @@ const AdminDashboardPage = async () => {
         registeredClients: 0,
         confirmedIntroAppointments: 0,
         confirmedPaidAppointments: 0,
+        completedIntroAppointmentsCount: 0,
+        completedPaidAppointmentsCount: 0,
+        noShowHostCount: 0,
+        noShowBothCount: 0,
+        noShowParticipantCount: 0,
+        accountSetupDates: [],
       };
     }
     acc[registrationDate].registeredClients += 1;
+    if (client.isAccountSetupDone) {
+      const setupDate = format(new Date(client.createdAt), "yyyy-MM-dd");
+      if (!acc[registrationDate].accountSetupDates.includes(setupDate)) {
+        acc[registrationDate].accountSetupDates.push(setupDate);
+      }
+    }
     client.appointments?.forEach((apptGroup: any) => {
       apptGroup.bookedAppointments.forEach((appointment: any) => {
         const createdDate = format(
-          new Date(appointment.createdAt),
+          new Date(appointment.startDate),
           "yyyy-MM-dd"
         );
 
@@ -64,6 +76,12 @@ const AdminDashboardPage = async () => {
             registeredClients: 0,
             confirmedIntroAppointments: 0,
             confirmedPaidAppointments: 0,
+            completedIntroAppointmentsCount: 0,
+            completedPaidAppointmentsCount: 0,
+            noShowHostCount: 0,
+            noShowBothCount: 0,
+            noShowParticipantCount: 0,
+            accountSetupDates: [],
           };
         }
 
@@ -85,8 +103,10 @@ const AdminDashboardPage = async () => {
         // Completed Appointments
         if (appointment?.status === "completed") {
           if (isIntroAppointment) {
+            acc[createdDate].completedIntroAppointmentsCount += 1;
             completedIntroAppointmentsCount += 1;
           } else {
+            acc[createdDate].completedPaidAppointmentsCount += 1;
             completedPaidAppointmentsCount += 1;
           }
         }
@@ -106,10 +126,14 @@ const AdminDashboardPage = async () => {
           const reason = appointment?.cancellationReason;
           if (reason === "no-show-both") {
             noShowBothCount += 1;
+            acc[createdDate].noShowBothCount += 1;
           } else if (reason === "no-show-host") {
             noShowHostCount += 1;
+            acc[createdDate].noShowHostCount += 1;
           } else if (reason === "no-show-participant") {
             noShowParticipantCount += 1;
+            noShowHostCount += 1;
+            acc[createdDate].noShowParticipantCount += 1;
           } else if (reason === "custom") {
             customCancellationCount += 1;
           }
@@ -142,6 +166,7 @@ const AdminDashboardPage = async () => {
             <p className="text-sm text-gray-600">Booked Intro Appointments</p>
             <p className="text-lg font-bold">{bookedIntroAppointmentsCount}</p>
           </div>
+
           <div className="p-3 bg-white rounded-md shadow-sm border border-gray-200">
             <p className="text-sm text-gray-600">
               Completed Intro Appointments
@@ -150,12 +175,12 @@ const AdminDashboardPage = async () => {
               {completedIntroAppointmentsCount}
             </p>
           </div>
-          <div className="p-3 bg-white rounded-md shadow-sm border border-gray-200">
+          {/* <div className="p-3 bg-white rounded-md shadow-sm border border-gray-200">
             <p className="text-sm text-gray-600">Canceled Intro Appointments</p>
             <p className="text-lg font-bold">
               {canceledIntroAppointmentsCount}
             </p>
-          </div>
+          </div> */}
           <div className="p-3 bg-white rounded-md shadow-sm border border-gray-200">
             <p className="text-sm text-gray-600">Booked Paid Appointments</p>
             <p className="text-lg font-bold">{bookedPaidAppointmentsCount}</p>
@@ -166,10 +191,10 @@ const AdminDashboardPage = async () => {
               {completedPaidAppointmentsCount}
             </p>
           </div>
-          <div className="p-3 bg-white rounded-md shadow-sm border border-gray-200">
+          {/* <div className="p-3 bg-white rounded-md shadow-sm border border-gray-200">
             <p className="text-sm text-gray-600">Canceled Paid Appointments</p>
             <p className="text-lg font-bold">{canceledPaidAppointmentsCount}</p>
-          </div>
+          </div> */}
           <div className="p-3 bg-white rounded-md shadow-sm border border-gray-200">
             <p className="text-sm text-gray-600">No-Show Both Cancellations</p>
             <p className="text-lg font-bold">{noShowBothCount}</p>
@@ -184,10 +209,10 @@ const AdminDashboardPage = async () => {
             </p>
             <p className="text-lg font-bold">{noShowParticipantCount}</p>
           </div>
-          <div className="p-3 bg-white rounded-md shadow-sm border border-gray-200">
+          {/* <div className="p-3 bg-white rounded-md shadow-sm border border-gray-200">
             <p className="text-sm text-gray-600">Custom Cancellations</p>
             <p className="text-lg font-bold">{customCancellationCount}</p>
-          </div>
+          </div> */}
         </div>
       </div>
 
@@ -199,16 +224,20 @@ const AdminDashboardPage = async () => {
 
       {/* Grouped Data by Appointment Creation Date */}
       <div className="mb-6">
-        <h2 className="text-xl font-semibold">
-          Confirmed Appointments by Date
-        </h2>
+        <h2 className="text-xl font-semibold">Metrics By Date</h2>
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead>Date</TableHead>
               <TableHead>Registered Clients</TableHead>
-              <TableHead>Booked Intro Appointments</TableHead>
-              <TableHead>Booked Paid Appointments</TableHead>
+              <TableHead>Accounts Setup</TableHead>
+              <TableHead>Booked Intro</TableHead>
+              {/*        <TableHead>Completed Intro</TableHead> */}
+              <TableHead>Booked Paid</TableHead>
+              {/*    <TableHead>Completed Paid</TableHead> */}
+              {/*     <TableHead>No-Show Host</TableHead>
+              <TableHead>No-Show Participant</TableHead>
+              <TableHead>No-Show Both</TableHead> */}
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -221,8 +250,18 @@ const AdminDashboardPage = async () => {
                 <TableRow key={date}>
                   <TableCell>{date}</TableCell>
                   <TableCell>{data.registeredClients}</TableCell>
+                  <TableCell>
+                    {data.accountSetupDates.length > 0
+                      ? data.accountSetupDates.join(", ")
+                      : "No accounts setup"}
+                  </TableCell>
                   <TableCell>{data.confirmedIntroAppointments}</TableCell>
+                  {/*  <TableCell>{data.completedIntroAppointmentsCount}</TableCell> */}
                   <TableCell>{data.confirmedPaidAppointments}</TableCell>
+                  {/* <TableCell>{data.completedPaidAppointmentsCount}</TableCell>
+                  <TableCell>{data.noShowHostCount}</TableCell>
+                  <TableCell>{data.noShowParticipantCount}</TableCell>
+                  <TableCell>{data.noShowBothCount}</TableCell> */}
                 </TableRow>
               ))}
           </TableBody>

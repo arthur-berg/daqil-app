@@ -10,7 +10,7 @@ import Image from "next/image";
 import { getCurrentUser } from "@/lib/auth";
 import { formatInTimeZone } from "date-fns-tz";
 import { getAppointmentTypeById } from "@/data/appointment-types";
-import { APPOINTMENT_TYPE_ID_INTRO_SESSION } from "@/contants/config";
+import { APPOINTMENT_TYPE_ID_SHORT_SESSION } from "@/contants/config";
 
 const BrowseTherapistsPage = async ({
   params,
@@ -18,18 +18,19 @@ const BrowseTherapistsPage = async ({
   params: { locale: string };
 }) => {
   await connectToMongoDB();
+  const t = await getTranslations("BookAppointmentPage");
+
   const user = await getCurrentUser();
   const locale = params.locale;
   const userTimeZone = user?.settings?.timeZone || "UTC";
   const introAppointmentType = await getAppointmentTypeById(
-    APPOINTMENT_TYPE_ID_INTRO_SESSION
+    APPOINTMENT_TYPE_ID_SHORT_SESSION
   );
   const therapists = await getTherapistsWithNextAvailableTime(
     new Date(),
     userTimeZone,
     introAppointmentType
   );
-  const t = await getTranslations("BookAppointmentPage");
 
   const maxDescriptionLength = 200;
 
@@ -106,7 +107,7 @@ const BrowseTherapistsPage = async ({
                   {formatInTimeZone(
                     new Date(therapist.nextAvailableSlot),
                     userTimeZone,
-                    "eeee, MMMM d, HH:ss"
+                    "eeee, MMMM d, HH:mm"
                   )}
                 </div>
               )}

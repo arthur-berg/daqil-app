@@ -67,9 +67,7 @@ const BookingCalendar = ({
   });
   const router = useRouter();
   const { toast } = useToast();
-  const [appointmentType, setAppointmentType] = useState(
-    showOnlyIntroCalls ? appointmentTypes[0] : ""
-  );
+  const [appointmentType, setAppointmentType] = useState(appointmentTypes[0]);
   const [showAddToCalendarDialog, setShowAddToCalendarDialog] = useState(false);
   const [closestAvailableDate, setClosestAvailableDate] = useState<Date | null>(
     null
@@ -133,20 +131,11 @@ const BookingCalendar = ({
 
   const setTimeSlots = (selectedDate: Date) => {
     if (!selectedDate) return [];
-    const utcSelectedDate = new Date(
-      Date.UTC(
-        selectedDate.getFullYear(),
-        selectedDate.getMonth(),
-        selectedDate.getDate(),
-        selectedDate.getHours(),
-        selectedDate.getMinutes(),
-        selectedDate.getSeconds()
-      )
-    );
+
     const timeSlots = getTherapistAvailableTimeSlots(
       JSON.parse(therapistsAvailableTimes),
       appointmentType,
-      utcSelectedDate,
+      selectedDate,
       JSON.parse(appointments),
       browserTimeZone
     );

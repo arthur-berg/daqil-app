@@ -177,6 +177,10 @@ const userSchema = new Schema(
       type: Number,
       required: false,
     },
+    totalAmountPaid: {
+      type: Number,
+      required: false,
+    },
     stripeCustomerId: {
       type: String,
       required: false,
@@ -221,6 +225,10 @@ const userSchema = new Schema(
     isAccountSetupDone: {
       type: Boolean,
       default: false,
+    },
+    accountSetupDate: {
+      type: Date,
+      required: false,
     },
     isOnboardingDone: {
       type: Boolean,

@@ -5,6 +5,8 @@ import connectToMongoDB from "@/lib/mongoose";
 import { chargeNoShowFee } from "@/actions/stripe";
 import { APPOINTMENT_TYPE_ID_INTRO_SESSION } from "@/contants/config";
 import { addTagToMailchimpUser } from "@/lib/mail";
+import Stripe from "stripe";
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
 const updateAppointmentStatus = async (
   appointmentId: string,
@@ -62,7 +64,46 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
       await addTagToMailchimpUser(clientEmail, "intro-call-finished");
     }
 
-    if (
+    if (statusUpdate.cancellationReason === "no-show-host") {
+      const paymentIntents = await stripe.paymentIntents.list({
+        customer: appointment.participants[0].userId.stripeCustomerId,
+        limit: 100,
+      });
+      const paymentIntent = paymentIntents.data.find(
+        (pi) => pi.metadata && pi.metadata.appointmentId === appointmentId
+      );
+      if (paymentIntent) {
+        try {
+          const refund = await stripe.refunds.create({
+            payment_intent: paymentIntent.id,
+          });
+          console.log(
+            `Refund of ${
+              refund.amount / 100
+            } issued successfully for appointment ${appointmentId}`
+          );
+        } catch (refundError) {
+          console.error(
+            `Failed to issue refund for appointment ${appointmentId}:`,
+            refundError
+          );
+          return NextResponse.json(
+            { error: "Failed to process refund" },
+            { status: 500 }
+          );
+        }
+      } else {
+        console.error(
+          `Missing payment intent ID for appointment ${appointmentId}`
+        );
+        return NextResponse.json(
+          { error: "Missing payment intent ID" },
+          { status: 400 }
+        );
+      }
+    }
+
+    /*     if (
       statusUpdate.cancellationReason === "no-show-participant" &&
       isIntroAppointment
     ) {
@@ -87,7 +128,7 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
           `Missing Stripe customer or payment method ID for appointment ${appointmentId}`
         );
       }
-    }
+    } */
 
     return NextResponse.json({
       message: `Appointment ${appointmentId} status updated successfully.`,

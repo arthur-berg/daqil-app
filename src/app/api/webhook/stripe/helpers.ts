@@ -295,15 +295,20 @@ export const updateAppointments = async (
       { session }
     );
 
-    const isIntroCall =
+    /*  const isIntroCall =
       appointment.appointmentTypeId.toString() ===
-      APPOINTMENT_TYPE_ID_INTRO_SESSION;
+      APPOINTMENT_TYPE_ID_INTRO_SESSION; */
+
+    const currentTherapist = client.selectedTherapistHistory.find(
+      (therapistObj: any) => {
+        return therapistObj.current;
+      }
+    );
 
     if (
-      (!client.selectedTherapist ||
-        client.selectedTherapist?.therapist?.toString() !==
-          therapistId.toString()) &&
-      !isIntroCall
+      !currentTherapist ||
+      currentTherapist?.therapist.toString() !== therapistId.toString() /* &&
+      !isIntroCall */
     ) {
       await User.updateOne(
         { _id: clientId, "selectedTherapistHistory.current": true },

@@ -44,19 +44,15 @@ const BookAppointmentPage = async ({
 
   const clientAcceptedIntroTherapist =
     client?.selectedTherapist?.clientIntroTherapistSelectionStatus ===
-      "ACCEPTED" && client?.selectedTherapist.introCallDone;
+    "ACCEPTED";
 
   const hasSelectedTherapist = client?.selectedTherapistHistory?.length > 0;
   const appointmentTypes = await getAppointmentTypesByIDs([
     APPOINTMENT_TYPE_ID_SHORT_SESSION,
     APPOINTMENT_TYPE_ID_LONG_SESSION,
   ]);
-
-  // TODO Testa nya flödet för att sätta introCallDone till true
-
-  // Gör det tydligare när mic är OFF i video samtal
-
-  if (clientAcceptedIntroTherapist || hasSelectedTherapist) {
+  // clientAcceptedIntroTherapist ||
+  if (hasSelectedTherapist) {
     return (
       <div className="max-w-4xl mx-auto">
         <div className="relative flex justify-center">
