@@ -89,7 +89,19 @@
     "createAccount": "إنشاء حساب",
     "alreadyHaveAccount": "هل لديك حساب بالفعل؟"
   },
+  "TherapistInvoicesPage": {
+  "earningsOverview": "نظرة عامة على الأرباح",
+  "totalEarnings": "إجمالي الأرباح",
+  "amountReceived": "إجمالي المبلغ المستلم",
+  "invoices": "الفواتير",
+  "noInvoices": "لا توجد فواتير متاحة",
+  "date": "التاريخ",
+  "client": "العميل",
+  "price": "السعر",
+  "earnings": "الأرباح"
+},
   "Sidebar": {
+    "invoices": "الفواتير",
     "availability": "التوفر",
     "forClients": "للعملاء",
     "admin": "لوحة تحكم المشرف",

@@ -4,6 +4,7 @@ import {
   CalendarIcon,
   DashboardIcon,
   PersonIcon,
+  FileTextIcon,
 } from "@radix-ui/react-icons";
 
 import { MdGroup } from "react-icons/md";
@@ -134,6 +135,13 @@ export const getTherapistMenuList = (pathname: string, t: any): Group[] => {
           label: t("availability"),
           active: pathname.includes("/therapist/availability"),
           icon: CalendarIcon,
+          submenus: [],
+        },
+        {
+          href: "/therapist/invoices",
+          label: t("invoices"),
+          active: pathname.includes("/therapist/invoices"),
+          icon: FileTextIcon,
           submenus: [],
         },
         {

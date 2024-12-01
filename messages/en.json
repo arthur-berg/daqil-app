@@ -146,7 +146,19 @@
     "createAccount": "Create an account",
     "alreadyHaveAccount": "Already have an account?"
   },
+  "TherapistInvoicesPage": {
+    "earningsOverview": "Earnings Overview",
+    "totalEarnings": "Total Earnings",
+"amountReceived": "Total Amount Received",
+    "invoices": "Invoices",
+    "noInvoices": "No invoices available",
+    "date": "Date",
+    "client": "Client",
+    "price": "Price",
+    "earnings": "Earnings"
+  },
   "Sidebar": {
+    "invoices": "Invoices",
     "availability": "Availability",
     "forClients": "For clients",
     "admin": "Admin dashboard",

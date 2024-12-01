@@ -42,7 +42,7 @@ const TherapistPage = async ({
         appt.status === "completed" &&
         appt.hostUserId.toString() === therapistId
       ) {
-        totalSumToPay += appt?.price || 0;
+        totalSumToPay += appt?.price ? appt?.price * 0.735 : 0;
         // Add logic for intro/paid conversion calculation
         if (
           appt.appointmentTypeId.toString() ===
