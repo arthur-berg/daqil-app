@@ -340,6 +340,7 @@
   "timezonesAligned": "Timezones are aligned"
 },
   "BookingCalendar": {
+    "therapist": "Psychologist",
     "timezoneNotice": "You are viewing times in your browsers timezone: {timeZone}",
     "closestAvailableDate": "Closest date that has available time slots: {date}",
     "addToCalendar": "Add to calendar",

@@ -30,6 +30,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useUserName } from "@/hooks/use-user-name";
 
 type DateType = {
   justDate: Date | undefined;
@@ -49,6 +50,8 @@ const BookIntroCall = ({
   const [closestAvailableDate, setClosestAvailableDate] = useState<Date | null>(
     null
   );
+  const { getFullName } = useUserName();
+
   const tAppointmentTypes = useTranslations("AppointmentTypes");
 
   const user = useCurrentUser();
@@ -56,6 +59,8 @@ const BookIntroCall = ({
   const [availableTimeSlots, setAvailableTimeSlots] = useState<
     { start: Date; end: Date }[]
   >([]);
+  const [selectedTherapist, setSelectedTherapist] = useState<any>(null);
+
   const [date, setDate] = useState<DateType>({
     justDate: undefined,
     dateTime: undefined,
@@ -387,6 +392,20 @@ const BookIntroCall = ({
                                 key={`time-${i}`}
                                 className="mb-2"
                                 onClick={() => {
+                                  const therapist =
+                                    selectTherapistWithFewestClients(
+                                      therapists,
+                                      time
+                                    );
+                                  if (!therapist) {
+                                    toast({
+                                      title:
+                                        "No therapists available for the selected time slot.",
+                                      variant: "destructive",
+                                    });
+                                    return;
+                                  }
+                                  setSelectedTherapist(therapist);
                                   setDate((prev) => ({
                                     ...prev,
                                     dateTime: time.start,
@@ -461,6 +480,15 @@ const BookIntroCall = ({
               <span className="block">
                 <strong>{t("time")}:</strong>{" "}
                 <span>{date.dateTime && format(date.dateTime, "HH:mm")}</span>
+              </span>
+              <span className="block">
+                <strong>{t("therapist")}:</strong>{" "}
+                <span>
+                  {getFullName(
+                    selectedTherapist?.firstName,
+                    selectedTherapist?.lastName
+                  )}
+                </span>
               </span>
               <span className="block">
                 <strong>{t("duration")}:</strong>{" "}

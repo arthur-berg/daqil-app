@@ -329,6 +329,7 @@
     "timezonesAligned": "تمت محاذاة المناطق الزمنية"
   },
   "BookingCalendar": {
+    "therapist": "الأخصائي النفسي",
     "timezoneNotice": "أنت تشاهد الأوقات في المنطقة الزمنية لمتصفحك: {timeZone}",
     "closestAvailableDate": "أقرب تاريخ يحتوي على أوقات متاحة: {date}",
     "addToCalendar": "أضف إلى التقويم",
