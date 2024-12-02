@@ -73,7 +73,7 @@ export const getSessionData = async (appointmentId: string) => {
       appointment.appointmentTypeId.toString() ===
       APPOINTMENT_TYPE_ID_INTRO_SESSION; */
 
-    if (isPast(startDate) || startDate.getTime() === new Date().getTime()) {
+    /*  if (isPast(startDate) || startDate.getTime() === new Date().getTime()) {
       if (isTherapist) {
         if (!appointment.hostShowUp) {
           updatePayload.hostShowUp = true;
@@ -82,9 +82,9 @@ export const getSessionData = async (appointmentId: string) => {
             { $set: updatePayload },
             updateOptions
           );
-        }
+        } */
 
-        /* if (
+    /* if (
           !client.selectedTherapist?.introCallDone &&
           isIntroCall &&
           appointment.participants[0].showUp
@@ -93,7 +93,7 @@ export const getSessionData = async (appointmentId: string) => {
             $set: { "selectedTherapist.introCallDone": true },
           });
         } */
-      }
+    /*  }
 
       if (isClient) {
         const participant = appointment.participants.find(
@@ -105,8 +105,8 @@ export const getSessionData = async (appointmentId: string) => {
           sessionCreationInProgress = false;
           return { error: ErrorMessages("userNotFound") };
         }
-
-        /* if (
+ */
+    /* if (
           !client.selectedTherapist?.introCallDone &&
           isIntroCall &&
           appointment.hostShowUp
@@ -116,7 +116,7 @@ export const getSessionData = async (appointmentId: string) => {
           });
         } */
 
-        updateOptions.arrayFilters = [{ "elem.userId": client._id }];
+    /*   updateOptions.arrayFilters = [{ "elem.userId": client._id }];
 
         if (!participant.showUp) {
           updatePayload["participants.$[elem].showUp"] = true;
@@ -127,7 +127,7 @@ export const getSessionData = async (appointmentId: string) => {
           );
         }
       }
-    }
+    } */
 
     let session = await VideoSession.findOne({ appointmentId });
     const videoRecordingStarted = !!appointment.journalNoteId;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { startTransition, useEffect, useRef, useState } from "react";
 import useRoom from "@/hooks/use-room";
 import { useCurrentUser } from "@/hooks/use-current-user";
 /* import useScreenSharing from "@/hooks/use-screen-sharing"; */
@@ -14,7 +14,8 @@ import { Button } from "@/components/ui/button";
 import { useLocale, useTranslations } from "next-intl";
 import Image from "next/image";
 import VideoSessionCountdown from "@/app/[locale]/(protected)/appointments/[appointmentId]/video-session-countdown";
-import { isBefore } from "date-fns";
+import { isBefore, isPast } from "date-fns";
+import { markUserAsShowedUp } from "@/actions/videoSessions/markUserAsShowedUp";
 
 const VideoRoom = ({
   sessionData,
@@ -71,6 +72,19 @@ const VideoRoom = ({
 
   const handleJoinCall = () => {
     setIsPreviewing(false);
+    if ("appointmentData" in sessionData) {
+      const appointmentStartDate = new Date(
+        sessionData?.appointmentData?.startDate
+      );
+      if (
+        isPast(appointmentStartDate) ||
+        appointmentStartDate.getTime() === new Date().getTime()
+      ) {
+        startTransition(async () => {
+          await markUserAsShowedUp(sessionData.appointmentData.id);
+        });
+      }
+    }
   };
 
   useEffect(() => {
