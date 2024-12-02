@@ -921,7 +921,7 @@
     "useOfServices": {
       "heading": "5. Use of Services",
       "content": "Therapy Services: Our platform provides access to licensed therapists who offer therapy services. These services are provided directly by the therapists, and we act as a facilitator for connecting you with these professionals.",
-      "sessionRecording": "Session Recording: Therapy sessions may be audio recorded for quality control, training, and to enable certain AI-powered features such as automated journaling. By using our services, you consent to the recording of your therapy sessions. You can choose to opt out of AI-driven features in your account settings.",
+      "sessionRecording": "Session Recording: Therapy sessions may be audio recorded for quality control, training, and to enable certain AI-powered features such as automated journaling. By using our services, you consent to the recording of your therapy sessions.",
       "healthDisclaimer": "Health Disclaimer: Our platform is not intended to provide medical diagnosis or treatment. Therapy provided through our platform is intended as a form of mental health support and should not replace medical advice from a licensed healthcare provider."
     },
     "consentToRecording": {
