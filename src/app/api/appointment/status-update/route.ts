@@ -64,7 +64,7 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
       await addTagToMailchimpUser(clientEmail, "intro-call-finished");
     }
 
-    if (statusUpdate.cancellationReason === "no-show-host") {
+    /*  if (statusUpdate.cancellationReason === "no-show-host") {
       const paymentIntents = await stripe.paymentIntents.list({
         customer: appointment.participants[0].userId.stripeCustomerId,
         limit: 100,
@@ -104,7 +104,7 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
           { status: 400 }
         );
       }
-    }
+    } */
 
     /*     if (
       statusUpdate.cancellationReason === "no-show-participant" &&

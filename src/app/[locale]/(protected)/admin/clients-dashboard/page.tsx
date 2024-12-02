@@ -54,20 +54,35 @@ const AdminDashboardPage = async () => {
         noShowHostCount: 0,
         noShowBothCount: 0,
         noShowParticipantCount: 0,
-        accountSetupDates: [],
+        accountSetupCount: 0,
       };
     }
     acc[registrationDate].registeredClients += 1;
-    if (client.isAccountSetupDone) {
-      const setupDate = format(new Date(client.createdAt), "yyyy-MM-dd");
-      if (!acc[registrationDate].accountSetupDates.includes(setupDate)) {
-        acc[registrationDate].accountSetupDates.push(setupDate);
+    if (client.isAccountSetupDone && client.accountSetupDate) {
+      acc[client.accountSetupDate];
+      const accountSetupDate = format(
+        new Date(client.accountSetupDate),
+        "yyyy-MM-dd"
+      );
+      if (!acc[accountSetupDate]) {
+        acc[accountSetupDate] = {
+          registeredClients: 0,
+          confirmedIntroAppointments: 0,
+          confirmedPaidAppointments: 0,
+          completedIntroAppointmentsCount: 0,
+          completedPaidAppointmentsCount: 0,
+          noShowHostCount: 0,
+          noShowBothCount: 0,
+          noShowParticipantCount: 0,
+          accountSetupCount: 0,
+        };
       }
+      acc[accountSetupDate].accountSetupCount += 1;
     }
     client.appointments?.forEach((apptGroup: any) => {
       apptGroup.bookedAppointments.forEach((appointment: any) => {
         const createdDate = format(
-          new Date(appointment.startDate),
+          new Date(appointment.createdAt),
           "yyyy-MM-dd"
         );
 
@@ -81,7 +96,7 @@ const AdminDashboardPage = async () => {
             noShowHostCount: 0,
             noShowBothCount: 0,
             noShowParticipantCount: 0,
-            accountSetupDates: [],
+            accountSetupCount: 0,
           };
         }
 
@@ -250,11 +265,7 @@ const AdminDashboardPage = async () => {
                 <TableRow key={date}>
                   <TableCell>{date}</TableCell>
                   <TableCell>{data.registeredClients}</TableCell>
-                  <TableCell>
-                    {data.accountSetupDates.length > 0
-                      ? data.accountSetupDates.join(", ")
-                      : "No accounts setup"}
-                  </TableCell>
+                  <TableCell>{data.accountSetupCount}</TableCell>
                   <TableCell>{data.confirmedIntroAppointments}</TableCell>
                   {/*  <TableCell>{data.completedIntroAppointmentsCount}</TableCell> */}
                   <TableCell>{data.confirmedPaidAppointments}</TableCell>
