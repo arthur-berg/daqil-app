@@ -87,20 +87,10 @@ const BookingCalendar = ({
     let foundAvailableSlots = false; // Track if we find available slots
 
     for (let i = 0; i < maxLookAheadDays; i++) {
-      const utcCurrentdDate = new Date(
-        Date.UTC(
-          currentDate.getFullYear(),
-          currentDate.getMonth(),
-          currentDate.getDate(),
-          currentDate.getHours(),
-          currentDate.getMinutes(),
-          currentDate.getSeconds()
-        )
-      );
       const allAvailableSlots = getTherapistAvailableTimeSlots(
         JSON.parse(therapistsAvailableTimes),
         appointmentType,
-        utcCurrentdDate,
+        currentDate,
         JSON.parse(appointments),
         browserTimeZone
       );

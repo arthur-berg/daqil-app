@@ -158,6 +158,42 @@ export const getTherapistAvailableTimeSlots = (
     return timeRanges;
   };
 
+  const generateNonRecurringTimeIntervals = (
+    recurringRange: TimeRange,
+    selectedDate: Date,
+    interval: number
+  ) => {
+    const originalStart = new Date(recurringRange.startTime);
+    const originalEnd = new Date(recurringRange.endTime);
+
+    const times: Date[] = [];
+
+    // Ensure the start is before the end
+    if (!isBefore(originalStart, originalEnd)) {
+      console.log("Invalid range: Start is not before End");
+      return [];
+    }
+
+    let current = new Date(originalStart);
+
+    while (isBefore(current, originalEnd)) {
+      const adjustedStart = new Date(
+        Date.UTC(
+          originalStart.getUTCFullYear(),
+          originalStart.getUTCMonth(),
+          originalStart.getUTCDate(),
+          current.getUTCHours(),
+          current.getUTCMinutes(),
+          current.getUTCSeconds()
+        )
+      );
+      times.push(new Date(adjustedStart));
+      current = addMinutes(current, interval);
+    }
+
+    return times;
+  };
+
   const generateRecurringTimeIntervals = (
     recurringRange: TimeRange,
     selectedDate: Date,
@@ -261,7 +297,7 @@ export const getTherapistAvailableTimeSlots = (
   });
 
   formattedNonRecurringTimeRanges.forEach((range) => {
-    const intervals = generateRecurringTimeIntervals(
+    const intervals = generateNonRecurringTimeIntervals(
       range,
       selectedDate,
       interval
