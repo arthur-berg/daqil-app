@@ -139,6 +139,16 @@ export const reserveAppointment = async (
     transactionCommitted = true;
     session.endSession();
 
+    console.log("client.appointments", client.appointments);
+
+    if (client.appointments.length === 0) {
+      console.log("client.email", client.email);
+      await addTagToMailchimpUser(
+        client.email as string,
+        "has-reached-intro-checkout"
+      );
+    }
+
     /* if (isIntroCall) {
       await addTagToMailchimpUser(
         client.email as string,
