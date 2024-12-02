@@ -2,11 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { verifySignatureAppRouter } from "@upstash/qstash/nextjs";
 import Appointment from "@/models/Appointment";
 import connectToMongoDB from "@/lib/mongoose";
-import { chargeNoShowFee } from "@/actions/stripe";
 import { APPOINTMENT_TYPE_ID_INTRO_SESSION } from "@/contants/config";
 import { addTagToMailchimpUser } from "@/lib/mail";
-import Stripe from "stripe";
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
 
 const updateAppointmentStatus = async (
   appointmentId: string,
