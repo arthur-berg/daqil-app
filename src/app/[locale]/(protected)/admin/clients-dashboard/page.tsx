@@ -82,7 +82,7 @@ const AdminDashboardPage = async () => {
     client.appointments?.forEach((apptGroup: any) => {
       apptGroup.bookedAppointments.forEach((appointment: any) => {
         const createdDate = format(
-          new Date(appointment.startDate),
+          new Date(appointment.createdAt),
           "yyyy-MM-dd"
         );
 
