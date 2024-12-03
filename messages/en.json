@@ -921,12 +921,11 @@
     "useOfServices": {
       "heading": "5. Use of Services",
       "content": "Therapy Services: Our platform provides access to licensed therapists who offer therapy services. These services are provided directly by the therapists, and we act as a facilitator for connecting you with these professionals.",
-      "sessionRecording": "Session Recording: Therapy sessions may be audio recorded for quality control, training, and to enable certain AI-powered features such as automated journaling. By using our services, you consent to the recording of your therapy sessions.",
       "healthDisclaimer": "Health Disclaimer: Our platform is not intended to provide medical diagnosis or treatment. Therapy provided through our platform is intended as a form of mental health support and should not replace medical advice from a licensed healthcare provider."
     },
     "consentToRecording": {
       "heading": "6. Consent to Recording",
-      "content": "By agreeing to these Terms, you consent to the recording of your therapy sessions. These recordings are confidential and will only be used to improve our services and provide additional features, such as AI-driven journaling. We do not share your data with third parties unless required by law. You can review and manage your consent in your account settings."
+      "content": "By agreeing to these Terms, you consent to the recording of your therapy sessions. These recordings are confidential and will only be used to improve our services and provide additional features, such as AI-driven journaling. We do not share your data with third parties unless required by law."
     },
     "paymentAndFees": {
       "heading": "7. Payment and Fees",

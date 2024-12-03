@@ -45,8 +45,6 @@ const TermsAndConditionsPage = async () => {
           </h2>
           <p>{t("useOfServices.content")}</p>
           <br />
-          <p>{t("useOfServices.sessionRecording")}</p>
-          <br />
           <p>{t("useOfServices.healthDisclaimer")}</p>
         </section>
 
