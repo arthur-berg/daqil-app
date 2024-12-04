@@ -32,9 +32,7 @@ const TermsAndConditionsPage = async () => {
           </h2>
           <p>{t("privacyAndDataProtection.content")}</p>
           <ul className="list-disc list-inside mt-4">
-            <li>{t("privacyAndDataProtection.rightToAccessCorrectErase")}</li>
             <li>{t("privacyAndDataProtection.dataPortability")}</li>
-            <li>{t("privacyAndDataProtection.consentWithdrawal")}</li>
             <li>{t("privacyAndDataProtection.accountDeletion")}</li>
           </ul>
         </section>
@@ -46,13 +44,6 @@ const TermsAndConditionsPage = async () => {
           <p>{t("useOfServices.content")}</p>
           <br />
           <p>{t("useOfServices.healthDisclaimer")}</p>
-        </section>
-
-        <section className="mb-8">
-          <h2 className="text-xl font-semibold">
-            {t("consentToRecording.heading")}
-          </h2>
-          <p>{t("consentToRecording.content")}</p>
         </section>
 
         <section className="mb-8">

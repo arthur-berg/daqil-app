@@ -913,9 +913,7 @@
     "privacyAndDataProtection": {
       "heading": "4. Privacy and Data Protection",
       "content": "We are committed to protecting your personal information in compliance with GDPR. You have the following rights regarding your data:",
-      "rightToAccessCorrectErase": "Right to Access, Correct, and Erase Data: You may request access to or correction of your data at any time. You may also request deletion of your data, including therapy session recordings, by contacting us at hello@daqil.com.",
       "dataPortability": "Data Portability: You can request a copy of your data in a structured format for transfer to another service provider.",
-      "consentWithdrawal": "Consent Withdrawal: You may withdraw consent for data processing, including session recordings, in your account settings. Upon withdrawal, any recordings will be deleted following our data retention policy.",
       "accountDeletion": "Account Deletion: You have the right to delete your profile, and we will remove your data from our system unless otherwise required by law or healthcare regulations."
     },
     "useOfServices": {
@@ -923,52 +921,48 @@
       "content": "Therapy Services: Our platform provides access to licensed therapists who offer therapy services. These services are provided directly by the therapists, and we act as a facilitator for connecting you with these professionals.",
       "healthDisclaimer": "Health Disclaimer: Our platform is not intended to provide medical diagnosis or treatment. Therapy provided through our platform is intended as a form of mental health support and should not replace medical advice from a licensed healthcare provider."
     },
-    "consentToRecording": {
-      "heading": "6. Consent to Recording",
-      "content": "By agreeing to these Terms, you consent to the recording of your therapy sessions. These recordings are confidential and will only be used to improve our services and provide additional features, such as AI-driven journaling. We do not share your data with third parties unless required by law."
-    },
     "paymentAndFees": {
-      "heading": "7. Payment and Fees",
+      "heading": "6. Payment and Fees",
       "content": "Payment Processing: Payments for therapy sessions are processed through Stripe, our third-party payment service provider."
     },
     "therapistConduct": {
-      "heading": "8. Therapist Conduct",
+      "heading": "7. Therapist Conduct",
       "content": "We work with licensed and qualified psychologists to provide the services. However, we do not supervise, direct, or control the professional judgment of psychologists. If you have concerns about the services provided, please contact us at hello@daqil.com."
     },
     "disclaimerOfLiability": {
-      "heading": "9. Disclaimer of Liability",
+      "heading": "8. Disclaimer of Liability",
       "content": "Zakina Medtech Global provides a platform to connect users with licensed psychologists. However, we do not supervise, direct, or control the professional judgment, actions, or advice provided by the psychologists..."
     },
     "userResponsibilities": {
-      "heading": "10. User Responsibilities",
+      "heading": "9. User Responsibilities",
       "content": "You agree to provide accurate and complete information when creating your account. Respect the confidentiality of your therapy sessions and any communications with psychologists."
     },
     "securityAndAccountProtection": {
-      "heading": "11. Security and Account Protection",
+      "heading": "10. Security and Account Protection",
       "content": "You are responsible for maintaining the confidentiality of your account login details. You must notify us immediately if you suspect unauthorized access to your account."
     },
     "intellectualProperty": {
-      "heading": "12. Intellectual Property",
+      "heading": "11. Intellectual Property",
       "content": "All content, logos, and material provided on the platform are the intellectual property of Zakina Medtech Global or the psychologists providing services."
     },
     "limitationOfLiability": {
-      "heading": "13. Limitation of Liability",
+      "heading": "12. Limitation of Liability",
       "content": "To the fullest extent permitted by law, Zakina Medtech Global will not be liable for any indirect, incidental, or consequential damages arising out of your use of the platform or services."
     },
     "governingLaw": {
-      "heading": "14. Governing Law",
+      "heading": "13. Governing Law",
       "content": "These Terms and Conditions shall be governed by and construed in accordance with the laws of the United Arab Emirates."
     },
     "changesToTerms": {
-      "heading": "15. Changes to Terms",
+      "heading": "14. Changes to Terms",
       "content": "We reserve the right to modify these Terms and Conditions at any time."
     },
     "notificationConsent": {
-      "heading": "16. Consent to Receive Notifications",
+      "heading": "15. Consent to Receive Notifications",
       "content": "By registering an account and using our services, you consent to receive SMS notifications regarding your appointments, account updates, and other relevant service-related information. These notifications are intended to enhance your experience and ensure you stay informed about your scheduled sessions. You may opt out of these notifications at any time by updating your preferences in your account settings or contacting us at hello@daqil.com."
     },
     "contactUs": {
-      "heading": "17. Contact Us",
+      "heading": "16. Contact Us",
       "content": "If you have any questions or concerns about these Terms and Conditions, please contact us at hello@daqil.com."
     }
   },
