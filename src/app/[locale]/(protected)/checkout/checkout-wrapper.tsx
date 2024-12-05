@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState, useTransition, useCallback } from "react";
 import { Button } from "@/components/ui/button";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { format } from "date-fns";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
@@ -56,6 +56,7 @@ const CheckoutWrapper = ({
   const { toast, responseToast } = useToast();
   const router = useRouter();
   const user = useCurrentUser();
+  const locale = useLocale();
 
   const [discountCode, setDiscountCode] = useState("");
   const [discountCodeApplied, setDiscountCodeApplied] = useState(false);
@@ -262,8 +263,10 @@ const CheckoutWrapper = ({
               t("calculatingPrice")
             ) : (
               <>
-                {t("price")}: {currencyToSymbol("USD")}
-                {finalAmount}
+                {t("price")}:{" "}
+                {locale === "ar"
+                  ? `${finalAmount}${currencyToSymbol("USD")}`
+                  : `${currencyToSymbol("USD")}${finalAmount}`}
               </>
             )}
           </p>
@@ -295,6 +298,7 @@ const CheckoutWrapper = ({
               options={{
                 customerSessionClientSecret,
                 clientSecret,
+                locale: locale as any,
               }}
             >
               <Checkout

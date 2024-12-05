@@ -40,7 +40,7 @@ const MyClientsPage = async () => {
           <TableHeader>
             <TableRow>
               <TableHead className="w-[200px]">{t("name")}</TableHead>
-              <TableHead>{t("email")}</TableHead>
+              {/* <TableHead>{t("email")}</TableHead> */}
               <TableHead>{t("totalAppointments")}</TableHead>
             </TableRow>
           </TableHeader>
@@ -52,7 +52,7 @@ const MyClientsPage = async () => {
                     {await getFullName(client.firstName, client.lastName)}
                   </Link>
                 </TableCell>
-                <TableCell>{client.email}</TableCell>
+                {/* <TableCell>{client.email}</TableCell> */}
                 <TableCell>{client.totalAppointments}</TableCell>
               </TableRow>
             ))}

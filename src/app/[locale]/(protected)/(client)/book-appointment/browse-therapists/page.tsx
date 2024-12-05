@@ -23,13 +23,13 @@ const BrowseTherapistsPage = async ({
   const user = await getCurrentUser();
   const locale = params.locale;
   const userTimeZone = user?.settings?.timeZone || "UTC";
-  const introAppointmentType = await getAppointmentTypeById(
+  const shortAppointmentType = await getAppointmentTypeById(
     APPOINTMENT_TYPE_ID_SHORT_SESSION
   );
   const therapists = await getTherapistsWithNextAvailableTime(
     new Date(),
     userTimeZone,
-    introAppointmentType
+    shortAppointmentType
   );
 
   const maxDescriptionLength = 200;

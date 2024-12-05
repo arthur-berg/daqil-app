@@ -234,6 +234,10 @@ const userSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    professionalAgreementAccepted: {
+      type: Boolean,
+      default: false,
+    },
     role: {
       type: String,
       enum: ["ADMIN", "CLIENT", "THERAPIST"],

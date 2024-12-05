@@ -4,6 +4,7 @@ import Appointment from "@/models/Appointment";
 import User from "@/models/User";
 import { getTherapistAvailableTimeSlots } from "@/utils/therapistAvailability";
 import { addDays } from "date-fns";
+import { toZonedTime } from "date-fns-tz";
 
 export const getUserByEmail = async (email: string) => {
   try {
@@ -280,6 +281,7 @@ export const getTherapists = async () => {
     const therapists = await User.find({
       role: UserRole.THERAPIST,
       isAccountSetupDone: true,
+      professionalAgreementAccepted: true,
       $or: [
         { "settings.hiddenProfile": { $exists: false } },
         { "settings.hiddenProfile": false },
@@ -294,46 +296,49 @@ export const getTherapists = async () => {
 
 export const getTherapistsWithNextAvailableTime = async (
   startingDate = new Date(),
-  browserTimeZone: string,
+  userTimeZone: string,
   appointmentType: any
 ) => {
   try {
+    const maxLookAheadDays = 30;
+    const formattedStartingDate = toZonedTime(startingDate, userTimeZone);
+
     const therapists = await User.find({
       role: UserRole.THERAPIST,
       isAccountSetupDone: true,
+      professionalAgreementAccepted: true,
       $or: [
         { "settings.hiddenProfile": { $exists: false } },
         { "settings.hiddenProfile": false },
       ],
-    }).lean();
+    })
+      .populate([
+        {
+          path: "appointments.bookedAppointments",
+          match: {
+            status: "confirmed",
+            startDate: {
+              $gte: formattedStartingDate,
+              $lte: addDays(formattedStartingDate, maxLookAheadDays),
+            },
+          },
+        },
+        {
+          path: "appointments.temporarilyReservedAppointments",
+          match: {
+            status: "temporarily-reserved",
+            startDate: {
+              $gte: formattedStartingDate,
+              $lte: addDays(formattedStartingDate, maxLookAheadDays),
+            },
+          },
+        },
+      ])
+      .lean();
 
-    const maxLookAheadDays = 30;
-
-    // Fetch all relevant appointments in one query
-    const allAppointments = await Appointment.find({
-      hostUserId: { $in: therapists.map((t) => t._id) },
-      status: { $in: ["confirmed", "temporarily-reserved"] },
-      startDate: {
-        $gte: startingDate,
-        $lte: addDays(startingDate, maxLookAheadDays),
-      },
-    }).lean();
-
-    // Group appointments by therapist
-    const appointmentsByTherapist = allAppointments.reduce(
-      (acc: any, appointment: any) => {
-        if (!acc[appointment.hostUserId]) acc[appointment.hostUserId] = [];
-        acc[appointment.hostUserId].push(appointment);
-        return acc;
-      },
-      {}
-    );
-
-    // Process therapists in parallel
     const therapistsWithNextAvailableTime = await Promise.all(
       therapists.map(async (therapist: any) => {
         const availableTimes = therapist.availableTimes;
-        const appointments = appointmentsByTherapist[therapist._id] || [];
 
         therapist.nextAvailableSlot = null;
 
@@ -343,8 +348,8 @@ export const getTherapistsWithNextAvailableTime = async (
             availableTimes,
             appointmentType,
             currentDate,
-            appointments,
-            browserTimeZone
+            therapist.appointments,
+            userTimeZone
           );
 
           if (allAvailableSlots.length > 0) {
@@ -359,9 +364,8 @@ export const getTherapistsWithNextAvailableTime = async (
       })
     );
 
-    // Sort therapists by the nextAvailableSlot date (earliest first)
     const sortedTherapists = therapistsWithNextAvailableTime.sort((a, b) => {
-      if (!a.nextAvailableSlot) return 1; // Therapists with no slot go to the end
+      if (!a.nextAvailableSlot) return 1;
       if (!b.nextAvailableSlot) return -1;
       return (
         new Date(a.nextAvailableSlot).getTime() -

@@ -349,7 +349,7 @@ const BookingCalendar = ({
             typeof setChangeTherapistDialogOpen === "function" && (
               <div className="text-center mt-6">
                 <Button
-                  variant="outline"
+                  variant="secondary"
                   onClick={() => setChangeTherapistDialogOpen(true)}
                 >
                   {t("changeTherapistButton")}
