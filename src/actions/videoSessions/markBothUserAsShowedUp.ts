@@ -49,11 +49,9 @@ export const markBothUserAsShowedUp = async (appointmentId: string) => {
 
     if (!appointment.hostShowUp) {
       updatePayload.hostShowUp = true;
-      await Appointment.findByIdAndUpdate(
-        appointmentId,
-        { $set: updatePayload },
-        updateOptions
-      );
+      await Appointment.findByIdAndUpdate(appointmentId, {
+        $set: updatePayload,
+      });
     }
   } catch (error) {
     return { error: ErrorMessages("somethingWentWrong") };
