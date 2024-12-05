@@ -81,7 +81,11 @@ export const getTherapistAvailableTimeSlots = (
     recurringAvailableTimes,
   } = availableTimes;
   const { interval, futureBookingDelay } = settings;
-  const appointmentDate = formatInTimeZone(selectedDate, "UTC", "yyyy-MM-dd");
+  const appointmentDate = formatInTimeZone(
+    selectedDate,
+    timeZone,
+    "yyyy-MM-dd"
+  );
 
   const normalizeToUTC = (date: any) => {
     return new Date(

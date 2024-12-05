@@ -47,7 +47,8 @@ export function Menu({ isOpen, setIsOpen }: MenuProps) {
     : isClient
     ? getClientMenuList(pathname, t)
     : getAdmintMenuList(pathname, t);
-
+  console.log("pathname", pathname);
+  const isCheckout = pathname.includes("checkout");
   return (
     <>
       <div
@@ -56,30 +57,32 @@ export function Menu({ isOpen, setIsOpen }: MenuProps) {
           isOpen === true && "flex justify-center"
         )}
       >
-        <TooltipProvider disableHoverableContent>
-          <Tooltip delayDuration={100}>
-            <TooltipTrigger asChild>
-              <div>
-                <LanguageSwitcher isOpen={isOpen} />
-              </div>
-            </TooltipTrigger>
-            {isOpen === false && (
-              <TooltipContent side="right">
-                {locale === "en" ? (
-                  <>
-                    <div>التبديل إلى العربية</div>
-                    <div>Switch to Arabic</div>
-                  </>
-                ) : (
-                  <>
-                    <div>Switch to English</div>
-                    <div>التبديل إلى اللغة الإنجليزية</div>
-                  </>
-                )}
-              </TooltipContent>
-            )}
-          </Tooltip>
-        </TooltipProvider>
+        {!isCheckout && (
+          <TooltipProvider disableHoverableContent>
+            <Tooltip delayDuration={100}>
+              <TooltipTrigger asChild>
+                <div>
+                  <LanguageSwitcher isOpen={isOpen} />
+                </div>
+              </TooltipTrigger>
+              {isOpen === false && (
+                <TooltipContent side="right">
+                  {locale === "en" ? (
+                    <>
+                      <div>التبديل إلى العربية</div>
+                      <div>Switch to Arabic</div>
+                    </>
+                  ) : (
+                    <>
+                      <div>Switch to English</div>
+                      <div>التبديل إلى اللغة الإنجليزية</div>
+                    </>
+                  )}
+                </TooltipContent>
+              )}
+            </Tooltip>
+          </TooltipProvider>
+        )}
       </div>
       <div className="flex flex-col h-full">
         <ScrollArea className="[&>div>div[style]]:!block flex-1">
