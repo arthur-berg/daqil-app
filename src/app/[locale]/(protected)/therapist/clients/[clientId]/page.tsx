@@ -86,13 +86,13 @@ const ClientPage = async ({ params }: { params: { clientId: string } }) => {
         </div>
       )}
 
-      <div className="mt-6 flex flex-col sm:flex-row sm:space-x-4 space-y-4 justify-center sm:space-y-0">
+      {/*  <div className="mt-6 flex flex-col sm:flex-row sm:space-x-4 space-y-4 justify-center sm:space-y-0">
         <Link href={`/therapist/clients/${clientId}/schedule-appointment`}>
           <Button className="w-full sm:w-auto">
             {t("scheduleAppointment")}
           </Button>
         </Link>
-      </div>
+      </div> */}
     </div>
   );
 };

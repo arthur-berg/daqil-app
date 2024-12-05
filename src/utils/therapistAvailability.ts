@@ -87,22 +87,6 @@ export const getTherapistAvailableTimeSlots = (
     "yyyy-MM-dd"
   );
 
-  const normalizeToUTC = (date: any) => {
-    return new Date(
-      Date.UTC(
-        date.getFullYear(),
-        date.getMonth(),
-        date.getDate(),
-        date.getHours(),
-        date.getMinutes(),
-        0,
-        0
-      )
-    );
-  };
-
-  const normalizedSelectedDate = normalizeToUTC(new Date(selectedDate));
-
   const selectedAppointment = appointments.find(
     (appointment) => appointment.date === appointmentDate
   );
@@ -403,16 +387,20 @@ export const getTherapistBookedTimeSlots = (
   appointments: any[]
 ): TimeSlot[] => {
   const appointmentDate = formatInTimeZone(selectedDate, "UTC", "yyyy-MM-dd");
-
+  console.log("appointmentDate", appointmentDate);
   const selectedAppointment = appointments.find(
     (appointment) => appointment.date === appointmentDate
   );
+
+  console.log("selectedAppointment", selectedAppointment);
 
   const bookedAppointments = selectedAppointment
     ? selectedAppointment.bookedAppointments.filter(
         (appointment: any) => appointment.status !== "canceled"
       )
     : [];
+
+  console.log("bookedAppointments", bookedAppointments);
 
   const validTemporarilyReservedAppointments = selectedAppointment
     ? selectedAppointment.temporarilyReservedAppointments.filter(

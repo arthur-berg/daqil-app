@@ -47,7 +47,7 @@ export function Menu({ isOpen, setIsOpen }: MenuProps) {
     : isClient
     ? getClientMenuList(pathname, t)
     : getAdmintMenuList(pathname, t);
-  console.log("pathname", pathname);
+
   const isCheckout = pathname.includes("checkout");
   return (
     <>
