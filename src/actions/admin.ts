@@ -133,6 +133,7 @@ export const inviteTherapist = async (
       password: hashedPassword,
       role: UserRole.THERAPIST,
       stripeAccountId: "",
+      professionalAgreementAccepted: false,
       firstName: {
         en: "",
         ar: "",

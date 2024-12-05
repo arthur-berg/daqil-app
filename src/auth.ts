@@ -122,7 +122,10 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         session.user.isAccountSetupDone = token.isAccountSetupDone as any;
         /* 
         session.user.hasUTMSaved = token.marketingCampaignData as boolean; */
-
+        if (session.user.role === "THERAPIST") {
+          session.user.professionalAgreementAccepted =
+            token.professionalAgreementAccepted as boolean;
+        }
         if (session.user.role === "CLIENT") {
           session.user.selectedTherapist = token.selectedTherapist as any;
         }
@@ -159,6 +162,11 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 
       if (existingUser.role === "CLIENT") {
         token.selectedTherapist = existingUser.selectedTherapist;
+      }
+
+      if (existingUser.role === "THERAPIST") {
+        token.professionalAgreementAccepted =
+          existingUser.professionalAgreementAccepted;
       }
 
       return token;

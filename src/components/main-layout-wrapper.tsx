@@ -2,7 +2,7 @@
 import { cn } from "@/lib/utils";
 import { Sidebar } from "@/components/sidebar/sidebar";
 import { useEffect, useRef, useState, useTransition } from "react";
-import { usePathname } from "@/navigation";
+import { usePathname, useRouter } from "@/navigation";
 import { clearAllBodyScrollLocks, disableBodyScroll } from "body-scroll-lock";
 import { useMediaQuery } from "react-responsive";
 import { useCurrentUser } from "@/hooks/use-current-user";
@@ -37,7 +37,7 @@ export default function AdminPanelLayout({
   const [isOpen, setIsOpen] = useState(false);
   const [showTimezoneDialog, setShowTimezoneDialog] = useState(false);
   const [isPending, startTransition] = useTransition();
-
+  const router = useRouter();
   const pathname = usePathname();
   const sidebarMenuRef = useRef<any>();
   const user = useCurrentUser();
@@ -111,6 +111,12 @@ export default function AdminPanelLayout({
       });
     }
   }, [user]); */
+
+  useEffect(() => {
+    if (user?.role === "THERAPIST" && !user?.professionalAgreementAccepted) {
+      router.push("/therapist/professional-agreement");
+    }
+  }, [user?.professionalAgreementAccepted, user?.role, router]);
 
   useEffect(() => {
     const dismissedTimeZoneCookie = Cookies.get("timezoneWarningDismissed");

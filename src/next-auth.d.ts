@@ -27,6 +27,7 @@ export type ExtendedUser = DefaultSession["user"] & {
   error?: "inactive-user";
   isOnboardingDone: boolean;
   isAccountSetupDone: boolean;
+  isProfessionalAgreementDone?: boolean;
   appointments: {
     date: Date;
     bookedAppointments: string[];
