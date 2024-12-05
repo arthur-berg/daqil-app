@@ -22,7 +22,7 @@ const AdminTherapistsPage = async () => {
   await connectToMongoDB();
   const therapists = await getTherapistsAdminView();
   return (
-    <Card className="w-full md:w-[600px]">
+    <Card className="w-full max-w-4xl">
       <CardHeader>
         <p>🔑 Admin Dashboard</p>
       </CardHeader>
@@ -38,6 +38,7 @@ const AdminTherapistsPage = async () => {
                 <TableHead className="w-[100px]">Name</TableHead>
                 <TableHead>Email</TableHead>
                 <TableHead>Action</TableHead>
+                <TableHead>Accepted professional agreement?</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -79,6 +80,9 @@ const AdminTherapistsPage = async () => {
                         email={therapist.email}
                       />
                     )}
+                  </TableCell>
+                  <TableCell>
+                    {therapist.professionalAgreementAccepted ? "Yes" : "No"}
                   </TableCell>
                 </TableRow>
               ))}
