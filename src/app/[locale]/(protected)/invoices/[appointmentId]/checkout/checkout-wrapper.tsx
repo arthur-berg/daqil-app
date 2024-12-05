@@ -1,6 +1,6 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { format } from "date-fns";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
@@ -45,6 +45,7 @@ const CheckoutWrapper = ({
   const [discountCodeApplied, setDiscountCodeApplied] = useState(false);
   const [discountCode, setDiscountCode] = useState("");
   const [finalAmount, setFinalAmount] = useState(appointmentType.price);
+  const locale = useLocale();
 
   useEffect(() => {
     setLoading(true);
@@ -153,8 +154,9 @@ const CheckoutWrapper = ({
               t("calculatingPrice")
             ) : (
               <>
-                {t("price")}: {currencyToSymbol(appointmentType.currency)}
-                {finalAmount}
+                {locale === "ar"
+                  ? `${finalAmount}${currencyToSymbol("USD")}`
+                  : `${currencyToSymbol("USD")}${finalAmount}`}
               </>
             )}
           </p>
@@ -185,6 +187,7 @@ const CheckoutWrapper = ({
               options={{
                 customerSessionClientSecret,
                 clientSecret,
+                locale: locale as any,
               }}
             >
               <Checkout
