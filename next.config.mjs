@@ -1,7 +1,7 @@
 import createNextIntlPlugin from "next-intl/plugin";
 
 const withNextIntl = createNextIntlPlugin();
-const { withAxiom } = require('next-axiom');
+import { withAxiom } from "next-axiom";
 
 const radixPackages = ["@radix-ui/react-icons"];
 
