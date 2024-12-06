@@ -196,7 +196,7 @@ const CheckoutWrapper = ({
               options={{
                 customerSessionClientSecret,
                 clientSecret,
-                locale: locale as any,
+                locale: locale === "ar" ? locale : "auto",
               }}
             >
               <Checkout
