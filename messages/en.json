@@ -163,7 +163,8 @@
     "forClients": "For clients",
     "admin": "Admin dashboard",
     "calendar": "Calendar",
-    "bookSession": "Book therapy session",
+    "bookTherapySession": "Book therapy session",
+    "bookSession":"Book Session",
     "forAllUsers": "For all users",
     "forTherapists": "For psychologists",
     "appointments": "Appointments",
@@ -422,8 +423,9 @@
     "discountLoading": "Applying discount code...",
     "calculatingPrice": "Calculating price...",
     "cancelReservation": "Cancel reservation",
-    "cancellationPolicy": "You will receive a 100% refund if you cancel more than 24 hours before the appointment starts."
-    
+    "cancellationPolicy": "You will receive a 100% refund if you cancel more than 24 hours before the appointment starts.",
+    "yourPrivacyAndSecurity": "Your Privacy and Security",
+"privacyMessage": "All payments are processed securely through Stripe, and we comply with the highest standards of data protection."
   },
   "AvailabilityPage": {
     "timezoneNotice":  "You are viewing times in your browsers timezone: {timeZone}",

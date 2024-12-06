@@ -107,7 +107,7 @@
     "admin": "لوحة تحكم المشرف",
     "calendar": "التقويم",
     "appointments": "المواعيد",
-    "bookSession": "احجز جلسة علاجية",
+    "bookSession": "احجز جلسة",
     "forAllUsers": "لكل المستخدمين",
     "forTherapists": "للمعالجين",
     "payment": " الدفع",
@@ -412,7 +412,9 @@
     "discountLoading": "جارٍ تطبيق رمز الخصم...",
     "calculatingPrice": "... جارٍ حساب السعر",
     "cancelReservation": "إلغاء الحجز",
-    "cancellationPolicy": "ستحصل على استرداد كامل بنسبة 100٪ إذا قمت بالإلغاء قبل أكثر من 24 ساعة من موعد الجلسة."
+    "cancellationPolicy": "ستحصل على استرداد كامل بنسبة 100٪ إذا قمت بالإلغاء قبل أكثر من 24 ساعة من موعد الجلسة.",
+    "yourPrivacyAndSecurity": "خصوصيتك وأمانك",
+"privacyMessage": "تتم معالجة جميع المدفوعات بشكل آمن عبر Stripe، ونحن نلتزم بأعلى معايير حماية البيانات."
   },
   "AvailabilityPage": {
     "timezoneNotice": "أنت تشاهد الأوقات في المنطقة الزمنية لمتصفحك: {timeZone}",

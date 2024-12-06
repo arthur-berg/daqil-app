@@ -35,7 +35,7 @@ const BrowseTherapistsPage = async ({
   const maxDescriptionLength = 200;
 
   return (
-    <div className="px-4 sm:px-10">
+    <div className="sm:px-10">
       <PageTitle title={t("ourTherapists")} />
       <div className="mb-4">
         <Link href="/book-appointment">
