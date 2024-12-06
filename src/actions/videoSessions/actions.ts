@@ -12,6 +12,7 @@ import VideoSession from "@/models/VideoSession";
 import { getTranslations } from "next-intl/server";
 import connectToMongoDB from "@/lib/mongoose";
 import { getUserById } from "@/data/user";
+import { log } from "next-axiom";
 
 if (!process.env.VONAGE_APP_ID) {
   throw new Error("Missing config values for env params VONAGE_APP_ID ");
@@ -22,6 +23,10 @@ let sessionCreationInProgress = false;
 export const getSessionData = async (appointmentId: string) => {
   if (sessionCreationInProgress) {
     console.log("Session creation already in progress. Skipping request.");
+    log.warn("Session creation already in progress. Skipping request.", {
+      appointmentId,
+    });
+
     return;
   }
 
@@ -40,13 +45,23 @@ export const getSessionData = async (appointmentId: string) => {
     const appointment = await Appointment.findById(appointmentId);
     if (!appointment) {
       sessionCreationInProgress = false;
+      log.warn("Appointment not found", { appointmentId });
+
       return { error: ErrorMessages("appointmentNotFound") };
     }
 
     const client = await getUserById(appointment.participants[0].userId);
 
+    if (!client) {
+      log.warn("Participant not found in appointment", { appointmentId });
+      sessionCreationInProgress = false;
+      return { error: ErrorMessages("userNotFound") };
+    }
+
     if (appointment.status !== "confirmed") {
       sessionCreationInProgress = false;
+      log.warn("Appointment is not confirmed", { appointmentId });
+
       return { error: ErrorMessages("appointmentNotConfirmed") };
     }
 
@@ -143,6 +158,8 @@ export const getSessionData = async (appointmentId: string) => {
 
       if (!userAuthorized) {
         sessionCreationInProgress = false;
+        log.error("User is not authorized", { userId: user?.id });
+
         throw new Error("User is not authorized");
       }
 
@@ -195,6 +212,11 @@ export const getSessionData = async (appointmentId: string) => {
     }
   } catch (error: any) {
     sessionCreationInProgress = false;
+    log.error("Error getting session data", {
+      error: error.message,
+      stack: error.stack,
+    });
+
     throw new Error("Error getting credentials: " + error.message);
   }
 };

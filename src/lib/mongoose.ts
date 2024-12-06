@@ -2,6 +2,7 @@
 import mongoose from "mongoose";
 
 const MONGODB_URI = process.env.MONGODB_URI;
+import { log } from "next-axiom";
 
 /**
  * Global is used here to maintain a cached connection across hot reloads
@@ -30,12 +31,23 @@ async function dbConnect() {
       );
     }
 
-    cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
-      return mongoose;
-    });
+    cached.promise = mongoose
+      .connect(MONGODB_URI, opts)
+      .then((mongoose) => {
+        return mongoose;
+      })
+      .catch((error) => {
+        log.error("Failed to connect to MongoDB", { error, uri: MONGODB_URI });
+        throw error;
+      });
   }
-  cached.conn = await cached.promise;
-  return cached.conn;
+  try {
+    cached.conn = await cached.promise;
+    return cached.conn;
+  } catch (error) {
+    log.error("Error resolving MongoDB connection promise", { error });
+    throw error;
+  }
 }
 
 export default dbConnect;
