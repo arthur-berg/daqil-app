@@ -11,6 +11,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { formatInTimeZone } from "date-fns-tz";
 import { getAppointmentTypeById } from "@/data/appointment-types";
 import { APPOINTMENT_TYPE_ID_SHORT_SESSION } from "@/contants/config";
+import NextAppointment from "./next-appointment";
 
 const BrowseTherapistsPage = async ({
   params,
@@ -102,14 +103,10 @@ const BrowseTherapistsPage = async ({
                 </div>
               )}
               {therapist.nextAvailableSlot && (
-                <div className="bg-blue-100 text-blue-800 font-semibold text-sm px-3 py-1 rounded-full mb-2 text-center">
-                  {t("nextAvailable")}{" "}
-                  {formatInTimeZone(
-                    new Date(therapist.nextAvailableSlot),
-                    userTimeZone,
-                    "eeee, MMMM d, HH:mm"
-                  )}
-                </div>
+                <NextAppointment
+                  nextAvailable={t("nextAvailable")}
+                  nextAvailableSlot={therapist.nextAvailableSlot}
+                />
               )}
               <Link href={`/therapist/${therapist._id}`}>
                 <Button variant="outline" size="sm" className="mt-2">

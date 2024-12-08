@@ -7,6 +7,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { useCallback, useEffect, useState, useTransition } from "react";
 import { cancelTempReservation } from "@/actions/appointments/cancel-temp-reservation";
 import { format } from "date-fns";
+import { MdEmail } from "react-icons/md"; // Import email icon
 
 const IntroConfirmationWrapper = ({
   appointmentId,
@@ -69,8 +70,12 @@ const IntroConfirmationWrapper = ({
 
   return (
     <div className="max-w-xl mx-auto bg-white shadow-md rounded-lg p-6 text-center">
-      <div className="bg-blue-100 border border-blue-300 p-4 rounded-md mb-6 text-blue-800 text-left">
-        <p className="text-sm">{t("confirmationPolicy")}</p>
+      <div className="flex flex-col items-center mb-6">
+        <MdEmail className="text-blue-500 text-6xl mb-2" /> {/* Email icon */}
+        <h1 className="text-3xl font-bold text-gray-800 mb-2">
+          {t("actionRequired")}
+        </h1>
+        <p className="text-lg text-gray-600 mb-4">{t("checkEmailToConfirm")}</p>
       </div>
 
       <div className="bg-gray-100 p-4 rounded-md mb-6">
@@ -88,6 +93,12 @@ const IntroConfirmationWrapper = ({
           {t("minutes")}
         </p>
       </div>
+
+      {/* Penalty Fee Notice */}
+      {/*       <div className="text-red-600 font-semibold mb-4">
+        {t("cancellationNotice")}
+      </div>
+      <p className="text-sm text-gray-600 mb-6">{t("cancellationReason")}</p> */}
 
       <div className="text-center mb-6">
         <p className="text-lg font-semibold text-gray-800">

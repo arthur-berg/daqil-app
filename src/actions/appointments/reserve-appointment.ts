@@ -152,7 +152,7 @@ export const reserveAppointment = async (
         client.email as string,
         "has-reached-intro-checkout"
       );
-      /* const locale = await getLocale();
+      const locale = await getLocale();
 
       const clientTimeZone = client.settings?.timeZone || "UTC";
       const therapistTimeZone = therapist.settings.timeZone || "UTC";
@@ -201,7 +201,7 @@ export const reserveAppointment = async (
         client.email,
         appointmentDetails,
         locale
-      ); */
+      );
     }
 
     await schedulePayBeforePaymentExpiredStatusUpdateJobs(

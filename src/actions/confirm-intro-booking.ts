@@ -114,12 +114,12 @@ export async function confirmIntroBooking(appointmentId: string) {
       return { error: "Appointment not found." };
     }
 
-    if (appointment.status === "confirmed") {
+    /*  if (appointment.status === "confirmed") {
       return {
         redirect: true,
         error: ErrorMessages("appointmentAlreadyConfirmed"),
       };
-    }
+    } */
 
     const isIntroCall =
       appointment.appointmentTypeId.toString() ===

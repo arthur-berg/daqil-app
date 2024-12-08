@@ -245,17 +245,20 @@ const CheckoutWrapper = ({
             <Countdown date={paymentExpiryDate} renderer={renderer} />
           )}
         </div>
-        <div className={`p-4 rounded-md mb-6`}>
-          <h2 className="text-2xl font-bold">{t("appointmentDetails")}:</h2>
-          <p className="mt-2">
-            {t("day")}: {format(date, "eeee, MMMM d, yyyy")}{" "}
+        <div className="bg-gray-100 p-4 rounded-md mb-6">
+          <h2 className="text-xl font-semibold text-gray-700 mb-2">
+            {t("appointmentDetails")}
+          </h2>
+          <p className="text-gray-600">
+            <strong>{t("day")}</strong>: {format(date, "eeee, MMMM d, yyyy")}
           </p>
-          <p>
-            {t("time")}: {format(date, "HH:mm")}{" "}
+          <p className="text-gray-600">
+            <strong>{t("time")}</strong>: {format(date, "HH:mm")}{" "}
             <em>({browserTimeZoneFormatted})</em>
           </p>
-          <p>
-            {t("duration")}: {appointmentType.durationInMinutes} {t("minutes")}
+          <p className="text-gray-600">
+            <strong>{t("duration")}</strong>:{" "}
+            {appointmentType.durationInMinutes} {t("minutes")}
           </p>
 
           <p>
@@ -286,21 +289,21 @@ const CheckoutWrapper = ({
           <>
             {renderDiscountCodeForm()}
 
-            <div className="bg-gray-100 border-l-4 border-blue-500 text-blue-700 p-4 rounded-md mb-6">
+            {/* <div className="bg-gray-100 border-l-4 border-blue-500 text-blue-700 p-4 rounded-md mb-6">
               <p className="text-sm">
                 <div>
                   <strong>{t("yourPrivacyAndSecurity")}</strong>{" "}
                 </div>
                 {t("privacyMessage")}
               </p>
-            </div>
+            </div> */}
             <div className="flex justify-center mb-4">
               <Image
                 src="https://zakina-images.s3.eu-north-1.amazonaws.com/stripe-badge-grey.png"
                 width={500}
                 height={500}
                 alt="Pay securely with Stripe"
-                className="object-contain max-w-[400px] w-full transition-all duration-300 ease-in-out"
+                className="object-contain max-w-[320px] w-full transition-all duration-300 ease-in-out"
               />
             </div>
             <Elements
