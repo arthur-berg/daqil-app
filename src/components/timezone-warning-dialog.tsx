@@ -8,7 +8,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Link } from "@/navigation";
-import { formatTimeZoneWithOffset } from "@/utils/timeZoneUtils";
+import { getUTCOffset, formatTimeZoneWithOffset } from "@/utils/timeZoneUtils";
 import { useTranslations } from "next-intl";
 import Cookies from "js-cookie";
 
@@ -31,9 +31,11 @@ const TimezoneWarningDialog = ({
 
   const handleDismiss = () => {
     Cookies.set(
-      "timezoneWarningDismissed",
-      formatTimeZoneWithOffset(browserTimeZone),
-      { expires: 30 }
+      "timezoneWarningOffsetDismissed",
+      getUTCOffset(browserTimeZone),
+      {
+        expires: 30,
+      }
     );
     setShowTimezoneDialog(false);
   };

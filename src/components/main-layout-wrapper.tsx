@@ -11,7 +11,7 @@ import Cookies from "js-cookie";
 
 import TimezoneWarningDialog from "@/components/timezone-warning-dialog";
 import { updateUserCampaignId } from "@/actions/update-user-campaign-id";
-import { formatTimeZoneWithOffset } from "@/utils/timeZoneUtils";
+import { formatTimeZoneWithOffset, getUTCOffset } from "@/utils/timeZoneUtils";
 import { updateUserUTMData } from "@/actions/update-user-utm-data";
 import { useSearchParams } from "next/navigation";
 
@@ -51,7 +51,7 @@ export default function AdminPanelLayout({
   const browserTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const userTimeZone = user?.settings?.timeZone || "UTC";
 
-  const areTimeZonesEquivalent = (tz1: string, tz2: string) => {
+  /*   const areTimeZonesEquivalent = (tz1: string, tz2: string) => {
     const datesToCheck = [
       new Date(),
       new Date(Date.UTC(2024, 0, 1)),
@@ -94,7 +94,7 @@ export default function AdminPanelLayout({
   const timeZoneMismatch = !areTimeZonesEquivalent(
     browserTimeZone,
     userTimeZone
-  );
+  ); */
 
   /*   useEffect(() => {
     const googleCampaignId = Cookies.get("gclid");
@@ -119,13 +119,19 @@ export default function AdminPanelLayout({
   }, [user?.professionalAgreementAccepted, user?.role, router]);
 
   useEffect(() => {
-    const dismissedTimeZoneCookie = Cookies.get("timezoneWarningDismissed");
-    let dismissedTimezoneChanged = false;
+    const dismissedTimeZoneCookie = Cookies.get(
+      "timezoneWarningOffsetDismissed"
+    );
+    let dismissedOffsetChanged = false;
+    const browserOffset = getUTCOffset(browserTimeZone);
+    const userOffset = getUTCOffset(userTimeZone);
+    const timeZoneMismatch = browserOffset !== userOffset;
     if (dismissedTimeZoneCookie) {
-      const formattedTimeZone = formatTimeZoneWithOffset(browserTimeZone);
-      const newTimeZoneDetected = formattedTimeZone !== dismissedTimeZoneCookie;
-      if (newTimeZoneDetected) {
-        dismissedTimezoneChanged = true;
+      const currentOffset = getUTCOffset(browserTimeZone);
+      const cookieOffset = dismissedTimeZoneCookie;
+      const newOffsetDetected = currentOffset !== cookieOffset;
+      if (newOffsetDetected) {
+        dismissedOffsetChanged = true;
       }
     }
 
@@ -133,11 +139,11 @@ export default function AdminPanelLayout({
       (timeZoneMismatch &&
         !!user?.settings?.timeZone &&
         !dismissedTimeZoneCookie) ||
-      (dismissedTimeZoneCookie && dismissedTimezoneChanged)
+      (dismissedTimeZoneCookie && dismissedOffsetChanged)
     ) {
       setShowTimezoneDialog(true);
     }
-  }, [timeZoneMismatch, user?.settings?.timeZone]);
+  }, [user?.settings?.timeZone, browserTimeZone]);
 
   useEffect(() => {
     if (!isDesktop) {
