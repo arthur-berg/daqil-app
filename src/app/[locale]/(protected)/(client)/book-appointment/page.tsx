@@ -44,15 +44,15 @@ const BookAppointmentPage = async ({
 
   const clientAcceptedIntroTherapist =
     client?.selectedTherapist?.clientIntroTherapistSelectionStatus ===
-    "ACCEPTED";
+      "ACCEPTED" && client?.selectedTherapist.introCallDone;
 
   const hasSelectedTherapist = client?.selectedTherapistHistory?.length > 0;
   const appointmentTypes = await getAppointmentTypesByIDs([
     APPOINTMENT_TYPE_ID_SHORT_SESSION,
     APPOINTMENT_TYPE_ID_LONG_SESSION,
   ]);
-  // clientAcceptedIntroTherapist ||
-  if (hasSelectedTherapist) {
+
+  if (clientAcceptedIntroTherapist || hasSelectedTherapist) {
     return (
       <div className="max-w-4xl mx-auto">
         <div className="relative flex justify-center">

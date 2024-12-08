@@ -23,18 +23,18 @@ export const markBothUserAsShowedUp = async (appointmentId: string) => {
     }
 
     const client = await getUserById(appointment.participants[0].userId);
-    /*     const isIntroCall =
+    const isIntroCall =
       appointment.appointmentTypeId.toString() ===
       APPOINTMENT_TYPE_ID_INTRO_SESSION;
- */
+
     let updatePayload: Record<string, unknown> = {};
     const updateOptions: Record<string, unknown> = { new: true };
 
-    /* if (!client.selectedTherapist?.introCallDone && isIntroCall) {
+    if (!client.selectedTherapist?.introCallDone && isIntroCall) {
       await User.findByIdAndUpdate(client._id, {
         $set: { "selectedTherapist.introCallDone": true },
       });
-    } */
+    }
 
     updateOptions.arrayFilters = [{ "elem.userId": client._id }];
 

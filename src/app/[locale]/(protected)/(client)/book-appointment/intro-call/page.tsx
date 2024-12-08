@@ -18,8 +18,7 @@ const IntroCallPage = async () => {
 
   const therapists = await getTherapists();
   const appointmentTypes = await getAppointmentTypesByIDs([
-    APPOINTMENT_TYPE_ID_SHORT_SESSION,
-    APPOINTMENT_TYPE_ID_LONG_SESSION,
+    APPOINTMENT_TYPE_ID_INTRO_SESSION,
   ]);
 
   if (!appointmentTypes) {

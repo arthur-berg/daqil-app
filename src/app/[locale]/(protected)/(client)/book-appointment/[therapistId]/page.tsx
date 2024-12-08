@@ -41,22 +41,17 @@ const TherapistUserProfile = async ({
     return ErrorMessages("therapistNotExist");
   }
 
-  /*  const clientAcceptedIntroTherapist =
-    client?.selectedTherapist?.clientIntroTherapistSelectionStatus ===
-      "ACCEPTED" && client?.selectedTherapist.introCallDone;
-
-  const hasSelectedTherapist = client?.selectedTherapistHistory.length > 0; */
-
   const showOnlyIntroCalls =
     user?.selectedTherapist && user?.selectedTherapist.introCallDone
       ? false
       : true;
 
-  const appointmentTypes = await getAppointmentTypesByIDs([
-    APPOINTMENT_TYPE_ID_SHORT_SESSION,
-    APPOINTMENT_TYPE_ID_LONG_SESSION,
-  ]);
-
+  const appointmentTypes = showOnlyIntroCalls
+    ? [await getAppointmentTypeById(APPOINTMENT_TYPE_ID_INTRO_SESSION)]
+    : await getAppointmentTypesByIDs([
+        APPOINTMENT_TYPE_ID_SHORT_SESSION,
+        APPOINTMENT_TYPE_ID_LONG_SESSION,
+      ]);
   if (!appointmentTypes) {
     return ErrorMessages("appointmentTypeNotExist");
   }
