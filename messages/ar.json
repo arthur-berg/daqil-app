@@ -90,6 +90,8 @@
     "alreadyHaveAccount": "هل لديك حساب بالفعل؟"
   },
   "TherapistInvoicesPage": {
+    "bonusEarned": "البونص المكتسب",
+"outstandingBalance": "الرصيد المستحق",
   "earningsOverview": "نظرة عامة على الأرباح",
   "totalEarnings": "إجمالي الأرباح",
   "amountReceived": "إجمالي المبلغ المستلم",

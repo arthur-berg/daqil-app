@@ -42,7 +42,20 @@ const TherapistPage = async ({
         appt.status === "completed" &&
         appt.hostUserId.toString() === therapistId
       ) {
-        totalSumToPay += appt?.price ? appt?.price * 0.735 : 0;
+        let percentage = 0;
+        if (
+          appt.appointmentTypeId.toString() ===
+          APPOINTMENT_TYPE_ID_SHORT_SESSION
+        ) {
+          percentage = 0.7241; // 72.41%
+        } else if (
+          appt.appointmentTypeId.toString() === APPOINTMENT_TYPE_ID_LONG_SESSION
+        ) {
+          percentage = 0.661; // 66.10%
+        } else {
+          percentage = 0; // Intro sessions or other cases won't contribute to earnings here
+        }
+        totalSumToPay += appt?.price ? appt?.price * percentage : 0;
         // Add logic for intro/paid conversion calculation
         if (
           appt.appointmentTypeId.toString() ===
@@ -78,12 +91,21 @@ const TherapistPage = async ({
 
   const clientsWhoConverted = clientsWithIntroAppointments.filter((clientId) =>
     clientsWithPaidAppointments.includes(clientId)
-  ).length;
+  );
+
+  console.log("clientsWithIntroAppointments", clientsWithIntroAppointments);
+  console.log("clientsWithPaidAppointments", clientsWithPaidAppointments);
+
+  const totalBonus = clientsWhoConverted.length * 25;
+
+  const regularSumToPay = totalSumToPay;
+
+  totalSumToPay = regularSumToPay + totalBonus;
 
   const totalIntroAppointments = clientsWithIntroAppointments.length;
   const conversionRatio =
     totalIntroAppointments > 0
-      ? (clientsWhoConverted / totalIntroAppointments) * 100
+      ? (clientsWhoConverted.length / totalIntroAppointments) * 100
       : 0;
 
   return (
@@ -143,17 +165,34 @@ const TherapistPage = async ({
                 {conversionRatio.toFixed(2)}%
               </p>
               <div>
-                <div className="bg-blue-100 p-4 rounded-md mb-4 mt-2">
-                  <h3 className="text-lg font-bold">
-                    Total Payment Due: ${totalSumToPay.toFixed(2)}
-                  </h3>
+                <div className="bg-purple-100 p-4 rounded-md mb-4">
+                  <h3 className="text-lg font-bold">Bonus Earned:</h3>
+                  <p className="text-2xl font-semibold text-purple-600">
+                    ${totalBonus.toFixed(2)}
+                  </p>
+                </div>
+                <div className="bg-blue-100 p-4 rounded-md mb-4">
+                  <h3 className="text-lg font-bold">Total Earnings:</h3>
+                  <p className="text-2xl font-semibold text-blue-600">
+                    ${totalSumToPay.toFixed(2)}
+                  </p>
                 </div>
                 <div className="bg-green-100 p-4 rounded-md mb-4">
-                  <h3 className="text-lg font-bold">
-                    Has been paid: $
-                    {therapist.totalAmountPaid?.toFixed(2) || "0.00"}
-                  </h3>
+                  <h3 className="text-lg font-bold">Has been paid:</h3>
+                  <p className="text-2xl font-semibold text-green-600">
+                    ${therapist.totalAmountPaid?.toFixed(2) || "0.00"}
+                  </p>
                 </div>
+                <div className="bg-yellow-100 p-4 rounded-md mb-4">
+                  <h3 className="text-lg font-bold">Outstanding Balance:</h3>
+                  <p className="text-2xl font-semibold text-yellow-600">
+                    $
+                    {(totalSumToPay - (therapist.totalAmountPaid || 0)).toFixed(
+                      2
+                    )}
+                  </p>
+                </div>
+
                 <PayButton therapistId={therapistId} />
               </div>
             </div>

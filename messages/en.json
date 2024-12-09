@@ -147,6 +147,8 @@
     "alreadyHaveAccount": "Already have an account?"
   },
   "TherapistInvoicesPage": {
+    "bonusEarned": "Bonus earned",
+    "outstandingBalance": "Outstanding Balance", 
     "earningsOverview": "Earnings Overview",
     "totalEarnings": "Total Earnings",
 "amountReceived": "Total Amount Received",

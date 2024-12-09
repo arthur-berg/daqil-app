@@ -2,7 +2,7 @@
 import { APPOINTMENT_TYPE_ID_INTRO_SESSION } from "@/contants/config";
 import { getUserById } from "@/data/user";
 import { UserRole } from "@/generalTypes";
-import { getCurrentRole, requireAuth } from "@/lib/auth";
+import { requireAuth } from "@/lib/auth";
 import connectToMongoDB from "@/lib/mongoose";
 import Appointment from "@/models/Appointment";
 import User from "@/models/User";
@@ -27,32 +27,26 @@ export const markBothUserAsShowedUp = async (appointmentId: string) => {
       appointment.appointmentTypeId.toString() ===
       APPOINTMENT_TYPE_ID_INTRO_SESSION;
 
-    let updatePayload: Record<string, unknown> = {};
-    const updateOptions: Record<string, unknown> = { new: true };
-
     if (!client.selectedTherapist?.introCallDone && isIntroCall) {
       await User.findByIdAndUpdate(client._id, {
         $set: { "selectedTherapist.introCallDone": true },
       });
     }
 
-    updateOptions.arrayFilters = [{ "elem.userId": client._id }];
-
     if (!appointment.participants[0].showUp) {
-      updatePayload["participants.$[elem].showUp"] = true;
-      await Appointment.findByIdAndUpdate(
-        appointmentId,
-        { $set: updatePayload },
-        updateOptions
+      await Appointment.findOneAndUpdate(
+        { _id: appointmentId, "participants.userId": client._id },
+        { $set: { "participants.$.showUp": true } }
       );
     }
 
     if (!appointment.hostShowUp) {
-      updatePayload.hostShowUp = true;
       await Appointment.findByIdAndUpdate(appointmentId, {
-        $set: updatePayload,
+        $set: { hostShowUp: true },
       });
     }
+
+    return { success: true };
   } catch (error) {
     return { error: ErrorMessages("somethingWentWrong") };
   }

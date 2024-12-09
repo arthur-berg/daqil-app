@@ -15,7 +15,7 @@ export const markUserAsShowedUp = async (appointmentId: string) => {
     getTranslations("ErrorMessages"),
   ]);
   try {
-    const user = await requireAuth([UserRole.THERAPIST, UserRole.CLIENT]);
+    await requireAuth([UserRole.THERAPIST, UserRole.CLIENT]);
     const { isTherapist, isClient } = await getCurrentRole();
     const appointment = await Appointment.findById(appointmentId);
     if (!appointment) {
@@ -26,9 +26,6 @@ export const markUserAsShowedUp = async (appointmentId: string) => {
     const isIntroCall =
       appointment.appointmentTypeId.toString() ===
       APPOINTMENT_TYPE_ID_INTRO_SESSION;
-
-    let updatePayload: Record<string, unknown> = {};
-    const updateOptions: Record<string, unknown> = { new: true };
 
     if (isClient) {
       if (
@@ -41,26 +38,19 @@ export const markUserAsShowedUp = async (appointmentId: string) => {
         });
       }
 
-      updateOptions.arrayFilters = [{ "elem.userId": client._id }];
-
       if (!appointment.participants[0].showUp) {
-        updatePayload["participants.$[elem].showUp"] = true;
-        await Appointment.findByIdAndUpdate(
-          appointmentId,
-          { $set: updatePayload },
-          updateOptions
+        await Appointment.findOneAndUpdate(
+          { _id: appointmentId, "participants.userId": client._id },
+          { $set: { "participants.$.showUp": true } }
         );
       }
     }
 
     if (isTherapist) {
       if (!appointment.hostShowUp) {
-        updatePayload.hostShowUp = true;
-        await Appointment.findByIdAndUpdate(
-          appointmentId,
-          { $set: updatePayload },
-          updateOptions
-        );
+        await Appointment.findByIdAndUpdate(appointmentId, {
+          $set: { hostShowUp: true },
+        });
       }
 
       if (

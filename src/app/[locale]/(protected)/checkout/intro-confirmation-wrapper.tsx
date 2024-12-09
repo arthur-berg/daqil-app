@@ -70,14 +70,18 @@ const IntroConfirmationWrapper = ({
 
   return (
     <div className="max-w-xl mx-auto bg-white shadow-md rounded-lg p-6 text-center">
+      {/* Emphasize Email Section */}
       <div className="flex flex-col items-center mb-6">
-        <MdEmail className="text-blue-500 text-6xl mb-2" /> {/* Email icon */}
+        <MdEmail className="text-blue-500 text-6xl animate-pulse mb-2" />
         <h1 className="text-3xl font-bold text-gray-800 mb-2">
           {t("actionRequired")}
         </h1>
-        <p className="text-lg text-gray-600 mb-4">{t("checkEmailToConfirm")}</p>
+        <p className="text-lg font-semibold text-blue-600 mb-4">
+          {t("checkEmailToConfirm")}
+        </p>
       </div>
 
+      {/* Appointment Details */}
       <div className="bg-gray-100 p-4 rounded-md mb-6">
         <h2 className="text-xl font-semibold text-gray-700 mb-2">
           {t("appointmentDetails")}
@@ -94,12 +98,7 @@ const IntroConfirmationWrapper = ({
         </p>
       </div>
 
-      {/* Penalty Fee Notice */}
-      {/*       <div className="text-red-600 font-semibold mb-4">
-        {t("cancellationNotice")}
-      </div>
-      <p className="text-sm text-gray-600 mb-6">{t("cancellationReason")}</p> */}
-
+      {/* Countdown */}
       <div className="text-center mb-6">
         <p className="text-lg font-semibold text-gray-800">
           {t("weHaveReservedNoCard")}
@@ -113,12 +112,12 @@ const IntroConfirmationWrapper = ({
         )}
       </div>
 
-      <div className="flex justify-center">
+      {/* Make Cancel Button Less Prominent */}
+      <div className="flex justify-center mt-6">
         <Button
           disabled={isPending}
-          className="mb-4"
-          size="lg"
-          variant="destructive"
+          size="sm"
+          variant="secondary"
           onClick={handleCancelTempReservation}
         >
           {t("cancelReservation")}
