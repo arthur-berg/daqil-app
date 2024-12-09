@@ -164,29 +164,34 @@ const TherapistInvoicesPage = async () => {
         {Object.keys(groupedInvoices).length === 0 ? (
           <p className="text-center py-4">{t("noInvoices")}</p>
         ) : (
-          Object.entries(groupedInvoices).map(([month, invoices]) => (
-            <div key={month} className="mb-6">
-              <h3 className="text-lg font-semibold mb-2">{month}</h3>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>{t("date")}</TableHead>
-                    <TableHead>{t("client")}</TableHead>
-                    <TableHead>{t("earnings")}</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {invoices.map((invoice: any) => (
-                    <TableRow key={invoice.id}>
-                      <TableCell>{invoice.date}</TableCell>
-                      <TableCell>{invoice.clientName}</TableCell>
-                      <TableCell>${invoice.earnings.toFixed(2)}</TableCell>
+          Object.entries(groupedInvoices).map(([month, invoices]) => {
+            const sortedInvoices = invoices.sort(
+              (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+            );
+            return (
+              <div key={month} className="mb-6">
+                <h3 className="text-lg font-semibold mb-2">{month}</h3>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>{t("date")}</TableHead>
+                      <TableHead>{t("client")}</TableHead>
+                      <TableHead>{t("earnings")}</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          ))
+                  </TableHeader>
+                  <TableBody>
+                    {sortedInvoices.map((invoice: any) => (
+                      <TableRow key={invoice.id}>
+                        <TableCell>{invoice.date}</TableCell>
+                        <TableCell>{invoice.clientName}</TableCell>
+                        <TableCell>${invoice.earnings.toFixed(2)}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            );
+          })
         )}
       </div>
     </div>
