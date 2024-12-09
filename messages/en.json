@@ -302,6 +302,10 @@
     "noPaymentDetails": "No payment details have been saved yet"
   },
   "BookAppointmentPage": {
+    "filterBy": "Filter by",
+  "male": "Male",
+  "female": "Female",
+  "all": "All",
     "nextAvailable": "Next available time: ",
     "logout": "Logout",
     "introMeetingWasCanceled": " Your intro appointment was not completed because one or both participants didn't join, or one of the participants canceled. Please book a new intro call.",
