@@ -56,6 +56,7 @@ const CheckoutPage = async ({
           paymentExpiryDate={appointment.payment.paymentExpiryDate}
           date={dateObject}
           appointmentType={appointmentType}
+          therapistId={appointment.hostUserId.toString()}
         />
       ) : (
         <CheckoutWrapper

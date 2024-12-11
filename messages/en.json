@@ -387,7 +387,7 @@
     "close": "Close",
     "bookAppointment": "Book appointment",
     "changeTherapistButton": "Change Psychologist",
-    "bookingAppointmentLoading": "Booking appointment... Please wait",
+    "bookingAppointmentLoading": "Reserving appointment... Please wait",
     "loadingCheckout": "Loading checkout...",
     "free": "Free",
     "selectAppointmentType": "Select type of appointment"
@@ -557,9 +557,20 @@
   "redirecting": "Redirecting..."
 },
 "IntroCheckoutTranslation": {
+  "almostThere": "Almost there!",
+  "emailConfirmationInstructions": "We have sent a booking confirmation link to your email. Please follow the instructions to complete your booking.",
+  "whatToDoNext": "What to do next:",
+  "checkEmailStep": "Open your email inbox and find the email from us.",
+  "clickConfirmStepStart": "Click on the",
+"confirmBookingButton": "Confirm Booking",
+"clickConfirmStepEnd": "button in the email.",
+
+  "completeBookingStep": "Once confirmed, your booking will be finalized and you can close this screen.",
+  "introQuestionsHeader": "Before we can confirm your booking",
+  "introQuestionsSubHeader": "We need you to answer some questions to ensure your session is tailored to your needs.",
   "checkEmailToConfirm": "Check your email to confirm your booking.",
   "actionRequired": "Action Required",
-  "weHaveReservedNoCard": "We have reserved this appointment for you.",
+"weHaveReservedNoCard": "We have reserved this appointment for you. Please complete the actions above to confirm your booking.",
   "goBack": "Go back",
   "minutes": "minutes",
   "appointmentDetails": "Appointment Details",
@@ -574,7 +585,16 @@
   "minutesLeft": "minutes left",
   "cancelReservation": "Cancel reservation",
   "bookAppointment": "Book Appointment",
-  "bookingAppointment": "Booking appointment..."
+  "bookingAppointment": "Booking appointment...",
+  "question1": "What is the reason for booking a call with us?",
+  "question2": "Please describe your symptoms.",
+  "question3": "How long have you been experiencing these symptoms?",
+  "question4": "Is there anything else you would like to share with your psychologist before the call?",
+  "placeholder": "Type your answer here...",
+  "validationError": "This field is required.",
+  "back": "Back",
+  "continue": "Continue",
+  "finish": "Finish"
 },
   "AdminPage": {
     "clientOverview": "Client Overview",
@@ -651,6 +671,7 @@
     "goToAppointments": "Go to Appointments"
   },
   "ErrorMessages": {
+    "somethingWentWrongWhenSendingEmail": "Something went wrong when sending the email. Please contact support chat.",
     "appointmentNotFound": "Appointment not found",
     "appointmentNotReserved": "Appointment not reserved anymore",
     "isNotIntroCall": "This is not an introductory call",
