@@ -256,11 +256,26 @@ export const getTherapistAdminProfileById = async (id: string) => {
 
     const therapist = await User.findById(id)
       .populate([
-        "appointments.bookedAppointments",
-        "appointments.temporarilyReservedAppointments",
-        "assignedClients",
+        {
+          path: "appointments.bookedAppointments",
+          match: { status: "completed" }, // Only include completed appointments
+          populate: {
+            path: "participants.userId",
+            select: "firstName lastName", // Include participant names
+          },
+        },
+        {
+          path: "appointments.temporarilyReservedAppointments",
+          populate: {
+            path: "participants.userId",
+            select: "firstName lastName", // Include participant names
+          },
+        },
+        {
+          path: "assignedClients",
+          select: "firstName lastName email", // Include basic client info
+        },
       ])
-
       .lean();
 
     if (!therapist) {

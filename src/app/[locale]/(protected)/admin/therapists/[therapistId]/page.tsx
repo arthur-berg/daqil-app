@@ -20,6 +20,7 @@ import {
   APPOINTMENT_TYPE_ID_LONG_SESSION,
 } from "@/contants/config";
 import PayButton from "@/app/[locale]/(protected)/admin/therapists/[therapistId]/pay-button";
+import { getFullName } from "@/utils/formatName";
 
 const TherapistPage = async ({
   params,
@@ -35,6 +36,8 @@ const TherapistPage = async ({
   const clientsWithIntroAppointments: string[] = [];
   const clientsWithPaidAppointments: string[] = [];
   let totalSumToPay = 0;
+  const groupedInvoices: { [month: string]: any[] } = {};
+  let totalEarnings = 0;
 
   therapist.appointments.forEach((appointment: any) => {
     appointment.bookedAppointments.forEach((appt: any) => {
@@ -93,9 +96,6 @@ const TherapistPage = async ({
     clientsWithPaidAppointments.includes(clientId)
   );
 
-  console.log("clientsWithIntroAppointments", clientsWithIntroAppointments);
-  console.log("clientsWithPaidAppointments", clientsWithPaidAppointments);
-
   const totalBonus = clientsWhoConverted.length * 25;
 
   const regularSumToPay = totalSumToPay;
@@ -107,6 +107,51 @@ const TherapistPage = async ({
     totalIntroAppointments > 0
       ? (clientsWhoConverted.length / totalIntroAppointments) * 100
       : 0;
+
+  await Promise.all(
+    therapist.appointments.flatMap((appointment: any) =>
+      appointment.bookedAppointments.map(async (appt: any) => {
+        if (
+          appt.status === "completed" &&
+          appt.hostUserId.toString() === therapistId &&
+          appt.appointmentTypeId.toString() !==
+            APPOINTMENT_TYPE_ID_INTRO_SESSION
+        ) {
+          const date = new Date(appt.startDate);
+          const monthKey = format(date, "MMMM yyyy");
+
+          if (!groupedInvoices[monthKey]) {
+            groupedInvoices[monthKey] = [];
+          }
+
+          let percentage = 0;
+
+          if (
+            appt.appointmentTypeId.toString() ===
+            APPOINTMENT_TYPE_ID_SHORT_SESSION
+          ) {
+            percentage = 0.7241; // 72.41%
+          } else if (
+            appt.appointmentTypeId.toString() ===
+            APPOINTMENT_TYPE_ID_LONG_SESSION
+          ) {
+            percentage = 0.661; // 66.10%
+          }
+          groupedInvoices[monthKey].push({
+            id: appt._id,
+            date: format(date, "yyyy-MM-dd"),
+            clientName: await getFullName(
+              appt.participants[0]?.userId?.firstName,
+              appt.participants[0]?.userId?.lastName
+            ),
+            earnings: (appt.price || 0) * percentage,
+          });
+
+          totalEarnings += (appt.price || 0) * percentage;
+        }
+      })
+    )
+  );
 
   return (
     <div className="container mx-auto p-6 bg-white">
@@ -213,9 +258,14 @@ const TherapistPage = async ({
           <Button>Therapist&apos;s Calendar</Button>
         </Link>
       </div>
-      <div className="flex justify-center sm:justify-start">
+      <div className="flex justify-center sm:justify-start mb-2">
         <Link href={`/admin/therapists/${therapistId}/profile`}>
           <Button>Therapist&apos;s Profile Details</Button>
+        </Link>
+      </div>
+      <div className="flex justify-center sm:justify-start">
+        <Link href={`/admin/therapists/${therapistId}/all-appointments`}>
+          <Button>Therapist&apos;s appointments details</Button>
         </Link>
       </div>
 
@@ -223,7 +273,44 @@ const TherapistPage = async ({
         <h2 className="text-xl font-bold mt-4">Appointments Overview</h2>
       </div>
 
+      {/* Invoices Table */}
+      <h2 className="text-xl font-bold mb-4">Invoices</h2>
       <div className="overflow-x-auto">
+        {Object.keys(groupedInvoices).length === 0 ? (
+          <p className="text-center py-4">No invoices available</p>
+        ) : (
+          Object.entries(groupedInvoices).map(([month, invoices]) => {
+            const sortedInvoices = invoices.sort(
+              (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+            );
+            return (
+              <div key={month} className="mb-6">
+                <h3 className="text-lg font-semibold mb-2">{month}</h3>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Date</TableHead>
+                      <TableHead>Client</TableHead>
+                      <TableHead>Earnings</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {sortedInvoices.map((invoice: any) => (
+                      <TableRow key={invoice.id}>
+                        <TableCell>{invoice.date}</TableCell>
+                        <TableCell>{invoice.clientName}</TableCell>
+                        <TableCell>${invoice.earnings.toFixed(2)}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            );
+          })
+        )}
+      </div>
+
+      {/*   <div className="overflow-x-auto">
         {therapist.appointments.length === 0 ? (
           <p className="text-center py-4">No appointments available</p>
         ) : (
@@ -272,7 +359,7 @@ const TherapistPage = async ({
             </TableBody>
           </Table>
         )}
-      </div>
+      </div> */}
     </div>
   );
 };
