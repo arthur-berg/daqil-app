@@ -104,6 +104,7 @@ export const getTherapistAvailableTimeSlots = (
           new Date(appointment.payment.paymentExpiryDate) > new Date()
       )
     : [];
+
   const allAppointmentsForDate = [
     ...bookedAppointments,
     ...validTemporarilyReservedAppointments,
@@ -387,20 +388,16 @@ export const getTherapistBookedTimeSlots = (
   appointments: any[]
 ): TimeSlot[] => {
   const appointmentDate = formatInTimeZone(selectedDate, "UTC", "yyyy-MM-dd");
-  console.log("appointmentDate", appointmentDate);
+
   const selectedAppointment = appointments.find(
     (appointment) => appointment.date === appointmentDate
   );
-
-  console.log("selectedAppointment", selectedAppointment);
 
   const bookedAppointments = selectedAppointment
     ? selectedAppointment.bookedAppointments.filter(
         (appointment: any) => appointment.status !== "canceled"
       )
     : [];
-
-  console.log("bookedAppointments", bookedAppointments);
 
   const validTemporarilyReservedAppointments = selectedAppointment
     ? selectedAppointment.temporarilyReservedAppointments.filter(

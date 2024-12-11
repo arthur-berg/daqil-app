@@ -341,6 +341,7 @@ export const getTherapistsWithNextAvailableTime = async (
         const availableTimes = therapist.availableTimes;
 
         therapist.nextAvailableSlot = null;
+        const isImam = therapist._id.toString() === "66e43c84e9bee8dbeb7ebf72";
 
         let currentDate = new Date(startingDate);
         for (let i = 0; i < maxLookAheadDays; i++) {

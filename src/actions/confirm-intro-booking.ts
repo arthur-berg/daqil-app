@@ -62,12 +62,12 @@ const updateAppointments = async (
       { session }
     );
 
-    const previousTherapistId = client.selectedTherapist?.therapist;
+    /*  const previousTherapistId = client.selectedTherapist?.therapist;
+
     if (
       previousTherapistId &&
       previousTherapistId.toString() !== therapistId.toString()
     ) {
-      // Remove client from the previous therapist's assignedClients list
       await User.findByIdAndUpdate(
         previousTherapistId,
         { $pull: { assignedClients: clientId } },
@@ -81,7 +81,7 @@ const updateAppointments = async (
         { $addToSet: { assignedClients: clientId } },
         { session }
       );
-    }
+    } */
 
     await User.findByIdAndUpdate(
       clientId,

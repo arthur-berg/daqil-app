@@ -52,7 +52,7 @@
     "male": "Male",
     "female": "Female",
     "other": "Other",
-    "sex": "Sex",
+    "sex": "Gender",
     "phoneNumber": "Phone number with country code",
     "dateOfBirth": "Date of birth",
     "pickADate": "Pick a date",
@@ -147,6 +147,8 @@
     "alreadyHaveAccount": "Already have an account?"
   },
   "TherapistInvoicesPage": {
+    "bonusEarned": "Bonus earned",
+    "outstandingBalance": "Outstanding Balance", 
     "earningsOverview": "Earnings Overview",
     "totalEarnings": "Total Earnings",
 "amountReceived": "Total Amount Received",
@@ -163,7 +165,8 @@
     "forClients": "For clients",
     "admin": "Admin dashboard",
     "calendar": "Calendar",
-    "bookSession": "Book therapy session",
+    "bookTherapySession": "Book therapy session",
+    "bookSession":"Book Session",
     "forAllUsers": "For all users",
     "forTherapists": "For psychologists",
     "appointments": "Appointments",
@@ -178,7 +181,7 @@
   "callEnded": "Call Ended",
   "nextStep": "Next Step: Book Your Appointment",
   "descriptionIntro": "Your introductory call has ended. Now, you can book your next appointment to continue your progress. If you left the meeting by accident, you can rejoin it.",
-  "promoCodeMessage": "Use code NOVEMBER50 to get 50% off your next appointment!",
+  "promoCodeMessage": "Use code DISCOUNT50 to get 50% off your next appointment!",
   "bookNextAppointmentButton": "Book Next Appointment",
   "rejoinMeetingButton": "Rejoin Meeting",
   "goToAppointments":"Go to Appointments"
@@ -299,6 +302,10 @@
     "noPaymentDetails": "No payment details have been saved yet"
   },
   "BookAppointmentPage": {
+    "filterBy": "Filter by",
+  "male": "Male",
+  "female": "Female",
+  "all": "All",
     "nextAvailable": "Next available time: ",
     "logout": "Logout",
     "introMeetingWasCanceled": " Your intro appointment was not completed because one or both participants didn't join, or one of the participants canceled. Please book a new intro call.",
@@ -308,13 +315,13 @@
     "finishAccountSetupButton": "Finish Account Setup",
     "therapists": "Psychologists",
     "bookSession": "Book a Session",
-    "introCallTitle": "Book therapy session",
-    "introCallDescription": "Book a first therapy session to get started.",
-    "bookIntroCall": "Book",
+    "introCallTitle": "Book a 15-Minute Intro Call",
+    "introCallDescription": "Book a 15-minute intro call to get started.",
+    "bookIntroCall": "Book Intro Call",
     "browseTherapistsTitle": "Browse Psychologists",
     "browseTherapistsDescription": "If you prefer to browse psychologists on your own, click here.",
     "browseTherapistsButton": "Browse Psychologists",
-    "scheduleIntroCall": "Schedule Your First Call",
+    "scheduleIntroCall": "Schedule Your Introductory Call",
     "goBackButton": "Go Back",
     "bookAppointment": "Book Appointment",
     "morning": "Morning",
@@ -422,8 +429,9 @@
     "discountLoading": "Applying discount code...",
     "calculatingPrice": "Calculating price...",
     "cancelReservation": "Cancel reservation",
-    "cancellationPolicy": "You will receive a 100% refund if you cancel more than 24 hours before the appointment starts."
-    
+    "cancellationPolicy": "You will receive a 100% refund if you cancel more than 24 hours before the appointment starts.",
+    "yourPrivacyAndSecurity": "Your Privacy and Security",
+"privacyMessage": "All payments are processed securely through Stripe, and we comply with the highest standards of data protection."
   },
   "AvailabilityPage": {
     "timezoneNotice":  "You are viewing times in your browsers timezone: {timeZone}",
@@ -550,25 +558,23 @@
 },
 "IntroCheckoutTranslation": {
   "checkEmailToConfirm": "Check your email to confirm your booking.",
-  "actionRequired":"Action Required",
+  "actionRequired": "Action Required",
   "weHaveReservedNoCard": "We have reserved this appointment for you.",
   "goBack": "Go back",
   "minutes": "minutes",
-    "appointmentDetails": "Appointment Details",
-    "day": "Day",
-    "time": "Time",
-    "duration": "Duration",
+  "appointmentDetails": "Appointment Details",
+  "day": "Day",
+  "time": "Time",
+  "duration": "Duration",
   "cancellationTerms": "Your introductory appointment is completely free of charge.",
-  "cancellationNotice": "If you do not attend the appointment or fail to cancel at least 24 hours in advance, you will be charged $15 USD.",
-  "cancellationReason": "This policy helps ensure that our psychologists time is respected.",
-  "thankYou": "Thank you for your understanding.",
-  "weHaveReserved": "We have reserved this appointment slot for you. Please complete add your card details within the given time to confirm your reservation.",
+  "confirmationPolicy": "By confirming this appointment, you agree to show up or cancel at least 24 hours in advance. This policy helps us ensure that the psychologist’s time is respected and minimizes the likelihood of missed appointments. Thank you for your understanding and cooperation.",
+  "agreeToPolicy": "I agree to the cancellation policy.",
+  "agreeToPolicyError": "Please agree to the cancellation policy before proceeding.",
+  "appointmentBooked": "Your appointment has been successfully booked!",
   "minutesLeft": "minutes left",
-  "loadingCheckout": "Loading checkout...",
-  "cancelReservation":"Cancel reservation",
-  "bookAppointment": "Book appointment",
-  "loadingSetup":  "Loading checkout...",
-  "processing": "Processing..."
+  "cancelReservation": "Cancel reservation",
+  "bookAppointment": "Book Appointment",
+  "bookingAppointment": "Booking appointment..."
 },
   "AdminPage": {
     "clientOverview": "Client Overview",
@@ -978,7 +984,7 @@
     },
     "services": {
       "heading": "Services Provided",
-      "content": "The Psychologist agrees to provide online counseling services using the Daqil platform to clients referred by Daqil. As a starting point, the Psychologist will be compensated at a rate of $21 for a 30-minute session and $39 for a 60-minute session. For the 15-minute (free for the client) session, reimbursement is provided as a bonus of $25 if the client continues treatments for at least 3 sessions. Compensation will be wired to the designated bank account or PayPal provided to Daqil."
+      "content": "The Psychologist agrees to provide online counseling services using the Daqil platform to clients referred by Daqil. As a starting point, the Psychologist will be compensated at a rate of $21 for a 30-minute session and $39 for a 60-minute session. For the 15-minute (free for the client) session, reimbursement is provided as a bonus of $25 if the client proceeds to book a paid session. Compensation will be wired to the designated bank account or PayPal provided to Daqil."
     },
     "compliance": {
       "heading": "Compliance",

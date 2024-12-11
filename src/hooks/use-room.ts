@@ -2,6 +2,7 @@
 import { useState, useRef, useCallback, useEffect, useTransition } from "react";
 import _ from "lodash";
 import { markBothUserAsShowedUp } from "@/actions/videoSessions/markBothUserAsShowedUp";
+import { log } from "next-axiom";
 
 interface Credentials {
   appId: string;
@@ -164,102 +165,121 @@ export default function useRoom() {
       publisherOptions?: PublisherOptions
     ) => {
       if (!appId || !sessionId || !token) {
-        throw new Error("Check your credentials");
+        const error = new Error("Missing credentials");
+        log.error("Error joining video room", { error });
+        throw error;
       }
-      const VideoExpress = await import("@vonage/video-express");
+      try {
+        const VideoExpress = await import("@vonage/video-express");
 
-      // Create a self-video container inside the roomContainer
-      const selfVideoContainer = document.createElement("div");
-      const isMobile = window.innerWidth <= 768;
+        // Create a self-video container inside the roomContainer
+        const selfVideoContainer = document.createElement("div");
+        const isMobile = window.innerWidth <= 768;
 
-      if (isMobile) {
-        // Mobile view adjustments: smaller video and centered within the roomContainer
-        selfVideoContainer.style.position = "absolute"; // Change to absolute for positioning relative to roomContainer
-        selfVideoContainer.style.bottom = "90px";
-        selfVideoContainer.style.right = "0";
-        selfVideoContainer.style.width = "133px"; // Smaller size for mobile
-        selfVideoContainer.style.height = "105px";
-      } else {
-        // Desktop view adjustments: bottom-right corner within the roomContainer
-        selfVideoContainer.style.position = "absolute"; // Change to absolute for positioning relative to roomContainer
-        selfVideoContainer.style.bottom = "0";
-        selfVideoContainer.style.right = "0";
-        selfVideoContainer.style.width = "207px"; // Adjust size for desktop
-        selfVideoContainer.style.height = "168px";
-      }
+        if (isMobile) {
+          // Mobile view adjustments: smaller video and centered within the roomContainer
+          selfVideoContainer.style.position = "absolute"; // Change to absolute for positioning relative to roomContainer
+          selfVideoContainer.style.bottom = "90px";
+          selfVideoContainer.style.right = "0";
+          selfVideoContainer.style.width = "133px"; // Smaller size for mobile
+          selfVideoContainer.style.height = "105px";
+        } else {
+          // Desktop view adjustments: bottom-right corner within the roomContainer
+          selfVideoContainer.style.position = "absolute"; // Change to absolute for positioning relative to roomContainer
+          selfVideoContainer.style.bottom = "0";
+          selfVideoContainer.style.right = "0";
+          selfVideoContainer.style.width = "207px"; // Adjust size for desktop
+          selfVideoContainer.style.height = "168px";
+        }
 
-      selfVideoContainer.style.border = "2px solid gray";
-      selfVideoContainer.style.zIndex = "100";
+        selfVideoContainer.style.border = "2px solid gray";
+        selfVideoContainer.style.zIndex = "100";
 
-      selfVideoContainer.classList.add("self-video-container");
+        selfVideoContainer.classList.add("self-video-container");
 
-      // Append the selfVideoContainer to the roomContainer
-      roomContainer.appendChild(selfVideoContainer);
+        // Append the selfVideoContainer to the roomContainer
+        roomContainer.appendChild(selfVideoContainer);
 
-      roomRef.current = new VideoExpress.Room({
-        apiKey: appId,
-        sessionId: sessionId,
-        token: token,
-        roomContainer: "roomContainer", // This is the parent container
-        maxVideoParticipantsOnScreen: 2,
-        participantName: userName,
-        managedLayoutOptions: {
-          layoutMode: "grid",
-          cameraPublisherContainer: selfVideoContainer,
-        },
-      }) as any;
-
-      const publisherProperties = {
-        resolution: "1280x720",
-        fitMode: "cover",
-        insertMode: "replace",
-        width: "100%",
-        height: "100%",
-        publishAudio: true,
-        publishVideo: true,
-        insertDefaultUI: true,
-      };
-
-      startRoomListeners(appointmentId);
-
-      if (videoFilter && videoFilter.filterName && videoFilter.filterPayload) {
-        publisherOptionsRef.current = {
-          ...publisherOptions,
-          style: {
-            buttonDisplayMode: "off",
-            nameDisplayMode: "auto",
-            audioLevelDisplayMode: "off",
+        roomRef.current = new VideoExpress.Room({
+          apiKey: appId,
+          sessionId: sessionId,
+          token: token,
+          roomContainer: "roomContainer", // This is the parent container
+          maxVideoParticipantsOnScreen: 2,
+          participantName: userName,
+          managedLayoutOptions: {
+            layoutMode: "grid",
+            cameraPublisherContainer: selfVideoContainer,
           },
-          name: userName,
-          showControls: true,
-          videoFilter: parseVideoFilter(videoFilter),
-        };
-      } else {
-        publisherOptionsRef.current = {
-          ...publisherOptions,
-          ...publisherProperties,
-          style: {
-            buttonDisplayMode: "off",
-            nameDisplayMode: "auto",
-            audioLevelDisplayMode: "off",
-          },
-          name: userName,
-          showControls: true,
-        };
-      }
+        }) as any;
 
-      roomRef.current
-        .join({ publisherProperties: publisherOptionsRef.current })
-        .then(() => {
-          setConnected(true);
-          setCamera(roomRef.current!.camera);
-          setScreen(roomRef.current!.screen);
-          addLocalParticipant({ room: roomRef.current! });
-        })
-        .catch((error: any) => console.log(error));
+        const publisherProperties = {
+          resolution: "1280x720",
+          fitMode: "cover",
+          insertMode: "replace",
+          width: "100%",
+          height: "100%",
+          publishAudio: true,
+          publishVideo: true,
+          insertDefaultUI: true,
+        };
+
+        startRoomListeners(appointmentId);
+
+        if (
+          videoFilter &&
+          videoFilter.filterName &&
+          videoFilter.filterPayload
+        ) {
+          publisherOptionsRef.current = {
+            ...publisherOptions,
+            style: {
+              buttonDisplayMode: "off",
+              nameDisplayMode: "auto",
+              audioLevelDisplayMode: "off",
+            },
+            name: userName,
+            showControls: true,
+            videoFilter: parseVideoFilter(videoFilter),
+          };
+        } else {
+          publisherOptionsRef.current = {
+            ...publisherOptions,
+            ...publisherProperties,
+            style: {
+              buttonDisplayMode: "off",
+              nameDisplayMode: "auto",
+              audioLevelDisplayMode: "off",
+            },
+            name: userName,
+            showControls: true,
+          };
+        }
+
+        roomRef.current
+          .join({ publisherProperties: publisherOptionsRef.current })
+          .then(() => {
+            setConnected(true);
+            setCamera(roomRef.current!.camera);
+            setScreen(roomRef.current!.screen);
+            addLocalParticipant({ room: roomRef.current! });
+          })
+          .catch((error: any) => {
+            log.error("Error joining video room", { error, sessionId });
+            console.error("error", error);
+          });
+      } catch (error) {
+        log.error("Error joining video room", { error, sessionId });
+      }
     },
     [startRoomListeners]
   );
+
+  useEffect(() => {
+    if (connected && !roomRef.current) {
+      log.warn("Room is connected but roomRef is null", { connected });
+    }
+  }, [connected]);
 
   return {
     createCall,

@@ -5,6 +5,7 @@ import { getLangDir } from "rtl-detect";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { GoogleTagManager } from "@next/third-parties/google";
+/* import { AxiomWebVitals } from "next-axiom"; */
 
 import "@/app/globals.css";
 import TidioChat from "./tidio-chat";
@@ -40,6 +41,8 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale} dir={direction}>
+      {/*  <AxiomWebVitals /> */}
+
       {process.env.NODE_ENV === "production" && (
         <GoogleTagManager gtmId={GTM_ID} />
       )}
@@ -56,6 +59,7 @@ export default async function LocaleLayout({
         <Toaster />
 
         {children}
+
         {process.env.NODE_ENV === "production" && (
           <>
             <Analytics />

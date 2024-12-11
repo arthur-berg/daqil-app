@@ -1,6 +1,7 @@
 import createNextIntlPlugin from "next-intl/plugin";
 
 const withNextIntl = createNextIntlPlugin();
+import { withAxiom } from "next-axiom";
 
 const radixPackages = ["@radix-ui/react-icons"];
 
@@ -18,7 +19,10 @@ const nextConfig = {
   },
 };
 
-export default withNextIntl(nextConfig);
+const wrappedConfig = withAxiom(withNextIntl(nextConfig));
+
+
+export default wrappedConfig
 
 /* import autoCert from "anchor-pki/auto-cert/integrations/next";
 

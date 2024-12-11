@@ -46,19 +46,27 @@ export const acceptTherapist = async (therapistId: string) => {
   ]);
 
   try {
-    const user = await requireAuth([UserRole.CLIENT]);
+    const client = await requireAuth([UserRole.CLIENT]);
 
     const therapist = await User.findById(therapistId);
+
+    const clientId = client.id;
 
     if (!therapist) {
       return { error: ErrorMessages("therapistNotExist") };
     }
 
-    await User.findByIdAndUpdate(user.id, {
+    await User.findByIdAndUpdate(clientId, {
       $set: {
         "selectedTherapist.clientIntroTherapistSelectionStatus": "ACCEPTED",
       },
     });
+
+    if (!therapist.assignedClients?.includes(clientId)) {
+      await User.findByIdAndUpdate(therapistId, {
+        $addToSet: { assignedClients: clientId },
+      });
+    }
 
     revalidatePath("/book-appointment");
 

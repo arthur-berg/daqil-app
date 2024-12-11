@@ -254,8 +254,6 @@ async function handlePayAfterBooking(
   );
 }
 
-export const updateSelectedTherapist = async () => {};
-
 export const updateAppointments = async (
   appointment: any,
   appointmentDate: string
@@ -295,7 +293,7 @@ export const updateAppointments = async (
       { session }
     );
 
-    /*  const isIntroCall =
+    /* const isIntroCall =
       appointment.appointmentTypeId.toString() ===
       APPOINTMENT_TYPE_ID_INTRO_SESSION; */
 

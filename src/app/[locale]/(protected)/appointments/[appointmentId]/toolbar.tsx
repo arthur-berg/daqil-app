@@ -12,8 +12,8 @@ const ToolBar = ({
   cameraPublishing,
   t,
   appointmentId,
-}: /*  isIntroCall, */
-any) => {
+  isIntroCall,
+}: any) => {
   const [isPending, startTransition] = useTransition();
   const [hasAudio, setHasAudio] = useState(true);
   const [hasVideo, setHasVideo] = useState(true);
@@ -74,11 +74,11 @@ any) => {
 
   const endCall = () => {
     if (room) {
-      /* if (isIntroCall) {
+      if (isIntroCall) {
         startTransition(() => {
           revalidateBookAppointmentCache();
         });
-      } */
+      }
 
       room.leave();
       router.push(`/appointments/ended/${appointmentId}`);

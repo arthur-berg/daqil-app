@@ -14,8 +14,11 @@ const getDaqilLogoUrl = async (locale?: string) => {
 
 export const twoFactorTokenTemplate = async (token: string, t: any) => {
   const daqilLogoUrl = await getDaqilLogoUrl();
+  const locale = await getLocale();
+  const direction = locale === "ar" ? "rtl" : "ltr";
+
   return `
-  <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
+  <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;" dir="${direction}">
     <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
       <div style="text-align: center; margin-bottom: 20px;">
         <img src="${daqilLogoUrl}" alt="daqil" style="width: 50%; max-width: 100%; height: auto;" />
@@ -41,7 +44,7 @@ export const verificationEmailTemplate = async (
   const daqilLogoUrl = await getDaqilLogoUrl(locale);
   const encodedToken = encodeURIComponent(token);
   const confirmLink = `${process.env.NEXT_PUBLIC_APP_URL}/${locale}/auth/new-verification?token=${encodedToken}`;
-
+  const direction = locale === "ar" ? "rtl" : "ltr";
   const therapistMessage = isTherapist ? `<p>${t("therapistMessage")}</p>` : "";
 
   const therapistHumbly = isTherapist ? `<p>${t("therapistHumbly")}</p>` : "";
@@ -60,7 +63,7 @@ export const verificationEmailTemplate = async (
   const buttonColor = isTherapist ? "#28a745" : "#007bff";
 
   return `
-  <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
+  <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;" dir="${direction}">
     <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
       <div style="text-align: center; margin-bottom: 20px;">
         <img src="${daqilLogoUrl}" alt="daqil" style="width: 50%; max-width: 100%; height: auto;" />
@@ -92,9 +95,10 @@ export const passwordResetEmailTemplate = async (
   const daqilLogoUrl = await getDaqilLogoUrl(locale);
   const encodedToken = encodeURIComponent(token);
   const resetLink = `${process.env.NEXT_PUBLIC_APP_URL}/${locale}/auth/new-password?token=${encodedToken}`;
+  const direction = locale === "ar" ? "rtl" : "ltr";
 
   return `
-    <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
+    <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;" dir="${direction}">
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
         <div style="text-align: center; margin-bottom: 20px;">
           <img src="${daqilLogoUrl}" alt="daqil" style="width: 50%; max-width: 100%; height: auto;" />
@@ -154,8 +158,10 @@ export const appointmentCancellationTemplate = async (
 
   const formattedTimeZone = formatTimeZoneWithOffset(timeZone);
 
+  const direction = locale === "ar" ? "rtl" : "ltr";
+
   return `
-    <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
+    <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;" dir="${direction}">
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
         <div style="text-align: center; margin-bottom: 20px;">
           <img src="${daqilLogoUrl}" alt="daqil" style="width: 50%; max-width: 100%; height: auto;" />
@@ -259,8 +265,10 @@ export const invoicePaidTemplate = async (
 
   const formattedTimeZone = formatTimeZoneWithOffset(timeZone as string);
 
+  const direction = locale === "ar" ? "rtl" : "ltr";
+
   return `
-    <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
+    <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;" dir="${direction}">
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
         <div style="text-align: center; margin-bottom: 20px;">
           <img src="${daqilLogoUrl}" alt="daqil" style="width: 50%; max-width: 100%; height: auto;" />
@@ -382,8 +390,10 @@ export const paidAppointmentConfirmationTemplate = async (
        <p><strong>${t("timeLabel")}</strong> ${time} (${formattedTimeZone})</p>
      `;
 
+  const direction = locale === "ar" ? "rtl" : "ltr";
+
   return `
-    <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
+    <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;" dir="${direction}">
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
          <div style="text-align: center; margin-bottom: 20px;">
           <img src="${daqilLogoUrl}" alt="daqil" style="width: 50%; max-width: 100%; height: auto;" />
@@ -466,8 +476,10 @@ export const introBookingConfirmationTemplate = async (
        <p><strong>${t("timeLabel")}</strong> ${time} (${formattedTimeZone})</p>
      `;
 
+  const direction = locale === "ar" ? "rtl" : "ltr";
+
   return `
-    <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
+    <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;" dir="${direction}">
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
         <div style="text-align: center; margin-bottom: 20px;">
           <img src="${daqilLogoUrl}" alt="daqil" style="width: 50%; max-width: 100%; height: auto;" />
@@ -555,8 +567,10 @@ export const nonPaidAppointmentConfirmationTemplate = async (
     `
     : "";
 
+  const direction = locale === "ar" ? "rtl" : "ltr";
+
   return `
-    <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
+    <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;" dir="${direction}">
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
         <div style="text-align: center; margin-bottom: 20px;">
             <img src="${daqilLogoUrl}" alt="daqil" style="width: 50%; max-width: 100%; height: auto;" />
@@ -600,9 +614,10 @@ export const paymentReminderTemplate = async (
 ) => {
   const daqilLogoUrl = await getDaqilLogoUrl(locale);
   const paymentLink = `${process.env.NEXT_PUBLIC_APP_URL}/${locale}/invoices/${appointmentId}/checkout?appointmentId=${appointmentId}`;
+  const direction = locale === "ar" ? "rtl" : "ltr";
 
   return `
-    <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
+    <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;" dir="${direction}">
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
         <div style="text-align: center; margin-bottom: 20px;">
           <img src="${daqilLogoUrl}" alt="daqil" style="width: 50%; max-width: 100%; height: auto;" />
@@ -634,8 +649,10 @@ export const reminderEmailTemplate = async (
   const formattedTimeZone = formatTimeZoneWithOffset(
     appointmentDetails.clientTimeZone
   );
+  const direction = locale === "ar" ? "rtl" : "ltr";
+
   return `
-    <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
+    <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;" dir="${direction}">
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
         <div style="text-align: center; margin-bottom: 20px;">
           <img src="${daqilLogoUrl}" alt="daqil" style="width: 50%; max-width: 100%; height: auto;" />
@@ -670,8 +687,10 @@ export const clientNotPaidInTimeTemplate = async (
   locale: string
 ) => {
   const daqilLogoUrl = await getDaqilLogoUrl(locale);
+  const direction = locale === "ar" ? "rtl" : "ltr";
+
   return `
-    <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
+    <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;" dir="${direction}">
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
         <div style="text-align: center; margin-bottom: 20px;">
           <img src="${daqilLogoUrl}" alt="daqil" style="width: 50%; max-width: 100%; height: auto;" />
@@ -715,8 +734,10 @@ export const therapistNotPaidInTimeTemplate = async (
   locale: string
 ) => {
   const daqilLogoUrl = await getDaqilLogoUrl(locale);
+  const direction = locale === "ar" ? "rtl" : "ltr";
+
   return `
-    <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
+    <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;" dir="${direction}">
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
         <div style="text-align: center; margin-bottom: 20px;">
           <img src="${daqilLogoUrl}" alt="daqil" style="width: 50%; max-width: 100%; height: auto;" />
@@ -763,8 +784,10 @@ export const meetingLinkEmailTemplate = async ({
   locale: string;
 }) => {
   const daqilLogoUrl = await getDaqilLogoUrl(locale);
+  const direction = locale === "ar" ? "rtl" : "ltr";
+
   return `
-    <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
+    <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;" dir="${direction}">
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
         <div style="text-align: center; margin-bottom: 20px;">
           <img src="${daqilLogoUrl}" alt="daqil" style="width: 50%; max-width: 100%; height: auto;" />
@@ -795,10 +818,11 @@ export const introBookingConfirmationEmailTemplate = async (
   locale: any
 ) => {
   const daqilLogoUrl = await getDaqilLogoUrl(locale);
+  const direction = locale === "ar" ? "rtl" : "ltr";
 
   return {
     clientEmailHtml: `
-    <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;">
+    <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;" dir="${direction}">
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
         <div style="text-align: center; margin-bottom: 20px;">
           <img src="${daqilLogoUrl}" alt="daqil" style="width: 50%; max-width: 100%; height: auto;" />

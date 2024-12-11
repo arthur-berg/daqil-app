@@ -67,7 +67,9 @@ const BookingCalendar = ({
   });
   const router = useRouter();
   const { toast } = useToast();
-  const [appointmentType, setAppointmentType] = useState(appointmentTypes[0]);
+  const [appointmentType, setAppointmentType] = useState(
+    showOnlyIntroCalls ? appointmentTypes[0] : ""
+  );
   const [showAddToCalendarDialog, setShowAddToCalendarDialog] = useState(false);
   const [closestAvailableDate, setClosestAvailableDate] = useState<Date | null>(
     null

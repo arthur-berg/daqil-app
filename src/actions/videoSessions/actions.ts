@@ -12,6 +12,7 @@ import VideoSession from "@/models/VideoSession";
 import { getTranslations } from "next-intl/server";
 import connectToMongoDB from "@/lib/mongoose";
 import { getUserById } from "@/data/user";
+import { log } from "next-axiom";
 
 if (!process.env.VONAGE_APP_ID) {
   throw new Error("Missing config values for env params VONAGE_APP_ID ");
@@ -22,6 +23,10 @@ let sessionCreationInProgress = false;
 export const getSessionData = async (appointmentId: string) => {
   if (sessionCreationInProgress) {
     console.log("Session creation already in progress. Skipping request.");
+    log.warn("Session creation already in progress. Skipping request.", {
+      appointmentId,
+    });
+
     return;
   }
 
@@ -40,13 +45,23 @@ export const getSessionData = async (appointmentId: string) => {
     const appointment = await Appointment.findById(appointmentId);
     if (!appointment) {
       sessionCreationInProgress = false;
+      log.warn("Appointment not found", { appointmentId });
+
       return { error: ErrorMessages("appointmentNotFound") };
     }
 
     const client = await getUserById(appointment.participants[0].userId);
 
+    if (!client) {
+      log.warn("Participant not found in appointment", { appointmentId });
+      sessionCreationInProgress = false;
+      return { error: ErrorMessages("userNotFound") };
+    }
+
     if (appointment.status !== "confirmed") {
       sessionCreationInProgress = false;
+      log.warn("Appointment is not confirmed", { appointmentId });
+
       return { error: ErrorMessages("appointmentNotConfirmed") };
     }
 
@@ -66,68 +81,9 @@ export const getSessionData = async (appointmentId: string) => {
       };
     } */
 
-    let updatePayload: Record<string, unknown> = {};
-    const updateOptions: Record<string, unknown> = { new: true };
-
-    /* const isIntroCall =
+    const isIntroCall =
       appointment.appointmentTypeId.toString() ===
-      APPOINTMENT_TYPE_ID_INTRO_SESSION; */
-
-    /*  if (isPast(startDate) || startDate.getTime() === new Date().getTime()) {
-      if (isTherapist) {
-        if (!appointment.hostShowUp) {
-          updatePayload.hostShowUp = true;
-          await Appointment.findByIdAndUpdate(
-            appointmentId,
-            { $set: updatePayload },
-            updateOptions
-          );
-        } */
-
-    /* if (
-          !client.selectedTherapist?.introCallDone &&
-          isIntroCall &&
-          appointment.participants[0].showUp
-        ) {
-          await User.findByIdAndUpdate(client._id, {
-            $set: { "selectedTherapist.introCallDone": true },
-          });
-        } */
-    /*  }
-
-      if (isClient) {
-        const participant = appointment.participants.find(
-          (participant: any) =>
-            participant.userId.toString() === client._id.toString()
-        );
-
-        if (!participant) {
-          sessionCreationInProgress = false;
-          return { error: ErrorMessages("userNotFound") };
-        }
- */
-    /* if (
-          !client.selectedTherapist?.introCallDone &&
-          isIntroCall &&
-          appointment.hostShowUp
-        ) {
-          await User.findByIdAndUpdate(client._id, {
-            $set: { "selectedTherapist.introCallDone": true },
-          });
-        } */
-
-    /*   updateOptions.arrayFilters = [{ "elem.userId": client._id }];
-
-        if (!participant.showUp) {
-          updatePayload["participants.$[elem].showUp"] = true;
-          await Appointment.findByIdAndUpdate(
-            appointmentId,
-            { $set: updatePayload },
-            updateOptions
-          );
-        }
-      }
-    } */
+      APPOINTMENT_TYPE_ID_INTRO_SESSION;
 
     let session = await VideoSession.findOne({ appointmentId });
     const videoRecordingStarted = !!appointment.journalNoteId;
@@ -145,6 +101,8 @@ export const getSessionData = async (appointmentId: string) => {
 
       if (!userAuthorized) {
         sessionCreationInProgress = false;
+        log.error("User is not authorized", { userId: user?.id });
+
         throw new Error("User is not authorized");
       }
 
@@ -157,7 +115,7 @@ export const getSessionData = async (appointmentId: string) => {
         token: data.token,
         appId: data.appId,
         roomName: session.roomName,
-        /*    isIntroCall, */
+        isIntroCall,
         appointmentData: {
           id: appointment._id.toString(),
           endDate: appointment.endDate,
@@ -185,7 +143,7 @@ export const getSessionData = async (appointmentId: string) => {
         sessionId: data?.sessionId,
         token: data?.token,
         appId: data?.appId,
-        /*    isIntroCall, */
+        isIntroCall,
         appointmentData: {
           id: appointment._id.toString(),
           endDate: appointment.endDate,
@@ -198,6 +156,11 @@ export const getSessionData = async (appointmentId: string) => {
     }
   } catch (error: any) {
     sessionCreationInProgress = false;
+    log.error("Error getting session data", {
+      error: error.message,
+      stack: error.stack,
+    });
+
     throw new Error("Error getting credentials: " + error.message);
   }
 };
