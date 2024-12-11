@@ -65,15 +65,20 @@ const TherapistInvoicesPage = async () => {
           percentage = 0; // Intro sessions or other cases won't contribute to earnings here
         }
 
-        groupedInvoices[monthKey].push({
-          id: appt._id,
-          date: format(date, "yyyy-MM-dd"),
-          clientName: getFullName(
-            appt.participants[0]?.userId?.firstName,
-            appt.participants[0]?.userId?.lastName
-          ),
-          earnings: (appt.price || 0) * percentage,
-        });
+        if (
+          appt.appointmentTypeId.toString() !==
+          APPOINTMENT_TYPE_ID_INTRO_SESSION
+        ) {
+          groupedInvoices[monthKey].push({
+            id: appt._id,
+            date: format(date, "yyyy-MM-dd"),
+            clientName: getFullName(
+              appt.participants[0]?.userId?.firstName,
+              appt.participants[0]?.userId?.lastName
+            ),
+            earnings: (appt.price || 0) * percentage,
+          });
+        }
 
         // Track clients with intro and paid appointments
         if (
