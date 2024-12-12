@@ -37,7 +37,7 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
 
     const appointment = await Appointment.findById(appointmentId).populate({
       path: "participants.userId",
-      select: "stripeCustomerId stripePaymentMethodId email",
+      select: "email",
     });
     if (!appointment) {
       return NextResponse.json(
@@ -56,6 +56,7 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
     const isIntroAppointment =
       appointment.appointmentTypeId.toString() ===
       APPOINTMENT_TYPE_ID_INTRO_SESSION;
+
     if (isIntroAppointment && statusUpdate.status === "completed") {
       const clientEmail = participants[0]?.userId?.email;
       await addTagToMailchimpUser(clientEmail, "intro-call-finished");
@@ -133,7 +134,7 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
   } catch (error) {
     console.error("Error updating appointment status:", error);
     return NextResponse.json(
-      { error: "Failed to update status" },
+      { error: `Failed to update status. Error: ${error}` },
       { status: 500 }
     );
   }
