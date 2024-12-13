@@ -445,7 +445,8 @@ export const introBookingConfirmationTemplate = async (
   isTherapist: boolean,
   t: any,
   locale: string,
-  isAdmin?: boolean
+  isAdmin?: boolean,
+  introAnswers?: any
 ) => {
   const daqilLogoUrl = await getDaqilLogoUrl(locale);
   const subject = isTherapist ? t("therapistSubject") : t("clientSubject");
@@ -476,6 +477,27 @@ export const introBookingConfirmationTemplate = async (
        <p><strong>${t("timeLabel")}</strong> ${time} (${formattedTimeZone})</p>
      `;
 
+  console.log("introAnswers", introAnswers);
+
+  const introAnswersHtml = introAnswers
+    ? `
+       <div style="margin-top: 20px;">
+         <p><strong>${t("introAnswersLabel")}</strong></p>
+         <ul>
+           ${Object.entries(introAnswers)
+             .map(
+               ([key, value]) => `
+                 <li><strong>${t(`${key}`)}:</strong> ${
+                 value || t("notProvided")
+               }</li>
+               `
+             )
+             .join("")}
+         </ul>
+       </div>
+     `
+    : "";
+
   const direction = locale === "ar" ? "rtl" : "ltr";
 
   return `
@@ -497,6 +519,7 @@ export const introBookingConfirmationTemplate = async (
           <p><strong>${t("durationLabel")}</strong> ${
     appointmentDetails.durationInMinutes
   } ${t("minutesLabel")}</p>
+  ${introAnswersHtml}
         </div>
         <div style="margin-top: 20px; font-size: 12px; color: #888888; text-align: center;">
           ${t("thankYouMessage")}

@@ -27,7 +27,7 @@ const IntroConfirmationWrapper = ({
   const [showQuestionsForm, setShowQuestionsForm] = useState(true); // Add state to toggle view
   const browserTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-  const handleFormCompletion = () => {
+  const handleFormCompletion = (answers: any) => {
     // Trigger the email sending process when form is completed
     setShowQuestionsForm(false);
     startTransition(async () => {
@@ -35,7 +35,8 @@ const IntroConfirmationWrapper = ({
         appointmentId,
         date,
         therapistId,
-        browserTimeZone
+        browserTimeZone,
+        answers
       );
       if (data?.error) {
         toast({ title: data.error, variant: "destructive" });
@@ -91,8 +92,7 @@ const IntroConfirmationWrapper = ({
 
   return (
     <div className="max-w-xl mx-auto bg-white shadow-md rounded-lg p-6 text-center">
-      {/* Emphasize Email Section */}
-      <>
+      {/*   <>
         <div className="flex flex-col items-center mb-6">
           <MdEmail className="text-blue-500 text-6xl animate-bounce mb-4" />
           <h1 className="text-4xl font-bold text-gray-800 mb-4">
@@ -131,8 +131,8 @@ const IntroConfirmationWrapper = ({
             {appointmentType.durationInMinutes} {t("minutes")}
           </p>
         </div>
-      </>
-      {/*  {showQuestionsForm ? (
+      </> */}
+      {showQuestionsForm ? (
         <>
           <IntroQuestionsForm onComplete={handleFormCompletion} />
           <div className="bg-gray-100 p-4 rounded-md mb-6">
@@ -194,7 +194,7 @@ const IntroConfirmationWrapper = ({
             </p>
           </div>
         </>
-      )} */}
+      )}
 
       {/* Appointment Details */}
 

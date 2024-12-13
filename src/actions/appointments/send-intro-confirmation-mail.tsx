@@ -6,6 +6,7 @@ import { UserRole } from "@/generalTypes";
 import { requireAuth } from "@/lib/auth";
 import { sendIntroBookingConfirmationMailWithLink } from "@/lib/mail";
 import connectToMongoDB from "@/lib/mongoose";
+import User from "@/models/User";
 import { getFullName } from "@/utils/formatName";
 import { formatInTimeZone } from "date-fns-tz";
 import { getLocale, getTranslations } from "next-intl/server";
@@ -14,7 +15,8 @@ export const sendIntroConfirmationMail = async (
   appointmentId: string,
   startDate: Date,
   therapistId: string,
-  browserTimeZone: string
+  browserTimeZone: string,
+  answers: any
 ) => {
   await connectToMongoDB();
   const [SuccessMessages, ErrorMessages] = await Promise.all([
@@ -56,6 +58,15 @@ export const sendIntroConfirmationMail = async (
       durationInMinutes: appointmentType.durationInMinutes,
       clientTimeZone: client.settings.timeZone,
     };
+
+    await User.findByIdAndUpdate(user.id, {
+      introAnswers: {
+        question1: answers.question1,
+        question2: answers.question2,
+        question3: answers.question3,
+        question4: answers.question4,
+      },
+    });
 
     await sendIntroBookingConfirmationMailWithLink(
       therapist.email,

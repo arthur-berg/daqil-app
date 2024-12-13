@@ -14,6 +14,7 @@ const getStructuredParticipantData = (appointment: any) => {
       email: participant.userId?.email,
       userId: participant.userId?._id.toString(),
       showUp: participant.showUp,
+      introAnswers: participant.userId?.introAnswers,
     })
   );
 
@@ -50,7 +51,7 @@ export const getSerializedAppointments = async (appointments: any[]) => {
     .lean()
     .populate({
       path: "participants.userId",
-      select: "firstName lastName email",
+      select: "firstName lastName email introAnswers",
     })
     .populate("hostUserId", "firstName lastName email")
     .populate("appointmentTypeId", "price title");

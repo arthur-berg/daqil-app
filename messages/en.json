@@ -83,6 +83,12 @@
     "cancelButton": "Cancel"
   },
   "AppointmentList": {
+    "notProvided": "Not provided",
+    "introQuestions": "Intro Questions",
+    "question1": "What is the reason for booking a call with us?",
+    "question2": "Please describe your symptoms.",
+    "question3": "How long have you been experiencing these symptoms?",
+    "question4": "Is there anything else you would like to share with your psychologist before the call?",
     "timeLeftUntilStart": "Time left until appointment start",
     "timezoneNotice":  "You are viewing times in your browsers timezone: {timeZone}",
     "meetingNotPaid": "Appointment is waiting for payment",
@@ -1073,6 +1079,8 @@
     },
   
   "BookingConfirmedIntroCall": {
+    "introAnswersLabel": "Intro Questions",
+    "notProvided": "Not provided",
     "therapistSubject": "New Appointment Booking: Introductory Call",
     "clientSubject": "Appointment Confirmation",
     "therapistLabel": "Psychologist:",
@@ -1081,7 +1089,11 @@
     "timeLabel": "Time:",
     "durationLabel": "Duration:",
     "minutesLabel": "minutes",
-    "thankYouMessage": "Thank you for using DAQIL."
+    "thankYouMessage": "Thank you for using DAQIL.",
+    "question1": "What is the reason for booking a call with us?",
+    "question2": "Please describe your symptoms.",
+    "question3": "How long have you been experiencing these symptoms?",
+    "question4": "Is there anything else you would like to share with your psychologist before the call?"
   },
   "AppointmentTypes": {
     "6692b4919a6b12347d0afac4": "Therapy session - 30 minutes",

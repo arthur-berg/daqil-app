@@ -7,7 +7,11 @@ import { Textarea } from "@/components/ui/textarea"; // Shadcn Textarea componen
 import { cn } from "@/lib/utils"; // Utility for conditional classes (if needed)
 import { useTranslations } from "next-intl";
 
-const IntroQuestionsForm = ({ onComplete }: { onComplete: () => void }) => {
+const IntroQuestionsForm = ({
+  onComplete,
+}: {
+  onComplete: (answers: any) => void;
+}) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [answers, setAnswers] = useState<string[]>(Array(4).fill(""));
   const [progress, setProgress] = useState(0);
@@ -27,7 +31,12 @@ const IntroQuestionsForm = ({ onComplete }: { onComplete: () => void }) => {
       setProgress(((currentSlide + 1) / 4) * 100);
       setTouched(false);
     } else {
-      onComplete();
+      onComplete({
+        question1: answers[0],
+        question2: answers[1],
+        question3: answers[2],
+        question4: answers[3],
+      });
     }
   };
 

@@ -28,6 +28,7 @@ import CancelAppontmentForm from "./cancel-appointment-form";
 import { useUserName } from "@/hooks/use-user-name";
 import { formatTimeZoneWithOffset } from "@/utils/timeZoneUtils";
 import Countdown from "react-countdown";
+import { APPOINTMENT_TYPE_ID_INTRO_SESSION } from "@/contants/config";
 
 const AppointmentList = ({ appointments }: { appointments: any }) => {
   const [filterType, setFilterType] = useState("upcoming");
@@ -544,6 +545,38 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
                                           )}
                                         </ul>
                                       </div>
+
+                                      {/* Intro Questions and Answers */}
+                                      {console.log(
+                                        appointment.participants[0].introAnswers
+                                      )}
+                                      {/* {console.log(
+                                        "isIntro",
+                                        appointment.appointmentTypeId._id.toString() ===
+                                          APPOINTMENT_TYPE_ID_INTRO_SESSION
+                                      )} */}
+                                      {appointment.appointmentTypeId._id.toString() ===
+                                        APPOINTMENT_TYPE_ID_INTRO_SESSION &&
+                                        appointment.participants[0]
+                                          .introAnswers && (
+                                          <div className="mt-4">
+                                            <h4 className="text-md font-semibold">
+                                              {t("introQuestions")}
+                                            </h4>
+                                            <ul className="text-sm text-gray-500 list-disc list-inside mt-2">
+                                              {Object.entries(
+                                                appointment.participants[0]
+                                                  .introAnswers
+                                              ).map(([key, value]: any) => (
+                                                <li key={key}>
+                                                  <strong>{t(key)}:</strong>{" "}
+                                                  {value || t("notProvided")}
+                                                </li>
+                                              ))}
+                                            </ul>
+                                          </div>
+                                        )}
+
                                       <div className="mt-6 flex justify-center">
                                         {appointment.status === "confirmed" &&
                                           !isPending && (

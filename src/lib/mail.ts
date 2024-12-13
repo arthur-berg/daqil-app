@@ -365,7 +365,8 @@ export const sendIntroBookingConfirmationMail = async (
     therapistTimeZone: string;
   },
   t: any,
-  locale: string
+  locale: string,
+  introAnswers?: any
 ) => {
   const therapistMessage = {
     from_email: "no-reply@daqilhealth.com",
@@ -374,7 +375,9 @@ export const sendIntroBookingConfirmationMail = async (
       appointmentDetails,
       true,
       t,
-      locale
+      locale,
+      false,
+      introAnswers
     ),
     to: [
       {
