@@ -173,12 +173,11 @@ export const addTagToMailchimpUser = async (email: string, tag: string) => {
         ],
       }
     );
-
     console.log(`Tag "${tag}" added to Mailchimp user: ${email}`);
     return { success: `Tag "${tag}" added successfully` };
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error adding tag to Mailchimp user:", error);
-    return { error: "Failed to add tag to Mailchimp user" };
+    return { error: `Failed to add tag "${tag}" to Mailchimp user: ${email}` };
   }
 };
 

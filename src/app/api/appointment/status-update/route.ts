@@ -59,7 +59,14 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
 
     if (isIntroAppointment && statusUpdate.status === "completed") {
       const clientEmail = participants[0]?.userId?.email;
-      await addTagToMailchimpUser(clientEmail, "intro-call-finished");
+      try {
+        await addTagToMailchimpUser(clientEmail, "intro-call-finished");
+      } catch (mailchimpError) {
+        console.error(
+          `Failed to add Mailchimp tag for email ${clientEmail}:`,
+          mailchimpError
+        );
+      }
     }
 
     /*  if (statusUpdate.cancellationReason === "no-show-host") {
