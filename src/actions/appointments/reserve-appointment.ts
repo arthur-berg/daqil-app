@@ -84,6 +84,11 @@ export const reserveAppointment = async (
 
   let transactionCommitted = false;
 
+  const isIntroCall =
+    appointmentType._id.toString() === APPOINTMENT_TYPE_ID_INTRO_SESSION;
+
+  const reservationTime = isIntroCall ? 30 : 15;
+
   const session = await mongoose.startSession();
   session.startTransaction();
 
@@ -98,7 +103,7 @@ export const reserveAppointment = async (
       payment: {
         method: "payBeforeBooking",
         status: "pending",
-        paymentExpiryDate: new Date(Date.now() + 15 * 60000),
+        paymentExpiryDate: new Date(Date.now() + reservationTime * 60000),
       },
       status: "temporarily-reserved",
       price: appointmentType.price,
@@ -113,9 +118,6 @@ export const reserveAppointment = async (
       "UTC",
       "yyyy-MM-dd"
     );
-
-    const isIntroCall =
-      appointmentType._id.toString() === APPOINTMENT_TYPE_ID_INTRO_SESSION;
 
     // Update the user's appointments
     await updateAppointments(
@@ -152,7 +154,7 @@ export const reserveAppointment = async (
         client.email as string,
         "has-reached-intro-checkout"
       );
-      /* const locale = await getLocale();
+      const locale = await getLocale();
 
       const clientTimeZone = client.settings?.timeZone || "UTC";
       const therapistTimeZone = therapist.settings.timeZone || "UTC";
@@ -201,7 +203,7 @@ export const reserveAppointment = async (
         client.email,
         appointmentDetails,
         locale
-      ); */
+      );
     }
 
     await schedulePayBeforePaymentExpiredStatusUpdateJobs(
