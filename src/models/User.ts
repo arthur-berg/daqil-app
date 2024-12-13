@@ -257,6 +257,24 @@ const userSchema = new Schema(
         type: Boolean,
       },
     },
+    introAnswers: {
+      question1: {
+        type: String,
+        default: false,
+      },
+      question2: {
+        type: String,
+        default: false,
+      },
+      question3: {
+        type: String,
+        default: false,
+      },
+      question4: {
+        type: String,
+        default: false,
+      },
+    },
     assignedClients: [
       {
         type: Schema.Types.ObjectId,

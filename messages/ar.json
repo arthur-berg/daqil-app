@@ -129,6 +129,12 @@
   "goToAppointments": "اذهب إلى المواعيد"
 },
   "AppointmentList": {
+     "notProvided": "لم يتم تقديمها",
+  "introQuestions": "أسئلة تمهيدية",
+    "question1": "ما هو سبب حجز مكالمة معنا؟",
+  "question2": "يرجى وصف الأعراض التي تشعر بها.",
+  "question3": "منذ متى وأنت تعاني من هذه الأعراض؟",
+  "question4": "هل هناك أي شيء آخر ترغب في مشاركته مع الأخصائي النفسي قبل المكالمة؟",
     "timeLeftUntilStart": "الوقت المتبقي حتى بدء الموعد",
     "timezoneNotice": "أنت تشاهد الأوقات في المنطقة الزمنية لمتصفحك: {timeZone}",
     "meetingNotPaid": "الموعد في انتظار الدفع",
@@ -1059,6 +1065,8 @@
     }
   },
   "BookingConfirmedIntroCall": {
+    "introAnswersLabel": "أسئلة تمهيدية",
+    "notProvided": "لم يتم تقديمها",
     "therapistSubject": "حجز موعد جديد: مكالمة تعريفية",
     "clientSubject": "تأكيد الموعد",
     "therapistLabel": "الأخصائي النفسي:",
@@ -1067,7 +1075,11 @@
     "timeLabel": "الوقت:",
     "durationLabel": "المدة:",
     "minutesLabel": "دقائق",
-    "thankYouMessage": "شكرًا لاستخدامك زاكينا"
+    "thankYouMessage": "شكرًا لاستخدامك زاكينا",
+    "question1": "ما هو سبب حجز مكالمة معنا؟",
+  "question2": "يرجى وصف الأعراض التي تشعر بها.",
+  "question3": "منذ متى وأنت تعاني من هذه الأعراض؟",
+  "question4": "هل هناك أي شيء آخر ترغب في مشاركته مع الأخصائي النفسي قبل المكالمة؟"
   },
   "AppointmentTypes": {
     "6692b4919a6b12347d0afac4": "جلسة علاجية - 30 دقيقة",

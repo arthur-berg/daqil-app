@@ -90,6 +90,8 @@ const updateAppointments = async (
     );
 
     await session.commitTransaction();
+
+    return client;
   } catch (error) {
     await session.abortTransaction();
     throw error;
@@ -205,7 +207,11 @@ export async function confirmIntroBooking(appointmentId: string) {
     });
 
     // Add a tag to the client's profile in Mailchimp
-    await addTagToMailchimpUser(clientEmail, "intro-call-booked");
+    try {
+      await addTagToMailchimpUser(clientEmail, "intro-call-booked");
+    } catch {
+      console.error("Failed to add tag to Mailchimp user.");
+    }
 
     // Send the intro booking confirmation email with the confirmation link
     await sendIntroBookingConfirmationMail(
@@ -213,7 +219,8 @@ export async function confirmIntroBooking(appointmentId: string) {
       clientEmail,
       appointmentDetails,
       t,
-      locale
+      locale,
+      client.introAnswers
     );
 
     // Revalidate paths to update the cache
