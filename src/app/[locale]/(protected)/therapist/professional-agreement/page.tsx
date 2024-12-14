@@ -26,8 +26,7 @@ const ProfessionalAgreementPage = () => {
       startTransition(async () => {
         const data = await markProfessionalAgreementAsDone();
         responseToast(data);
-        router.push("/therapist/settings");
-        window.location.reload();
+        window.location.assign(`/therapist/settings`);
       });
     }
   };

@@ -42,7 +42,7 @@ export default function useRoom() {
   const addParticipants = ({ participant, appointmentId }: any) => {
     startTransition(async () => {
       try {
-        await markBothUserAsShowedUp(appointmentId);
+        markBothUserAsShowedUp(appointmentId);
       } catch (error) {
         console.error("Error marking user as showed up:", error);
       }

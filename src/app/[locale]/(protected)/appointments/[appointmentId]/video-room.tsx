@@ -16,9 +16,11 @@ import Image from "next/image";
 import VideoSessionCountdown from "@/app/[locale]/(protected)/appointments/[appointmentId]/video-session-countdown";
 import { isBefore, isPast } from "date-fns";
 import { markUserAsShowedUp } from "@/actions/videoSessions/markUserAsShowedUp";
+import { MdErrorOutline } from "react-icons/md";
 
 const VideoRoom = ({
   sessionData,
+  disablePreview,
 }: {
   sessionData:
     | {
@@ -35,6 +37,7 @@ const VideoRoom = ({
         };
       }
     | { error: string };
+  disablePreview: boolean;
 }) => {
   const {
     createCall,
@@ -65,10 +68,13 @@ const VideoRoom = ({
 
   const userName = fullName;
 
-  const [isPreviewing, setIsPreviewing] = useState(true);
+  const [isPreviewing, setIsPreviewing] = useState(
+    disablePreview ? false : true
+  );
   const [hasAudio, setHasAudio] = useState(true);
   const [hasVideo, setHasVideo] = useState(true);
   const [isLandscape, setIsLandscape] = useState(false);
+  const [isDisconnected, setDisconnected] = useState(false);
 
   const handleJoinCall = () => {
     setIsPreviewing(false);
@@ -81,7 +87,11 @@ const VideoRoom = ({
         appointmentStartDate.getTime() === new Date().getTime()
       ) {
         startTransition(async () => {
-          await markUserAsShowedUp(sessionData.appointmentData.id);
+          try {
+            markUserAsShowedUp(sessionData.appointmentData.id);
+          } catch (error) {
+            console.error("Error marking user as showed up:", error);
+          }
         });
       }
     }
@@ -226,6 +236,8 @@ const VideoRoom = ({
         if (selfVideoContainer) {
           selfVideoContainer.remove();
         }
+
+        setDisconnected(true);
         room.leave();
       }
     };
@@ -347,26 +359,49 @@ const VideoRoom = ({
           {participants.length === 0 && (
             <div className="absolute inset-0 flex justify-center items-center text-white text-lg w-full h-full">
               <div className="flex flex-col items-center mb-[90px] px-4 text-center">
-                <Image
-                  src={logoSrc}
-                  alt="daqil-logo"
-                  width={300}
-                  height={200}
-                  className="mb-4"
-                />
-                {meetingHasNotStarted && (
-                  <VideoSessionCountdown
-                    appointmentStartDate={startDate}
-                    appointmentId={sessionData.appointmentData.id}
-                  />
-                )}
+                {networkStatus === "disconnected" || isDisconnected ? (
+                  <div className="flex flex-col items-center justify-center gap-4 p-6 bg-red-100 rounded-lg shadow-md text-red-700">
+                    <MdErrorOutline size={48} className="text-red-600" />
+                    <h2 className="text-xl font-bold">
+                      {t("disconnected.title")}
+                    </h2>
+                    <p className="text-center">
+                      {t("disconnected.description")}
+                    </p>
 
-                {user?.role === "CLIENT" ? (
-                  t("waitingForPsychologist")
+                    <Button
+                      className="bg-red-600 text-white hover:bg-red-700 z-50"
+                      onClick={() => {
+                        window.location.assign(
+                          `/appointments/${sessionData.appointmentData.id}?disablePreview=true`
+                        );
+                      }}
+                    >
+                      {t("disconnected.reloadButton")}
+                    </Button>
+                  </div>
                 ) : (
                   <>
-                    <p>{t("waitingForClient")}</p>
-                    {/* <div className="mt-4 text-sm text-gray-300">
+                    <Image
+                      src={logoSrc}
+                      alt="daqil-logo"
+                      width={300}
+                      height={200}
+                      className="mb-4"
+                    />
+                    {meetingHasNotStarted && (
+                      <VideoSessionCountdown
+                        appointmentStartDate={startDate}
+                        appointmentId={sessionData.appointmentData.id}
+                      />
+                    )}
+
+                    {user?.role === "CLIENT" ? (
+                      t("waitingForPsychologist")
+                    ) : (
+                      <>
+                        <p>{t("waitingForClient")}</p>
+                        {/* <div className="mt-4 text-sm text-gray-300">
                       <p>{t("noShowMessage")}</p>
                       <p>
                         <strong>{t("clientName")}:</strong>{" "}
@@ -377,6 +412,8 @@ const VideoRoom = ({
                         {sessionData.appointmentData.clientPhoneNumber}
                       </p>
                     </div> */}
+                      </>
+                    )}
                   </>
                 )}
               </div>
