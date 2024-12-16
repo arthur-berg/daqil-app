@@ -82,7 +82,7 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
   } catch (error) {
     console.error("Error sending SMS reminder:", error);
     return NextResponse.json(
-      { error: "Failed to send SMS reminder" },
+      { error: `Failed to send SMS reminder, error: ${error}` },
       { status: 500 }
     );
   }
