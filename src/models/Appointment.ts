@@ -118,6 +118,11 @@ const appointmentSchema = new Schema(
         return this.status === "canceled";
       },
     },
+    customCancellationUserRole: {
+      type: String,
+      enum: ["ADMIN", "CLIENT", "THERAPIST"],
+      default: false,
+    },
     customCancellationReason: {
       type: String,
       required: function (this: any) {

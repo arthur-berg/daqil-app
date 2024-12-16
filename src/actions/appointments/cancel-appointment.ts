@@ -44,7 +44,7 @@ export const cancelAppointment = async (
       UserRole.CLIENT,
     ]);
 
-    const { isTherapist, isClient } = await getCurrentRole();
+    const { isTherapist, isClient, isAdmin } = await getCurrentRole();
 
     const appointment = await Appointment.findById(appointmentId)
       .populate({
@@ -136,6 +136,11 @@ export const cancelAppointment = async (
       status: "canceled",
       cancellationReason: "custom",
       customCancellationReason: reason,
+      customCancellationUserRole: isTherapist
+        ? UserRole.THERAPIST
+        : isAdmin
+        ? UserRole.ADMIN
+        : UserRole.CLIENT,
     });
 
     const client = appointment.participants[0].userId;
