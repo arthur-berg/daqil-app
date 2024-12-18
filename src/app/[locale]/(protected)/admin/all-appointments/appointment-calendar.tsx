@@ -99,6 +99,7 @@ const AppointmentCalendar = () => {
               <TableHead>Client Email</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Cancellation Reason</TableHead>
+              <TableHead>Cancellation User Role</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -139,6 +140,12 @@ const AppointmentCalendar = () => {
                       ? appointment.cancellationReason === "custom"
                         ? appointment.customCancellationReason || "N/A"
                         : appointment.cancellationReason || "N/A"
+                      : "N/A"}
+                  </TableCell>
+                  <TableCell>
+                    {appointment.status === "canceled" &&
+                    appointment.cancellationReason === "custom"
+                      ? appointment.customCancellationUserRole
                       : "N/A"}
                   </TableCell>
                 </TableRow>

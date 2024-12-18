@@ -328,6 +328,11 @@ const userSchema = new Schema(
         type: String,
         required: false,
       },
+      languages: [
+        {
+          type: String,
+        },
+      ],
       hiddenProfile: {
         type: Boolean,
         required: false,

@@ -418,7 +418,8 @@ export const sendIntroBookingConfirmationMail = async (
         true,
         t,
         locale,
-        true
+        true,
+        introAnswers
       ),
       to: [
         {

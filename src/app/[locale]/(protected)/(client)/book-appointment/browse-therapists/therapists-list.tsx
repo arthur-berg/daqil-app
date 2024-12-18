@@ -12,22 +12,34 @@ import { useUserName } from "@/hooks/use-user-name";
 const TherapistsList = ({ therapistsJson }: { therapistsJson: any }) => {
   const therapists = JSON.parse(therapistsJson);
   const [selectedSex, setSelectedSex] = useState<any>(null);
+  const [selectedLanguage, setSelectedLanguage] = useState<string | null>(
+    "Both"
+  );
   const { getFullName } = useUserName();
   const locale = useLocale();
   const t = useTranslations("BookAppointmentPage");
   const maxDescriptionLength = 200;
 
-  const filteredTherapists = selectedSex
-    ? therapists?.filter(
-        (therapist: any) => therapist.personalInfo?.sex === selectedSex
-      )
-    : therapists;
+  const filteredTherapists = therapists?.filter((therapist: any) => {
+    const matchesSex =
+      selectedSex === null || therapist.personalInfo?.sex === selectedSex;
+
+    const matchesLanguage =
+      !therapist.settings?.languages || // Show therapists with undefined or empty languages
+      selectedLanguage === "Both" ||
+      therapist.settings.languages.includes(
+        selectedLanguage === "English" ? "en" : "ar"
+      );
+
+    return matchesSex && matchesLanguage;
+  });
 
   return (
     <div>
       <div className="bg-gray-100 p-4 mb-6 rounded-md shadow-sm">
         <h2 className="text-lg font-bold mb-2">{t("filterBy")}</h2>
-        <div className="flex space-x-2">
+        <div className="flex space-x-2 mb-4">
+          {/* Sex Filter */}
           <Button
             variant={!selectedSex ? "default" : "outline"}
             onClick={() => setSelectedSex(null)}
@@ -51,9 +63,30 @@ const TherapistsList = ({ therapistsJson }: { therapistsJson: any }) => {
             {t("female")}
           </Button>
         </div>
+        <div className="flex space-x-2">
+          {/* Language Filter */}
+          <Button
+            variant={selectedLanguage === "Both" ? "default" : "outline"}
+            onClick={() => setSelectedLanguage("Both")}
+          >
+            {t("bothLanguages")}
+          </Button>
+          <Button
+            variant={selectedLanguage === "English" ? "default" : "outline"}
+            onClick={() => setSelectedLanguage("English")}
+          >
+            {t("english")}
+          </Button>
+          <Button
+            variant={selectedLanguage === "Arabic" ? "default" : "outline"}
+            onClick={() => setSelectedLanguage("Arabic")}
+          >
+            {t("arabic")}
+          </Button>
+        </div>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredTherapists?.map(async (therapist: any) => (
+        {filteredTherapists?.map((therapist: any) => (
           <div
             key={therapist.email}
             className="bg-white shadow-lg rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col justify-between"

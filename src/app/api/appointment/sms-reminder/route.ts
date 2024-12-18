@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifySignatureAppRouter } from "@upstash/qstash/nextjs";
+import User from "@/models/User";
 import Appointment from "@/models/Appointment";
 import { sendSmsReminder } from "@/lib/twilio-sms";
 import { getTranslations } from "next-intl/server";
@@ -82,7 +83,7 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
   } catch (error) {
     console.error("Error sending SMS reminder:", error);
     return NextResponse.json(
-      { error: "Failed to send SMS reminder" },
+      { error: `Failed to send SMS reminder, error: ${error}` },
       { status: 500 }
     );
   }

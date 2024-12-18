@@ -308,6 +308,9 @@
     "noPaymentDetails": "No payment details have been saved yet"
   },
   "BookAppointmentPage": {
+    "bothLanguages": "Both languages",
+  "english": "English",
+  "arabic": "Arabic",
     "filterBy": "Filter by",
   "male": "Male",
   "female": "Female",
@@ -1114,7 +1117,12 @@
     "waitingForPsychologist": "Please wait. Your psychologist will be with you shortly.",
     "noShowMessage": "If the client doesn't show up, please feel free to give them a call.",
   "clientName": "Client name",
-  "phoneNumber": "Phone number"
+  "phoneNumber": "Phone number",
+  "disconnected": {
+    "title": "You have been disconnected",
+    "description": "It seems you've lost connection to the video call. Please try reloading.",
+    "reloadButton": "Reload Video Call"
+  }
   },
   "DateTimePicker": {
     "ok": "Ok"

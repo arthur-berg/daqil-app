@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifySignatureAppRouter } from "@upstash/qstash/nextjs";
+import User from "@/models/User";
 import Appointment from "@/models/Appointment";
 import connectToMongoDB from "@/lib/mongoose";
 import { APPOINTMENT_TYPE_ID_INTRO_SESSION } from "@/contants/config";
