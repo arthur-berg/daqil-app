@@ -121,7 +121,7 @@ const appointmentSchema = new Schema(
     customCancellationUserRole: {
       type: String,
       enum: ["ADMIN", "CLIENT", "THERAPIST"],
-      default: false,
+      required: false,
     },
     customCancellationReason: {
       type: String,
