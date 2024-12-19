@@ -5,7 +5,7 @@ import { useEffect } from "react";
 const TidioChat = () => {
   useEffect(() => {
     const script = document.createElement("script");
-    script.src = "//code.tidio.co/yktkainububxrzj0222vzob18lqkmzvt.js";
+    script.src = "//code.tidio.co/pqyecx2ixcf6zsjjjkoef9yjs8oxriuv.js";
     script.async = true;
     document.body.appendChild(script);
 
