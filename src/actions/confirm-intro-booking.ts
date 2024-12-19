@@ -22,6 +22,7 @@ import { requireAuth } from "@/lib/auth";
 import { UserRole } from "@/generalTypes";
 import { APPOINTMENT_TYPE_ID_INTRO_SESSION } from "@/contants/config";
 import mongoose from "mongoose";
+import { redirect } from "@/navigation";
 
 const updateAppointments = async (
   appointment: any,
@@ -233,6 +234,8 @@ export async function confirmIntroBooking(appointmentId: string) {
     // Schedule reminder jobs and status update jobs
     await scheduleReminderJobs(appointment, locale);
     await scheduleStatusUpdateJob(appointment);
+
+    /*  redirect(`/intro-booking-success?appointmentId=${appointmentId}`); */
 
     return { success: SuccessMessages("appointmentBookingConfirmed") };
   } catch (error) {
