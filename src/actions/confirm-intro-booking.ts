@@ -235,7 +235,7 @@ export async function confirmIntroBooking(appointmentId: string) {
     await scheduleReminderJobs(appointment, locale);
     await scheduleStatusUpdateJob(appointment);
 
-    redirect(`/intro-booking-success?appointmentId=${appointmentId}`);
+    /*  redirect(`/intro-booking-success?appointmentId=${appointmentId}`); */
 
     return { success: SuccessMessages("appointmentBookingConfirmed") };
   } catch (error) {
