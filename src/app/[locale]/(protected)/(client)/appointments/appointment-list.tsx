@@ -311,12 +311,6 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
     if (pendingPaymentAppointments.length === 0) return null;
 
     const countdownRenderer = ({ hours, minutes, seconds, completed }: any) => {
-      const totalMinutes = hours * 60 + minutes;
-
-      if (totalMinutes < 20 && !hasSetCountdown) {
-        setIsCountdownFinished(true);
-        setHasSetCountdown(true);
-      }
       if (completed) {
         return null;
       } else {

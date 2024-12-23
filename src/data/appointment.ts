@@ -21,6 +21,22 @@ const getStructuredParticipantData = (appointment: any) => {
   return transformedParticipants;
 };
 
+export const getAppointmentByIdWithTherapist = async (id: string) => {
+  try {
+    if (!User.schema) {
+      throw new Error("User schema is not registered.");
+    }
+    const appointment = await Appointment.findById(id).populate({
+      path: "hostUserId",
+      select: "firstName lastName",
+    });
+
+    return appointment;
+  } catch {
+    return null;
+  }
+};
+
 export const getAppointmentById = async (id: string) => {
   try {
     const appointment = await Appointment.findById(id);

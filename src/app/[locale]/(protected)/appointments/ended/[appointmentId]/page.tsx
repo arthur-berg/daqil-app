@@ -1,11 +1,17 @@
 import { Button } from "@/components/ui/button";
-import { getCurrentRole } from "@/lib/auth";
+import { getCurrentRole, getCurrentUser } from "@/lib/auth";
 import { Link } from "@/navigation";
 import connectToMongoDB from "@/lib/mongoose";
 import { getTranslations } from "next-intl/server";
-import { getAppointmentById } from "@/data/appointment";
+import { getAppointmentByIdWithTherapist } from "@/data/appointment";
 import { APPOINTMENT_TYPE_ID_INTRO_SESSION } from "@/contants/config";
-import AcceptTherapist from "../../../(client)/book-appointment/accept-therapist";
+import {
+  getClientById,
+  getClientByIdAppointments,
+  getUserById,
+} from "@/data/user";
+import PaymentCard from "@/app/[locale]/(protected)/appointments/ended/[appointmentId]/payment-card";
+import { getFullName } from "@/utils/formatName";
 
 const EndedAppointmentPage = async ({
   params,
@@ -17,7 +23,11 @@ const EndedAppointmentPage = async ({
 
   const t = await getTranslations("AppointmentEndedPage");
 
-  const appointment = await getAppointmentById(appointmentId);
+  console.log("appointmentId", appointmentId);
+
+  const appointment = await getAppointmentByIdWithTherapist(appointmentId);
+  console.log("appointment", appointment);
+
   if (!appointment) {
     return "No appointment found";
   }
@@ -27,8 +37,72 @@ const EndedAppointmentPage = async ({
     APPOINTMENT_TYPE_ID_INTRO_SESSION;
 
   const { isTherapist, isClient } = await getCurrentRole();
+  const user = await getCurrentUser();
 
-  const introAppointmentClientView = isIntroAppointment && isClient;
+  let client = null;
+
+  if (isClient && user) {
+    client = await getClientByIdAppointments(user.id);
+  }
+
+  const introAppointmentClientView =
+    isIntroAppointment &&
+    isClient &&
+    client?.selectedTherapist.clientIntroTherapistSelectionStatus === "PENDING";
+
+  const showIntroAppointmentClientViewWithPayment =
+    isIntroAppointment &&
+    isClient &&
+    client?.selectedTherapist.clientIntroTherapistSelectionStatus ===
+      "ACCEPTED";
+
+  if (showIntroAppointmentClientViewWithPayment) {
+    const allAppointments = client.appointments.flatMap(
+      (appointmentDay: any) => appointmentDay.bookedAppointments
+    );
+
+    const allAppointmentsToBePaid = allAppointments.filter(
+      (appointment: any) => {
+        return (
+          appointment.payment.status === "pending" &&
+          new Date(appointment.payment.paymentExpiryDate) > new Date()
+        );
+      }
+    );
+
+    const nextAppointmentToBePaid = allAppointmentsToBePaid
+      .filter(
+        (appointment: any) =>
+          appointment.payment.status === "pending" &&
+          new Date(appointment.payment.paymentExpiryDate) > new Date()
+      )
+      .sort(
+        (a: any, b: any) =>
+          new Date(a.payment.paymentExpiryDate).getTime() -
+          new Date(b.payment.paymentExpiryDate).getTime()
+      )[0];
+
+    if (!nextAppointmentToBePaid) return "No appointment found";
+    const nextAppointment = await getAppointmentByIdWithTherapist(
+      nextAppointmentToBePaid?._id
+    );
+
+    const therapistName = await getFullName(
+      nextAppointment.hostUserId.firstName,
+      nextAppointment.hostUserId.lastName
+    );
+    return (
+      <div className="w-full h-[calc(100vh-196px)] lg:h-[calc(100vh-154px)] flex flex-col items-center justify-center">
+        <PaymentCard
+          paymentDeadline={nextAppointment.payment.paymentExpiryDate}
+          startDate={nextAppointment.startDate}
+          therapistName={therapistName}
+          appointmentId={nextAppointment._id.toString()}
+          appointmentDuration={nextAppointment.durationInMinutes}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="w-full h-[calc(100vh-196px)] lg:h-[calc(100vh-154px)] flex flex-col items-center justify-center text-white">

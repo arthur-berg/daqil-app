@@ -129,6 +129,11 @@
   "goToAppointments": "اذهب إلى المواعيد"
 },
   "AppointmentList": {
+    "nextAppointmentInfo": "موعدك التالي مقرر يوم {day}، {date} في الساعة {time}.",
+    "completedIntro": "لقد أكملت جلستك التعريفية.",
+    "nextStepsMessage": "حان الوقت الآن لتأكيد ودفع رسوم موعدك التالي. واصل تقدمك مع أخصائيك النفسي.",
+    "paymentDeadline": "الموعد النهائي للدفع",
+    "congratulations": "تهانينا!",
     "timeLeftToPay": "الوقت المتبقي للدفع",
      "notProvided": "لم يتم تقديمها",
   "introQuestions": "أسئلة تمهيدية",
@@ -399,6 +404,7 @@
     "free": "مجاني"
   },
   "Checkout": {
+    "alreadyPaidFor": "لقد دفعت بالفعل مقابل هذا الموعد.",
     "confirmationExpired": "لقد انتهت صلاحية رابط التأكيد. يرجى حجز موعد جديد.",
     "processingPayment": "جارٍ معالجة الدفع...",
     "pay": "ادفع ${amount}",

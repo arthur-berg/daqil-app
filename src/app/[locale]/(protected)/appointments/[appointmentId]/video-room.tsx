@@ -76,7 +76,7 @@ const VideoRoom = ({
   const previewPublisherRef = useRef<any>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const user = useCurrentUser();
-  const { isClient } = useCurrentRole();
+  const { isClient, isTherapist } = useCurrentRole();
   const { toast } = useToast();
   const { fullName } = useUserName();
   const t = useTranslations("VideoRoom");
@@ -450,11 +450,13 @@ const VideoRoom = ({
             className="absolute top-2 right-2 w-[120px] lg:w-[150px] z-10"
           />
         </div>
-        <div className="absolute bottom-24 left-4 z-50">
-          <Button onClick={() => setIsDialogOpen(true)}>
-            {t("scheduleAppointment")}
-          </Button>
-        </div>
+        {isTherapist && (
+          <div className="absolute bottom-24 left-4 z-50">
+            <Button onClick={() => setIsDialogOpen(true)}>
+              {t("scheduleAppointment")}
+            </Button>
+          </div>
+        )}
 
         {/* Dialog for Scheduling Appointment */}
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -465,6 +467,7 @@ const VideoRoom = ({
             <BookingCalendar
               inVideoCallMode={true}
               showOnlyIntroCalls={false}
+              inIntroVideoCall={sessionData.isIntroCall}
               setIsVideoDialogOpen={setIsDialogOpen}
               therapistId={sessionData.appointmentData.therapistId}
               therapistsAvailableTimes={

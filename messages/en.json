@@ -83,6 +83,11 @@
     "cancelButton": "Cancel"
   },
   "AppointmentList": {
+    "nextAppointmentInfo": "Your next appointment is scheduled on {day}, {date} at {time}",
+    "completedIntro": "You've completed your introductory appointment.",
+  "nextStepsMessage": "Now it's time to confirm and pay for your next appointment. Continue your progress with your psychologist.",
+  "paymentDeadline": "Payment Deadline",
+    "congratulations": "Congratulations!",
     "timeLeftToPay": "Time left to pay",
     "notProvided": "Not provided",
     "introQuestions": "Intro Questions",
@@ -410,6 +415,7 @@
     "selectAppointmentType": "Select type of appointment"
   },
   "Checkout": {
+    "alreadyPaidFor": "You have already paid for this appointment.",
     "confirmationExpired": "The confirmation link has expired. Please reserve a new appointment.",
     "processingPayment": "Processing payment...",
     "pay": "Pay ${amount}",

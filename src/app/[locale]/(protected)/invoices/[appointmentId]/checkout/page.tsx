@@ -46,6 +46,16 @@ const InvoiceCheckoutPage = async ({
     );
   }
 
+  if (appointment.payment.status === "paid") {
+    return (
+      <div className="max-w-4xl mx-auto bg-white p-10 rounded-md text-black ">
+        <p className="text-center text-green-600 font-semibold">
+          {t("alreadyPaidFor")}
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-4xl mx-auto bg-white py-6 px-2 sm:p-10 rounded-md text-black relative">
       <CheckoutWrapper

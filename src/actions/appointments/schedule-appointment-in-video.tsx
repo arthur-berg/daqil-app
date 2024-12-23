@@ -1,7 +1,5 @@
 "use server";
 
-import * as z from "zod";
-import { AppointmentSchema } from "@/schemas";
 import { getLocale, getTranslations } from "next-intl/server";
 import { requireAuth } from "@/lib/auth";
 import { getAppointmentTypeById } from "@/data/appointment-types";
@@ -9,30 +7,25 @@ import User from "@/models/User";
 import { UserRole } from "@/generalTypes";
 import mongoose from "mongoose";
 import Appointment from "@/models/Appointment";
-import { format } from "date-fns";
 import {
   schedulePayAfterPaymentExpiredStatusUpdateJobs,
   schedulePaymentReminders,
-  scheduleStatusUpdateJob,
 } from "@/lib/schedule-appointment-jobs";
-import {
-  checkTherapistAvailability,
-  checkTherapistBookedTimeSlotsAvailability,
-  updateAppointments,
-} from "./utils";
+import { checkTherapistAvailability, updateAppointments } from "./utils";
 import connectToMongoDB from "@/lib/mongoose";
 import { sendNonPaidBookingConfirmationEmail } from "@/lib/mail";
 import { getFullName } from "@/utils/formatName";
 import { formatInTimeZone } from "date-fns-tz";
-import { getTherapistById, getUserById } from "@/data/user";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { getTherapistById } from "@/data/user";
+import { APPOINTMENT_TYPE_ID_INTRO_SESSION } from "@/contants/config";
 
 export const scheduleAppointmentInVideo = async (
   appointmentTypeId: string,
   therapistId: string,
   clientId: string,
   startDate: Date,
-  browserTimeZone: string
+  browserTimeZone: string,
+  inIntroVideoCall: boolean
 ) => {
   await connectToMongoDB();
   const [SuccessMessages, ErrorMessages, tAppointmentTypes] = await Promise.all(
@@ -127,6 +120,20 @@ export const scheduleAppointmentInVideo = async (
       paymentExpiryDate,
       locale
     );
+
+    if (inIntroVideoCall) {
+      console.log("here", inIntroVideoCall);
+      await User.findByIdAndUpdate(
+        clientId,
+        {
+          $set: {
+            "selectedTherapist.clientIntroTherapistSelectionStatus": "ACCEPTED",
+          },
+        },
+        { session }
+      );
+      console.log("after");
+    }
 
     if (
       client.selectedTherapist &&
@@ -254,8 +261,6 @@ export const scheduleAppointmentInVideo = async (
       client.email,
       appointmentDetails
     );
-
-    /*     revalidateTag("/therapist/appointments"); */
 
     return {
       appointmentData: {
