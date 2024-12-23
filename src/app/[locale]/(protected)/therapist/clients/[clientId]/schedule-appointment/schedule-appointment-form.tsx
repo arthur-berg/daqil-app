@@ -37,23 +37,24 @@ import {
 } from "@/components/ui/select";
 
 const ScheduleAppointmentForm = ({
-  clientJson,
+  clientId,
+  clientName,
   appointmentTypes,
 }: {
-  clientJson: any;
+  clientId: string;
+  clientName: string;
   appointmentTypes: any[];
 }) => {
-  const client = JSON.parse(clientJson);
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
   const [isPending, startTransition] = useTransition();
   const { responseToast } = useToast();
-  const user = useCurrentUser();
   const router = useRouter();
-  const { firstName, getFullName } = useUserName();
   const [appointmentType, setAppointmentType] = useState<any>(undefined);
   const t = useTranslations("ScheduleAppointmentPage");
   const tAppointmentTypes = useTranslations("AppointmentTypes");
+
+  const browserTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
   const form = useForm<z.infer<typeof AppointmentSchema>>({
     resolver: zodResolver(AppointmentSchema),
@@ -65,7 +66,7 @@ const ScheduleAppointmentForm = ({
       description: "",
       paid: false,
       status: "confirmed",
-      clientId: client._id.toString(),
+      clientId: clientId,
       appointmentTypeId: appointmentType ? appointmentType._id : undefined,
     },
   });
@@ -73,7 +74,7 @@ const ScheduleAppointmentForm = ({
   const onSubmit = (values: z.infer<typeof AppointmentSchema>) => {
     startTransition(async () => {
       try {
-        const data = await scheduleAppointment(values);
+        const data = await scheduleAppointment(values, browserTimeZone);
 
         if (data.error) {
           setError(data.error);
@@ -101,8 +102,7 @@ const ScheduleAppointmentForm = ({
       <Card className="md:w-[600px] border-none shadow-none">
         <CardHeader>
           <p className="text-2xl font-semibold text-center">
-            {t("scheduleAppointmentWith")}{" "}
-            {getFullName(client.firstName, client.lastName)}
+            {t("scheduleAppointmentWith")} {clientName}
           </p>
         </CardHeader>
         <CardContent>
@@ -171,7 +171,7 @@ const ScheduleAppointmentForm = ({
                       {appointmentType.durationInMinutes} {t("minutes")}
                     </p>
                   </div>
-                  <FormField
+                  {/*  <FormField
                     control={form.control}
                     name="title"
                     render={({ field }) => (
@@ -206,7 +206,7 @@ const ScheduleAppointmentForm = ({
                         <FormMessage />
                       </FormItem>
                     )}
-                  />
+                  /> */}
                 </div>
                 <FormError message={error} />
                 <FormSuccess message={success} />

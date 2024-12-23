@@ -11,7 +11,7 @@ import User from "@/models/User";
 import VideoSession from "@/models/VideoSession";
 import { getTranslations } from "next-intl/server";
 import connectToMongoDB from "@/lib/mongoose";
-import { getUserById } from "@/data/user";
+import { getTherapistById, getUserById } from "@/data/user";
 import { log } from "next-axiom";
 
 if (!process.env.VONAGE_APP_ID) {
@@ -51,6 +51,7 @@ export const getSessionData = async (appointmentId: string) => {
     }
 
     const client = await getUserById(appointment.participants[0].userId);
+    const therapist = await getTherapistById(appointment.hostUserId);
 
     if (!client) {
       log.warn("Participant not found in appointment", { appointmentId });
@@ -120,6 +121,10 @@ export const getSessionData = async (appointmentId: string) => {
           startDate: appointment.startDate,
           clientName: await getFullName(client.firstName, client.lastName),
           clientPhoneNumber: client.personalInfo.phoneNumber,
+          clientId: client._id.toString(),
+          therapistsAvailableTimes: JSON.stringify(therapist.availableTimes),
+          therapistsAppointments: JSON.stringify(therapist.appointments),
+          therapistId: therapist._id.toString(),
         },
       };
     } else {
@@ -148,6 +153,10 @@ export const getSessionData = async (appointmentId: string) => {
           startDate: appointment.startDate,
           clientName: await getFullName(client.firstName, client.lastName),
           clientPhoneNumber: client.personalInfo.phoneNumber,
+          clientId: client._id.toString(),
+          therapistsAvailableTimes: JSON.stringify(therapist.availableTimes),
+          therapistsAppointments: JSON.stringify(therapist.appointments),
+          therapistId: therapist._id.toString(),
         },
       };
     }

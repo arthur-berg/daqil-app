@@ -207,10 +207,12 @@ export const AppointmentSchema = z.object({
     required_error: "Start date is required",
     invalid_type_error: "Start date must be a date",
   }),
-  title: z.string({
-    required_error: "Title is required",
-    invalid_type_error: "Title must be a string",
-  }),
+  title: z
+    .string({
+      required_error: "Title is required",
+      invalid_type_error: "Title must be a string",
+    })
+    .optional(),
   clientId: z.string({
     required_error: "You must select a patient",
   }),

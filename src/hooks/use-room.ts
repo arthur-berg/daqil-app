@@ -193,7 +193,7 @@ export default function useRoom() {
         }
 
         selfVideoContainer.style.border = "2px solid gray";
-        selfVideoContainer.style.zIndex = "100";
+        selfVideoContainer.style.zIndex = "40";
 
         selfVideoContainer.classList.add("self-video-container");
 

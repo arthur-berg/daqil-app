@@ -83,6 +83,7 @@
     "cancelButton": "Cancel"
   },
   "AppointmentList": {
+    "timeLeftToPay": "Time left to pay",
     "notProvided": "Not provided",
     "introQuestions": "Intro Questions",
     "question1": "What is the reason for booking a call with us?",
@@ -368,6 +369,12 @@
   "timezonesAligned": "Timezones are aligned"
 },
   "BookingCalendar": {
+    "title": "Title",
+    "appointmentBooked": "Your appointment has been successfully booked!",
+    "receiveConfirmation": "You will receive a confirmation email with the appointment details.",
+    "paymentLinkSent": "A booking confirmation and a payment link have been sent to the client's email.",
+    "paymentExpiryDateClient": "The client will need to complete the payment within 2 hours from now.",
+    "all": "All",
     "therapist": "Psychologist",
     "timezoneNotice": "You are viewing times in your browsers timezone: {timeZone}",
     "closestAvailableDate": "Closest date that has available time slots: {date}",
@@ -658,7 +665,7 @@
   },
   "PaymentSuccessPage": {
     "paymentLinkSent": "A booking confirmation and a payment link have been sent to the client's email.",
-    "paymentExpiryDateClient": "The client will need to complete the payment no later than 1 hour before the appointment starts.",
+    "paymentExpiryDateClient": "The client will need to complete the payment no later than 2 hours from now.",
     "introMeetingSuccessfullyBooked": "Introductory meeting successfully booked",
     "addToCalendar": "Add to calendar",
     "addToGoogleCalendar": "Add to Google Calendar",
@@ -845,7 +852,7 @@
     "therapistButtonText": "See all my appointments",
     "clientButtonText": "View my appointments",
     "therapistAdditionalMessage": "To join the session and manage all your appointments, please visit your appointments page.",
-    "clientAdditionalMessage": "Please note that this appointment needs to be paid for at least 1 hour before the meeting starts. You can make the payment using the link below. You can also join your upcoming session and see an overview of all your appointments on your appointments page.",
+    "clientAdditionalMessage": "Please note that this appointment needs to be paid within 2 hours. You can make the payment using the link below. You can also join your upcoming session and see an overview of all your appointments on your appointments page.",
     "payNowButtonText": "Pay Now",
     "thankYouMessage": "Thank you for using DAQIL.",
     "therapistLabel": "Psychologist:",
@@ -1107,6 +1114,7 @@
     "loggingYouOut": "Logging you out..."
   },
   "VideoRoom": {
+    "scheduleAppointment": "Schedule appointment",
     "timeLeft": "Time left until appointment starts",
     "micMuted": "Microphone is muted",
     "micMutedDescription": "You have muted your microphone. Tap mic symbtol to unmute.",

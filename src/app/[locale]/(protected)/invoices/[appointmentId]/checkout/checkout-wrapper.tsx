@@ -154,6 +154,7 @@ const CheckoutWrapper = ({
               t("calculatingPrice")
             ) : (
               <>
+                {t("price")}:{" "}
                 {locale === "ar"
                   ? `${finalAmount}${currencyToSymbol("USD")}`
                   : `${currencyToSymbol("USD")}${finalAmount}`}
@@ -174,14 +175,14 @@ const CheckoutWrapper = ({
         ) : (
           <>
             {renderDiscountCodeForm()}
-            <div className="bg-gray-100 border-l-4 border-blue-500 text-blue-700 p-4 rounded-md mb-6">
+            {/* <div className="bg-gray-100 border-l-4 border-blue-500 text-blue-700 p-4 rounded-md mb-6">
               <p className="text-sm">
                 <div>
                   <strong>{t("yourPrivacyAndSecurity")}</strong>{" "}
                 </div>
                 {t("privacyMessage")}
               </p>
-            </div>
+            </div> */}
             <div className="flex justify-center mb-4">
               <Image
                 src="https://zakina-images.s3.eu-north-1.amazonaws.com/stripe-badge-grey.png"

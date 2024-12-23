@@ -25,45 +25,27 @@ import { sendNonPaidBookingConfirmationEmail } from "@/lib/mail";
 import { getFullName } from "@/utils/formatName";
 import { formatInTimeZone } from "date-fns-tz";
 import { getTherapistById, getUserById } from "@/data/user";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
-export const scheduleAppointment = async (
-  values: z.input<typeof AppointmentSchema>,
+export const scheduleAppointmentInVideo = async (
+  appointmentTypeId: string,
+  therapistId: string,
+  clientId: string,
+  startDate: Date,
   browserTimeZone: string
 ) => {
   await connectToMongoDB();
-  const [SuccessMessages, ErrorMessages] = await Promise.all([
-    getTranslations("SuccessMessages"),
-    getTranslations("ErrorMessages"),
-  ]);
+  const [SuccessMessages, ErrorMessages, tAppointmentTypes] = await Promise.all(
+    [
+      getTranslations("SuccessMessages"),
+      getTranslations("ErrorMessages"),
+      getTranslations("AppointmentTypes"),
+    ]
+  );
   const locale = await getLocale();
-  const user = await requireAuth([UserRole.THERAPIST]);
+  await requireAuth([UserRole.THERAPIST]);
 
-  if (!user) {
-    return {
-      error: ErrorMessages("therapistNotExist"),
-    };
-  }
-
-  const therapist = await getTherapistById(user.id);
-
-  const therapistId = therapist._id.toString();
-
-  const validatedFields = AppointmentSchema.safeParse(values);
-
-  if (!validatedFields.success) {
-    return { error: ErrorMessages("invalidFields") };
-  }
-
-  const {
-    title,
-    description,
-    startDate,
-    paid,
-    status,
-    clientId,
-    appointmentTypeId,
-  } = validatedFields.data;
+  const therapist = await getTherapistById(therapistId);
 
   const appointmentType = await getAppointmentTypeById(appointmentTypeId);
 
@@ -104,16 +86,14 @@ export const scheduleAppointment = async (
   const session = await mongoose.startSession();
   session.startTransaction();
 
-  const paymentExpiryDate = new Date(startDate);
-
-  paymentExpiryDate.setHours(paymentExpiryDate.getHours() - 1);
+  const paymentExpiryDate = new Date();
+  paymentExpiryDate.setHours(paymentExpiryDate.getHours() + 2);
 
   try {
     const appointment = await Appointment.create(
       [
         {
-          title,
-          description,
+          title: `${tAppointmentTypes(appointmentType._id)}`,
           startDate,
           endDate,
           appointmentTypeId: appointmentType._id,
@@ -275,9 +255,15 @@ export const scheduleAppointment = async (
       appointmentDetails
     );
 
-    revalidatePath("/therapist/appointments");
+    /*     revalidateTag("/therapist/appointments"); */
 
     return {
+      appointmentData: {
+        startTime: appointment[0].startDate,
+        endTime: appointment[0].endDate,
+        title: appointment[0].title,
+        durationInMinutes: appointment[0].durationInMinutes,
+      },
       appointmentId: appointmentId.toString(),
       success: SuccessMessages("appointmentCreated"),
     };
