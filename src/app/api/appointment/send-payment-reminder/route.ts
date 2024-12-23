@@ -42,7 +42,7 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
     const appointmentStartTime = formatInTimeZone(
       new Date(appointment.startDate),
       clientTimeZone,
-      "HH:mm"
+      "EEEE, d MMMM HH:mm"
     );
 
     await sendPaymentReminderEmail(

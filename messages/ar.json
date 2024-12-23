@@ -357,6 +357,7 @@
     "timezonesAligned": "تمت محاذاة المناطق الزمنية"
   },
   "BookingCalendar": {
+    "client": "العميل",
     "title": "العنوان",
     "appointmentBooked": "تم حجز موعدك بنجاح!",
     "receiveConfirmation": "ستتلقى بريدًا إلكترونيًا لتأكيد الحجز مع تفاصيل الموعد.",
@@ -782,6 +783,7 @@
     "greeting": "عزيزي {clientFirstName}،",
     "reminderText": "هذا تذكير ودي بأن الدفع لموعدك القادم في {appointmentStartTime} مستحق.",
     "paymentInstructions": "يرجى التأكد من إتمام الدفع قبل ساعة واحدة على الأقل من الموعد المحدد.",
+    "timeLeftToPay": "لديك {hoursLeft} ساعات متبقية لإتمام الدفع.",
     "payNowButton": "ادفع الآن",
     "footerText": "شكرًا لاستخدامك زاكينا."
   },

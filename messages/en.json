@@ -369,6 +369,7 @@
   "timezonesAligned": "Timezones are aligned"
 },
   "BookingCalendar": {
+    "client": "Client",
     "title": "Title",
     "appointmentBooked": "Your appointment has been successfully booked!",
     "receiveConfirmation": "You will receive a confirmation email with the appointment details.",
@@ -792,6 +793,7 @@
     "greeting": "Dear {clientFirstName},",
     "reminderText": "This is a friendly reminder that payment for your upcoming appointment at {appointmentStartTime} is due.",
     "paymentInstructions": "Please ensure that your payment is completed at least 1 hour before the scheduled time.",
+    "timeLeftToPay": "You have {hoursLeft} hours left to complete the payment.",
     "payNowButton": "Pay Now",
     "footerText": "Thank you for using DAQIL."
   },

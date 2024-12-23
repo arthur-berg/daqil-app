@@ -263,6 +263,7 @@ export const scheduleAppointmentInVideo = async (
         endTime: appointment[0].endDate,
         title: appointment[0].title,
         durationInMinutes: appointment[0].durationInMinutes,
+        clientName: `${await getFullName(client.firstName, client.lastName)}`,
       },
       appointmentId: appointmentId.toString(),
       success: SuccessMessages("appointmentCreated"),
