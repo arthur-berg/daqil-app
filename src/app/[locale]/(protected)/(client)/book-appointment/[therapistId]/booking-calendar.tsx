@@ -53,6 +53,7 @@ const BookingCalendar = ({
   inVideoCallMode,
   clientId,
   setIsVideoDialogOpen,
+  inIntroVideoCall,
 }: {
   therapistId: string;
   therapistsAvailableTimes: string;
@@ -64,6 +65,7 @@ const BookingCalendar = ({
   inVideoCallMode?: boolean;
   clientId?: string;
   setIsVideoDialogOpen?: any;
+  inIntroVideoCall?: boolean;
 }) => {
   const [bookingDialogOpen, setBookingDialogOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
@@ -186,7 +188,8 @@ const BookingCalendar = ({
           therapistId,
           clientId as string,
           combinedDateTime,
-          browserTimeZone
+          browserTimeZone,
+          inIntroVideoCall as boolean
         );
 
         if (data.error) {
