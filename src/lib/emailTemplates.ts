@@ -638,7 +638,7 @@ export const paymentReminderTemplate = async (
   const daqilLogoUrl = await getDaqilLogoUrl(locale);
   const paymentLink = `${process.env.NEXT_PUBLIC_APP_URL}/${locale}/invoices/${appointmentId}/checkout?appointmentId=${appointmentId}`;
   const direction = locale === "ar" ? "rtl" : "ltr";
-
+  const hoursLeft = 1;
   return `
     <div style="background-color: #f4f4f4; font-family: Arial, sans-serif; padding: 20px;" dir="${direction}">
       <div style="background-color: #ffffff; padding: 20px; margin: 20px auto; max-width: 600px; border-radius: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
@@ -648,7 +648,7 @@ export const paymentReminderTemplate = async (
         <div style="margin-top: 40px;">
           <p>${t("greeting", { clientFirstName })}</p>
           <p>${t("reminderText", { appointmentStartTime })}</p>
-          <p>${t("paymentInstructions")}</p>
+          <p>${t("timeLeftToPay", { hoursLeft })}</p>
           <div style="text-align: center; margin-top: 20px;">
             <a href="${paymentLink}" style="display: inline-block; padding: 12px 24px; margin-right: 10px; background-color: ${primaryColor}; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: bold;">
               ${t("payNowButton")}

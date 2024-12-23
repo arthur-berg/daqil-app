@@ -235,6 +235,9 @@ const BookingCalendar = ({
             <strong>{t("title")}</strong>: {nextAppointmentBooked.title}
           </p>
           <p className="text-gray-600">
+            <strong>{t("client")}</strong>: {nextAppointmentBooked.clientName}
+          </p>
+          <p className="text-gray-600">
             <strong>{t("day")}</strong>:{" "}
             {format(
               new Date(nextAppointmentBooked.startTime),
@@ -249,7 +252,7 @@ const BookingCalendar = ({
           </p>
           <p className="text-gray-600">
             <strong>{t("duration")}</strong>:{" "}
-            {nextAppointmentBooked.appointmentDuration} {t("minutes")}
+            {nextAppointmentBooked.durationInMinutes} {t("minutes")}
           </p>
           <p className="text-gray-500 mt-4">{t("receiveConfirmation")}</p>
 
