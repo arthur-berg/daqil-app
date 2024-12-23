@@ -35,10 +35,10 @@ const ScheduleAppointmentPage = async ({
       <Link href={`/therapist/clients/${params.clientId}`}>
         <Button variant="secondary">{t("goBackToClient")}</Button>
       </Link>
-      <ScheduleAppointmentForm
+      {/* <ScheduleAppointmentForm
         clientJson={JSON.stringify(user)}
         appointmentTypes={appointmentTypes}
-      />
+      /> */}
     </div>
   );
 };
