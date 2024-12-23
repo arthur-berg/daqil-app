@@ -2,6 +2,7 @@ import { DateTimes, TimeRange } from "@/generalTypes";
 import { formatDateTime } from "@/utils";
 import { formatTimeZoneWithOffset } from "@/utils/timeZoneUtils";
 import { format } from "date-fns";
+import { useLocale } from "next-intl";
 import { FaCalendarAlt, FaTrash } from "react-icons/fa";
 
 const NonRecurringTimes = ({
@@ -23,6 +24,7 @@ const NonRecurringTimes = ({
       ?.filter((type) => ids.includes(type._id))
       .map((type) => type.title);
   };
+  const locale = useLocale();
 
   const browserTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
@@ -75,7 +77,7 @@ const NonRecurringTimes = ({
                       key={`${timeRange.startDate?.toString()}${index}`}
                       className="bg-green-200 p-2 rounded-md text-green-900 inline-flex flex-col mr-2"
                     >
-                      <div>
+                      <div dir={locale === "ar" ? "rtl" : "ltr"}>
                         {formatDateTime(timeRange.startDate!)} -{" "}
                         {formatDateTime(timeRange.endDate!)}
                       </div>

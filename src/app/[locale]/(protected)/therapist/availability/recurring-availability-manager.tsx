@@ -36,7 +36,7 @@ import {
 } from "@radix-ui/react-icons";
 import { addMinutes, format, isBefore, set } from "date-fns";
 import { FaClock } from "react-icons/fa";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { MdWarning } from "react-icons/md";
 import { formatTimeZoneWithOffset } from "@/utils/timeZoneUtils";
 
@@ -124,7 +124,7 @@ const DefaultAvailabilityManager = ({
     initialEditModes
   );
   const { responseToast } = useToast();
-
+  const locale = useLocale();
   const t = useTranslations("AvailabilityPage");
 
   const form = useForm({
@@ -401,7 +401,10 @@ const DefaultAvailabilityManager = ({
                       key={index}
                       className="bg-blue-200 p-2 rounded-md text-blue-900 md:flex md:items-center"
                     >
-                      <div className="flex">
+                      <div
+                        className="flex"
+                        dir={locale === "ar" ? "rtl" : "ltr"}
+                      >
                         <span className="px-2 py-1 text-center">
                           {format(new Date(range.from), "HH:mm")}
                         </span>

@@ -2,6 +2,7 @@ import { DateTimes, TimeRange } from "@/generalTypes";
 import { formatDateTime } from "@/utils";
 import { formatTimeZoneWithOffset } from "@/utils/timeZoneUtils";
 import { format } from "date-fns";
+import { useLocale } from "next-intl";
 import { FaBan, FaTrash } from "react-icons/fa";
 
 const BlockedOutTimes = ({
@@ -16,6 +17,7 @@ const BlockedOutTimes = ({
   handleRemoveBlockedDate?: any;
 }) => {
   const browserTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const locale = useLocale();
 
   const browserTimeZoneFormatted = formatTimeZoneWithOffset(browserTimeZone);
   return (
@@ -64,8 +66,10 @@ const BlockedOutTimes = ({
                       key={`${timeRange.startDate?.toString()}${index}`}
                       className="bg-red-200 p-2 rounded-md text-red-900 inline-flex mr-2"
                     >
-                      {formatDateTime(timeRange.startDate!)} -{" "}
-                      {formatDateTime(timeRange.endDate!)}
+                      <div dir={locale === "ar" ? "rtl" : "ltr"}>
+                        {formatDateTime(timeRange.startDate!)} -{" "}
+                        {formatDateTime(timeRange.endDate!)}
+                      </div>
                     </div>
                   )
                 )}
