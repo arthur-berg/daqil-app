@@ -17,10 +17,21 @@ import VideoSessionCountdown from "@/app/[locale]/(protected)/appointments/[appo
 import { isBefore, isPast } from "date-fns";
 import { markUserAsShowedUp } from "@/actions/videoSessions/markUserAsShowedUp";
 import { MdErrorOutline } from "react-icons/md";
-
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import ScheduleAppointmentForm from "@/app/[locale]/(protected)/therapist/clients/[clientId]/schedule-appointment/schedule-appointment-form";
+import BookingCalendar from "@/app/[locale]/(protected)/(client)/book-appointment/[therapistId]/booking-calendar";
 const VideoRoom = ({
   sessionData,
   disablePreview,
+  appointmentTypes,
 }: {
   sessionData:
     | {
@@ -34,10 +45,15 @@ const VideoRoom = ({
           startDate: Date;
           clientName: string;
           clientPhoneNumber: string;
+          clientId: string;
+          therapistId: string;
+          therapistsAvailableTimes: string;
+          therapistsAppointments: string;
         };
       }
     | { error: string };
   disablePreview: boolean;
+  appointmentTypes: any[];
 }) => {
   const {
     createCall,
@@ -58,6 +74,7 @@ const VideoRoom = ({
   const effectRun = useRef(false);
   const effectRunPreview = useRef(false);
   const previewPublisherRef = useRef<any>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const user = useCurrentUser();
   const { isClient } = useCurrentRole();
   const { toast } = useToast();
@@ -154,6 +171,10 @@ const VideoRoom = ({
     };
   }, [isPreviewing]);
 
+  useEffect(() => {
+    console.log("Parent re-rendered");
+  });
+
   const logoSrc =
     locale === "en"
       ? "https://zakina-images.s3.eu-north-1.amazonaws.com/daqil-logo-white-v2-en.png"
@@ -238,6 +259,8 @@ const VideoRoom = ({
         }
 
         setDisconnected(true);
+        console.log("LeaveRoom triggered", new Error().stack);
+
         room.leave();
       }
     };
@@ -427,6 +450,32 @@ const VideoRoom = ({
             className="absolute top-2 right-2 w-[120px] lg:w-[150px] z-10"
           />
         </div>
+        <div className="absolute bottom-24 left-4 z-50">
+          <Button onClick={() => setIsDialogOpen(true)}>
+            {t("scheduleAppointment")}
+          </Button>
+        </div>
+
+        {/* Dialog for Scheduling Appointment */}
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogContent className="w-11/12 sm:max-w-md max-h-[90vh] overflow-y-auto z-50 p-4">
+            <h2 className="text-lg font-semibold mb-4">
+              {t("scheduleAppointment")}
+            </h2>
+            <BookingCalendar
+              inVideoCallMode={true}
+              showOnlyIntroCalls={false}
+              setIsVideoDialogOpen={setIsDialogOpen}
+              therapistId={sessionData.appointmentData.therapistId}
+              therapistsAvailableTimes={
+                sessionData.appointmentData.therapistsAvailableTimes
+              }
+              clientId={sessionData.appointmentData.clientId}
+              appointments={sessionData.appointmentData.therapistsAppointments}
+              appointmentTypes={appointmentTypes}
+            />
+          </DialogContent>
+        </Dialog>
         <div className="absolute bottom-0 left-0  w-full md:max-w-7xl">
           <ToolBar
             room={room}

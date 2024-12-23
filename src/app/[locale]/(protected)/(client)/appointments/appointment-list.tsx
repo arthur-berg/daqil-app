@@ -310,6 +310,25 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
   const renderPendingPayments = () => {
     if (pendingPaymentAppointments.length === 0) return null;
 
+    const countdownRenderer = ({ hours, minutes, seconds, completed }: any) => {
+      const totalMinutes = hours * 60 + minutes;
+
+      if (totalMinutes < 20 && !hasSetCountdown) {
+        setIsCountdownFinished(true);
+        setHasSetCountdown(true);
+      }
+      if (completed) {
+        return null;
+      } else {
+        return (
+          <span>
+            {String(hours).padStart(2, "0")}:{String(minutes).padStart(2, "0")}:
+            {String(seconds).padStart(2, "0")}
+          </span>
+        );
+      }
+    };
+
     return (
       <div className="mb-6 p-4 w-full bg-red-100 border-l-4 border-red-500">
         <h2 className="text-lg sm:text-2xl font-bold text-red-800 mb-4">
@@ -339,9 +358,19 @@ const AppointmentList = ({ appointmentsJson }: { appointmentsJson: any }) => {
                   paymentDeadline: format(paymentDeadline, "P HH:mm"),
                 })}
               </p>
-              <p className="text-gray-700 mb-2 font-semibold">
+              <div className="mt-2 text-sm text-destructive">
+                {t("timeLeftToPay")}:{" "}
+                {isMounted && (
+                  <Countdown
+                    date={new Date(appointment.payment.paymentExpiryDate)}
+                    renderer={countdownRenderer}
+                  />
+                )}
+              </div>
+
+              {/* <p className="text-gray-700 mb-2 font-semibold">
                 {t("paymentWarning")}
-              </p>
+              </p> */}
               <p className="text-gray-700 mb-2">
                 <strong>{t("therapist")}:</strong>{" "}
                 {getFullName(

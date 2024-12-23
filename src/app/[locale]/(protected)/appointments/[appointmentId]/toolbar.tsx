@@ -4,7 +4,12 @@ import MuteVideoButton from "./mute-video-button";
 import EndCallButton from "./end-call-button";
 import { useRouter } from "@/navigation";
 import { useToast } from "@/components/ui/use-toast";
-import { revalidateBookAppointmentCache } from "@/actions/revalidateBookAppointmentCache";
+import {
+  revalidateTherapistAppointentListCache,
+  revalidateBookAppointmentCache,
+  revalidateClientAppointentListCache,
+} from "@/actions/revalidateBookAppointmentCache";
+import { useCurrentRole } from "@/hooks/use-current-role";
 
 const ToolBar = ({
   room,
@@ -18,6 +23,7 @@ const ToolBar = ({
   const [hasAudio, setHasAudio] = useState(true);
   const [hasVideo, setHasVideo] = useState(true);
   const [areAllMuted, setAllMuted] = useState(false);
+  const { isTherapist, isClient } = useCurrentRole();
   const { toast, dismiss } = useToast();
   const [muteToastId, setMuteToastId] = useState<string | null>(null);
   const router = useRouter();
@@ -79,6 +85,14 @@ const ToolBar = ({
           revalidateBookAppointmentCache();
         });
       }
+      startTransition(() => {
+        if (isClient) {
+          revalidateClientAppointentListCache();
+        }
+        if (isTherapist) {
+          revalidateTherapistAppointentListCache();
+        }
+      });
 
       room.leave();
       router.push(`/appointments/ended/${appointmentId}`);
