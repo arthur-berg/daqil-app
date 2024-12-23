@@ -45,6 +45,7 @@ const VideoRoom = ({
           startDate: Date;
           clientName: string;
           clientPhoneNumber: string;
+          clientEmail: string;
           clientId: string;
           therapistId: string;
           therapistsAvailableTimes: string;
@@ -423,7 +424,20 @@ const VideoRoom = ({
                       t("waitingForPsychologist")
                     ) : (
                       <>
-                        <p>{t("waitingForClient")}</p>
+                        <p className="mb-4">{t("waitingForClient")}</p>
+                        <p>{t("noShowMessage")}</p>
+                        <p>
+                          {t("clientName")}:{" "}
+                          {sessionData.appointmentData.clientName}
+                        </p>
+                        <p>
+                          {t("phoneNumber")}:{" "}
+                          {sessionData.appointmentData.clientPhoneNumber}
+                        </p>
+                        <p>
+                          {t("email")}:{" "}
+                          {sessionData.appointmentData.clientEmail}
+                        </p>
                         {/* <div className="mt-4 text-sm text-gray-300">
                       <p>{t("noShowMessage")}</p>
                       <p>

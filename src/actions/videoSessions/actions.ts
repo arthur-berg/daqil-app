@@ -89,8 +89,6 @@ export const getSessionData = async (appointmentId: string) => {
     let session = await VideoSession.findOne({ appointmentId });
     const videoRecordingStarted = !!appointment.journalNoteId;
 
-    console.log("session", session);
-
     if (session) {
       console.log("Session found. Generating new token...");
       const userAuthorized = await isUserAuthorized(
@@ -122,6 +120,7 @@ export const getSessionData = async (appointmentId: string) => {
           endDate: appointment.endDate,
           videoRecordingStarted,
           startDate: appointment.startDate,
+          clientEmail: client.email,
           clientName: await getFullName(client.firstName, client.lastName),
           clientPhoneNumber: client.personalInfo.phoneNumber,
           clientId: client._id.toString(),
@@ -155,6 +154,7 @@ export const getSessionData = async (appointmentId: string) => {
           videoRecordingStarted,
           startDate: appointment.startDate,
           clientName: await getFullName(client.firstName, client.lastName),
+          clientEmail: client.email,
           clientPhoneNumber: client.personalInfo.phoneNumber,
           clientId: client._id.toString(),
           therapistsAvailableTimes: JSON.stringify(therapist.availableTimes),
