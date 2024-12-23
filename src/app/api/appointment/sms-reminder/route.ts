@@ -19,7 +19,9 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
       locale,
       namespace: "SmsReminder",
     });
-
+    if (!User.schema) {
+      throw new Error("User schema is not registered.");
+    }
     const appointment = await Appointment.findById(appointmentId)
       .populate({
         path: "participants.userId",
