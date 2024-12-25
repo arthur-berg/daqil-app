@@ -1097,6 +1097,8 @@
     },
   
   "BookingConfirmedIntroCall": {
+    "clientNameLabel": "Client name: ",
+    "clientPhoneNumberLabel" : "Phone number: ", 
     "introAnswersLabel": "Intro Questions",
     "notProvided": "Not provided",
     "therapistSubject": "New Appointment Booking: Introductory Call",

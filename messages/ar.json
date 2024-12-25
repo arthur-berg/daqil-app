@@ -1083,6 +1083,8 @@
     }
   },
   "BookingConfirmedIntroCall": {
+      "clientNameLabel": "اسم العميل: ",
+  "clientPhoneNumberLabel": "رقم الهاتف: ",
     "introAnswersLabel": "أسئلة تمهيدية",
     "notProvided": "لم يتم تقديمها",
     "therapistSubject": "حجز موعد جديد: مكالمة تعريفية",

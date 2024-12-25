@@ -65,7 +65,8 @@ export const findAppointmentById = async (appointmentId: string) => {
     return await Appointment.findById(appointmentId)
       .populate({
         path: "participants.userId",
-        select: "firstName lastName email settings.timeZone introAnswers",
+        select:
+          "firstName lastName email settings.timeZone introAnswers personalInfo.phoneNumber",
       })
       .populate({
         path: "hostUserId",
