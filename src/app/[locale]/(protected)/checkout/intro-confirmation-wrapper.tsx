@@ -65,7 +65,6 @@ const IntroConfirmationWrapper = ({
   }, [appointmentType.price]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleFormCompletion = (answers: any) => {
-    // Trigger the email sending process when form is completed
     setShowQuestionsForm(false);
     startTransition(async () => {
       const data = await sendIntroConfirmationMail(
