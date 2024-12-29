@@ -582,6 +582,8 @@
   "redirecting": "Redirecting..."
 },
 "IntroCheckoutTranslation": {
+  "price": "Price",
+  "symbolicAmountExplanation": "A $1 USD charge is a symbolic amount to ensure that you respect the psychologist's time and commit to showing up for the introduction call. This helps maintain professionalism and ensures a meaningful session.",
   "almostThere": "Almost there!",
   "emailConfirmationInstructions": "We have sent a booking confirmation link to your email. Please follow the instructions to complete your booking.",
   "whatToDoNext": "What to do next:",
