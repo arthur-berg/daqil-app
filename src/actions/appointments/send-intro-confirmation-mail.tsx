@@ -46,7 +46,7 @@ export const sendIntroConfirmationMail = async (
       "HH:mm"
     );
 
-    const appointmentDetails = {
+    /*    const appointmentDetails = {
       appointmentId: appointmentId.toString(),
       clientDate: clientAppointmentDate,
       clientTime: clientAppointmentTime,
@@ -57,7 +57,7 @@ export const sendIntroConfirmationMail = async (
       clientName: `${await getFullName(client.firstName, client.lastName)}`,
       durationInMinutes: appointmentType.durationInMinutes,
       clientTimeZone: client.settings.timeZone,
-    };
+    }; */
 
     await User.findByIdAndUpdate(user.id, {
       introAnswers: {
@@ -68,12 +68,12 @@ export const sendIntroConfirmationMail = async (
       },
     });
 
-    await sendIntroBookingConfirmationMailWithLink(
+    /*  await sendIntroBookingConfirmationMailWithLink(
       therapist.email,
       client.email,
       appointmentDetails,
       locale
-    );
+    ); */
   } catch (error) {
     console.error(
       "Something happened in send-intro-confirmation-mail action",
