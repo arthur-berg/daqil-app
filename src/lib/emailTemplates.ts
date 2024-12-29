@@ -441,6 +441,8 @@ export const introBookingConfirmationTemplate = async (
     durationInMinutes: number;
     clientTimeZone: string;
     therapistTimeZone: string;
+    clientPhoneNumber: string;
+    clientEmail: string;
   },
   isTherapist: boolean,
   t: any,
@@ -477,8 +479,6 @@ export const introBookingConfirmationTemplate = async (
        <p><strong>${t("timeLabel")}</strong> ${time} (${formattedTimeZone})</p>
      `;
 
-  console.log("introAnswers", introAnswers);
-
   const introAnswersHtml = introAnswers
     ? `
        <div style="margin-top: 20px;">
@@ -494,6 +494,19 @@ export const introBookingConfirmationTemplate = async (
              )
              .join("")}
          </ul>
+       </div>
+     `
+    : "";
+
+  const clientDetailsHtml = isTherapist
+    ? `
+       <div style="margin-top: 20px;">
+         <p><strong>${t("clientNameLabel")}</strong> ${
+        appointmentDetails.clientName || t("notProvided")
+      }</p>
+         <p><strong>${t("clientPhoneNumberLabel")}</strong> ${
+        appointmentDetails.clientPhoneNumber || t("notProvided")
+      }</p>
        </div>
      `
     : "";
@@ -519,6 +532,7 @@ export const introBookingConfirmationTemplate = async (
           <p><strong>${t("durationLabel")}</strong> ${
     appointmentDetails.durationInMinutes
   } ${t("minutesLabel")}</p>
+  ${clientDetailsHtml}
   ${introAnswersHtml}
         </div>
         <div style="margin-top: 20px; font-size: 12px; color: #888888; text-align: center;">

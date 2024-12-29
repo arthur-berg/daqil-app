@@ -199,6 +199,7 @@
   "goToAppointments":"Go to Appointments"
 },
   "SettingsPage": {
+    "symptomsTitle": "Please check the symptoms that you can help treat",
     "deleteAccount": "Delete Account",
     "areYouSureTitle": "Are You Sure?",
     "areYouSureDescription": "Please type 'delete-account' to confirm you want to delete your account. This action is irreversible.",
@@ -314,6 +315,7 @@
     "noPaymentDetails": "No payment details have been saved yet"
   },
   "BookAppointmentPage": {
+    "showMore": "Show more",
     "bothLanguages": "Both languages",
   "english": "English",
   "arabic": "Arabic",
@@ -580,6 +582,8 @@
   "redirecting": "Redirecting..."
 },
 "IntroCheckoutTranslation": {
+  "price": "Price",
+  "symbolicAmountExplanation": "A $1 USD charge is a symbolic amount to ensure that you respect the psychologist's time and commit to showing up for the introduction call. This helps maintain professionalism and ensures a meaningful session.",
   "almostThere": "Almost there!",
   "emailConfirmationInstructions": "We have sent a booking confirmation link to your email. Please follow the instructions to complete your booking.",
   "whatToDoNext": "What to do next:",
@@ -743,7 +747,30 @@
     "videoMeetingOnlyAvailable": "Video meeting is only available between 20 minutes before the appointment starts and 15 minutes after it ends.",
     "appointmentNotConfirmed": "The appointment is not confirmed."
   },
+ "Symptoms": {
+  "adhd": "ADHD",
+  "sleep": "Sleep Issues",
+  "anxiety": "Anxiety",
+  "depression": "Depression",
+  "stress": "Stress",
+  "trauma": "Trauma",
+  "phobias": "Phobias",
+  "bipolar": "Bipolar Disorder",
+  "ocd": "Obsessive-Compulsive Disorder (OCD)",
+  "ptsd": "Post-Traumatic Stress Disorder (PTSD)",
+  "anger": "Anger Management",
+  "relationship": "Relationship Issues",
+  "grief": "Grief and Loss",
+  "addiction": "Addiction",
+  "eatingDisorders": "Eating Disorders",
+  "selfEsteem": "Self-Esteem Issues",
+  "autism": "Autism Spectrum Disorder",
+  "socialAnxiety": "Social Anxiety",
+  "panicAttacks": "Panic Attacks",
+  "childBehavior": "Child Behavior Issues"
+},
   "SuccessMessages": {
+    "symptomsSaved": "Your symptoms have been saved successfully.",
     "professionalAgreementAccepted": "Professional agreement accepted",
     "therapistPaidAmountSet": "Amount edited successfully",
     "appointmentBookingConfirmed": "Appointment booking confirmed",
@@ -1097,6 +1124,8 @@
     },
   
   "BookingConfirmedIntroCall": {
+    "clientNameLabel": "Client name: ",
+    "clientPhoneNumberLabel" : "Phone number: ", 
     "introAnswersLabel": "Intro Questions",
     "notProvided": "Not provided",
     "therapistSubject": "New Appointment Booking: Introductory Call",

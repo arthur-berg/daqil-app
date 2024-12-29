@@ -363,6 +363,8 @@ export const sendIntroBookingConfirmationMail = async (
     durationInMinutes: number;
     clientTimeZone: string;
     therapistTimeZone: string;
+    clientPhoneNumber: string;
+    clientEmail: string;
   },
   t: any,
   locale: string,

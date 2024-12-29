@@ -8,6 +8,7 @@ import connectToMongoDB from "@/lib/mongoose";
 import { getCurrentUser } from "@/lib/auth";
 import { MdError } from "react-icons/md"; // Using the MdError icon for the warning
 import { getUserByIdLean } from "@/data/user";
+import SymptomsForm from "@/components/symptoms-form";
 
 const TherapistSettingsPage = async () => {
   await connectToMongoDB();
@@ -103,6 +104,15 @@ const TherapistSettingsPage = async () => {
           </CardContent>
         </Card>
       </div>
+      <SymptomsForm treatedSymptoms={therapist.settings?.treatedSymptoms} />
+      {/* <div>
+        <Card className="sm:w-[500px] w-full shadow-lg border border-gray-200">
+          <CardHeader className="text-center text-xl font-semibold">
+            {t("symptomsTitle")}
+          </CardHeader>
+          <CardContent className="space-y-4"></CardContent>
+        </Card>
+      </div> */}
 
       {/* Other Settings Form */}
       <SettingsForm hidePageTitle />

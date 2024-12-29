@@ -30,7 +30,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { BlockAvailabilitySchemaFE } from "@/schemas";
 import { removeBlockedDate, saveBlockedOutTimes } from "@/actions/availability";
 import { Separator } from "@/components/ui/separator";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import BlockedOutTimes from "./blocked-out-times";
 import { convertToUtcMidnight } from "@/utils";
 
@@ -73,7 +73,7 @@ const BlockAvailabilityForm = ({
   const [startTimePopoverOpen, setStartTimePopoverOpen] = useState(false);
   const [endTimePopoverOpen, setEndTimePopoverOpen] = useState(false);
   const t = useTranslations("AvailabilityPage");
-
+  const locale = useLocale();
   const { responseToast } = useToast();
 
   const form = useForm<z.infer<typeof BlockAvailabilitySchemaFE>>({
@@ -230,7 +230,11 @@ const BlockAvailabilityForm = ({
                     {t("blockTimesFor")} {format(date, "PPPP")}
                   </h3>
                   {form.watch("timeRanges").map((_: any, index: any) => (
-                    <div key={index} className="flex gap-4 mt-4 flex-wrap">
+                    <div
+                      key={index}
+                      className="flex gap-4 mt-4 flex-wrap"
+                      dir={locale === "ar" ? "rtl" : "ltr"}
+                    >
                       <FormField
                         control={form.control}
                         name={`timeRanges.${index}.startDate`}
