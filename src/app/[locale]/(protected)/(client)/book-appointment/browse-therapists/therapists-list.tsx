@@ -8,6 +8,11 @@ import NextAppointment from "./next-appointment";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import { useUserName } from "@/hooks/use-user-name";
+import { SYMPTOM_OPTIONS } from "@/contants/config";
+import { Checkbox } from "@/components/ui/checkbox";
+import { MdAdd } from "react-icons/md";
+
+const MAX_VISIBLE_SYMPTOMS = 3;
 
 const TherapistsList = ({ therapistsJson }: { therapistsJson: any }) => {
   const therapists = JSON.parse(therapistsJson);
@@ -15,9 +20,14 @@ const TherapistsList = ({ therapistsJson }: { therapistsJson: any }) => {
   const [selectedLanguage, setSelectedLanguage] = useState<string | null>(
     "Both"
   );
+  const [selectedSymptoms, setSelectedSymptoms] = useState<string[]>([]);
+  const [visibleSymptomsCount, setVisibleSymptomsCount] = useState<{
+    [therapistId: string]: number;
+  }>({});
   const { getFullName } = useUserName();
   const locale = useLocale();
   const t = useTranslations("BookAppointmentPage");
+  const tSymptoms = useTranslations("Symptoms");
   const maxDescriptionLength = 200;
 
   const filteredTherapists = therapists?.filter((therapist: any) => {
@@ -25,14 +35,37 @@ const TherapistsList = ({ therapistsJson }: { therapistsJson: any }) => {
       selectedSex === null || therapist.personalInfo?.sex === selectedSex;
 
     const matchesLanguage =
-      !therapist.settings?.languages || // Show therapists with undefined or empty languages
+      !therapist.settings?.languages ||
       selectedLanguage === "Both" ||
       therapist.settings.languages.includes(
         selectedLanguage === "English" ? "en" : "ar"
       );
 
-    return matchesSex && matchesLanguage;
+    const matchesSymptoms =
+      selectedSymptoms.length === 0 ||
+      (therapist.settings?.treatedSymptoms &&
+        selectedSymptoms.every((symptom) =>
+          therapist.settings.treatedSymptoms.includes(symptom)
+        ));
+
+    return matchesSex && matchesLanguage && matchesSymptoms;
   });
+
+  const toggleSymptom = (symptom: string) => {
+    setSelectedSymptoms((prev) =>
+      prev.includes(symptom)
+        ? prev.filter((s) => s !== symptom)
+        : [...prev, symptom]
+    );
+  };
+
+  const handleShowMore = (therapistId: string) => {
+    setVisibleSymptomsCount((prev) => ({
+      ...prev,
+      [therapistId]:
+        (prev[therapistId] || MAX_VISIBLE_SYMPTOMS) + MAX_VISIBLE_SYMPTOMS,
+    }));
+  };
 
   return (
     <div>
@@ -63,7 +96,7 @@ const TherapistsList = ({ therapistsJson }: { therapistsJson: any }) => {
             {t("female")}
           </Button>
         </div>
-        <div className="flex space-x-2">
+        <div className="flex space-x-2 mb-4">
           {/* Language Filter */}
           <Button
             variant={selectedLanguage === "Both" ? "default" : "outline"}
@@ -84,87 +117,132 @@ const TherapistsList = ({ therapistsJson }: { therapistsJson: any }) => {
             {t("arabic")}
           </Button>
         </div>
+        {/*  <div className="flex flex-wrap gap-4 mb-4">
+          {SYMPTOM_OPTIONS.map((symptom) => (
+            <div key={symptom.value} className="flex items-center space-x-2">
+              <Checkbox
+                id={symptom.value}
+                checked={selectedSymptoms.includes(symptom.value)}
+                onCheckedChange={() => toggleSymptom(symptom.value)}
+              />
+              <label htmlFor={symptom.value} className="text-sm">
+                {tSymptoms(`${symptom.value}`)}
+              </label>
+            </div>
+          ))}
+        </div> */}
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredTherapists?.map((therapist: any) => (
-          <div
-            key={therapist.email}
-            className="bg-white shadow-lg rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col justify-between"
-          >
-            <div className="flex flex-col items-center p-6">
-              <div className="flex justify-center mt-4">
-                <Avatar className="w-28 h-28">
-                  <AvatarImage
-                    src={therapist?.image || ""}
-                    className="object-cover"
-                  />
-                  <AvatarFallback className="bg-background flex items-center justify-center w-full h-full">
-                    <Image
-                      width={150}
-                      height={50}
-                      src={
-                        locale === "en"
-                          ? "https://zakina-images.s3.eu-north-1.amazonaws.com/daqil-logo-en.png"
-                          : "https://zakina-images.s3.eu-north-1.amazonaws.com/daqil-logo-ar.png"
-                      }
-                      alt="psychologist-image"
-                      className="w-full"
+        {filteredTherapists?.map((therapist: any) => {
+          const visibleSymptoms =
+            visibleSymptomsCount[therapist._id] || MAX_VISIBLE_SYMPTOMS;
+
+          return (
+            <div
+              key={therapist.email}
+              className="bg-white shadow-lg rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col justify-between"
+            >
+              <div className="flex flex-col items-center p-6">
+                <div className="flex justify-center mt-4">
+                  <Avatar className="w-28 h-28">
+                    <AvatarImage
+                      src={therapist?.image || ""}
+                      className="object-cover"
                     />
-                  </AvatarFallback>
-                </Avatar>
-              </div>
-              <div className="font-bold text-lg sm:text-xl mb-4 text-center mt-2">
-                {getFullName(therapist.firstName, therapist.lastName)}
-              </div>
-              {therapist.therapistWorkProfile && (
-                <div className="text-sm text-gray-700 mb-4 text-center">
-                  <div className="font-semibold mb-2 text-base sm:text-lg">
-                    {therapist.therapistWorkProfile[locale].title}
+                    <AvatarFallback className="bg-background flex items-center justify-center w-full h-full">
+                      <Image
+                        width={150}
+                        height={50}
+                        src={
+                          locale === "en"
+                            ? "https://zakina-images.s3.eu-north-1.amazonaws.com/daqil-logo-en.png"
+                            : "https://zakina-images.s3.eu-north-1.amazonaws.com/daqil-logo-ar.png"
+                        }
+                        alt="psychologist-image"
+                        className="w-full"
+                      />
+                    </AvatarFallback>
+                  </Avatar>
+                </div>
+                <div className="font-bold text-lg sm:text-xl mb-4 text-center mt-2">
+                  {getFullName(therapist.firstName, therapist.lastName)}
+                </div>
+                {therapist.therapistWorkProfile && (
+                  <div className="text-sm text-gray-700 mb-4 text-center">
+                    <div className="font-semibold mb-2 text-base sm:text-lg">
+                      {therapist.therapistWorkProfile[locale].title}
+                    </div>
+                    <div className="leading-relaxed">
+                      {therapist.therapistWorkProfile[locale].description
+                        .length > maxDescriptionLength ? (
+                        <div
+                          dangerouslySetInnerHTML={{
+                            __html:
+                              therapist.therapistWorkProfile[
+                                locale
+                              ].description.slice(0, maxDescriptionLength) +
+                              "...",
+                          }}
+                        />
+                      ) : (
+                        <div
+                          dangerouslySetInnerHTML={{
+                            __html:
+                              therapist.therapistWorkProfile[locale]
+                                .description,
+                          }}
+                        />
+                      )}
+                    </div>
                   </div>
-                  <div className="leading-relaxed">
-                    {therapist.therapistWorkProfile[locale].description.length >
-                    maxDescriptionLength ? (
-                      <div
-                        dangerouslySetInnerHTML={{
-                          __html:
-                            therapist.therapistWorkProfile[
-                              locale
-                            ].description.slice(0, maxDescriptionLength) +
-                            "...",
-                        }}
-                      />
-                    ) : (
-                      <div
-                        dangerouslySetInnerHTML={{
-                          __html:
-                            therapist.therapistWorkProfile[locale].description,
-                        }}
-                      />
+                )}
+                {/*  {therapist.settings?.treatedSymptoms?.length > 0 && (
+                  <div className="flex flex-wrap justify-center gap-2 mb-4">
+                    {therapist.settings.treatedSymptoms
+                      .slice(0, visibleSymptoms)
+                      .map((symptom: string) => (
+                        <span
+                          key={symptom}
+                          className="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs font-medium"
+                        >
+                          {tSymptoms(symptom)}
+                        </span>
+                      ))}
+                    {therapist.settings.treatedSymptoms.length >
+                      visibleSymptoms && (
+                      <Button
+                        variant="link"
+                        className="text-xs mt-2 flex items-center space-x-1"
+                        onClick={() => handleShowMore(therapist._id)}
+                      >
+                        <MdAdd className="w-4 h-4" />
+                        <span>{t("showMore")}</span>
+                      </Button>
                     )}
                   </div>
-                </div>
-              )}
-              {therapist.nextAvailableSlot && (
-                <NextAppointment
-                  nextAvailable={t("nextAvailable")}
-                  nextAvailableSlot={therapist.nextAvailableSlot}
-                />
-              )}
-              <Link href={`/therapist/${therapist._id}`}>
-                <Button variant="outline" size="sm" className="mt-2">
-                  {t("readMore")}
-                </Button>
-              </Link>
-            </div>
-            <div className="pb-6">
-              <div className="mt-auto flex justify-center">
-                <Link href={`/book-appointment/${therapist._id}`}>
-                  <Button>{t("bookSession")}</Button>
+                )} */}
+                {therapist.nextAvailableSlot && (
+                  <NextAppointment
+                    nextAvailable={t("nextAvailable")}
+                    nextAvailableSlot={therapist.nextAvailableSlot}
+                  />
+                )}
+                <Link href={`/therapist/${therapist._id}`}>
+                  <Button variant="outline" size="sm" className="mt-2">
+                    {t("readMore")}
+                  </Button>
                 </Link>
               </div>
+              <div className="pb-6">
+                <div className="mt-auto flex justify-center">
+                  <Link href={`/book-appointment/${therapist._id}`}>
+                    <Button>{t("bookSession")}</Button>
+                  </Link>
+                </div>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
