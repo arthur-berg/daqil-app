@@ -156,6 +156,9 @@ export const inviteTherapist = async (
           interval: 15,
         },
       },
+      settings: {
+        languages: ["ar"],
+      },
     });
 
     /*  const verificationToken = await generateVerificationToken(email, 168);
