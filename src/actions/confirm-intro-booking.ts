@@ -180,6 +180,8 @@ export async function confirmIntroBooking(appointmentId: string) {
       "HH:mm"
     );
 
+    const clientPhoneNumber = client.personalInfo.phoneNumber;
+
     const appointmentDetails = {
       clientDate: clientAppointmentDate,
       clientTime: clientAppointmentTime,
@@ -193,6 +195,8 @@ export async function confirmIntroBooking(appointmentId: string) {
       durationInMinutes: appointment.durationInMinutes,
       therapistTimeZone,
       clientTimeZone,
+      clientPhoneNumber,
+      clientEmail,
     };
 
     const t = await getTranslations({

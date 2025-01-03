@@ -199,6 +199,7 @@
     "yourNextAppointment": "موعدك القادم"
   },
   "SettingsPage": {
+    "symptomsTitle": "يرجى تحديد الأعراض التي يمكنك المساعدة في علاجها",
     "deleteAccount": "حذف الحساب",
     "areYouSureTitle": "هل أنت متأكد؟",
     "areYouSureDescription": "يرجى كتابة 'delete-account' لتأكيد رغبتك في حذف حسابك. هذا الإجراء لا يمكن التراجع عنه.",
@@ -304,6 +305,7 @@
     "companyDetails": "تفاصيل الشركة"
   },
   "BookAppointmentPage": {
+    "showMore": "عرض المزيد",
     "bothLanguages": "كلا اللغتين",
     "english": "الإنجليزية",
     "arabic": "العربية",
@@ -569,6 +571,8 @@
     "redirecting": "جارٍ التوجيه..."
   },
   "IntroCheckoutTranslation": {
+    "price": "السعر",
+    "symbolicAmountExplanation": "رسوم بقيمة 1 دولار أمريكي هي مبلغ رمزي لضمان احترامك لوقت الأخصائي النفسي والتزامك بحضور جلسة التعارف. يساعد هذا في الحفاظ على الاحترافية وضمان جلسة مثمرة.",
     "almostThere": "اقتربنا من النهاية!",
     "emailConfirmationInstructions": "لقد أرسلنا رابط تأكيد الحجز إلى بريدك الإلكتروني. يرجى اتباع التعليمات لإكمال الحجز.",
     "whatToDoNext": "ما يجب عليك فعله بعد ذلك:",
@@ -733,7 +737,32 @@
     "videoMeetingOnlyAvailable": "يتوفر الاجتماع عبر الفيديو فقط بين 20 دقيقة قبل بدء الموعد و15 دقيقة بعد انتهائه.",
     "appointmentNotConfirmed": "لم يتم تأكيد الموعد."
   },
+  "Symptoms": {
+    "add": "اضطراب نقص الانتباه (ADD)",
+    "adhd": "اضطراب فرط الحركة ونقص الانتباه (ADHD)",
+    "aggression": "العدوان والغضب",
+    "addiction": "الإدمان",
+    "depression": "الاكتئاب",
+    "phobias": "الرهاب/المخاوف",
+    "parentSupport": "دعم الوالدين",
+    "lgbtq": "مجتمع الميم (LGBTQ+)",
+    "ibs": "متلازمة القولون العصبي (IBS)",
+    "chronicPain": "الألم المزمن",
+    "panicAttacks": "نوبات الهلع/اضطراب الهلع",
+    "relationship": "مشاكل العلاقات",
+    "sexualProblems": "مشاكل جنسية",
+    "selfEsteem": "تقدير الذات",
+    "confidence": "الثقة بالنفس",
+    "socialAnxiety": "القلق الاجتماعي",
+    "stress": "الإجهاد",
+    "sleep": "مشاكل النوم",
+    "tinnitus": "طنين الأذن",
+    "trauma": "الصدمة النفسية",
+    "ocd": "اضطراب الوسواس القهري (OCD)",
+    "anxiety": "القلق/التوتر"
+  },
   "SuccessMessages": {
+    "symptomsSaved": "تم حفظ الأعراض التي تعالجها بنجاح.",
     "professionalAgreementAccepted": "تم قبول الاتفاقية المهنية",
     "therapistPaidAmountSet": "تم تعديل المبلغ بنجاح",
     "appointmentBookingConfirmed": "تم تأكيد حجز الموعد",
@@ -1083,6 +1112,8 @@
     }
   },
   "BookingConfirmedIntroCall": {
+    "clientNameLabel": "اسم العميل: ",
+    "clientPhoneNumberLabel": "رقم الهاتف: ",
     "introAnswersLabel": "أسئلة تمهيدية",
     "notProvided": "لم يتم تقديمها",
     "therapistSubject": "حجز موعد جديد: مكالمة تعريفية",

@@ -43,8 +43,7 @@ const TherapistUserProfile = async ({
   }
 
   const showOnlyIntroCalls =
-    (user?.selectedTherapist && user?.selectedTherapist.introCallDone) ||
-    client?.selectedTherapistHistory.length > 0
+    user?.selectedTherapist && user?.selectedTherapist.introCallDone
       ? false
       : true;
 
