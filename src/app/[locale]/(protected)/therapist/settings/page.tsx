@@ -9,6 +9,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { MdError } from "react-icons/md"; // Using the MdError icon for the warning
 import { getUserByIdLean } from "@/data/user";
 import SymptomsForm from "@/components/symptoms-form";
+import LanguageForm from "@/app/[locale]/(protected)/therapist/settings/language-form";
 
 const TherapistSettingsPage = async () => {
   await connectToMongoDB();
@@ -24,10 +25,8 @@ const TherapistSettingsPage = async () => {
 
   return (
     <div className="sm:w-[500px] w-full mx-auto space-y-6">
-      {/* Page Title */}
       <PageTitle title={t("settings")} />
 
-      {/* Payment Settings Card */}
       <div className="flex justify-center">
         <Card className="sm:w-[500px] w-full shadow-lg border border-gray-200">
           <CardHeader className="text-center text-xl font-semibold">
@@ -84,7 +83,6 @@ const TherapistSettingsPage = async () => {
               </>
             ) : (
               <div className="space-y-4">
-                {/* Action Required Block */}
                 <div className="p-4 bg-red-100 text-red-700 rounded-lg flex items-center space-x-3 border border-red-300">
                   <MdError className="w-6 h-6" />
                   <div>
@@ -93,7 +91,6 @@ const TherapistSettingsPage = async () => {
                   </div>
                 </div>
 
-                {/* Payment Settings Button */}
                 <div className="text-center ">
                   <Link href="/therapist/settings/payment-details-setup">
                     <Button>{t("startPaymentSetup")}</Button>
@@ -104,17 +101,9 @@ const TherapistSettingsPage = async () => {
           </CardContent>
         </Card>
       </div>
+      <LanguageForm languages={therapist.settings?.languages} />
       <SymptomsForm treatedSymptoms={therapist.settings?.treatedSymptoms} />
-      {/* <div>
-        <Card className="sm:w-[500px] w-full shadow-lg border border-gray-200">
-          <CardHeader className="text-center text-xl font-semibold">
-            {t("symptomsTitle")}
-          </CardHeader>
-          <CardContent className="space-y-4"></CardContent>
-        </Card>
-      </div> */}
 
-      {/* Other Settings Form */}
       <SettingsForm hidePageTitle />
     </div>
   );

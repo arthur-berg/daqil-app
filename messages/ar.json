@@ -199,6 +199,7 @@
     "yourNextAppointment": "موعدك القادم"
   },
   "SettingsPage": {
+    "languageTitle": "يرجى تحديد اللغات التي يمكنك التحدث بها مع العملاء",
     "symptomsTitle": "يرجى تحديد الأعراض التي يمكنك المساعدة في علاجها",
     "deleteAccount": "حذف الحساب",
     "areYouSureTitle": "هل أنت متأكد؟",
@@ -305,6 +306,14 @@
     "companyDetails": "تفاصيل الشركة"
   },
   "BookAppointmentPage": {
+    "allSymptomsDefault": "عرض جميع الأعراض افتراضيًا. استخدم الفلاتر لتضييق النتائج.",
+    "filtersApplied": "تم تطبيق {count} فلتر. قم بضبط الفلاتر لتغيير النتائج.",
+    "filtersAppliedShort": "تم تطبيق {count} فلتر",
+    "searchSymptoms": "ابحث عن الأعراض",
+    "noSymptomsFound": "لم يتم العثور على أعراض",
+    "allSymptoms": "جميع الأعراض",
+    "noSymptomsSelected": "لم يتم اختيار أي أعراض (عرض الجميع).",
+    "clearAllFilters": "إزالة جميع الفلاتر",
     "showMore": "عرض المزيد",
     "bothLanguages": "كلا اللغتين",
     "english": "الإنجليزية",
@@ -737,6 +746,10 @@
     "videoMeetingOnlyAvailable": "يتوفر الاجتماع عبر الفيديو فقط بين 20 دقيقة قبل بدء الموعد و15 دقيقة بعد انتهائه.",
     "appointmentNotConfirmed": "لم يتم تأكيد الموعد."
   },
+  "Languages": {
+    "en": "الإنجليزية",
+  "ar": "العربية"
+  },
   "Symptoms": {
     "add": "اضطراب نقص الانتباه (ADD)",
     "adhd": "اضطراب فرط الحركة ونقص الانتباه (ADHD)",
@@ -762,6 +775,7 @@
     "anxiety": "القلق/التوتر"
   },
   "SuccessMessages": {
+    "languagesSaved": "تم حفظ اللغات بنجاح.",
     "symptomsSaved": "تم حفظ الأعراض التي تعالجها بنجاح.",
     "professionalAgreementAccepted": "تم قبول الاتفاقية المهنية",
     "therapistPaidAmountSet": "تم تعديل المبلغ بنجاح",

@@ -10,6 +10,10 @@ export const SymptomsSchema = z.object({
   symptoms: z.array(z.string()).min(1, "Please select at least one symptom."),
 });
 
+export const LanguagesSchema = z.object({
+  languages: z.array(z.string()).min(1, "Please select at least one symptom."),
+});
+
 export const TherapistMyProfileSchema = z.object({
   workDescriptionEn: z.string().min(1, {
     message: "Description is required",
