@@ -1,5 +1,6 @@
 import { DayTimes, TimeRangeStrings } from "@/generalTypes";
 import { format } from "date-fns";
+import { useLocale } from "next-intl";
 import { FaClock } from "react-icons/fa";
 
 const RecurringTimes = ({
@@ -17,7 +18,7 @@ const RecurringTimes = ({
       dayOrder.indexOf(a.day.toLowerCase()) -
       dayOrder.indexOf(b.day.toLowerCase())
   );
-
+  const locale = useLocale();
   // Helper function to get appointment type names by IDs and return as an array
   const getAppointmentTypeNames = (ids: string[]) => {
     return (
@@ -51,7 +52,7 @@ const RecurringTimes = ({
                       key={timeRange.startTime?.toString()}
                       className="bg-blue-200 p-2 rounded-md text-blue-900 inline-flex flex-col mr-2"
                     >
-                      <div>
+                      <div dir={locale === "ar" ? "rtl" : "ltr"}>
                         {format(new Date(timeRange.startTime), "HH:mm")} -{" "}
                         {format(new Date(timeRange.endTime), "HH:mm")}
                       </div>

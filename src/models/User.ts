@@ -333,11 +333,17 @@ const userSchema = new Schema(
           type: String,
         },
       ],
+      treatedSymptoms: [
+        {
+          type: String,
+        },
+      ],
       hiddenProfile: {
         type: Boolean,
         required: false,
       },
     },
+
     paymentSettings: {
       type: { type: String, enum: ["personal", "company"] },
       personal: {

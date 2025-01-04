@@ -50,10 +50,11 @@ const BookingCalendar = ({
   appointmentTypes,
   showOnlyIntroCalls,
   adminView,
-  inVideoCallMode,
+  payLaterMode,
   clientId,
   setIsVideoDialogOpen,
   inIntroVideoCall,
+  smallSelect,
 }: {
   therapistId: string;
   therapistsAvailableTimes: string;
@@ -62,10 +63,11 @@ const BookingCalendar = ({
   appointmentTypes: any[];
   showOnlyIntroCalls: boolean;
   adminView?: boolean;
-  inVideoCallMode?: boolean;
+  payLaterMode?: boolean;
   clientId?: string;
   setIsVideoDialogOpen?: any;
   inIntroVideoCall?: boolean;
+  smallSelect?: boolean;
 }) => {
   const [bookingDialogOpen, setBookingDialogOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
@@ -182,7 +184,7 @@ const BookingCalendar = ({
     const isFree = appointmentType._id === APPOINTMENT_TYPE_ID_INTRO_SESSION;
 
     startTransition(async () => {
-      if (inVideoCallMode) {
+      if (payLaterMode) {
         const data = await scheduleAppointmentInVideo(
           appointmentType,
           therapistId,
@@ -288,7 +290,7 @@ const BookingCalendar = ({
                 <div className="flex justify-center">
                   <div
                     className={
-                      inVideoCallMode
+                      payLaterMode && !smallSelect
                         ? "w-64 sm:w-2/3 mb-4 sm:px-0"
                         : "w-64 sm:w-1/3 mb-4 sm:px-0"
                     }

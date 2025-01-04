@@ -547,14 +547,7 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
                                       </div>
 
                                       {/* Intro Questions and Answers */}
-                                      {console.log(
-                                        appointment.participants[0].introAnswers
-                                      )}
-                                      {/* {console.log(
-                                        "isIntro",
-                                        appointment.appointmentTypeId._id.toString() ===
-                                          APPOINTMENT_TYPE_ID_INTRO_SESSION
-                                      )} */}
+
                                       {appointment.appointmentTypeId._id.toString() ===
                                         APPOINTMENT_TYPE_ID_INTRO_SESSION &&
                                         appointment.participants[0]

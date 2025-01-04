@@ -36,6 +36,10 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
     const body = await req.json();
     const { appointmentId } = body;
 
+    if (!User.schema) {
+      throw new Error("User schema is not registered.");
+    }
+
     const appointment = await Appointment.findById(appointmentId).populate({
       path: "participants.userId",
       select: "email",

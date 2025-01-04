@@ -156,6 +156,9 @@ export const inviteTherapist = async (
           interval: 15,
         },
       },
+      settings: {
+        languages: ["ar"],
+      },
     });
 
     /*  const verificationToken = await generateVerificationToken(email, 168);
@@ -254,6 +257,10 @@ export const getAllAppointmentsByDate = async (date: string) => {
 
     const appointments = await Appointment.find({
       startDate: { $gte: start, $lte: end },
+      $or: [
+        { status: { $ne: "canceled" } },
+        { cancellationReason: { $ne: "not-paid-in-time" } },
+      ],
     })
       .populate("hostUserId", "firstName lastName email")
       .populate("participants.userId", "firstName lastName email")

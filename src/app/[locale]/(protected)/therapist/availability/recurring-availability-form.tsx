@@ -23,7 +23,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { BeatLoader } from "react-spinners";
 
 const combineDateAndTime = (baseDate: Date, time: Date): Date => {
@@ -85,7 +85,7 @@ const RecurringAvailabilityForm = ({
   const [startTimePopoverOpen, setStartTimePopoverOpen] = useState(false);
   const [endTimePopoverOpen, setEndTimePopoverOpen] = useState(false);
   const t = useTranslations("AvailabilityPage");
-
+  const locale = useLocale();
   const { responseToast } = useToast();
 
   const form = useForm({
@@ -224,7 +224,10 @@ const RecurringAvailabilityForm = ({
             {timeRangeInputs[day] && timeRangeInputs[day].length > 0 ? (
               timeRangeInputs[day].map((range: any, index: any) => (
                 <div key={index} className="flex items-center gap-4 flex-wrap">
-                  <div className="flex items-center gap-2 flex-wrap">
+                  <div
+                    className="flex items-center gap-2 flex-wrap"
+                    dir={locale === "ar" ? "rtl" : "ltr"}
+                  >
                     <FormField
                       control={form.control}
                       name={`timeRanges.${index}.startTime`}

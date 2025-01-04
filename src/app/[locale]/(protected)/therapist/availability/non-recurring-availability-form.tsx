@@ -33,7 +33,7 @@ import {
   saveNonRecurringAvailableTimes,
 } from "@/actions/availability";
 import { Separator } from "@/components/ui/separator";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import NonRecurringTimes from "./non-recurring-times";
 import { Checkbox } from "@/components/ui/checkbox";
 import { convertToUtcMidnight } from "@/utils";
@@ -78,7 +78,7 @@ const NonRecurringAvailabilityForm = ({
   const [startTimePopoverOpen, setStartTimePopoverOpen] = useState(false);
   const [endTimePopoverOpen, setEndTimePopoverOpen] = useState(false);
   const t = useTranslations("AvailabilityPage");
-
+  const locale = useLocale();
   // Initialize form with default values
   const form = useForm<z.infer<typeof NonRecurringAvailabilitySchemaFE>>({
     defaultValues: {
@@ -275,7 +275,10 @@ const NonRecurringAvailabilityForm = ({
                   </h3>
                   {form.watch("timeRanges").map((_: any, index: any) => (
                     <div key={index} className="flex flex-col gap-4 mt-4">
-                      <div className="flex gap-4 flex-wrap">
+                      <div
+                        className="flex gap-4 flex-wrap"
+                        dir={locale === "ar" ? "rtl" : "ltr"}
+                      >
                         <FormField
                           control={form.control}
                           name={`timeRanges.${index}.startDate`}

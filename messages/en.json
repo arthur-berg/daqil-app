@@ -6,8 +6,8 @@
     "signUp": "Sign up"
   },
   "AuthPage": {
-     "timeZoneNoticePart1": "To make sure your schedule is correct, the time zone in your browser should match the one you select below.",
-  "timeZoneNoticePart2": "Your current browser time zone is:",
+    "timeZoneNoticePart1": "To make sure your schedule is correct, the time zone in your browser should match the one you select below.",
+    "timeZoneNoticePart2": "Your current browser time zone is:",
     "iAcceptThe": "I accept the",
     "termsAndConditions": "Terms and Conditions",
     "minimum6Characters": "Minimum 6 characters",
@@ -85,8 +85,8 @@
   "AppointmentList": {
     "nextAppointmentInfo": "Your next appointment is scheduled on {day}, {date} at {time}",
     "completedIntro": "You've completed your introductory appointment.",
-  "nextStepsMessage": "Now it's time to confirm and pay for your next appointment. Continue your progress with your psychologist.",
-  "paymentDeadline": "Payment Deadline",
+    "nextStepsMessage": "Now it's time to confirm and pay for your next appointment. Continue your progress with your psychologist.",
+    "paymentDeadline": "Payment Deadline",
     "congratulations": "Congratulations!",
     "timeLeftToPay": "Time left to pay",
     "notProvided": "Not provided",
@@ -96,7 +96,7 @@
     "question3": "How long have you been experiencing these symptoms?",
     "question4": "Is there anything else you would like to share with your psychologist before the call?",
     "timeLeftUntilStart": "Time left until appointment start",
-    "timezoneNotice":  "You are viewing times in your browsers timezone: {timeZone}",
+    "timezoneNotice": "You are viewing times in your browsers timezone: {timeZone}",
     "meetingNotPaid": "Appointment is waiting for payment",
     "meetingNotPaidMessage": "The meeting is not paid yet by the client.",
     "meetingPaymentDeadline": "They have up to {timeLimit} hour before the meeting start to pay, otherwise the meeting will be canceled.",
@@ -160,10 +160,10 @@
   },
   "TherapistInvoicesPage": {
     "bonusEarned": "Bonus earned",
-    "outstandingBalance": "Outstanding Balance", 
+    "outstandingBalance": "Outstanding Balance",
     "earningsOverview": "Earnings Overview",
     "totalEarnings": "Total Earnings",
-"amountReceived": "Total Amount Received",
+    "amountReceived": "Total Amount Received",
     "invoices": "Invoices",
     "noInvoices": "No invoices available",
     "date": "Date",
@@ -178,7 +178,7 @@
     "admin": "Admin dashboard",
     "calendar": "Calendar",
     "bookTherapySession": "Book therapy session",
-    "bookSession":"Book Session",
+    "bookSession": "Book Session",
     "forAllUsers": "For all users",
     "forTherapists": "For psychologists",
     "appointments": "Appointments",
@@ -188,17 +188,18 @@
     "myClients": "My Clients",
     "myProfile": "My Profile"
   },
-"AppointmentEndedPage": {
-  "description": "If you left the meeting by accident, you can rejoin it.",
-  "callEnded": "Call Ended",
-  "nextStep": "Next Step: Book Your Appointment",
-  "descriptionIntro": "Your introductory call has ended. Now, you can book your next appointment to continue your progress. If you left the meeting by accident, you can rejoin it.",
-  "promoCodeMessage": "Use code DISCOUNT50 to get 50% off your next appointment!",
-  "bookNextAppointmentButton": "Book Next Appointment",
-  "rejoinMeetingButton": "Rejoin Meeting",
-  "goToAppointments":"Go to Appointments"
-},
+  "AppointmentEndedPage": {
+    "description": "If you left the meeting by accident, you can rejoin it.",
+    "callEnded": "Call Ended",
+    "nextStep": "Next Step: Book Your Appointment",
+    "descriptionIntro": "Your introductory call has ended. Now, you can book your next appointment to continue your progress. If you left the meeting by accident, you can rejoin it.",
+    "promoCodeMessage": "Use code DISCOUNT50 to get 50% off your next appointment!",
+    "bookNextAppointmentButton": "Book Next Appointment",
+    "rejoinMeetingButton": "Rejoin Meeting",
+    "goToAppointments": "Go to Appointments"
+  },
   "SettingsPage": {
+    "symptomsTitle": "Please check the symptoms that you can help treat",
     "deleteAccount": "Delete Account",
     "areYouSureTitle": "Are You Sure?",
     "areYouSureDescription": "Please type 'delete-account' to confirm you want to delete your account. This action is irreversible.",
@@ -314,13 +315,14 @@
     "noPaymentDetails": "No payment details have been saved yet"
   },
   "BookAppointmentPage": {
+    "showMore": "Show more",
     "bothLanguages": "Both languages",
-  "english": "English",
-  "arabic": "Arabic",
+    "english": "English",
+    "arabic": "Arabic",
     "filterBy": "Filter by",
-  "male": "Male",
-  "female": "Female",
-  "all": "All",
+    "male": "Male",
+    "female": "Female",
+    "all": "All",
     "nextAvailable": "Next available time: ",
     "logout": "Logout",
     "introMeetingWasCanceled": " Your intro appointment was not completed because one or both participants didn't join, or one of the participants canceled. Please book a new intro call.",
@@ -366,13 +368,13 @@
     "noImage": "No image"
   },
   "TimezoneWarningDialog": {
-  "title": "Timezone Mismatch Detected - Warning",
-  "browserTimezoneLabel": "Browser timezone:",
-  "accountSettingsTimezoneLabel": "Account settings timezone:",
-  "description": "Your browser's timezone does not match your saved timezone. This mismatch may lead to appointment times being displayed in different timezones. We recommend updating your timezone in the settings to match your browser's timezone for consistency.",
-  "goToSettings": "Go to Settings",
-  "timezonesAligned": "Timezones are aligned"
-},
+    "title": "Timezone Mismatch Detected - Warning",
+    "browserTimezoneLabel": "Browser timezone:",
+    "accountSettingsTimezoneLabel": "Account settings timezone:",
+    "description": "Your browser's timezone does not match your saved timezone. This mismatch may lead to appointment times being displayed in different timezones. We recommend updating your timezone in the settings to match your browser's timezone for consistency.",
+    "goToSettings": "Go to Settings",
+    "timezonesAligned": "Timezones are aligned"
+  },
   "BookingCalendar": {
     "client": "Client",
     "title": "Title",
@@ -454,10 +456,10 @@
     "cancelReservation": "Cancel reservation",
     "cancellationPolicy": "You will receive a 100% refund if you cancel more than 24 hours before the appointment starts.",
     "yourPrivacyAndSecurity": "Your Privacy and Security",
-"privacyMessage": "All payments are processed securely through Stripe, and we comply with the highest standards of data protection."
+    "privacyMessage": "All payments are processed securely through Stripe, and we comply with the highest standards of data protection."
   },
   "AvailabilityPage": {
-    "timezoneNotice":  "You are viewing times in your browsers timezone: {timeZone}",
+    "timezoneNotice": "You are viewing times in your browsers timezone: {timeZone}",
     "savingTimeSlots": "Saving time slots...",
     "recurringAvailableTimes": "Recurring available times",
     "nonRecurringAvailableTimes": "Non-recurring available times",
@@ -575,50 +577,52 @@
   },
   "ConfirmBookingPage": {
     "confirmingBookingText": "Confirming booking... Please wait",
-  "missingAppointmentId": "The appointment ID is missing. Please try again.",
-  "somethingWentWrong": "Something went wrong. Please try again later.",
-  "redirecting": "Redirecting..."
-},
-"IntroCheckoutTranslation": {
-  "almostThere": "Almost there!",
-  "emailConfirmationInstructions": "We have sent a booking confirmation link to your email. Please follow the instructions to complete your booking.",
-  "whatToDoNext": "What to do next:",
-  "checkEmailStep": "Open your email inbox and find the email from us.",
-  "clickConfirmStepStart": "Click on the",
-"confirmBookingButton": "Confirm Booking",
-"clickConfirmStepEnd": "button in the email.",
+    "missingAppointmentId": "The appointment ID is missing. Please try again.",
+    "somethingWentWrong": "Something went wrong. Please try again later.",
+    "redirecting": "Redirecting..."
+  },
+  "IntroCheckoutTranslation": {
+    "price": "Price",
+    "symbolicAmountExplanation": "A $1 USD charge is a symbolic amount to ensure that you respect the psychologist's time and commit to showing up for the introduction call. This helps maintain professionalism and ensures a meaningful session.",
+    "almostThere": "Almost there!",
+    "emailConfirmationInstructions": "We have sent a booking confirmation link to your email. Please follow the instructions to complete your booking.",
+    "whatToDoNext": "What to do next:",
+    "checkEmailStep": "Open your email inbox and find the email from us.",
+    "clickConfirmStepStart": "Click on the",
+    "confirmBookingButton": "Confirm Booking",
+    "clickConfirmStepEnd": "button in the email.",
 
-  "completeBookingStep": "Once confirmed, your booking will be finalized and you can close this screen.",
-  "introQuestionsHeader": "Before we can confirm your booking",
-  "introQuestionsSubHeader": "We need you to answer some questions to ensure your session is tailored to your needs.",
-  "checkEmailToConfirm": "Check your email to confirm your booking.",
-  "actionRequired": "Action Required",
-"weHaveReservedNoCard": "We have reserved this appointment for you. Please complete the actions above to confirm your booking.",
-  "goBack": "Go back",
-  "minutes": "minutes",
-  "appointmentDetails": "Appointment Details",
-  "day": "Day",
-  "time": "Time",
-  "duration": "Duration",
-  "cancellationTerms": "Your introductory appointment is completely free of charge.",
-  "confirmationPolicy": "By confirming this appointment, you agree to show up or cancel at least 24 hours in advance. This policy helps us ensure that the psychologist’s time is respected and minimizes the likelihood of missed appointments. Thank you for your understanding and cooperation.",
-  "agreeToPolicy": "I agree to the cancellation policy.",
-  "agreeToPolicyError": "Please agree to the cancellation policy before proceeding.",
-  "appointmentBooked": "Your appointment has been successfully booked!",
-  "minutesLeft": "minutes left",
-  "cancelReservation": "Cancel reservation",
-  "bookAppointment": "Book Appointment",
-  "bookingAppointment": "Booking appointment...",
-  "question1": "What is the reason for booking a call with us?",
-  "question2": "Please describe your symptoms.",
-  "question3": "How long have you been experiencing these symptoms?",
-  "question4": "Is there anything else you would like to share with your psychologist before the call?",
-  "placeholder": "Type your answer here...",
-  "validationError": "This field is required.",
-  "back": "Back",
-  "continue": "Continue",
-  "finish": "Finish"
-},
+    "completeBookingStep": "Once confirmed, your booking will be finalized and you can close this screen.",
+    "introQuestionsHeader": "Before we can confirm your booking",
+    "introQuestionsSubHeader": "We need you to answer some questions to ensure your session is tailored to your needs.",
+    "checkEmailToConfirm": "Check your email to confirm your booking.",
+    "actionRequired": "Action Required",
+    "weHaveReservedNoCard": "We have reserved this appointment for you. Please complete the actions above to confirm your booking.",
+    "goBack": "Go back",
+    "minutes": "minutes",
+    "appointmentDetails": "Appointment Details",
+    "day": "Day",
+    "time": "Time",
+    "duration": "Duration",
+    "cancellationTerms": "Your introductory appointment is completely free of charge.",
+    "confirmationPolicy": "By confirming this appointment, you agree to show up or cancel at least 24 hours in advance. This policy helps us ensure that the psychologist’s time is respected and minimizes the likelihood of missed appointments. Thank you for your understanding and cooperation.",
+    "agreeToPolicy": "I agree to the cancellation policy.",
+    "agreeToPolicyError": "Please agree to the cancellation policy before proceeding.",
+    "appointmentBooked": "Your appointment has been successfully booked!",
+    "minutesLeft": "minutes left",
+    "cancelReservation": "Cancel reservation",
+    "bookAppointment": "Book Appointment",
+    "bookingAppointment": "Booking appointment...",
+    "question1": "What is the reason for booking a call with us?",
+    "question2": "Please describe your symptoms.",
+    "question3": "How long have you been experiencing these symptoms?",
+    "question4": "Is there anything else you would like to share with your psychologist before the call?",
+    "placeholder": "Type your answer here...",
+    "validationError": "This field is required.",
+    "back": "Back",
+    "continue": "Continue",
+    "finish": "Finish"
+  },
   "AdminPage": {
     "clientOverview": "Client Overview",
     "inviteTherapists": "Invite psychologists",
@@ -743,7 +747,32 @@
     "videoMeetingOnlyAvailable": "Video meeting is only available between 20 minutes before the appointment starts and 15 minutes after it ends.",
     "appointmentNotConfirmed": "The appointment is not confirmed."
   },
+  "Symptoms": {
+    "add": "ADD",
+    "adhd": "ADHD",
+    "aggression": "Aggression and Anger",
+    "addiction": "Addiction",
+    "depression": "Depression",
+    "phobias": "Phobias/Fears",
+    "parentSupport": "Parent Support",
+    "lgbtq": "LGBTQ+",
+    "ibs": "IBS (Irritable Bowel Syndrome)",
+    "chronicPain": "Chronic Pain",
+    "panicAttacks": "Panic Attacks/Panic Disorder",
+    "relationship": "Relationship Issues",
+    "sexualProblems": "Sexual Problems",
+    "selfEsteem": "Self-Esteem",
+    "confidence": "Self-Confidence",
+    "socialAnxiety": "Social Anxiety",
+    "stress": "Stress",
+    "sleep": "Sleep Problems",
+    "tinnitus": "Tinnitus",
+    "trauma": "Trauma",
+    "ocd": "Obsessive-Compulsive Disorder (OCD)",
+    "anxiety": "Anxiety/Worry"
+  },
   "SuccessMessages": {
+    "symptomsSaved": "Your symptoms have been saved successfully.",
     "professionalAgreementAccepted": "Professional agreement accepted",
     "therapistPaidAmountSet": "Amount edited successfully",
     "appointmentBookingConfirmed": "Appointment booking confirmed",
@@ -805,11 +834,10 @@
   },
   "SmsReminder": {
     "reminderMessage": "Reminder: Your appointment with {hostFirstName} {hostLastName} starts in 20 minutes at {appointmentTime}. Please be ready and ensure your microphone and video are working properly. You can join the meeting here: {meetingLink}",
-  "reminderMessage24h": "Reminder: Your appointment with {hostFirstName} {hostLastName} is scheduled for {appointmentTime} tomorrow. Please be prepared and ensure your equipment is set up.",
-  "reminderMessage2h": "Reminder: Your appointment with {hostFirstName} {hostLastName} starts in 2 hours at {appointmentTime}. Please be prepared and ensure your equipment is set up."
+    "reminderMessage24h": "Reminder: Your appointment with {hostFirstName} {hostLastName} is scheduled for {appointmentTime} tomorrow. Please be prepared and ensure your equipment is set up.",
+    "reminderMessage2h": "Reminder: Your appointment with {hostFirstName} {hostLastName} starts in 2 hours at {appointmentTime}. Please be prepared and ensure your equipment is set up."
+  },
 
-},
-  
   "TwoFactorEmail": {
     "daqil": "DAQIL",
     "subject": "Your Two-Factor Authentication Code",
@@ -921,24 +949,23 @@
     "thankYouMessage": "Thank you for using DAQIL."
   },
   "IntroBookingLinkConfirmationEmail": {
-  "actionRequiredSubject": "Action Required: Confirm Your Booking",
-  "therapistNotificationSubject": "New Intro Call Appointment Booked",
-  "greeting": "Hello {name},",
-  "introBookingMessage": "We have reserved an intro call appointment for you. Please confirm your booking by clicking the button below.",
-  "dateLabel": "Date",
-  "timeLabel": "Time",
-  "durationLabel": "Duration",
-  "minutesLabel": "minutes",
-  "confirmBookingButton": "Confirm Booking",
-  "actionRequiredFooter": "Please confirm your booking as soon as possible to secure your appointment.",
-  "therapistGreeting": "Hello {name},",
-  "therapistIntroBookingMessage": "{clientName} has booked an intro call appointment with you. Here are the details:",
-  "therapistNotificationFooter": "You will receive a notification once the client confirms the booking.",
-  "cancellationNotice": "If you do not attend the appointment or fail to cancel at least 24 hours in advance, you will be charged $15 USD.",
-  "psychologistLabel": "Psychologist",
-  "clientLabel": "Client"
-
-},
+    "actionRequiredSubject": "Action Required: Confirm Your Booking",
+    "therapistNotificationSubject": "New Intro Call Appointment Booked",
+    "greeting": "Hello {name},",
+    "introBookingMessage": "We have reserved an intro call appointment for you. Please confirm your booking by clicking the button below.",
+    "dateLabel": "Date",
+    "timeLabel": "Time",
+    "durationLabel": "Duration",
+    "minutesLabel": "minutes",
+    "confirmBookingButton": "Confirm Booking",
+    "actionRequiredFooter": "Please confirm your booking as soon as possible to secure your appointment.",
+    "therapistGreeting": "Hello {name},",
+    "therapistIntroBookingMessage": "{clientName} has booked an intro call appointment with you. Here are the details:",
+    "therapistNotificationFooter": "You will receive a notification once the client confirms the booking.",
+    "cancellationNotice": "If you do not attend the appointment or fail to cancel at least 24 hours in advance, you will be charged $15 USD.",
+    "psychologistLabel": "Psychologist",
+    "clientLabel": "Client"
+  },
   "MeetingLinkEmail": {
     "subject": "Video link for your appointment at {appointmentTime}",
     "greeting": "Hello,",
@@ -1067,36 +1094,38 @@
     "acceptButton": "Accept",
     "checkboxNotCheckedAlert": "You must accept the agreement to proceed."
   },
-    "PenaltyPolicyPage": {
-      "title": "Penalty Policy",
-      "lastUpdated": "Last Updated: 2024/11/29",
-      "introduction": {
-        "heading": "1. Introduction",
-        "content": "This document outlines the penalty policy for psychologists who violate the terms of the platform by stealing clients or breaching other outlined agreements."
-      },
-      "policyOverview": {
-        "heading": "2. Policy Overview",
-        "content": "To maintain trust and professionalism, DAQIL enforces strict policies regarding client interactions. Any violations, such as stealing clients, will result in significant penalties to ensure the integrity of the platform."
-      },
-      "fineDetails": {
-        "heading": "3. Fine Details",
-        "content": "A fine of $1000 will be imposed for each client stolen from the platform. This penalty aims to prevent unauthorized solicitation and safeguard the interests of both the platform and its users."
-      },
-      "detectionMethods": {
-        "heading": "4. Detection Methods",
-        "content": "DAQIL employs advanced AI technology and manual monitoring to detect unauthorized actions. This includes tracking communication patterns, session history, and other behavioral indicators to identify potential violations."
-      },
-      "agreement": {
-        "heading": "5. Agreement to Policy",
-        "content": "By continuing to use the platform, psychologists agree to abide by this policy and accept the penalties for any violations as outlined in this document."
-      },
-      "contactUs": {
-        "heading": "6. Contact Us",
-        "content": "If you have any questions or concerns about this policy, please contact us at hello@daqil.com."
-      }
+  "PenaltyPolicyPage": {
+    "title": "Penalty Policy",
+    "lastUpdated": "Last Updated: 2024/11/29",
+    "introduction": {
+      "heading": "1. Introduction",
+      "content": "This document outlines the penalty policy for psychologists who violate the terms of the platform by stealing clients or breaching other outlined agreements."
     },
-  
+    "policyOverview": {
+      "heading": "2. Policy Overview",
+      "content": "To maintain trust and professionalism, DAQIL enforces strict policies regarding client interactions. Any violations, such as stealing clients, will result in significant penalties to ensure the integrity of the platform."
+    },
+    "fineDetails": {
+      "heading": "3. Fine Details",
+      "content": "A fine of $1000 will be imposed for each client stolen from the platform. This penalty aims to prevent unauthorized solicitation and safeguard the interests of both the platform and its users."
+    },
+    "detectionMethods": {
+      "heading": "4. Detection Methods",
+      "content": "DAQIL employs advanced AI technology and manual monitoring to detect unauthorized actions. This includes tracking communication patterns, session history, and other behavioral indicators to identify potential violations."
+    },
+    "agreement": {
+      "heading": "5. Agreement to Policy",
+      "content": "By continuing to use the platform, psychologists agree to abide by this policy and accept the penalties for any violations as outlined in this document."
+    },
+    "contactUs": {
+      "heading": "6. Contact Us",
+      "content": "If you have any questions or concerns about this policy, please contact us at hello@daqil.com."
+    }
+  },
+
   "BookingConfirmedIntroCall": {
+    "clientNameLabel": "Client name: ",
+    "clientPhoneNumberLabel": "Phone number: ",
     "introAnswersLabel": "Intro Questions",
     "notProvided": "Not provided",
     "therapistSubject": "New Appointment Booking: Introductory Call",
@@ -1132,14 +1161,14 @@
     "waitingForClient": "Waiting for the client to join...",
     "waitingForPsychologist": "Please wait. Your psychologist will be with you shortly.",
     "noShowMessage": "If the client doesn't show up, please feel free to give them a call.",
-  "clientName": "Client name",
-  "phoneNumber": "Phone number",
-  "email": "Email",
-  "disconnected": {
-    "title": "You have been disconnected",
-    "description": "It seems you've lost connection to the video call. Please try reloading.",
-    "reloadButton": "Reload Video Call"
-  }
+    "clientName": "Client name",
+    "phoneNumber": "Phone number",
+    "email": "Email",
+    "disconnected": {
+      "title": "You have been disconnected",
+      "description": "It seems you've lost connection to the video call. Please try reloading.",
+      "reloadButton": "Reload Video Call"
+    }
   },
   "DateTimePicker": {
     "ok": "Ok"

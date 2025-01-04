@@ -122,7 +122,6 @@ export const scheduleAppointmentInVideo = async (
     );
 
     if (inIntroVideoCall) {
-      console.log("here", inIntroVideoCall);
       await User.findByIdAndUpdate(
         clientId,
         {
@@ -132,7 +131,6 @@ export const scheduleAppointmentInVideo = async (
         },
         { session }
       );
-      console.log("after");
     }
 
     if (

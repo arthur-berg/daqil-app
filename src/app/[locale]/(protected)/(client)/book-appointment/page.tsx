@@ -52,7 +52,10 @@ const BookAppointmentPage = async ({
     APPOINTMENT_TYPE_ID_LONG_SESSION,
   ]);
 
-  if (clientAcceptedIntroTherapist || hasSelectedTherapist) {
+  if (
+    clientAcceptedIntroTherapist ||
+    (hasSelectedTherapist && selectedTherapist)
+  ) {
     return (
       <div className="max-w-4xl mx-auto">
         <div className="relative flex justify-center">
