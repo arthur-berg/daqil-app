@@ -5,7 +5,7 @@ import { requireAuth } from "@/lib/auth";
 import connectToMongoDB from "@/lib/mongoose";
 import User from "@/models/User";
 import { getTranslations } from "next-intl/server";
-import { SymptomsSchema } from "@/schemas";
+import { LanguagesSchema, SymptomsSchema } from "@/schemas";
 
 export async function saveSymptoms(values: z.infer<typeof SymptomsSchema>) {
   await connectToMongoDB();
@@ -35,6 +35,39 @@ export async function saveSymptoms(values: z.infer<typeof SymptomsSchema>) {
     // Find the appointment
 
     return { success: SuccessMessages("symptomsSaved") };
+  } catch (error) {
+    return { error: ErrorMessages("somethingWentWrong") };
+  }
+}
+
+export async function saveLanguages(values: z.infer<typeof LanguagesSchema>) {
+  await connectToMongoDB();
+
+  const [SuccessMessages, ErrorMessages] = await Promise.all([
+    getTranslations("SuccessMessages"),
+    getTranslations("ErrorMessages"),
+  ]);
+
+  const validatedFields = LanguagesSchema.safeParse(values);
+
+  if (!validatedFields.success) {
+    return { error: ErrorMessages("invalidFields") };
+  }
+
+  const { languages } = validatedFields.data;
+
+  try {
+    const therapist = await requireAuth([UserRole.THERAPIST]);
+
+    await User.findByIdAndUpdate(therapist.id, {
+      $set: {
+        "settings.languages": languages,
+      },
+    });
+
+    // Find the appointment
+
+    return { success: SuccessMessages("languagesSaved") };
   } catch (error) {
     return { error: ErrorMessages("somethingWentWrong") };
   }

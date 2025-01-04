@@ -26,3 +26,5 @@ export const SYMPTOM_OPTIONS = [
   { value: "ocd" },
   { value: "anxiety" },
 ];
+
+export const LANGUAGE_OPTIONS = [{ value: "en" }, { value: "ar" }];

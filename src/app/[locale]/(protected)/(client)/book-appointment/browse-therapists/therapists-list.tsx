@@ -11,6 +11,20 @@ import { useUserName } from "@/hooks/use-user-name";
 import { SYMPTOM_OPTIONS } from "@/contants/config";
 import { Checkbox } from "@/components/ui/checkbox";
 import { MdAdd } from "react-icons/md";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Badge } from "@/components/ui/badge";
 
 const MAX_VISIBLE_SYMPTOMS = 3;
 
@@ -24,6 +38,7 @@ const TherapistsList = ({ therapistsJson }: { therapistsJson: any }) => {
   const [visibleSymptomsCount, setVisibleSymptomsCount] = useState<{
     [therapistId: string]: number;
   }>({});
+  const [symptomSearch, setSymptomSearch] = useState("");
   const { getFullName } = useUserName();
   const locale = useLocale();
   const t = useTranslations("BookAppointmentPage");
@@ -51,6 +66,13 @@ const TherapistsList = ({ therapistsJson }: { therapistsJson: any }) => {
     return matchesSex && matchesLanguage && matchesSymptoms;
   });
 
+  const handleShowMore = (therapistId: string) => {
+    setVisibleSymptomsCount((prev) => ({
+      ...prev,
+      [therapistId]:
+        (prev[therapistId] || MAX_VISIBLE_SYMPTOMS) + MAX_VISIBLE_SYMPTOMS,
+    }));
+  };
   const toggleSymptom = (symptom: string) => {
     setSelectedSymptoms((prev) =>
       prev.includes(symptom)
@@ -59,13 +81,13 @@ const TherapistsList = ({ therapistsJson }: { therapistsJson: any }) => {
     );
   };
 
-  const handleShowMore = (therapistId: string) => {
-    setVisibleSymptomsCount((prev) => ({
-      ...prev,
-      [therapistId]:
-        (prev[therapistId] || MAX_VISIBLE_SYMPTOMS) + MAX_VISIBLE_SYMPTOMS,
-    }));
+  const removeSymptom = (symptom: string) => {
+    setSelectedSymptoms((prev) => prev.filter((s) => s !== symptom));
   };
+
+  const clearAllSymptoms = () => setSelectedSymptoms([]);
+
+  const allSymptomsSelected = selectedSymptoms.length === 0;
 
   return (
     <div>
@@ -117,20 +139,93 @@ const TherapistsList = ({ therapistsJson }: { therapistsJson: any }) => {
             {t("arabic")}
           </Button>
         </div>
-        {/*  <div className="flex flex-wrap gap-4 mb-4">
-          {SYMPTOM_OPTIONS.map((symptom) => (
-            <div key={symptom.value} className="flex items-center space-x-2">
-              <Checkbox
-                id={symptom.value}
-                checked={selectedSymptoms.includes(symptom.value)}
-                onCheckedChange={() => toggleSymptom(symptom.value)}
-              />
-              <label htmlFor={symptom.value} className="text-sm">
-                {tSymptoms(`${symptom.value}`)}
-              </label>
-            </div>
-          ))}
-        </div> */}
+
+        {/* <h2 className="text-lg font-bold mb-2">{t("filterBy")}</h2>
+        <p className="text-sm text-gray-600 mb-4">
+          {allSymptomsSelected
+            ? t("allSymptomsDefault")
+            : t("filtersApplied", { count: selectedSymptoms.length })}
+        </p>
+
+        <div className="w-64 mb-4">
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" className="w-full">
+                {allSymptomsSelected
+                  ? t("allSymptoms")
+                  : t("filtersAppliedShort", {
+                      count: selectedSymptoms.length,
+                    })}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-[300px] p-0">
+              <Command>
+                <CommandInput
+                  placeholder={t("searchSymptoms")}
+                  value={symptomSearch}
+                  onValueChange={setSymptomSearch}
+                />
+                <CommandList>
+                  <CommandEmpty>{t("noSymptomsFound")}</CommandEmpty>
+                  <CommandGroup>
+                    {SYMPTOM_OPTIONS.filter((symptom: any) =>
+                      symptom.value
+                        .toLowerCase()
+                        .includes(symptomSearch.toLowerCase())
+                    ).map((symptom) => (
+                      <CommandItem
+                        key={symptom.value}
+                        onSelect={() => toggleSymptom(symptom.value)}
+                      >
+                        <Checkbox
+                          id={symptom.value}
+                          checked={selectedSymptoms.includes(symptom.value)}
+                          onCheckedChange={() => toggleSymptom(symptom.value)}
+                        />
+                        <label htmlFor={symptom.value} className="ml-2">
+                          {tSymptoms(symptom.value)}
+                        </label>
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                </CommandList>
+              </Command>
+            </PopoverContent>
+          </Popover>
+        </div>
+ */}
+        {/* Selected Symptoms */}
+        {/* <div className="flex flex-wrap gap-2 mb-4">
+          {selectedSymptoms.length > 0 ? (
+            selectedSymptoms.map((symptom) => (
+              <Badge
+                key={symptom}
+                variant="secondary"
+                className="flex items-center space-x-2"
+              >
+                <span>{tSymptoms(symptom)}</span>
+                <Button
+                  onClick={() => removeSymptom(symptom)}
+                  className="ml-1 h-auto p-0"
+                  variant="destructive"
+                  size="icon"
+                >
+                  &times;
+                </Button>
+              </Badge>
+            ))
+          ) : (
+            <Badge variant="secondary" className="text-gray-600">
+              {t("noSymptomsSelected")}
+            </Badge>
+          )}
+        </div>
+
+        {selectedSymptoms.length > 0 && (
+          <Button variant="link" className="text-sm" onClick={clearAllSymptoms}>
+            {t("clearAllFilters")}
+          </Button>
+        )} */}
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredTherapists?.map((therapist: any) => {
@@ -196,14 +291,14 @@ const TherapistsList = ({ therapistsJson }: { therapistsJson: any }) => {
                     </div>
                   </div>
                 )}
-                {/*  {therapist.settings?.treatedSymptoms?.length > 0 && (
-                  <div className="flex flex-wrap justify-center gap-2 mb-4">
+                {therapist.settings?.treatedSymptoms?.length > 0 && (
+                  <div className="flex flex-wrap justify-center items-center gap-2 mb-4">
                     {therapist.settings.treatedSymptoms
                       .slice(0, visibleSymptoms)
                       .map((symptom: string) => (
                         <span
                           key={symptom}
-                          className="bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs font-medium"
+                          className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-medium inline-flex items-center leading-tight h-[30px]"
                         >
                           {tSymptoms(symptom)}
                         </span>
@@ -212,7 +307,7 @@ const TherapistsList = ({ therapistsJson }: { therapistsJson: any }) => {
                       visibleSymptoms && (
                       <Button
                         variant="link"
-                        className="text-xs mt-2 flex items-center space-x-1"
+                        className="text-xs flex items-center space-x-1 h-[30px] px-2"
                         onClick={() => handleShowMore(therapist._id)}
                       >
                         <MdAdd className="w-4 h-4" />
@@ -220,7 +315,7 @@ const TherapistsList = ({ therapistsJson }: { therapistsJson: any }) => {
                       </Button>
                     )}
                   </div>
-                )} */}
+                )}
                 {therapist.nextAvailableSlot && (
                   <NextAppointment
                     nextAvailable={t("nextAvailable")}

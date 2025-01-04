@@ -199,6 +199,7 @@
     "goToAppointments": "Go to Appointments"
   },
   "SettingsPage": {
+    "languageTitle": "Please check the languages you can speak to clients in",
     "symptomsTitle": "Please check the symptoms that you can help treat",
     "deleteAccount": "Delete Account",
     "areYouSureTitle": "Are You Sure?",
@@ -315,6 +316,14 @@
     "noPaymentDetails": "No payment details have been saved yet"
   },
   "BookAppointmentPage": {
+    "allSymptomsDefault": "Showing all symptoms by default. Use filters to narrow down.",
+    "filtersApplied": "{count} filter(s) applied. Adjust the filters to change the results.",
+    "filtersAppliedShort": "{count} filter(s) applied",
+    "searchSymptoms": "Search symptoms",
+    "noSymptomsFound": "No symptoms found",
+    "allSymptoms": "All Symptoms",
+    "noSymptomsSelected": "No symptoms selected (showing all).",
+    "clearAllFilters": "Clear All Filters",
     "showMore": "Show more",
     "bothLanguages": "Both languages",
     "english": "English",
@@ -747,6 +756,10 @@
     "videoMeetingOnlyAvailable": "Video meeting is only available between 20 minutes before the appointment starts and 15 minutes after it ends.",
     "appointmentNotConfirmed": "The appointment is not confirmed."
   },
+  "Languages": {
+    "en": "English",
+    "ar": "Arabic"
+  },
   "Symptoms": {
     "add": "ADD",
     "adhd": "ADHD",
@@ -772,6 +785,7 @@
     "anxiety": "Anxiety/Worry"
   },
   "SuccessMessages": {
+    "languagesSaved": "Languages saved successfully.",
     "symptomsSaved": "Your symptoms have been saved successfully.",
     "professionalAgreementAccepted": "Professional agreement accepted",
     "therapistPaidAmountSet": "Amount edited successfully",
