@@ -479,7 +479,7 @@ const VideoRoom = ({
               {t("scheduleAppointment")}
             </h2>
             <BookingCalendar
-              inVideoCallMode={true}
+              payLaterMode={true}
               showOnlyIntroCalls={false}
               inIntroVideoCall={sessionData.isIntroCall}
               setIsVideoDialogOpen={setIsDialogOpen}
