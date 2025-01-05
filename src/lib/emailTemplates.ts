@@ -559,7 +559,8 @@ export const nonPaidAppointmentConfirmationTemplate = async (
   },
   isTherapist: boolean,
   t: any,
-  locale: string
+  locale: string,
+  isAdmin?: boolean
 ) => {
   const daqilLogoUrl = await getDaqilLogoUrl(locale);
   const subject = isTherapist ? t("therapistSubject") : t("clientSubject");
@@ -583,6 +584,23 @@ export const nonPaidAppointmentConfirmationTemplate = async (
     : appointmentDetails.clientTimeZone;
 
   const formattedTimeZone = formatTimeZoneWithOffset(timeZone);
+
+  const timeZoneInfo = isAdmin
+    ? `
+       <p><strong>Psychologists timezone: </strong> ${
+         appointmentDetails.therapistTimeZone
+           ? formatTimeZoneWithOffset(appointmentDetails.therapistTimeZone)
+           : "N/A"
+       }</p>
+       <p><strong>Clients timezone: </strong> ${
+         appointmentDetails.clientTimeZone
+           ? formatTimeZoneWithOffset(appointmentDetails.clientTimeZone)
+           : "N/A"
+       }</p>
+     `
+    : `
+       <p><strong>${t("timeLabel")}</strong> ${time} (${formattedTimeZone})</p>
+     `;
 
   const paymentLink = `${process.env.NEXT_PUBLIC_APP_URL}/${locale}/invoices/${appointmentDetails.appointmentId}/checkout?appointmentTypeId=${appointmentDetails.appointmentTypeId}&date=${encodedDate}`;
 
@@ -621,9 +639,7 @@ export const nonPaidAppointmentConfirmationTemplate = async (
     appointmentDetails.clientName
   }</p>
           <p><strong>${t("dateLabel")}</strong> ${date}</p>
-          <p><strong>${t(
-            "timeLabel"
-          )}</strong> ${time} (${formattedTimeZone})</p>
+          ${timeZoneInfo}
         </div>
         <div style="margin-top: 20px; font-size: 16px; color: #333333;">
           <p>${additionalMessage}</p>
