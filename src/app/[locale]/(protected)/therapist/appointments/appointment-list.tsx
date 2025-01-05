@@ -246,9 +246,13 @@ const AppointmentList = ({ appointments }: { appointments: any }) => {
             <div className="mt-4 text-yellow-700">
               <div>
                 <div> {t("meetingNotPaidMessage")}</div>{" "}
-                {t("meetingPaymentDeadline", {
-                  timeLimit: 1, // 1 hour before meeting
-                })}
+                {t("timeLeftUntilPaymentExpires")}:{" "}
+                {isMounted && (
+                  <Countdown
+                    date={new Date(nextAppointment.payment.paymentExpiryDate)}
+                    renderer={countdownRenderer}
+                  />
+                )}
               </div>
             </div>
           )}
