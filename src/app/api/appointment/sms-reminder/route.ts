@@ -35,7 +35,7 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
       })
       .populate({
         path: "hostUserId",
-        select: "firstName lastName personalInfo.phoneNumber",
+        select: "firstName lastName personalInfo.phoneNumber settings.timeZone",
       });
 
     if (!appointment) {
@@ -70,6 +70,7 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
     const appointmentStartTime = new Date(appointment.startDate);
 
     const clientTimeZone = appointment.participants[0].userId.settings.timeZone;
+    const therapistTimeZone = appointment.hostUserId.settings.timeZone;
 
     if (!phoneNumber) {
       return NextResponse.json(
@@ -78,9 +79,15 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
       );
     }
 
-    const formattedTime = formatInTimeZone(
+    const formattedTimeClient = formatInTimeZone(
       appointmentStartTime,
       clientTimeZone,
+      "HH:mm"
+    );
+
+    const formattedTimeTherapist = formatInTimeZone(
+      appointmentStartTime,
+      therapistTimeZone,
       "HH:mm"
     );
 
@@ -89,6 +96,10 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
       reminder2h: !!reminder2h,
       reminderTherapist: !!reminderTherapist,
     };
+
+    let formattedTime = !!reminderTherapist
+      ? formattedTimeTherapist
+      : formattedTimeClient;
 
     await sendSmsReminder(
       phoneNumber,
