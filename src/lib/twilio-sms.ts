@@ -25,14 +25,16 @@ export const sendSmsReminder = async (
     reminder24h: boolean;
     reminder2h: boolean;
     reminderTherapist: boolean;
-  }
+  },
+  clientFirstName: string,
+  clientLastName: string
 ): Promise<void> => {
   try {
     let message;
     if (reminders.reminderTherapist) {
       message = t("reminderMessageTherapist", {
-        hostFirstName,
-        hostLastName,
+        clientFirstName,
+        clientLastName,
         appointmentTime,
       });
     } else if (reminders.reminder24h) {

@@ -58,6 +58,15 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
       locale
     );
     const hostLastName = getLastName(appointment.hostUserId.lastName, locale);
+    const clientFirstName = getFirstName(
+      appointment.participants[0].userId.firstName,
+      locale
+    );
+    const clientLastName = getLastName(
+      appointment.participants[0].userId.lastName,
+      locale
+    );
+
     const appointmentStartTime = new Date(appointment.startDate);
 
     const clientTimeZone = appointment.participants[0].userId.settings.timeZone;
@@ -88,7 +97,9 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
       formattedTime,
       t,
       appointmentId,
-      reminders
+      reminders,
+      clientFirstName,
+      clientLastName
     );
 
     return NextResponse.json({
