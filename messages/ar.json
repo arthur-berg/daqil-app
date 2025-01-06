@@ -840,7 +840,8 @@
   "SmsReminder": {
     "reminderMessage": "تذكير: موعدك مع {hostFirstName} {hostLastName} سيبدأ خلال 20 دقيقة في {appointmentTime}. يرجى الاستعداد والتأكد من أن الميكروفون والفيديو يعملان بشكل صحيح. يمكنك الانضمام إلى الاجتماع هنا: {meetingLink}",
     "reminderMessage24h": "تذكير: موعدك مع {hostFirstName} {hostLastName} مقرر في {appointmentTime} غدًا. يرجى الاستعداد والتأكد من تجهيز معداتك.",
-    "reminderMessage2h": "تذكير: موعدك مع {hostFirstName} {hostLastName} سيبدأ بعد ساعتين في {appointmentTime}. يرجى الاستعداد والتأكد من أن معداتك جاهزة."
+    "reminderMessage2h": "تذكير: موعدك مع {hostFirstName} {hostLastName} سيبدأ بعد ساعتين في {appointmentTime}. يرجى الاستعداد والتأكد من أن معداتك جاهزة.",
+    "reminderMessageTherapist": "تذكير: لديك موعد مع {hostFirstName} {hostLastName} في {appointmentTime}. يرجى الاستعداد والتأكد من إعداد معداتك."
   },
   "TwoFactorEmail": {
     "daqil": "زاكينا",

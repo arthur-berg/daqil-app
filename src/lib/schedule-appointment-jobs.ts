@@ -139,6 +139,8 @@ export const scheduleReminderJobs = async (
 
   /* const oneDayBefore = subDays(new Date(appointment.startDate), 1); */
   const twoHoursBefore = subHours(new Date(appointment.startDate), 2);
+  const threeHoursBefore = subHours(new Date(appointment.startDate), 3);
+
   /* const thirtyMinutesBefore = subMinutes(new Date(appointment.startDate), 30); */
   const twentyFourHoursBefore = subHours(new Date(appointment.startDate), 24);
 
@@ -208,6 +210,22 @@ export const scheduleReminderJobs = async (
       });
     }
   }
+
+  const smsReminderTaskIdTherapist = await scheduleTask(
+    `${process.env.QSTASH_API_URL}/sms-reminder`,
+    {
+      reminderTherapist: true,
+      appointmentId: appointmentId,
+    },
+    Math.floor(threeHoursBefore.getTime() / 1000),
+    locale
+  );
+
+  await ScheduledTask.create({
+    appointmentId: appointmentId,
+    type: "smsReminder",
+    taskId: smsReminderTaskIdTherapist,
+  });
 
   const meetingLinkTaskId = await scheduleTask(
     `${process.env.QSTASH_API_URL}/send-meeting-link`,
