@@ -26,7 +26,9 @@ const AdminClientPage = async ({
     (appointmentDay: any) => appointmentDay.bookedAppointments
   );
 
-  const introQuestions = Object.keys(client.introAnswers);
+  const introQuestions = client.introAnswers
+    ? Object.keys(client.introAnswers)
+    : null;
 
   return (
     <div className="container mx-auto py-10 bg-white rounded-md shadow-md px-6">
@@ -38,14 +40,20 @@ const AdminClientPage = async ({
           Intro Answers
         </h2>
         <ul className="space-y-2">
-          {introQuestions.map((question, index) => (
-            <li key={index} className="bg-gray-50 p-2 rounded-md shadow-sm">
-              <span className="font-medium">{questionsMap[question]}:</span>{" "}
-              <span className="text-gray-700">
-                {client.introAnswers[question]}
-              </span>
-            </li>
-          ))}
+          {introQuestions ? (
+            <>
+              {introQuestions?.map((question, index) => (
+                <li key={index} className="bg-gray-50 p-2 rounded-md shadow-sm">
+                  <span className="font-medium">{questionsMap[question]}:</span>{" "}
+                  <span className="text-gray-700">
+                    {client.introAnswers[question]}
+                  </span>
+                </li>
+              ))}
+            </>
+          ) : (
+            <p>No intro answers found.</p>
+          )}
         </ul>
       </div>
 
