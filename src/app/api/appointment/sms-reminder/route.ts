@@ -6,6 +6,7 @@ import { sendSmsReminder } from "@/lib/twilio-sms";
 import { getTranslations } from "next-intl/server";
 import { getFirstName, getLastName } from "@/utils/nameUtilsForApiRoutes";
 import { formatInTimeZone } from "date-fns-tz";
+import { formatTimeZoneWithOffset } from "@/utils/timeZoneUtils";
 
 import connectToMongoDB from "@/lib/mongoose";
 
@@ -35,7 +36,7 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
       })
       .populate({
         path: "hostUserId",
-        select: "firstName lastName personalInfo.phoneNumber",
+        select: "firstName lastName personalInfo.phoneNumber settings.timeZone",
       });
 
     if (!appointment) {
@@ -70,6 +71,7 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
     const appointmentStartTime = new Date(appointment.startDate);
 
     const clientTimeZone = appointment.participants[0].userId.settings.timeZone;
+    const therapistTimeZone = appointment.hostUserId.settings.timeZone;
 
     if (!phoneNumber) {
       return NextResponse.json(
@@ -78,9 +80,15 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
       );
     }
 
-    const formattedTime = formatInTimeZone(
+    const formattedTimeClient = formatInTimeZone(
       appointmentStartTime,
       clientTimeZone,
+      "HH:mm"
+    );
+
+    const formattedTimeTherapist = formatInTimeZone(
+      appointmentStartTime,
+      therapistTimeZone,
       "HH:mm"
     );
 
@@ -89,6 +97,14 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
       reminder2h: !!reminder2h,
       reminderTherapist: !!reminderTherapist,
     };
+
+    let formattedTime = !!reminderTherapist
+      ? formattedTimeTherapist
+      : formattedTimeClient;
+
+    const clientTimeZoneFormatted = formatTimeZoneWithOffset(clientTimeZone);
+    const therapistTimeZoneFormatted =
+      formatTimeZoneWithOffset(therapistTimeZone);
 
     await sendSmsReminder(
       phoneNumber,
@@ -99,7 +115,9 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
       appointmentId,
       reminders,
       clientFirstName,
-      clientLastName
+      clientLastName,
+      clientTimeZoneFormatted,
+      therapistTimeZoneFormatted
     );
 
     return NextResponse.json({
