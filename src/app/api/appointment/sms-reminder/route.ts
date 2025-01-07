@@ -6,6 +6,7 @@ import { sendSmsReminder } from "@/lib/twilio-sms";
 import { getTranslations } from "next-intl/server";
 import { getFirstName, getLastName } from "@/utils/nameUtilsForApiRoutes";
 import { formatInTimeZone } from "date-fns-tz";
+import { formatTimeZoneWithOffset } from "@/utils/timeZoneUtils";
 
 import connectToMongoDB from "@/lib/mongoose";
 
@@ -101,6 +102,10 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
       ? formattedTimeTherapist
       : formattedTimeClient;
 
+    const clientTimeZoneFormatted = formatTimeZoneWithOffset(clientTimeZone);
+    const therapistTimeZoneFormatted =
+      formatTimeZoneWithOffset(therapistTimeZone);
+
     await sendSmsReminder(
       phoneNumber,
       hostFirstName,
@@ -110,7 +115,9 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
       appointmentId,
       reminders,
       clientFirstName,
-      clientLastName
+      clientLastName,
+      clientTimeZoneFormatted,
+      therapistTimeZoneFormatted
     );
 
     return NextResponse.json({

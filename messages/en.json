@@ -848,10 +848,10 @@
     "footerText": "Thank you for using DAQIL."
   },
   "SmsReminder": {
-    "reminderMessage": "Reminder: Your appointment with {hostFirstName} {hostLastName} starts in 20 minutes at {appointmentTime}. Please be ready and ensure your microphone and video are working properly. You can join the meeting here: {meetingLink}",
-    "reminderMessage24h": "Reminder: Your appointment with {hostFirstName} {hostLastName} is scheduled for {appointmentTime} tomorrow. Please be prepared and ensure your equipment is set up.",
-    "reminderMessage2h": "Reminder: Your appointment with {hostFirstName} {hostLastName} starts in 2 hours at {appointmentTime}. Please be prepared and ensure your equipment is set up.",
-    "reminderMessageTherapist": "Reminder: Your appointment with {clientFirstName} {clientLastName} at {appointmentTime}. Please be prepared and ensure your equipment is set up."
+    "reminderMessage": "Reminder: Your appointment with {hostFirstName} {hostLastName} starts in 20 minutes at {appointmentTime} ({clientTimeZoneFormatted}). Please be ready and ensure your microphone and video are working properly. You can join the meeting here: {meetingLink}",
+    "reminderMessage24h": "Reminder: Your appointment with {hostFirstName} {hostLastName} is scheduled for {appointmentTime} ({clientTimeZoneFormatted}) tomorrow. Please be prepared and ensure your equipment is set up.",
+    "reminderMessage2h": "Reminder: Your appointment with {hostFirstName} {hostLastName} starts in 2 hours at {appointmentTime} ({clientTimeZoneFormatted}). Please be prepared and ensure your equipment is set up.",
+    "reminderMessageTherapist": "Reminder: Your appointment with {clientFirstName} {clientLastName} at {appointmentTime} ({therapistTimeZoneFormatted}). Please be prepared and ensure your equipment is set up."
   },
 
   "TwoFactorEmail": {

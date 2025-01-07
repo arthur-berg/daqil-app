@@ -154,10 +154,17 @@ const CheckoutWrapper = ({
               t("calculatingPrice")
             ) : (
               <>
-                {t("price")}:{" "}
                 {locale === "ar"
-                  ? `${finalAmount}${currencyToSymbol("USD")}`
-                  : `${currencyToSymbol("USD")}${finalAmount}`}
+                  ? `${
+                      Number(finalAmount) % 1 === 0
+                        ? Number(finalAmount)
+                        : Number(finalAmount).toFixed(2)
+                    }${currencyToSymbol("USD")}`
+                  : `${currencyToSymbol("USD")}${
+                      Number(finalAmount) % 1 === 0
+                        ? Number(finalAmount)
+                        : Number(finalAmount).toFixed(2)
+                    }`}
               </>
             )}
           </p>
