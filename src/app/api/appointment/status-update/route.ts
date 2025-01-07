@@ -76,9 +76,8 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
         );
       }
     }
-    //statusUpdate.cancellationReason === "no-show-host"
-    if (true) {
-      console.log("REFUNDING");
+
+    if (statusUpdate.cancellationReason === "no-show-host") {
       const paymentIntents = await stripe.paymentIntents.list({
         customer: appointment.participants[0].userId.stripeCustomerId,
         limit: 100,
