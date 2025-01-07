@@ -773,7 +773,8 @@
     "tinnitus": "طنين الأذن",
     "trauma": "الصدمة النفسية",
     "ocd": "اضطراب الوسواس القهري (OCD)",
-    "anxiety": "القلق/التوتر"
+    "anxiety": "القلق/التوتر",
+    "autism": "التوحد"
   },
   "SuccessMessages": {
     "languagesSaved": "تم حفظ اللغات بنجاح.",

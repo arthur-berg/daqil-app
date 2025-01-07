@@ -11,7 +11,10 @@ import { format, isPast } from "date-fns";
 import { Button } from "@/components/ui/button";
 import CancelAppointmentForm from "./cancel-appointment-form";
 
-const AppointmentRenderer = ({ appointmentsJson, clientId }: any) => {
+const AppointmentRenderer = ({
+  appointmentsJson,
+  clientId,
+}: any) => {
   const [filterType, setFilterType] = useState("upcoming");
   const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
   const [selectedAppointment, setSelectedAppointment] = useState<any>(null);

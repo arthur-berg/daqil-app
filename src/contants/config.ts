@@ -25,6 +25,7 @@ export const SYMPTOM_OPTIONS = [
   { value: "trauma" },
   { value: "ocd" },
   { value: "anxiety" },
+  { value: "autism" },
 ];
 
 export const LANGUAGE_OPTIONS = [{ value: "en" }, { value: "ar" }];

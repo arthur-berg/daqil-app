@@ -783,7 +783,8 @@
     "tinnitus": "Tinnitus",
     "trauma": "Trauma",
     "ocd": "Obsessive-Compulsive Disorder (OCD)",
-    "anxiety": "Anxiety/Worry"
+    "anxiety": "Anxiety/Worry",
+    "autism": "Autism"
   },
   "SuccessMessages": {
     "languagesSaved": "Languages saved successfully.",

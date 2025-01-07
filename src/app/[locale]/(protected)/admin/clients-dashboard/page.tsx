@@ -231,12 +231,6 @@ const AdminDashboardPage = async () => {
         </div>
       </div>
 
-      <div className="mb-6">
-        <Link href="/admin/clients">
-          <Button variant="secondary">See all clients</Button>
-        </Link>
-      </div>
-
       {/* Grouped Data by Appointment Creation Date */}
       <div className="mb-6">
         <h2 className="text-xl font-semibold">Metrics By Date</h2>
