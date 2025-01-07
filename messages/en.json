@@ -83,6 +83,7 @@
     "cancelButton": "Cancel"
   },
   "AppointmentList": {
+    "timeLeftUntilPaymentExpires": "Time left until payment expires",
     "nextAppointmentInfo": "Your next appointment is scheduled on {day}, {date} at {time}",
     "completedIntro": "You've completed your introductory appointment.",
     "nextStepsMessage": "Now it's time to confirm and pay for your next appointment. Continue your progress with your psychologist.",

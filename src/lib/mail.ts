@@ -493,11 +493,36 @@ export const sendNonPaidBookingConfirmationEmail = async (
     ],
   };
 
+  const messages = [
+    mailchimpTx.messages.send({ message: therapistMessage as any }),
+    mailchimpTx.messages.send({ message: clientMessage as any }),
+  ];
+
   try {
-    await Promise.all([
-      mailchimpTx.messages.send({ message: therapistMessage as any }),
-      mailchimpTx.messages.send({ message: clientMessage as any }),
-    ]);
+    if (process.env.NODE_ENV === "production") {
+      const adminMessage = {
+        from_email: "no-reply@daqilhealth.com",
+        subject: t("therapistSubject"),
+        html: await nonPaidAppointmentConfirmationTemplate(
+          appointmentDetails,
+          true,
+          t,
+          locale,
+          true
+        ),
+        to: [
+          {
+            email: "hello@daqil.com",
+            type: "to",
+          },
+        ],
+      };
+      messages.push(
+        mailchimpTx.messages.send({ message: adminMessage as any })
+      );
+    }
+
+    await Promise.all(messages);
   } catch (error) {
     console.error(
       "Error sending appointment booking confirmation email:",
@@ -552,11 +577,28 @@ export const sendInvoicePaidEmail = async (
     ],
   };
 
+  const messages = [
+    mailchimpTx.messages.send({ message: therapistMessage as any }),
+    mailchimpTx.messages.send({ message: clientMessage as any }),
+  ];
+
+  if (process.env.NODE_ENV === "production") {
+    const adminMessage = {
+      from_email: "no-reply@daqilhealth.com",
+      subject: t("therapistSubject"),
+      html: await invoicePaidTemplate(appointmentDetails, true, t, locale),
+      to: [
+        {
+          email: "hello@daqil.com",
+          type: "to",
+        },
+      ],
+    };
+    messages.push(mailchimpTx.messages.send({ message: adminMessage as any }));
+  }
+
   try {
-    await Promise.all([
-      mailchimpTx.messages.send({ message: therapistMessage as any }),
-      mailchimpTx.messages.send({ message: clientMessage as any }),
-    ]);
+    await Promise.all(messages);
   } catch (error) {
     console.error(
       "Error sending appointment booking confirmation email:",

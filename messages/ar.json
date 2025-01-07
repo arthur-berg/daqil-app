@@ -129,6 +129,7 @@
     "goToAppointments": "اذهب إلى المواعيد"
   },
   "AppointmentList": {
+    "timeLeftUntilPaymentExpires": "الوقت المتبقي حتى انتهاء صلاحية الدفع",
     "nextAppointmentInfo": "موعدك التالي مقرر يوم {day}، {date} في الساعة {time}.",
     "completedIntro": "لقد أكملت جلستك التعريفية.",
     "nextStepsMessage": "حان الوقت الآن لتأكيد ودفع رسوم موعدك التالي. واصل تقدمك مع أخصائيك النفسي.",
