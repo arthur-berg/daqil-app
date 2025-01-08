@@ -162,7 +162,6 @@ const TherapistPage = async ({
               <AvatarImage
                 src={therapist?.image}
                 alt={therapist.firstName.en}
-                className="object-cover"
               />
             </Avatar>
             <div>

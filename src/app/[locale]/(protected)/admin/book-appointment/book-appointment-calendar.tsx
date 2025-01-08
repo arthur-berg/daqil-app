@@ -135,10 +135,7 @@ const BookAppointmentCalendar = ({
         <>
           <div className="flex flex-col items-center">
             <Avatar className="w-28 h-28">
-              <AvatarImage
-                src={selectedTherapist?.image || ""}
-                className="object-cover"
-              />
+              <AvatarImage src={selectedTherapist?.image || ""} />
               <AvatarFallback className="bg-background flex items-center justify-center w-full h-full">
                 <Image
                   width={150}

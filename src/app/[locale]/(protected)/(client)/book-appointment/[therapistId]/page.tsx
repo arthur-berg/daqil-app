@@ -68,10 +68,7 @@ const TherapistUserProfile = async ({
         <div className="flex flex-col items-center">
           {/* Therapist Image or Placeholder */}
           <Avatar className="w-28 h-28">
-            <AvatarImage
-              src={therapist?.image || ""}
-              className="object-cover"
-            />
+            <AvatarImage src={therapist?.image || ""} />
             <AvatarFallback className="bg-background flex items-center justify-center w-full h-full">
               <Image
                 width={150}

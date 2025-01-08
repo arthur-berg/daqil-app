@@ -240,10 +240,7 @@ const TherapistsList = ({ therapistsJson }: { therapistsJson: any }) => {
               <div className="flex flex-col items-center p-6">
                 <div className="flex justify-center mt-4">
                   <Avatar className="w-28 h-28">
-                    <AvatarImage
-                      src={therapist?.image || ""}
-                      className="object-cover"
-                    />
+                    <AvatarImage src={therapist?.image || ""} />
                     <AvatarFallback className="bg-background flex items-center justify-center w-full h-full">
                       <Image
                         width={150}

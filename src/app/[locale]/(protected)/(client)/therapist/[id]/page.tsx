@@ -25,6 +25,8 @@ const TherapistPage = async ({
 
   if (!therapist) return <div>{t("errorTherapistNotFound")}</div>;
 
+  console.log("");
+
   return (
     <div className="max-w-4xl mx-auto bg-white rounded-md p-6">
       <div className="mb-4 sm:mb-2 flex justify-center sm:justify-start">
@@ -44,22 +46,19 @@ const TherapistPage = async ({
         {`${await getFullName(therapist.firstName, therapist.lastName)} `}
       </h1>
       <div className="flex justify-center mb-8">
-        <Avatar className="w-28 h-28">
-          <AvatarImage src={therapist?.image || ""} className="object-cover" />
-          <AvatarFallback className="bg-background flex items-center justify-center w-full h-full">
-            <Image
-              width={150}
-              height={50}
-              src={
-                locale === "en"
-                  ? "https://zakina-images.s3.eu-north-1.amazonaws.com/daqil-logo-en.png"
-                  : "https://zakina-images.s3.eu-north-1.amazonaws.com/daqil-logo-ar.png"
-              }
-              alt="psychologist-image"
-              className="w-full"
-            />
-          </AvatarFallback>
-        </Avatar>
+        <Image
+          width={150}
+          height={150}
+          src={
+            therapist?.image
+              ? therapist?.image
+              : locale === "en"
+              ? "https://zakina-images.s3.eu-north-1.amazonaws.com/daqil-logo-en.png"
+              : "https://zakina-images.s3.eu-north-1.amazonaws.com/daqil-logo-ar.png"
+          }
+          alt="psychologist-image"
+          className="w-[200px] h-[200px] rounded-md object-contain bg-secondary border border-gray-200"
+        />
       </div>
       <div className="space-y-8">
         <div>
