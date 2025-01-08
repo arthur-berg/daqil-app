@@ -97,17 +97,15 @@ export const cancelAppointment = async (
       appointment.appointmentTypeId.toString() ===
       APPOINTMENT_TYPE_ID_INTRO_SESSION;
 
-    if (isIntroSession && hoursUntilAppointment <= 24 && isClient) {
+    /*  if (isIntroSession && hoursUntilAppointment <= 24 && isClient) {
       const customerId = appointment.participants[0]?.userId?.stripeCustomerId;
       const paymentMethodId =
         appointment.participants[0]?.userId?.stripePaymentMethodId;
       await chargeNoShowFee(customerId, paymentMethodId);
-    }
+    } */
     if (
       isTherapist ||
-      (!isIntroSession &&
-        hoursUntilAppointment > 24 &&
-        appointment.payment.status === "paid")
+      (hoursUntilAppointment > 24 && appointment.payment.status === "paid")
     ) {
       const paymentIntents = await stripe.paymentIntents.list({
         customer: appointment.participants[0].userId.stripeCustomerId,
