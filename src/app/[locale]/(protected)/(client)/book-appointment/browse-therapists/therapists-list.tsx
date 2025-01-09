@@ -140,7 +140,7 @@ const TherapistsList = ({ therapistsJson }: { therapistsJson: any }) => {
           </Button>
         </div>
 
-        {/* <h2 className="text-lg font-bold mb-2">{t("filterBy")}</h2>
+        <h2 className="text-lg font-bold mb-2">{t("filterBy")}</h2>
         <p className="text-sm text-gray-600 mb-4">
           {allSymptomsSelected
             ? t("allSymptomsDefault")
@@ -193,9 +193,9 @@ const TherapistsList = ({ therapistsJson }: { therapistsJson: any }) => {
             </PopoverContent>
           </Popover>
         </div>
- */}
+
         {/* Selected Symptoms */}
-        {/* <div className="flex flex-wrap gap-2 mb-4">
+        <div className="flex flex-wrap gap-2 mb-4">
           {selectedSymptoms.length > 0 ? (
             selectedSymptoms.map((symptom) => (
               <Badge
@@ -225,7 +225,7 @@ const TherapistsList = ({ therapistsJson }: { therapistsJson: any }) => {
           <Button variant="link" className="text-sm" onClick={clearAllSymptoms}>
             {t("clearAllFilters")}
           </Button>
-        )} */}
+        )}
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredTherapists?.map((therapist: any) => {
