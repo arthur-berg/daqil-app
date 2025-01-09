@@ -26,7 +26,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import ScheduleAppointmentForm from "@/app/[locale]/(protected)/therapist/clients/[clientId]/schedule-appointment/schedule-appointment-form";
 import BookingCalendar from "@/app/[locale]/(protected)/(client)/book-appointment/[therapistId]/booking-calendar";
 const VideoRoom = ({
   sessionData,
