@@ -682,7 +682,8 @@
     "appointmentsLabel": "Appointments",
     "periodLabel": "Period",
     "current": "Current",
-    "scheduleAppointment": "Schedule Appointment"
+    "scheduleAppointment": "Schedule Appointment",
+    "exitCalendar": "Exit calendar"
   },
   "PaymentSuccessPage": {
     "paymentLinkSent": "A booking confirmation and a payment link have been sent to the client's email.",

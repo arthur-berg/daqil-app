@@ -26,8 +26,6 @@ const BookAppointmentPage = async () => {
     return ErrorMessages("appointmentTypeNotExist");
   }
 
-  console.log("clients", clients);
-
   return (
     <div className="container p-4 max-w-4xl mx-auto bg-white shadow-md rounded-lg">
       <BookAppointmentCalendar

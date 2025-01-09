@@ -131,6 +131,7 @@ export const getClientById = async (id: string) => {
     );
 
     return {
+      _id: client._id.toString(),
       firstName: client.firstName,
       lastName: client.lastName,
       email: client.email,

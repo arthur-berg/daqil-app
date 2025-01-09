@@ -669,7 +669,8 @@
     "appointmentsLabel": "المواعيد",
     "periodLabel": "الفترة",
     "current": "الحالي",
-    "scheduleAppointment": "جدولة موعد"
+    "scheduleAppointment": "جدولة موعد",
+    "exitCalendar": "الخروج من التقويم"
   },
   "PaymentSuccessPage": {
     "paymentLinkSent": "تم إرسال تأكيد الحجز ورابط الدفع إلى بريد العميل الإلكتروني",

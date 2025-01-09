@@ -1,17 +1,26 @@
-import { getClientById } from "@/data/user";
+import { getClientById, getTherapistById } from "@/data/user";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/navigation";
 import { getTranslations } from "next-intl/server";
 import { getFullName } from "@/utils/formatName";
 import connectToMongoDB from "@/lib/mongoose";
+import { getCurrentUser } from "@/lib/auth";
+import ScheduleAppointment from "@/app/[locale]/(protected)/therapist/clients/[clientId]/schedule-appointment";
+import { getAppointmentTypesByIDs } from "@/data/appointment-types";
+import {
+  APPOINTMENT_TYPE_ID_LONG_SESSION,
+  APPOINTMENT_TYPE_ID_SHORT_SESSION,
+} from "@/contants/config";
 
 const ClientPage = async ({ params }: { params: { clientId: string } }) => {
   await connectToMongoDB();
   const clientId = params.clientId;
   const client = await getClientById(clientId);
   const t = await getTranslations("MyClientsPage");
-
+  const user = await getCurrentUser();
+  if (!user) return "No user found";
   if (!client) return <div>{t("noClientFound")}</div>;
+  const therapist = await getTherapistById(user?.id);
 
   const currentTherapistHistory = client.therapistAppointmentCounts.find(
     (history: any) => history.current
@@ -19,6 +28,11 @@ const ClientPage = async ({ params }: { params: { clientId: string } }) => {
   const pastTherapistsHistory = client.therapistAppointmentCounts.filter(
     (history: any) => !history.current
   );
+
+  const appointmentTypes = await getAppointmentTypesByIDs([
+    APPOINTMENT_TYPE_ID_SHORT_SESSION,
+    APPOINTMENT_TYPE_ID_LONG_SESSION,
+  ]);
 
   return (
     <div className="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-6">
@@ -86,15 +100,27 @@ const ClientPage = async ({ params }: { params: { clientId: string } }) => {
         </div>
       )}
 
-      {/*  <div className="mt-6 flex flex-col sm:flex-row sm:space-x-4 space-y-4 justify-center sm:space-y-0">
-        <Link href={`/therapist/clients/${clientId}/schedule-appointment`}>
-          <Button className="w-full sm:w-auto">
-            {t("scheduleAppointment")}
-          </Button>
-        </Link>
-      </div> */}
+      <ScheduleAppointment
+        clientId={client._id}
+        appointmentTypes={appointmentTypes}
+        therapistsAvailableTimesJson={JSON.stringify(therapist.availableTimes)}
+        appointmentsJson={JSON.stringify(therapist.appointments)}
+        therapistId={therapist._id.toString()}
+      />
     </div>
   );
 };
 
 export default ClientPage;
+
+/*
+
+ appointmentTypes={appointmentTypes}
+        showOnlyIntroCalls={false}
+        therapistsAvailableTimes={JSON.stringify(therapist.availableTimes)}
+        clientId={client._id.toString()}
+        appointments={JSON.stringify(therapist.appointments)}
+        therapistId={therapist._id.toString()}
+        payLaterMode={true}
+        inIntroVideoCall={false}
+        smallSelect*/
