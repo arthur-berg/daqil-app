@@ -585,7 +585,9 @@ export const sendInvoicePaidEmail = async (
   if (process.env.NODE_ENV === "production") {
     const adminMessage = {
       from_email: "no-reply@daqilhealth.com",
-      subject: t("therapistSubject"),
+      subject: t("therapistSubject", {
+        clientName: appointmentDetails.clientName,
+      }),
       html: await invoicePaidTemplate(appointmentDetails, true, t, locale),
       to: [
         {
