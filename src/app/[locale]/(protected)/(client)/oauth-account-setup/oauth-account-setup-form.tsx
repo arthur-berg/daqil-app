@@ -47,6 +47,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { useGetCountries } from "@/hooks/use-get-countries";
 import { Checkbox } from "@/components/ui/checkbox";
 import { formatTimeZoneWithOffset, getUTCOffset } from "@/utils/timeZoneUtils";
+import Cookies from "js-cookie";
 
 const OAuthAccountSetupForm = () => {
   const [error, setError] = useState<string | undefined>("");
@@ -94,8 +95,25 @@ const OAuthAccountSetupForm = () => {
   const onSubmit = (values: z.infer<typeof OAuthAccountSetupSchema>) => {
     setError("");
     setSuccess("");
+    const utmSource = Cookies.get("utm_source");
+    const utmMedium = Cookies.get("utm_medium");
+    const utmCampaign = Cookies.get("utm_campaign");
+    const utmTerm = Cookies.get("utm_term");
+    const utmContent = Cookies.get("utm_content");
+
+    // If any UTM cookies exist, add them to the values object
+    const utmData = {
+      utmSource: utmSource || null,
+      utmMedium: utmMedium || null,
+      utmCampaign: utmCampaign || null,
+      utmTerm: utmTerm || null,
+      utmContent: utmContent || null,
+    };
+
+    // Merge UTM data with the registration values
+    const registrationData = { ...values, ...utmData };
     startTransition(async () => {
-      const data = await setupOAuthAccount(values, user.id);
+      const data = await setupOAuthAccount(registrationData, user.id);
       responseToast(data);
       if ("success" in data && data.success) {
         setSuccess(data.success);

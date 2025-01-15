@@ -10,10 +10,7 @@ import { logout } from "@/actions/logout";
 import Cookies from "js-cookie";
 
 import TimezoneWarningDialog from "@/components/timezone-warning-dialog";
-import { updateUserCampaignId } from "@/actions/update-user-campaign-id";
-import { formatTimeZoneWithOffset, getUTCOffset } from "@/utils/timeZoneUtils";
-import { updateUserUTMData } from "@/actions/update-user-utm-data";
-import { useSearchParams } from "next/navigation";
+import { getUTCOffset } from "@/utils/timeZoneUtils";
 
 const routesWithoutSidebar = ["/appointments/[id]"];
 
