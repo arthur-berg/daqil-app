@@ -35,11 +35,11 @@ export const CardWrapper = ({
         <Header label={headerLabel} />
       </CardHeader>
       <CardContent>{children}</CardContent>
-      {showSocial && (
+      {/* {showSocial && (
         <CardFooter>
           <Social />
         </CardFooter>
-      )}
+      )} */}
       <CardFooter>
         <div className="flex flex-col items-center w-full">
           <BackButton label={backButtonLabel} href={backButtonHref} />

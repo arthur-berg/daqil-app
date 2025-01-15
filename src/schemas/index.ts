@@ -327,6 +327,11 @@ export const OAuthAccountSetupSchema = z.object({
       message: "Timezone is required",
     }),
   }),
+  utmSource: z.string().nullable().optional(),
+  utmMedium: z.string().nullable().optional(),
+  utmCampaign: z.string().nullable().optional(),
+  utmTerm: z.string().nullable().optional(),
+  utmContent: z.string().nullable().optional(),
 });
 
 export const RegisterSchema = z.object({
