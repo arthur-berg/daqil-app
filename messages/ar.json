@@ -129,6 +129,7 @@
     "goToAppointments": "اذهب إلى المواعيد"
   },
   "AppointmentList": {
+    "timeLeftUntilPaymentExpires": "الوقت المتبقي حتى انتهاء صلاحية الدفع",
     "nextAppointmentInfo": "موعدك التالي مقرر يوم {day}، {date} في الساعة {time}.",
     "completedIntro": "لقد أكملت جلستك التعريفية.",
     "nextStepsMessage": "حان الوقت الآن لتأكيد ودفع رسوم موعدك التالي. واصل تقدمك مع أخصائيك النفسي.",
@@ -837,10 +838,10 @@
     "footerText": "شكرًا لاستخدامك زاكينا."
   },
   "SmsReminder": {
-    "reminderMessage": "تذكير: موعدك مع {hostFirstName} {hostLastName} سيبدأ خلال 20 دقيقة في {appointmentTime}. يرجى الاستعداد والتأكد من أن الميكروفون والفيديو يعملان بشكل صحيح. يمكنك الانضمام إلى الاجتماع هنا: {meetingLink}",
-    "reminderMessage24h": "تذكير: موعدك مع {hostFirstName} {hostLastName} مقرر في {appointmentTime} غدًا. يرجى الاستعداد والتأكد من تجهيز معداتك.",
-    "reminderMessage2h": "تذكير: موعدك مع {hostFirstName} {hostLastName} سيبدأ بعد ساعتين في {appointmentTime}. يرجى الاستعداد والتأكد من أن معداتك جاهزة.",
-    "reminderMessageTherapist": "تذكير: لديك موعد مع {clientFirstName} {clientLastName} في {appointmentTime}. يرجى الاستعداد والتأكد من إعداد معداتك."
+    "reminderMessage": "تذكير: موعدك مع {hostFirstName} {hostLastName} سيبدأ خلال 20 دقيقة في {appointmentTime} ({clientTimeZoneFormatted}). يرجى الاستعداد والتأكد من أن الميكروفون والفيديو يعملان بشكل صحيح. يمكنك الانضمام إلى الاجتماع هنا: {meetingLink}",
+    "reminderMessage24h": "تذكير: موعدك مع {hostFirstName} {hostLastName} مقرر في {appointmentTime} ({clientTimeZoneFormatted}) غدًا. يرجى الاستعداد والتأكد من تجهيز معداتك.",
+    "reminderMessage2h": "تذكير: موعدك مع {hostFirstName} {hostLastName} سيبدأ بعد ساعتين في {appointmentTime} ({clientTimeZoneFormatted}). يرجى الاستعداد والتأكد من أن معداتك جاهزة.",
+    "reminderMessageTherapist": "تذكير: لديك موعد مع {clientFirstName} {clientLastName} في {appointmentTime} ({therapistTimeZoneFormatted}). يرجى الاستعداد والتأكد من إعداد معداتك."
   },
   "TwoFactorEmail": {
     "daqil": "زاكينا",

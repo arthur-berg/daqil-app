@@ -27,7 +27,9 @@ export const sendSmsReminder = async (
     reminderTherapist: boolean;
   },
   clientFirstName: string,
-  clientLastName: string
+  clientLastName: string,
+  clientTimeZoneFormatted: string,
+  therapistTimeZoneFormatted: string
 ): Promise<void> => {
   try {
     let message;
@@ -36,6 +38,7 @@ export const sendSmsReminder = async (
         clientFirstName,
         clientLastName,
         appointmentTime,
+        therapistTimeZoneFormatted,
       });
     } else if (reminders.reminder24h) {
       // Message without the meeting link
@@ -43,12 +46,14 @@ export const sendSmsReminder = async (
         hostFirstName,
         hostLastName,
         appointmentTime,
+        clientTimeZoneFormatted,
       });
     } else if (reminders.reminder2h) {
       message = t("reminderMessage2h", {
         hostFirstName,
         hostLastName,
         appointmentTime,
+        clientTimeZoneFormatted,
       });
     } else {
       // Message with the meeting link
@@ -58,6 +63,7 @@ export const sendSmsReminder = async (
         hostLastName,
         appointmentTime,
         meetingLink,
+        clientTimeZoneFormatted,
       });
     }
 

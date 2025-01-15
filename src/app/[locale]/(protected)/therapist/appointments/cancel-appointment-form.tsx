@@ -53,7 +53,6 @@ const CancelAppontmentForm = ({
   });
 
   const onSubmit = (values: z.infer<typeof CancelAppointmentSchema>) => {
-    setIsCancelDialogOpen(false);
     startTransition(async () => {
       try {
         const data = await cancelAppointment(values);
@@ -61,6 +60,8 @@ const CancelAppontmentForm = ({
         responseToast(data);
 
         form.reset();
+
+        setIsCancelDialogOpen(false);
       } catch {
         console.error("Error canceling appointment");
       }

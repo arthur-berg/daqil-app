@@ -5,6 +5,7 @@ import Appointment from "@/models/Appointment";
 import connectToMongoDB from "@/lib/mongoose";
 import { APPOINTMENT_TYPE_ID_INTRO_SESSION } from "@/contants/config";
 import { addTagToMailchimpUser } from "@/lib/mail";
+import { trusted } from "mongoose";
 
 const updateAppointmentStatus = async (
   appointmentId: string,
@@ -29,6 +30,8 @@ const determineStatusUpdate = (
   return {};
 };
 
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+
 export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
   await connectToMongoDB();
 
@@ -42,7 +45,7 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
 
     const appointment = await Appointment.findById(appointmentId).populate({
       path: "participants.userId",
-      select: "email",
+      select: "email stripeCustomerId",
     });
     if (!appointment) {
       return NextResponse.json(
@@ -73,17 +76,17 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
         );
       }
     }
-
-    /*  if (statusUpdate.cancellationReason === "no-show-host") {
+    //statusUpdate.cancellationReason === "no-show-host"
+    if (true) {
+      console.log("REFUNDING");
       const paymentIntents = await stripe.paymentIntents.list({
         customer: appointment.participants[0].userId.stripeCustomerId,
         limit: 100,
       });
       console.log("paymentIntents", paymentIntents);
       const paymentIntent = paymentIntents.data.find(
-        (pi) => pi.metadata && pi.metadata.appointmentId === appointmentId
+        (pi: any) => pi.metadata && pi.metadata.appointmentId === appointmentId
       );
-      console.log("appointmentId");
       console.log("paymentIntent", paymentIntent);
       if (paymentIntent) {
         try {
@@ -101,7 +104,7 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
             refundError
           );
           return NextResponse.json(
-            { error: "Failed to process refund" },
+            { error: `Failed to process refund. Error: ${refundError}` },
             { status: 500 }
           );
         }
@@ -114,7 +117,7 @@ export const POST = verifySignatureAppRouter(async (req: NextRequest) => {
           { status: 400 }
         );
       }
-    } */
+    }
 
     /*     if (
       statusUpdate.cancellationReason === "no-show-participant" &&
